@@ -1,0 +1,1 @@
+Add here ogg files named as follow : xxxxx.ogg, where xxxxx is the string id of the pokemon.

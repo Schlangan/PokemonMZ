@@ -1,0 +1,497 @@
+[
+    null,
+    {
+        "id":"bulbasaur",
+        "pokedex":[{"region":"kanto","number":1}],
+        "category":"Seed",
+        "description":"A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokémon. It can go for days without eating a single morsel. In the bulb on its back, it stores energy.",
+        "height":0.7,
+        "weight":6.9,
+        "types":["grass","poison"],
+        "baseStats":{"hp":45,"patk":49,"pdef":49,"satk":65,"sdef":65,"spd":45},
+        "expCurve":"mediumSlow",
+        "catchRate":45,
+        "xpYield":64,
+        "ev":[{"satk":1}],
+        "evolutions":[
+            {"to":"ivysaur","mode":"level","level":16}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"tackle"},
+            {"lvl":1, "move":"growl"},
+            {"lvl":7, "move":"leechSeed"},
+            {"lvl":13, "move":"vineWhip"},
+            {"lvl":20, "move":"poisonPowder"},
+            {"lvl":27, "move":"razorLeaf"},
+            {"lvl":34, "move":"growth"},
+            {"lvl":41, "move":"sleepPowder"},
+            {"lvl":48, "move":"solarBeam"}
+        ],
+        "hmMoves":["cut"],
+        "tmMoves":[
+            "swordsDance","toxic","bodySlam","takeDown","doubleEdge","rage","megaDrain",
+            "soldarBeam","mimic","doubleTeam","reflect","bide","rest","substitute"
+        ]
+    },
+    {
+        "id":"charmander",
+        "pokedex":[{"region":"kanto","number":4}],
+        "category":"Lizard",
+        "description":"Obviously prefers hot places. When it rains, steam is said to spout from the tip of its tail. The flame at the tip of its tail makes a sound as it burns. You can only hear it in quiet places.",
+        "height":0.6,
+        "weight":8.5,
+        "types":["fire"],
+        "baseStats":{"hp":39,"patk":52,"pdef":43,"satk":50,"sdef":50,"spd":65},
+        "expCurve":"mediumSlow",
+        "catchRate":45,
+        "xpYield":65,
+        "ev":[{"spd":1}],
+        "evolutions":[
+            {"to":"charmeleon","mode":"level","level":16}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"scratch"},
+            {"lvl":1, "move":"growl"},
+            {"lvl":9, "move":"ember"},
+            {"lvl":15, "move":"leer"},
+            {"lvl":22, "move":"rage"},
+            {"lvl":30, "move":"slash"},
+            {"lvl":38, "move":"flamethrower"},
+            {"lvl":46, "move":"fireSpin"}
+        ],
+        "hmMoves":["cut","strength"],
+        "tmMoves":[
+            "megaPunch","swordsDance","megaKick","toxic","bodySlam","takeDown","doubleEdge",
+            "submission","counter","seismicToss","rage","dragonRage","dig","mimic","doubleTeam",
+            "reflect","bide","fireBlast","swift","skullBash","rest","substitute"
+        ]
+    },
+    {
+        "id":"squirtle",
+        "pokedex":[{"region":"kanto","number":7}],
+        "category":"Tiny Turtle",
+        "description":"After birth, its back swells and hardens into a shell. Powerfully sprays foam from its mouth. Shoots water at prey while in the water. Withdraws into its shell when in danger.",
+        "height":0.5,
+        "weight":9.0,
+        "types":["water"],
+        "baseStats":{"hp":44,"patk":48,"pdef":65,"satk":50,"sdef":50,"spd":43},
+        "expCurve":"mediumSlow",
+        "catchRate":45,
+        "xpYield":66,
+        "ev":[{"pdef":1}],
+        "evolutions":[
+            {"to":"wartortle","mode":"level","level":16}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"tackle"},
+            {"lvl":1, "move":"tailWhip"},
+            {"lvl":8, "move":"bubble"},
+            {"lvl":15, "move":"waterGun"},
+            {"lvl":22, "move":"bite"},
+            {"lvl":28, "move":"withdraw"},
+            {"lvl":35, "move":"skullBash"},
+            {"lvl":42, "move":"hydroPump"}
+        ],
+        "hmMoves":["surf","strength"],
+        "tmMoves":[
+            "megaPunch","megaKick","toxic","bodySlam","takeDown","doubleEdge","bubbleBeam",
+            "waterGun","iceBeam","blizzard","submission","counter","seismicToss","rage","dig",
+            "mimic","doubleTeam","reflect","bide","skullBash","rest","substitute"
+        ]
+    },
+    {
+        "id":"caterpie",
+        "pokedex":[{"region":"kanto","number":10}],
+        "category":"Worm",
+        "description":"Its short feet are tipped with suction pads that enable it to tirelessly climb slopes and walls. If you touch the feeler on top of its head, it will release a horrible stink to protect itself.",
+        "height":0.3,
+        "weight":2.9,
+        "types":["bug"],
+        "baseStats":{"hp":45,"patk":30,"pdef":35,"satk":20,"sdef":20,"spd":45},
+        "expCurve":"mediumFast",
+        "catchRate":255,
+        "xpYield":53,
+        "ev":[{"hp":1}],
+        "evolutions":[
+            {"to":"metapod","mode":"level","level":7}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"tackle"},
+            {"lvl":1, "move":"stringShot"}
+        ],
+        "hmMoves":[],
+        "tmMoves":[]
+    },
+    {
+        "id":"metapod",
+        "pokedex":[{"region":"kanto","number":11}],
+        "category":"Cocoon",
+        "description":"This Pokémon is vulnerable to attack while its shell is soft, exposing its weak and tender body. Hardens its shell to protect itself. However, a large impact may cause it to pop out of its shell.",
+        "height":0.7,
+        "weight":9.9,
+        "types":["bug"],
+        "baseStats":{"hp":50,"patk":20,"pdef":55,"satk":25,"sdef":25,"spd":30},
+        "expCurve":"mediumFast",
+        "catchRate":120,
+        "xpYield":72,
+        "ev":[{"pdef":2}],
+        "evolutions":[
+            {"to":"butterfree","mode":"level","level":10}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"harden"}
+        ],
+        "hmMoves":[],
+        "tmMoves":[]
+    },
+    {
+        "id":"butterfree",
+        "pokedex":[{"region":"kanto","number":12}],
+        "category":"Butterfly",
+        "description":"In battle, it flaps its wings at high speed to release highly toxic dust into the air. Its wings, covered with poisonous powders, repel water. This allows it to fly in the rain.",
+        "height":1.1,
+        "weight":32.0,
+        "types":["bug","flying"],
+        "baseStats":{"hp":60,"patk":45,"pdef":50,"satk":80,"sdef":80,"spd":70},
+        "expCurve":"mediumFast",
+        "catchRate":45,
+        "xpYield":160,
+        "ev":[{"satk":2,"sdef":1}],
+        "evolutions":[],
+        "learnedMoves":[
+            {"lvl":1, "move":"confusion"},
+            {"lvl":10, "move":"confusion"},
+            {"lvl":13, "move":"poisonPowder"},
+            {"lvl":14, "move":"stunSpore"},
+            {"lvl":15, "move":"sleepPowder"},
+            {"lvl":18, "move":"supersonic"},
+            {"lvl":23, "move":"whirlwind"},
+            {"lvl":28, "move":"gust"},
+            {"lvl":34, "move":"psybeam"}
+        ],
+        "hmMoves":["flash"],
+        "tmMoves":[
+            "razorWind","whirlwind","toxic","takeDown","doubleEdge","hyperBeam","rage",
+            "megaDrain","solarBeam","psychic","teleport","mimic","doubleTeam","reflect","bide",
+            "swift","rest","psywave","substitute"
+        ]
+    },
+    {
+        "id":"weedle",
+        "pokedex":[{"region":"kanto","number":13}],
+        "category":"Hairy bug",
+        "description":"Often found in forests, eating leaves. It has a sharp venomous stinger on its head. Beware of the sharp stinger on its head. It hides in grass and bushes where it eats leaves.",
+        "height":0.3,
+        "weight":3.2,
+        "types":["bug","poison"],
+        "baseStats":{"hp":40,"patk":35,"pdef":30,"satk":20,"sdef":20,"spd":50},
+        "expCurve":"mediumFast",
+        "catchRate":255,
+        "xpYield":52,
+        "ev":[{"spd":1}],
+        "evolutions":[
+            {"to":"kakuna","mode":"level","level":7}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"poisonSting"},
+            {"lvl":1, "move":"stringShot"}
+        ],
+        "hmMoves":[],
+        "tmMoves":[]
+    },
+    {
+        "id":"kakuna",
+        "pokedex":[{"region":"kanto","number":14}],
+        "category":"Cocoon",
+        "description":"Almost incapable of moving, this Pokémon can only harden its shell to protect itself from predators. Able to move only slightly. When endangered, it may stick out its stinger and poison its enemy.",
+        "height":0.6,
+        "weight":10.0,
+        "types":["bug","poison"],
+        "baseStats":{"hp":45,"patk":25,"pdef":50,"satk":25,"sdef":25,"spd":35},
+        "expCurve":"mediumFast",
+        "catchRate":120,
+        "xpYield":71,
+        "ev":[{"pdef":2}],
+        "evolutions":[
+            {"to":"beedrill","mode":"level","level":10}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"harden"}
+        ],
+        "hmMoves":[],
+        "tmMoves":[]
+    },
+    {
+        "id":"beedrill",
+        "pokedex":[{"region":"kanto","number":15}],
+        "category":"Poison bee",
+        "description":"Flies at high speed and attacks using its large venomous stingers on its forelegs and tail. It has 3 poisonous stingers on its forelegs and its tail. They are used to jab its enemy repeatedly.",
+        "height":1.0,
+        "weight":29.5,
+        "types":["bug","poison"],
+        "baseStats":{"hp":65,"patk":80,"pdef":40,"satk":45,"sdef":80,"spd":75},
+        "expCurve":"mediumFast",
+        "catchRate":45,
+        "xpYield":159,
+        "ev":[{"patk":2,"sdef":1}],
+        "evolutions":[],
+        "learnedMoves":[
+            {"lvl":1, "move":"furyAttack"},
+            {"lvl":12, "move":"furyAttack"},
+            {"lvl":16, "move":"focusEnergy"},
+            {"lvl":20, "move":"twineedle"},
+            {"lvl":25, "move":"rage"},
+            {"lvl":30, "move":"pinMissile"},
+            {"lvl":35, "move":"agility"}
+        ],
+        "hmMoves":["cut"],
+        "tmMoves":[
+            "swordsDance","toxic","takeDown","doubleEdge","hyperBeam","rage",
+            "megaDrain","mimic","doubleTeam","reflect","bide",
+            "swift","skullBash","rest","substitute"
+        ]
+    },
+    {
+        "id":"pidgey",
+        "pokedex":[{"region":"kanto","number":16}],
+        "category":"Tiny Bird",
+        "description":"A common sight in forests and woods. It flaps its wings at ground level to kick up blinding sand. Very docile. If attacked, it will often kick up sand to protect itself rather than fight back.",
+        "height":0.3,
+        "weight":1.8,
+        "types":["normal","flying"],
+        "baseStats":{"hp":40,"patk":45,"pdef":40,"satk":35,"sdef":35,"spd":56},
+        "expCurve":"mediumSlow",
+        "catchRate":255,
+        "xpYield":55,
+        "ev":[{"spd":1}],
+        "evolutions":[
+            {"to":"pidgeotto","mode":"level","level":18}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"gust"},
+            {"lvl":5, "move":"sandAttack"},
+            {"lvl":12, "move":"quickAttack"},
+            {"lvl":19, "move":"whirlwind"},
+            {"lvl":28, "move":"wingAttack"},
+            {"lvl":36, "move":"agility"},
+            {"lvl":44, "move":"mirrorMove"}
+        ],
+        "hmMoves":["fly"],
+        "tmMoves":[
+            "razorWind","whirlwind","toxic","takeDown","doubleEdge","rage","mimic","doubleTeam",
+            "reflect","bide","swift","skyAttack","rest","substitute"
+        ]
+    },
+    {
+        "id":"rattata",
+        "pokedex":[{"region":"kanto","number":19}],
+        "category":"Rat",
+        "description":"Bites anything when it attacks. Small and very quick, it is a common sight in many places. Will chew on anything with its fangs. If you see one, it is certain that 40 more live in the area.",
+        "height":0.3,
+        "weight":3.5,
+        "types":["normal"],
+        "baseStats":{"hp":30,"patk":56,"pdef":35,"satk":25,"sdef":35,"spd":72},
+        "expCurve":"mediumFast",
+        "catchRate":255,
+        "xpYield":57,
+        "ev":[{"spd":1}],
+        "evolutions":[
+            {"to":"raticate","mode":"level","level":20}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"tackle"},
+            {"lvl":1, "move":"tailWhip"},
+            {"lvl":7, "move":"quickAttack"},
+            {"lvl":14, "move":"hyperFang"},
+            {"lvl":22, "move":"focusEnergy"},
+            {"lvl":34, "move":"superFang"}
+        ],
+        "hmMoves":[],
+        "tmMoves":[
+            "toxic","bodySlam","takeDown","doubleEdge","bubbleBeam","waterGun","blizzard","rage","thunderbolt",
+            "thunder","dig","mimic","doubleTeam","bide","swift","skullBash","rest","substitute"
+        ]
+    },
+    {
+        "id":"spearow",
+        "pokedex":[{"region":"kanto","number":21}],
+        "category":"Tiny Bird",
+        "description":"Eats bugs in grassy areas. It has to flap its short wings at high speed to stay airborne. Inept at flying high. However, it can fly around very fast to protect its territory.",
+        "height":0.3,
+        "weight":2.0,
+        "types":["normal","flying"],
+        "baseStats":{"hp":40,"patk":60,"pdef":30,"satk":31,"sdef":31,"spd":70},
+        "expCurve":"mediumFast",
+        "catchRate":255,
+        "xpYield":58,
+        "ev":[{"spd":1}],
+        "evolutions":[
+            {"to":"fearow","mode":"level","level":20}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"peck"},
+            {"lvl":1, "move":"growl"},
+            {"lvl":9, "move":"leer"},
+            {"lvl":15, "move":"furyAttack"},
+            {"lvl":22, "move":"mirrorMove"},
+            {"lvl":29, "move":"drillPeck"},
+            {"lvl":36, "move":"agility"}
+        ],
+        "hmMoves":["fly"],
+        "tmMoves":[
+            "razorWind","whirlwind","toxic","takeDown","doubleEdge","rage","mimic","doubleTeam",
+            "bide","swift","skyAttack","rest","substitute"
+        ]
+    },
+    {
+        "id":"pikachu",
+        "pokedex":[{"region":"kanto","number":25}],
+        "category":"Mouse",
+        "description":"When several of these Pokémon gather, their electricity could build and cause lightning storms. It keeps its tail raised to monitor its surroundings. If you yank its tail, it will try to bite you.",
+        "height":0.4,
+        "weight":6.0,
+        "types":["electric"],
+        "baseStats":{"hp":35,"patk":55,"pdef":30,"satk":50,"sdef":40,"spd":90},
+        "expCurve":"mediumFast",
+        "catchRate":190,
+        "xpYield":82,
+        "ev":[{"spd":2}],
+        "evolutions":[
+            {"to":"raichu","mode":"useItem","item":"thunderStone"}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"thunderShock"},
+            {"lvl":1, "move":"growl"},
+            {"lvl":6, "move":"tailWhip"},
+            {"lvl":8, "move":"thunderWave"},
+            {"lvl":11, "move":"quickAttack"},
+            {"lvl":15, "move":"doubleTeam"},
+            {"lvl":20, "move":"slam"},
+            {"lvl":26, "move":"thunderbolt"},
+            {"lvl":33, "move":"agility"},
+            {"lvl":41, "move":"thunder"},
+            {"lvl":50, "move":"lightScreen"}
+        ],
+        "hmMoves":["flash"],
+        "tmMoves":[
+            "megaPunch","megaKick","toxic","toxic","bodySlam","takeDown","doubleEdge","payDay","submission","seismicToss",
+            "rage","thunderbolt","thunder","mimic","doubleTeam","reflect","bide","swift","skullBach","rest","thunderWave","substitute"
+        ]
+    },
+    {
+        "id":"nidoranf",
+        "pokedex":[{"region":"kanto","number":29}],
+        "category":"Poison Pin",
+        "description":"Although small, its venomous barbs render this Pokémon dangerous. The female has smaller horns. A mild-mannered Pokémon that does not like to fight. Beware, its small horns secrete venom.",
+        "height":0.4,
+        "weight":7.0,
+        "types":["poison"],
+        "baseStats":{"hp":55,"patk":47,"pdef":52,"satk":40,"sdef":40,"spd":41},
+        "expCurve":"mediumSlow",
+        "catchRate":235,
+        "xpYield":59,
+        "ev":[{"hp":1}],
+        "evolutions":[
+            {"to":"nidorina","mode":"level","level":16}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"growl"},
+            {"lvl":1, "move":"tackle"},
+            {"lvl":8, "move":"scratch"},
+            {"lvl":12, "move":"doubleKick"},
+            {"lvl":17, "move":"poisonSting"},
+            {"lvl":23, "move":"tailWhip"},
+            {"lvl":30, "move":"bite"},
+            {"lvl":38, "move":"furySwipes"}
+        ],
+        "hmMoves":[],
+        "tmMoves":[
+            "toxic","bodySlam","takeDown","doubleEdge","blizzard","rage","thunderbolt",
+            "thunder","mimic","doubleTeam","reflect","bide","skullBash","rest","substitute"
+        ]
+    },
+    {
+        "id":"nidoranm",
+        "pokedex":[{"region":"kanto","number":32}],
+        "category":"Poison Pin",
+        "description":"Stiffens its ears to sense danger. The larger its horns, the more powerful its secreted venom. Its large ears are always kept upright. If it senses danger, it will attack with a poisonous sting. ",
+        "height":0.5,
+        "weight":9.0,
+        "types":["poison"],
+        "baseStats":{"hp":46,"patk":57,"pdef":40,"satk":40,"sdef":40,"spd":50},
+        "expCurve":"mediumSlow",
+        "catchRate":235,
+        "xpYield":60,
+        "ev":[{"atk":1}],
+        "evolutions":[
+            {"to":"nidorino","mode":"level","level":16}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"leer"},
+            {"lvl":1, "move":"tackle"},
+            {"lvl":8, "move":"hornAttack"},
+            {"lvl":12, "move":"doubleKick"},
+            {"lvl":17, "move":"poisonSting"},
+            {"lvl":23, "move":"focusEnergy"},
+            {"lvl":30, "move":"furyAttack"},
+            {"lvl":38, "move":"hornDrill"}
+        ],
+        "hmMoves":[],
+        "tmMoves":[
+            "toxic","hornDrill","bodySlam","takeDown","doubleEdge","blizzard","rage","thunderbolt",
+            "thunder","mimic","doubleTeam","reflect","bide","skullBash","rest","substitute"
+        ]
+    },
+    {
+        "id":"mankey",
+        "pokedex":[{"region":"kanto","number":56}],
+        "category":"Pig Monkey",
+        "description":"Extremely quick to anger. It could be docile one moment then thrashing away the next instant. An agile Pokémon that lives in trees. It angers easily and will not hesitate to attack anything.",
+        "height":0.5,
+        "weight":28.0,
+        "types":["fighting"],
+        "baseStats":{"hp":40,"patk":80,"pdef":35,"satk":35,"sdef":45,"spd":70},
+        "expCurve":"mediumFast",
+        "catchRate":190,
+        "xpYield":74,
+        "ev":[{"atk":1}],
+        "evolutions":[
+            {"to":"primeape","mode":"level","level":28}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"scratch"},
+            {"lvl":1, "move":"leer"},
+            {"lvl":9, "move":"lowKick"},
+            {"lvl":15, "move":"karateChop"},
+            {"lvl":21, "move":"furySwipes"},
+            {"lvl":27, "move":"focusEnergy"},
+            {"lvl":33, "move":"seismicToss"},
+            {"lvl":39, "move":"thrash"},
+            {"lvl":45, "move":"screech"}
+        ],
+        "hmMoves":["strength"],
+        "tmMoves":[
+            "megaPunch","megaKick","toxic","bodySlam","takeDown","doubleEdge","payDay","submission","counter", 
+            "seismicToss","rage","thunderbolt","thunder","dig","mimic","doubleTeam","bide","metronome","swift",
+            "skullBash","rest","rockSlide","substitute"
+        ]
+    },
+    {
+        "id":"mew",
+        "pokedex":[{"region":"kanto","number":151}],
+        "category":"PLACEHOLDER",
+        "description":"PLACEHOLDER",
+        "height":0.0,
+        "weight":0.0,
+        "types":[""],
+        "baseStats":{"hp":0,"patk":0,"pdef":0,"satk":0,"sdef":0,"spd":0},
+        "expCurve":"PLACEHOLDER",
+        "catchRate":0,
+        "xpYield":0,
+        "ev":[{}],
+        "evolutions":[],
+        "learnedMoves":[],
+        "hmMoves":[],
+        "tmMoves":[]
+    }
+]

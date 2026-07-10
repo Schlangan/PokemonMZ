@@ -1,0 +1,182 @@
+[
+    null,
+    {
+        "id":"rival1_starter_bulbasaur",
+        "type":"trainer",
+        "trainerActor":2,
+        "ia":"generic",
+        "pokemons":[
+            {"id":"charmander","level":5,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "victoryText":"Yea! Am I great of what?",
+        "defeatText":"What? Unbelievable!\nI picked the wrong Pokémon!",
+        "money":175
+    },
+    {
+        "id":"rival1_starter_charmander",
+        "type":"trainer",
+        "trainerActor":2,
+        "ia":"generic",
+        "pokemons":[
+            {"id":"squirtle","level":5,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "victoryText":"Yea! Am I great of what?",
+        "defeatText":"What? Unbelievable!\nI picked the wrong Pokémon!",
+        "money":175
+    },
+    {
+        "id":"rival1_starter_squirtle",
+        "type":"trainer",
+        "trainerActor":2,
+        "ia":"generic",
+        "pokemons":[
+            {"id":"bulbasaur","level":5,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "victoryText":"Yea! Am I great of what?",
+        "defeatText":"What? Unbelievable!\nI picked the wrong Pokémon!",
+        "money":175
+    },
+    {
+        "id":"rival2_starter_bulbasaur",
+        "type":"trainer",
+        "trainerActor":2,
+        "ia":"generic",
+        "pokemons":[
+            {"id":"pidgey","level":9,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"charmander","level":8,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "victoryText":"Yeah! Am I great of what?",
+        "defeatText":"Awww! You just lucked out!",
+        "money":280
+    },
+    {
+        "id":"rival2_starter_charmander",
+        "type":"trainer",
+        "trainerActor":2,
+        "ia":"generic",
+        "pokemons":[
+            {"id":"pidgey","level":9,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"squirtle","level":8,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "victoryText":"Yeah! Am I great of what?",
+        "defeatText":"Awww! You just lucked out!",
+        "money":280
+    },
+    {
+        "id":"rival2_starter_squirtle",
+        "type":"trainer",
+        "trainerActor":2,
+        "ia":"generic",
+        "pokemons":[
+            {"id":"pidgey","level":9,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"bulbasaur","level":8,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "victoryText":"Yeah! Am I great of what?",
+        "defeatText":"Awww! You just lucked out!",
+        "money":280
+    },
+    {
+        "id":"route1_grass_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"pidgey","levelMin":2, "levelMax":5, "rate":50},
+            {"id":"rattata","levelMin":2, "levelMax":4, "rate":50}
+        ]
+    },
+    {
+        "id":"route22_grass_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"rattata","levelMin":2, "levelMax":4, "rate":45},
+            {"id":"spearow","levelMin":2, "levelMax":6, "rate":20},
+            {"id":"nidoranf","levelMin":2, "levelMax":4, "rate":30},
+            {"id":"nidoranm","levelMin":2, "levelMax":4, "rate":30},
+            {"id":"mankey","levelMin":3, "levelMax":5, "rate":20}
+        ]
+    },
+    {
+        "id":"route2_grass_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"pidgey","levelMin":3, "levelMax":7, "rate":35},
+            {"id":"rattata","levelMin":2, "levelMax":5, "rate":35},
+            {"id":"nidoranf","levelMin":4, "levelMax":6, "rate":15},
+            {"id":"nidoranm","levelMin":4, "levelMax":6, "rate":15},
+            {"id":"caterpie","levelMin":3, "levelMax":5, "rate":15},
+            {"id":"weedle","levelMin":3, "levelMax":5, "rate":15}
+        ]
+    },
+    {
+        "id":"viridian_lass1",
+        "type":"trainer",
+        "trainerActor":4,
+        "ia":"generic",
+        "pokemons":[
+            {"id":"nidoranf","level":6,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"nidoranm","level":6,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Oh no, really?",
+        "money":90
+    },
+    {
+        "id":"viridian_bug1",
+        "type":"trainer",
+        "trainerActor":3,
+        "ia":"generic",
+        "pokemons":[
+            {"id":"weedle","level":6,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"caterpie","level":6,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"No! Caterpie can't cut it!",
+        "money":60
+    },
+    {
+        "id":"viridian_bug2",
+        "type":"trainer",
+        "trainerActor":3,
+        "ia":"generic",
+        "pokemons":[
+            {"id":"weedle","level":7,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"kakuna","level":7,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"weedle","level":7,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Huh? I ran out of Pokémon!",
+        "money":70
+    },
+    {
+        "id":"viridian_bug3",
+        "type":"trainer",
+        "trainerActor":3,
+        "ia":"generic",
+        "pokemons":[
+            {"id":"caterpie","level":8,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"metapod","level":8,"moveset":"add","addMoves":["tackle","stringShot"],"dv":"default","ev":"default"}
+        ],
+        "defeatText":"After all I did...",
+        "money":80
+    },
+    {
+        "id":"viridian_bug4",
+        "type":"trainer",
+        "trainerActor":3,
+        "ia":"generic",
+        "pokemons":[
+            {"id":"caterpie","level":10,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I give! You're good at this!",
+        "money":100
+    },
+    {
+        "id":"viridianF_grass_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"pidgey","levelMin":4, "levelMax":8, "rate":25},
+            {"id":"caterpie","levelMin":3, "levelMax":5, "rate":25},
+            {"id":"weedle","levelMin":3, "levelMax":5, "rate":25},
+            {"id":"metapod","levelMin":7, "levelMax":7, "rate":10},
+            {"id":"kakuna","levelMin":7, "levelMax":7, "rate":10},
+            {"id":"pikachu","levelMin":3, "levelMax":5, "rate":5}
+        ]
+    }
+
+]
