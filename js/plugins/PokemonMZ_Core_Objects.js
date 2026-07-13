@@ -1448,6 +1448,8 @@ PokemonMZ_Game_Pokemon.prototype.canUseItemOn = function(item) {
         case "burn":
             if (this.isBurned()) { return canUseResult; }
             break;
+        case "sleep":
+            if (this.isAsleep()) { return canUseResult; }
         }
     }
     return cannotUseResult;

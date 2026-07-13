@@ -64,8 +64,6 @@
         "gen1rate":-1,
         "price":99999999
     },
-
-
     {
         "id":"antidote",
         "user":"trainer",
@@ -95,5 +93,15 @@
         "effect":"cureStatus",
         "status":"burn",
         "price":250
+    },
+    {
+        "id":"awakening",
+        "user":"trainer",
+        "category":"regular",
+        "battle":true,
+        "target":"pokemon",
+        "effect":"cureStatus",
+        "status":"sleep",
+        "price":200
     }
 ]
