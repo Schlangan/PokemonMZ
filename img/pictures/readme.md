@@ -1,0 +1,1 @@
+Add here png files for region maps, named as defined in the PokemonMZ_RegionMaps.json additional files.

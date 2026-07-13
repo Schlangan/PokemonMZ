@@ -1,0 +1,1 @@
+Add here png files for back sprites of pokemon, named as follow : xxxxx.png, where xxxxx is the string id of the pokemon.
