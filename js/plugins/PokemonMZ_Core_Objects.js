@@ -1321,7 +1321,12 @@ PokemonMZ_Game_Pokemon.prototype.move = function(index) {
 };
 PokemonMZ_Game_Pokemon.prototype.movePriority = function(index) {
     const moveData = this.moveDataFromIndex(index);
-    return moveData.priority? moveData.priority : 0;
+    if (moveData) {
+        return moveData.priority? moveData.priority : 0;
+    } else {
+        // Struggle
+        return 0;
+    }
 };
 PokemonMZ_Game_Pokemon.prototype.hasAnyMoveUseable = function() {
     let anyUsable = false;

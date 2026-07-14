@@ -2199,7 +2199,7 @@ PokemonMZ_BattleManager.startMove = function(side) {
     }
 
     // Get battle result index to insert text
-    const battleIndex = this._currentAction.resultStepsLength();
+    let battleIndex = this._currentAction.resultStepsLength();
 
     // Consume PP
     pokemon.consumePP(moveIndex);
