@@ -489,8 +489,7 @@ PokemonMZ_BattleManager.isGaugeAnimationPlaying = function() {
         playing = true;
     }
     return playing;
-}
-
+};
 PokemonMZ_BattleManager.update = function(timeActive) {
     this.updatePhase();
 };
@@ -872,7 +871,7 @@ PokemonMZ_BattleManager.enemyTrainerLeave = function() {
 
     let phaseCompleted = true;
     for (const sprite of this._spriteset.enemyTrainerSprites()) {
-        if (sprite.x < Graphics.boxWidth) {
+        if (sprite.x < Graphics.boxWidth + 10) {
             phaseCompleted = false;
             sprite.x += 10;
         }      
