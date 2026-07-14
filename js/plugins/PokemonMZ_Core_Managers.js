@@ -2633,7 +2633,7 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
     case "statusNothing":
         return "Nothing happened!";
     case "noeffect":
-        return "Placeholder text NO EFFECT";
+        return "It doesn't affect " + prefix + pokemon.name() + "!";
     case "noAffect":
         return "It didn't affect " + prefix + pokemon.name() + "!";
     case "weak":

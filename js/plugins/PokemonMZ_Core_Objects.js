@@ -2427,7 +2427,7 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
         } else {
             this._moveRemainingHits = 0;
             if (efficiency == 0) {
-               this._resultSteps.push(["autotext","noeffect",this.side()]);
+               this._resultSteps.push(["autotext","noeffect",this.oppositeSide()]);
             } 
             
         }
