@@ -3142,16 +3142,27 @@ PokemonMZ_Game_Action.prototype.effect_pdefDownTarget = function(battleData, eff
     }
     const randomNumber = Math.randomInt(100)
     if (PokemonMZ.debugLog) {
-        console.log({"PokemonMZ_Game_Action.effect_flinchTarget > ":{
+        console.log({"PokemonMZ_Game_Action.effect_pdefDownTarget > ":{
             "chance":effect.percentChance, "randomNumber":randomNumber}
         })
     }
     if (randomNumber < effect.percentChance) {
-        if (this._opponent._stageModifiers.pdef > -6) {
+        const initialStage = this._opponent._stageModifiers.pdef
+        if (initialStage > -6) {
             this._opponent._stageModifiers.pdef -= effect.stage;
-            this._opponent._stageModifiers.pdef.clamp(-6,6);
+            if (this._opponent._stageModifiers.pdef < -6) {
+                this._opponent._stageModifiers.pdef = -6;
+            }
             effectResults.success = true;
-            this._resultSteps.push(["autotext","defenseFell",this.oppositeSide()])
+            const droppedStages = initialStage - this._opponent._stageModifiers.pdef;
+            switch (droppedStages) {
+            case 1:
+                this._resultSteps.push(["autotext","defenseFell",this.oppositeSide()]);
+                break;
+            case 2:
+                this._resultSteps.push(["autotext","defenseFellPlus",this.oppositeSide()]);
+                break;
+            }
         } else {
             if (battleData.damageDealt == 0) {
                 // Message nothing if no damage dealt, else simply nothing happens

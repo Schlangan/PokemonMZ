@@ -2826,6 +2826,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + "'s attack fell!";
     case "defenseFell":
         return prefix + pokemon.name() + "'s defense fell!";
+    case "defenseFellPlus":
+        return prefix + pokemon.name() + "'s defense greatly fell!";
     case "speedFell":
         return prefix + pokemon.name() + "'s speed fell!";
     case "statusFailed":
