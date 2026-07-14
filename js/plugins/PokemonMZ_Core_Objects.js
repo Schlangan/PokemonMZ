@@ -1629,7 +1629,6 @@ PokemonMZ_Game_Pokemon.prototype.sdef = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.spc = function() {
     const base = this._data.baseStats ? this._data.baseStats.spc : 0;
-    console.log(base)
     if (PokemonMZ.pokemonMechanicsGeneration == 1) {
         const unbuffed = this.gen1_calc_stat(base, this._level, this._dv.satk, this._ev.satk);
         const buffed = unbuffed; // TODO...
