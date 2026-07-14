@@ -90,6 +90,16 @@
  * @type file
  * @dir audio/se/
  * 
+ * @param playerBumpSE
+ * @text Player Bumping Sound
+ * @type file
+ * @dir audio/se/
+ * 
+ * @param teleportSE
+ * @text Teleport Sound
+ * @type file
+ * @dir audio/se/
+ * 
  * @param normalDamageSE
  * @text Normal Damage Sound
  * @type file
@@ -189,7 +199,8 @@ PokemonMZ.seedHealedAnimation = parameters.seedHealedAnimation;
 
 PokemonMZ.poisonStepSE = parameters.poisonStepSE;
 PokemonMZ.playerJumpSE = parameters.playerJumpSE;
-
+PokemonMZ.playerBumpSE = parameters.playerBumpSE;
+PokemonMZ.teleportSE = parameters.teleportSE;
 
 PokemonMZ.normalDamageSE = parameters.normalDamageSE;
 PokemonMZ.weakDamageSE = parameters.weakDamageSE;

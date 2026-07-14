@@ -751,7 +751,7 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemOk = function() {
 };
 PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
     const itemDict = this.item();
-
+    
     switch(itemDict.pkmz_data.effect) {
         case "lockedItem":
             this._messageWindow.setText(itemDict.pkmz_data.useMessage);
@@ -765,6 +765,17 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
         case "ball":
             this._messageWindow.setText("This isn't the time to use that!");
             this._messageWindow.startMessage();
+            break;
+        case "escapeRope":
+            if ($gameMap.PokemonMZ_isRopeEscapable()) {
+                $gamePlayerTrainer.gainBagItem(itemDict.id, -1);
+                SceneManager.pop();
+                SceneManager.pop();
+                $gameMap.PokemonMZ_useEscapeRope();
+            } else {
+                this._messageWindow.setText("This isn't the time to use that!");
+                this._messageWindow.startMessage();
+            }
             break;
         default:
             // Open Pokemon menu

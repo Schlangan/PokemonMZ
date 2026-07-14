@@ -14,6 +14,7 @@ const PokemonMZ_Game_CharacterBase_initMembers = Game_CharacterBase.prototype.in
 Game_CharacterBase.prototype.initMembers = function() {
     PokemonMZ_Game_CharacterBase_initMembers.call(this);
     this._onLedge = false;
+    this._remainingSpinData = {"originalSpeed":0, "turns":0, "directions":0, "spinCount":0, "sound":false};
 };
 const PokemonMZ_Game_CharacterBase_canPass = Game_CharacterBase.prototype.canPass;
 Game_CharacterBase.prototype.canPass = function(x, y, d) {
@@ -51,6 +52,57 @@ Game_CharacterBase.prototype.moveStraight = function(d) {
     }
     PokemonMZ_Game_CharacterBase_moveStraight.call(this, d);
 };
+Game_CharacterBase.prototype.PokemonMZ_startSpinning = function(turns, soundOn) {
+    AudioManager.playStandardSe(PokemonMZ.playerBumpSE);
+    this._remainingSpinData = {
+        "turns":turns, 
+        "directions":4,
+        "spinCount":5*turns,
+        "sound":soundOn
+    };
+};
+Game_CharacterBase.prototype.PokemonMZ_endSpinning = function() {
+    this._remainingSpinData = {
+        "turns":0, 
+        "directions":0,
+        "spinCount":0,
+        "sound":false
+    };
+};
+
+Game_CharacterBase.prototype.PokemonMZ_isSpinning = function() {
+    return this._remainingSpinData && (this._remainingSpinData.turns > 0 || this._remainingSpinData.directions > 0);
+};
+
+const PokemonMZ_Game_CharacterBase_update = Game_CharacterBase.prototype.update;
+Game_CharacterBase.prototype.update = function() {
+    if (this.PokemonMZ_isSpinning()) {
+        this.PokemonMZ_updateSpin();
+    }
+    PokemonMZ_Game_CharacterBase_update.call(this);
+};
+
+Game_CharacterBase.prototype.PokemonMZ_updateSpin = function() {
+    this._remainingSpinData.spinCount--;
+    if (this._remainingSpinData.spinCount == 0) {
+        this.turnRight90();
+        this._remainingSpinData.directions--;
+        if (this._remainingSpinData.directions == 0) {
+            if (this._remainingSpinData.sound) {
+                AudioManager.playStandardSe(PokemonMZ.playerBumpSE);
+            }
+            this._remainingSpinData.turns--;
+            this._remainingSpinData.directions = 4;
+        }
+        if (this._remainingSpinData.turns == 0) {
+            this.PokemonMZ_endSpinning();
+        } else {
+            this._remainingSpinData.spinCount = 5*this._remainingSpinData.turns;
+        }
+    }
+}
+
+
 
 // Game_Event edits
 const PokemonMZ_Game_Event_initialize = Game_Event.prototype.initialize;
@@ -188,6 +240,8 @@ Game_Event.prototype.PokemonMZ_posAggro = function(x,y) {
 
 
 // Game_Player edits
+
+
 Game_Player.prototype.refresh = function() {
     const characterName = $gamePlayerTrainer.characterName();
     const characterIndex = $gamePlayerTrainer.characterIndex();
@@ -227,6 +281,16 @@ Game_Player.prototype.startMapEvent = function(x, y, triggers, normal) {
     }
 };
 
+const PokemonMZ_Game_Player_canMove = Game_Player.prototype.canMove;
+Game_Player.prototype.canMove = function() {
+    if ($gameMap.PokemonMZ_isUsingEscapeRope()) {
+        return false;
+    }
+    return PokemonMZ_Game_Player_canMove.call(this);
+};
+
+
+
 
 // Game_Map edits
 const PokemonMZ_Game_Map_initialize = Game_Map.prototype.initialize;
@@ -243,6 +307,8 @@ Game_Map.prototype.initialize = function() {
         "left":-1,
         "right":-1,
     };
+    this._isRopeEscapable = false;
+    this._isUsingRope = false;
 };
 Game_Map.prototype.PokemonMZ_reinitialize = function() {
     // Used to create possible missing objects after update
@@ -270,6 +336,7 @@ Game_Map.prototype.setup = function(mapId) {
     if (noteData.ledgeUpRegion) { this._ledgeRegions.up = Number(noteData.ledgeUpRegion) }
     if (noteData.ledgeLeftRegion) { this._ledgeRegions.left = Number(noteData.ledgeLeftRegion) }
     if (noteData.ledgeRightRegion) { this._ledgeRegions.right = Number(noteData.ledgeRightRegion) }
+    this._isRopeEscapable = Boolean(noteData.escapeRope)
 };
 Game_Map.prototype.PokemonMZ_eventsAggro = function(x, y) {
     return this.events().filter(event => (event.PokemonMZ_isAgrroable() && event.PokemonMZ_posAggro(x,y)));
@@ -302,6 +369,19 @@ Game_Map.prototype.regionMapPoiId = function() { // TODO get the true region POI
 const PokemonMZ_Game_Map_update = Game_Map.prototype.update;
 Game_Map.prototype.update = function(sceneActive) {
     PokemonMZ_Game_Map_update.call(this, sceneActive);
+
+    // Consider player spinning for ropes
+    if (this._isUsingRope) {
+        if (!$gamePlayer.PokemonMZ_isSpinning()) {
+            this._isUsingRope = false;
+            AudioManager.playStandardSe(PokemonMZ.teleportSE);
+            const location = $gamePlayerTrainer.respawnLocation();
+            $gamePlayer.reserveTransfer(location.mapId,location.x,location.y,2,0);
+            $gameSystem.enableMenu();
+        }
+        return;
+    }
+
     // Add message if pokemon fainted due to poison
     if (this._pokemonPoisonedFainted && this._pokemonPoisonedFainted.length > 0) {
         this.updatePoisonedFainted();
@@ -374,6 +454,24 @@ Game_Map.prototype.isEventRunning = function() {
 Game_Map.prototype.PokemonMZ_isAnyEventAggroing = function() {
     return this.events().some(event => event.PokemonMZ_isAggroing());
 };
+
+Game_Map.prototype.PokemonMZ_isRopeEscapable = function() {
+    return this._isRopeEscapable;
+};
+Game_Map.prototype.PokemonMZ_useEscapeRope = function() {
+    this._isUsingRope = true;
+    $gameSystem.disableMenu();
+    $gamePlayer.PokemonMZ_startSpinning(3, true);
+}
+Game_Map.prototype.PokemonMZ_isUsingEscapeRope = function() {
+    return this._isUsingRope;
+}
+
+
+
+
+
+
 
 // Game_Interpreter edits
 Game_Interpreter.prototype.command302 = function(params) {

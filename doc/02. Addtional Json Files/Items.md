@@ -28,5 +28,6 @@ Depending on the effet, additional parameters are required.
 - effect = **recover_hp_fixed** : Recover a specific amount of hp (ex: potion)
     - value,**int** : Amount of fixed hp recovered
 - effect = **townMap** : Opens the current region map.
+- effect = **escapeRope** : Use an escape rope.
 
 ---
