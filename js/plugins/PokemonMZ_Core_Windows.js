@@ -267,6 +267,12 @@ Window_Options.prototype.PokemonMZ_changeBattleStyle = function() {
     this.playCursorSound();
 }
 
+// Window_Gold
+Window_Gold.prototype.value = function() {
+    return $gamePlayerTrainer.money();
+};
+
+
 
 // PokemonMZ_Window_MenuCommand
 // The window for selecting a command on the menu screen.

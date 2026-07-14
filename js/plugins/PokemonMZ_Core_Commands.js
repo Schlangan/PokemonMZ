@@ -66,6 +66,28 @@
  * @desc The amount of money to give
 
  * //////////////////////////////////////////
+ * @command TakePlayerMoney
+ * @text Takes Money from the Player
+ * @desc Takes a given amount of money to the player.
+ * 
+ * @arg moneyAmount
+ * @type number
+ * @min 0
+ * @text Amount
+ * @desc The amount of money to take
+
+ * //////////////////////////////////////////
+ * @command GetPlayerMoney
+ * @text Get Player Money Value
+ * @desc Puts the value of the player money to a variable
+ * 
+ * @arg chosenVariable
+ * @type variable
+ * @text Chosen Variable
+ * @desc The variable to save the value into.
+
+
+ * //////////////////////////////////////////
  * @command AddItemToStorage
  * @text Add Item to Storage
  * @desc Adds a specific item with a given quantity to the item storage box
@@ -156,6 +178,16 @@ PluginManager.registerCommand(pluginName, "GivePlayerMoney", function(args) {
     const money = Number(args.moneyAmount);
     $gamePlayerTrainer.addMoney(money);
 });
+PluginManager.registerCommand(pluginName, "TakePlayerMoney", function(args) {
+    const money = Number(args.moneyAmount);
+    $gamePlayerTrainer.addMoney(-money);
+});
+PluginManager.registerCommand(pluginName, "GetPlayerMoney", function(args) {
+    const variable = Number(args.chosenVariable);
+    $gameVariables.setValue(variable, $gamePlayerTrainer.money());
+});
+
+
 PluginManager.registerCommand(pluginName, "AddItemToStorage", function(args) {
     const itemId = Number(args.item);
     const amount = Number(args.amount);
