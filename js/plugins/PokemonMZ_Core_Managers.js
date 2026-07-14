@@ -2346,6 +2346,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("removePokemonStatus");
                 this._subPhaseParams = ["poison", step[1]];
                 break;
+            case "allStatusHeal":
+                this.changeSubPhase("removePokemonStatus");
+                this._subPhaseParams = ["all", step[1]];
+                break;
         }
     } else {
         if (PokemonMZ.debugLog) {
@@ -2681,6 +2685,16 @@ PokemonMZ_BattleManager.removePokemonStatus = function() {
             this._playerPokemonStatusWindow.refresh(true);
             break;
         case "sleep":
+            target.unsleep();
+            this._enemyPokemonStatusWindow.refresh(true);
+            this._playerPokemonStatusWindow.refresh(true);
+            break;
+        case "all":
+            // Note Gen2+ will remove confusion too
+            target.unburn();
+            target.unpoison();
+            target.unparalyze();
+            target.unfreeze();
             target.unsleep();
             this._enemyPokemonStatusWindow.refresh(true);
             this._playerPokemonStatusWindow.refresh(true);

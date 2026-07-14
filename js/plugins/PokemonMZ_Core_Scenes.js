@@ -103,6 +103,15 @@ Scene_Base.prototype.PokemonMZ_updatePokemonCureStatus = function(listWindow, me
             pokemon.unsleep();
             message = pokemon.name() + " woke up!";
             break;
+        case "all":
+            // Note: Gen2+ fullheal will also remove confusion
+            pokemon.unpoison();
+            pokemon.unburn();
+            pokemon.unparalyze();
+            pokemon.unfreeze();
+            pokemon.unsleep();
+            message = pokemon.name() + "'s health returned!";
+            break;
         }
 
         listWindow.clearItem(this._pokemonRecoveringData.windowIndex);

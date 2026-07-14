@@ -1587,6 +1587,10 @@ PokemonMZ_Game_Pokemon.prototype.canUseItemOn = function(item) {
             break;
         case "sleep":
             if (this.isAsleep()) { return canUseResult; }
+            break;
+        case "all":
+            if (this.hasStatus()) { return canUseResult; }
+            break;
         }
     }
     return cannotUseResult;
@@ -2274,20 +2278,25 @@ PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO
             switch (effect.status) {
                 case "burn":
                     this._resultSteps.push(["burnHeal",this._user]);
-                    this._userStatusRemoved.push("burn")
+                    this._userStatusRemoved.push("burn");
                     break;
                 case "paralysis":
                     this._resultSteps.push(["paralyzeHeal",this._user]);
                     break;
                 case "poison":
                     this._resultSteps.push(["poisonHeal",this._user]);
-                    this._userStatusRemoved.push("poison")
+                    this._userStatusRemoved.push("poison");
                     break;
                 case "sleep":
                     this._resultSteps.push(["sleepHeal",this._user]);
                     break;
                 case "freeze":
                     this._resultSteps.push(["freezeHeal",this._user]);
+                    break;
+                case "all":
+                    this._resultSteps.push(["allStatusHeal",this._user]);
+                    this._userStatusRemoved.push("burn");
+                    this._userStatusRemoved.push("poison");
                     break;
             }
             break;
