@@ -80,6 +80,11 @@
  * @text Seed Healed Animation
  * @type animation
  *
+ * @param recoverySE
+ * @text Item recovery Sound
+ * @type file
+ * @dir audio/se/
+ * 
  * @param poisonStepSE
  * @text Poisoned Sound on map
  * @type file
@@ -171,10 +176,8 @@
  * @dir audio/bgm/
 */
 
-
 const PokemonMZ = {}
 const parameters = PluginManager.parameters("PokemonMZ_Core_Configuration")
-
 
 PokemonMZ.debugLog = false;
 
@@ -184,7 +187,6 @@ PokemonMZ.pokemonMaxLevel = Number(parameters.pokemonMaxLevel);
 PokemonMZ.bagMechanicsGeneration = Number(parameters.pokemonGenBag).clamp(1,1);
 PokemonMZ.pokemonMechanicsGeneration = Number(parameters.pokemonGenPkmn).clamp(1,1);
 PokemonMZ.maxPokemonInTeam = 6;
-
 
 PokemonMZ.frozenAnimation = parameters.frozenAnimation;
 PokemonMZ.paralyzedAnimation = parameters.paralyzedAnimation;
@@ -196,7 +198,7 @@ PokemonMZ.poisonedAnimation = parameters.poisonedAnimation;
 PokemonMZ.seededAnimation = parameters.seededAnimation;
 PokemonMZ.seedHealedAnimation = parameters.seedHealedAnimation;
 
-
+PokemonMZ.recoverySE = parameters.recoverySE;
 PokemonMZ.poisonStepSE = parameters.poisonStepSE;
 PokemonMZ.playerJumpSE = parameters.playerJumpSE;
 PokemonMZ.playerBumpSE = parameters.playerBumpSE;

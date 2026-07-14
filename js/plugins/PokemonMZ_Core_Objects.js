@@ -69,11 +69,9 @@ Game_CharacterBase.prototype.PokemonMZ_endSpinning = function() {
         "sound":false
     };
 };
-
 Game_CharacterBase.prototype.PokemonMZ_isSpinning = function() {
     return this._remainingSpinData && (this._remainingSpinData.turns > 0 || this._remainingSpinData.directions > 0);
 };
-
 const PokemonMZ_Game_CharacterBase_update = Game_CharacterBase.prototype.update;
 Game_CharacterBase.prototype.update = function() {
     if (this.PokemonMZ_isSpinning()) {
@@ -81,7 +79,6 @@ Game_CharacterBase.prototype.update = function() {
     }
     PokemonMZ_Game_CharacterBase_update.call(this);
 };
-
 Game_CharacterBase.prototype.PokemonMZ_updateSpin = function() {
     this._remainingSpinData.spinCount--;
     if (this._remainingSpinData.spinCount == 0) {
@@ -100,9 +97,7 @@ Game_CharacterBase.prototype.PokemonMZ_updateSpin = function() {
             this._remainingSpinData.spinCount = 5*this._remainingSpinData.turns;
         }
     }
-}
-
-
+};
 
 // Game_Event edits
 const PokemonMZ_Game_Event_initialize = Game_Event.prototype.initialize;
@@ -236,12 +231,9 @@ Game_Event.prototype.PokemonMZ_posAggro = function(x,y) {
     }
 
     return false;
-}
-
+};
 
 // Game_Player edits
-
-
 Game_Player.prototype.refresh = function() {
     const characterName = $gamePlayerTrainer.characterName();
     const characterIndex = $gamePlayerTrainer.characterIndex();
@@ -280,7 +272,6 @@ Game_Player.prototype.startMapEvent = function(x, y, triggers, normal) {
         }
     }
 };
-
 const PokemonMZ_Game_Player_canMove = Game_Player.prototype.canMove;
 Game_Player.prototype.canMove = function() {
     if ($gameMap.PokemonMZ_isUsingEscapeRope()) {
@@ -288,9 +279,6 @@ Game_Player.prototype.canMove = function() {
     }
     return PokemonMZ_Game_Player_canMove.call(this);
 };
-
-
-
 
 // Game_Map edits
 const PokemonMZ_Game_Map_initialize = Game_Map.prototype.initialize;
@@ -397,10 +385,10 @@ Game_Map.prototype.update = function(sceneActive) {
 };
 Game_Map.prototype.resetPoisonedFaintedList = function() {
     this._pokemonPoisonedFainted = [];
-}
+};
 Game_Map.prototype.addPoisonedFaintedList = function(pokemon) {
     this._pokemonPoisonedFainted.push(pokemon);
-}
+};
 Game_Map.prototype.updatePoisonedFainted = function() {
     if ($gameMap.isEventRunning() || $gameMessage.isBusy() || $gamePlayer.isMoving() ) { return; }
     const faintedPokemon = this._pokemonPoisonedFainted.splice(0,1)[0];
@@ -426,7 +414,7 @@ Game_Map.prototype.updateAfterFainted = function() {
 };
 Game_Map.prototype.askForEvolutionCheck = function() {
     this._checkEvolution = true;
-}
+};
 Game_Map.prototype.checkEvolution = function() {
     this._checkEvolution = false;
     this._evolvingPokemons = [];
@@ -454,7 +442,6 @@ Game_Map.prototype.isEventRunning = function() {
 Game_Map.prototype.PokemonMZ_isAnyEventAggroing = function() {
     return this.events().some(event => event.PokemonMZ_isAggroing());
 };
-
 Game_Map.prototype.PokemonMZ_isRopeEscapable = function() {
     return this._isRopeEscapable;
 };
@@ -462,16 +449,10 @@ Game_Map.prototype.PokemonMZ_useEscapeRope = function() {
     this._isUsingRope = true;
     $gameSystem.disableMenu();
     $gamePlayer.PokemonMZ_startSpinning(3, true);
-}
+};
 Game_Map.prototype.PokemonMZ_isUsingEscapeRope = function() {
     return this._isUsingRope;
-}
-
-
-
-
-
-
+};
 
 // Game_Interpreter edits
 Game_Interpreter.prototype.command302 = function(params) {
@@ -511,7 +492,6 @@ Game_Interpreter.prototype.command301 = function(params) {
     return true;
 };
 
-
 // PokemonMZ_Game_Trainer
 // The base class for all game trainers
 function PokemonMZ_Game_Trainer() {
@@ -526,6 +506,7 @@ PokemonMZ_Game_Trainer.prototype.initMembers = function(sourceActorId) {
     this._pokemons = [];
     this._money = 0;
     this._ia = "generic";
+    this._iaModifiers = null;
     this._defeatText = "";
     this._victoryText = "";
 };
@@ -550,8 +531,14 @@ PokemonMZ_Game_Trainer.prototype.hasPokemon = function() {
 PokemonMZ_Game_Trainer.prototype.setIa = function(ia) {
    this._ia = ia;
 };
+PokemonMZ_Game_Trainer.prototype.setIaModifiers = function(modifiers) {
+   this._iaModifiers = modifiers;
+};
 PokemonMZ_Game_Trainer.prototype.ia = function() {
    return this._ia;
+};
+PokemonMZ_Game_Trainer.prototype.iaModifiers = function() {
+   return this._iaModifiers;
 };
 PokemonMZ_Game_Trainer.prototype.setMoney = function(money) {
    this._money = money;
@@ -604,7 +591,6 @@ PokemonMZ_Game_Trainer.prototype.firstBattleReadyPokemonIndex = function() {
     }
     return null;
 };
-
 PokemonMZ_Game_Trainer.prototype.hasRemainingBattleReadyPokemon = function() {
     for (const pokemon of this._pokemons) {
         if (!pokemon.isFainted()) { return true; }
@@ -644,7 +630,6 @@ PokemonMZ_Game_Trainer.prototype.swapPokemons = function(index1, index2) {
     this._pokemons[index1] = pokemon2;
     this._pokemons[index2] = pokemon1;
 };
-
 
 // PokemonMZ_Game_TrainerPlayer
 // The class for player trainer, dealing with items, pokedex, etc.
@@ -708,7 +693,6 @@ PokemonMZ_Game_TrainerPlayer.prototype.hasPokedex = function() {
 PokemonMZ_Game_TrainerPlayer.prototype.pokedexRegion = function() {
     return this._pokedexRegion;
 };
-
 PokemonMZ_Game_TrainerPlayer.prototype.reloadAllPokemonData = function() {
     for (const pokemon of this._pokemons) {
         pokemon.reloadData();
@@ -719,8 +703,6 @@ PokemonMZ_Game_TrainerPlayer.prototype.reloadAllPokemonData = function() {
         }
     }
 };
-
-
 PokemonMZ_Game_TrainerPlayer.prototype.addSeenPokemon = function(pokemonStrId) {
     if (!this._seenPokemons.includes(pokemonStrId)) {
         this._seenPokemons.push(pokemonStrId);
@@ -831,7 +813,7 @@ PokemonMZ_Game_TrainerPlayer.prototype.hasStoredItems = function() {
 };
 PokemonMZ_Game_TrainerPlayer.prototype.maxSingleBagItemQuantity = function() {
     return 99;
-}
+};
 PokemonMZ_Game_TrainerPlayer.prototype.numBagItems = function(itemIntId) {
     switch(PokemonMZ.bagMechanicsGeneration) {
     case 1:
@@ -1029,17 +1011,16 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._isConfused = false;
     this._turnsSleep = 0;
     this._turnsConfusion = 0;
+    this._receivedItems = [];
 
     this._hasBattled = false;
     this._hasLeveledUp = false;
 };
-
 PokemonMZ_Game_Pokemon.prototype.reloadData = function() {
     this._data = $dataEnemies[this._enemyId].pkmz_data;
     const newMhp = this.mhp();
     if (this._hp > newMhp) { this._hp = newMhp; }
 };
-
 PokemonMZ_Game_Pokemon.prototype.cloneFromPokemon = function(pokemon) {
     this._nickname = pokemon._nickname;
     this._exp = pokemon._exp;
@@ -1086,15 +1067,12 @@ PokemonMZ_Game_Pokemon.prototype.clearBattleSprite = function() {
 PokemonMZ_Game_Pokemon.prototype.battleImageId = function() { // TODO substitute or morph
     return this.id();
 };
-
-
 PokemonMZ_Game_Pokemon.prototype.lastMoveIndex = function() {
     return this._lastMoveIndex;
 }
 PokemonMZ_Game_Pokemon.prototype.setLastMoveIndex = function(index) {
     this._lastMoveIndex = index;
 }
-
 PokemonMZ_Game_Pokemon.prototype.exp = function() {
     return this._exp;
 };
@@ -1159,9 +1137,6 @@ PokemonMZ_Game_Pokemon.prototype.calculateEvolutionMoves = function() {
         }
     }
 };
-
-
-
 PokemonMZ_Game_Pokemon.prototype.gainEv = function(hp,patk,pdef,satk,sdef,spd) {
     if (PokemonMZ.pokemonMechanicsGeneration <= 2) {
         // In first/second generations, Evs are limited to 65535
@@ -1200,7 +1175,6 @@ PokemonMZ_Game_Pokemon.prototype.evProvided = function() {
         }
     }
 };
-
 PokemonMZ_Game_Pokemon.prototype.expForLevel = function(level) {
     let xpValue = 0;
     switch(this._data.expCurve) {
@@ -1371,6 +1345,39 @@ PokemonMZ_Game_Pokemon.prototype.moveUseability = function(index) {
 
     return "";
 };
+PokemonMZ_Game_Pokemon.prototype.isMoveStatusOnly = function(index) {
+    // Returns if a move only sets a status to the target
+    const move = this.moveDataFromIndex(index);
+    if (move.category != "status") { return false; }
+    for (const effect of move.effects) {
+        if (
+            effect.type == "sleepTarget" ||
+            effect.type == "paralyzeTarget" ||
+            effect.type == "poisonTarget"
+        ) {
+            return true;
+        }
+    }
+    return false;
+};
+PokemonMZ_Game_Pokemon.prototype.isMoveSeedOnly = function(index) {
+    // Returns if a move only sets a status to the target
+    const move = this.moveDataFromIndex(index);
+    if (move.category != "status") { return false; }
+    for (const effect of move.effects) {
+        if (effect.type == "seedTarget") { return true; }
+    }
+    return false;
+};
+PokemonMZ_Game_Pokemon.prototype.isMoveConfuseOnly = function(index) {
+    // Returns if a move only sets a status to the target
+    const move = this.moveDataFromIndex(index);
+    if (move.category != "status") { return false; }
+    for (const effect of move.effects) {
+        if (effect.type == "confuseTarget") { return true; }
+    }
+    return false;
+};
 PokemonMZ_Game_Pokemon.prototype.moveNameFromIndex = function(index) {
     const move = this._moves[index];
     return this.moveName(move);
@@ -1385,6 +1392,16 @@ PokemonMZ_Game_Pokemon.prototype.moveDataFromIndex = function(index) {
             return "????"
         }
     }
+};
+PokemonMZ_Game_Pokemon.prototype.addReceivedItem = function(itemStrId) {
+    this._receivedItems.push(itemStrId);
+};
+PokemonMZ_Game_Pokemon.prototype.receivedItemCount = function(itemStrId) {
+    let counter = 0;
+    for (const strId of this._receivedItems) {
+        if (strId == itemStrId) { counter++; }
+    }
+    return counter;
 };
 PokemonMZ_Game_Pokemon.prototype.damageDealt = function() {
     return this._damageDealt;
@@ -1493,7 +1510,6 @@ PokemonMZ_Game_Pokemon.prototype.replaceMoveAtIndexBy = function(index, moveStri
         "ppup":0,
     });
 };
-
 PokemonMZ_Game_Pokemon.prototype.knowsMove = function(moveStringId) {
     for (const move of this._moves) {
         if (move.id == moveStringId) {
@@ -1636,8 +1652,6 @@ PokemonMZ_Game_Pokemon.prototype.spc = function() {
     }
     return 0;
 };
-
-
 PokemonMZ_Game_Pokemon.prototype.spd = function() {
     const base = this._data.baseStats ? this._data.baseStats.spd : 0;
 
@@ -1720,8 +1734,6 @@ PokemonMZ_Game_Pokemon.prototype.status = function() {
 PokemonMZ_Game_Pokemon.prototype.hasStatus = function() {
     return this.isBurned() || this.isParalyzed() || this.isAsleep() || this.isPoisoned() || this.isFrozen();
 };
-
-
 PokemonMZ_Game_Pokemon.prototype.cleanAfterFaint = function() {
     if (this.isFainted()) {
         this.removeTemporaryStatuses();
@@ -1738,7 +1750,6 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.unseed();
     this.unconfuse();
 };
-
 PokemonMZ_Game_Pokemon.prototype.isFainted = function() {
     return this._hp == 0;
 };
@@ -1763,8 +1774,6 @@ PokemonMZ_Game_Pokemon.prototype.nextSleepTurn = function() {
         this.unsleep();
     }
 };
-
-
 PokemonMZ_Game_Pokemon.prototype.isFlinched = function() {
     return this._isFlinched;
 };
@@ -1780,8 +1789,6 @@ PokemonMZ_Game_Pokemon.prototype.nextConfusionTurn = function() {
         this.unconfuse();
     }
 };
-
-
 PokemonMZ_Game_Pokemon.prototype.isBurnable = function() {
     // Cannot burn pokemon with PSN/SLP/FRZ/PAR/BRN/FNT
     if (this.hasStatus() || this.isFainted()) {
@@ -1857,8 +1864,6 @@ PokemonMZ_Game_Pokemon.prototype.isConfusable = function() {
 
     return true;
 };
-
-
 PokemonMZ_Game_Pokemon.prototype.burn = function(force) {
     if (this.isBurnable() || force) {
         this._isBurned = true;
@@ -1901,8 +1906,6 @@ PokemonMZ_Game_Pokemon.prototype.confuse = function(turns, force) {
         this._turnsConfusion = Math.randomInt(4) + 2;   // 2 to 5
     }
 };
-
-
 PokemonMZ_Game_Pokemon.prototype.unburn = function() {
     if (this.isBurned()) {
         this._isBurned = false;
@@ -1945,9 +1948,6 @@ PokemonMZ_Game_Pokemon.prototype.unconfuse = function() {
         this._turnsConfusion = 0;
     }
 };
-
-
-
 PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolution = function(evolutionMode) {
     switch(evolutionMode) {
     case "levelUp":
@@ -1970,10 +1970,6 @@ PokemonMZ_Game_Pokemon.prototype.evolveTo = function(newPokemonStrId) {
     this._data = $dataEnemies[this._enemyId].pkmz_data;
     this._hp = Math.floor(this.mhp() * currentHpFactor);
 };
-
-
-
-
 
 // PokemonMZ_Game_Battle
 // The class for a pokemon battle
@@ -2034,16 +2030,14 @@ PokemonMZ_Game_Battle.prototype.chooseWildPokemon = function(pokemons) {
         return this.createWildPokemon(chosenPokemon.id, chosenPokemon.levelMin);
     }
 };
-
-
-
-
 PokemonMZ_Game_Battle.prototype.createTrainer = function(trainerData) {
     const trainer = new PokemonMZ_Game_Trainer(trainerData.trainerActor);
     for (pokemonData of trainerData.pokemons) {
         const pokemon = this.createTrainerPokemon(pokemonData);
         trainer.addPokemonToParty(pokemon);
     }
+    trainer.setIa(trainerData.ia);
+    trainer.setIaModifiers(trainerData.iaModifiers);
     trainer.setDefeatText(trainerData.defeatText);
     trainer.setVictoryText(trainerData.victoryText);
     trainer.setMoney(trainerData.money);
@@ -2109,10 +2103,6 @@ PokemonMZ_Game_Battle.prototype.createWildPokemon = function(id, level) {
 
     return pokemon;
 };
-
-
-
-
 PokemonMZ_Game_Battle.prototype.isWildBattle = function() {
     return this._type == "wild"
 };
@@ -2147,21 +2137,21 @@ PokemonMZ_Game_Action.prototype.initialize = function(user, side) {
     this._moveHits = 0;
     this._moveRemainingHits = 0;
     this._moveExecutedHits = 0;
+    this._userStatusRemoved = [];
+    this._opponentStatusRemoved = [];
 };
 PokemonMZ_Game_Action.prototype.side = function() {
     return this._side;
-}
-
+};
 PokemonMZ_Game_Action.prototype.userBattleSprite = function() {
     return this._user._battleSprite;
-}
+};
 PokemonMZ_Game_Action.prototype.opponentBattleSprite = function() {
     return this._opponent._battleSprite;
-}
-
+};
 PokemonMZ_Game_Action.prototype.oppositeSide = function() {
     return this._side == "enemy" ? "player" : "enemy";
-}
+};
 PokemonMZ_Game_Action.prototype.setMove = function(moveId, opponent) {
     this._move = moveId;
     if (Object.keys($dataSkillsIndex).includes(moveId)) {
@@ -2201,9 +2191,6 @@ PokemonMZ_Game_Action.prototype.addResultSteps = function(step) {
 PokemonMZ_Game_Action.prototype.insertResultStepsAt = function(step, index) {
     this._resultSteps.splice(index, 0, step);
 };
-
-
-
 PokemonMZ_Game_Action.prototype.getNextResultStep = function() {
     return this._resultSteps.splice(0,1)[0];
 };
@@ -2266,8 +2253,42 @@ PokemonMZ_Game_Action.prototype.calculate = function(item) {
         this.calculateMove();
     }
 };
-PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO
+PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO  
+    const item = $dataItems[$dataItemsIndex[this._item]];
+    const effect = this._user.itemEffect(item);
+    this._userEvolvingHp = this._user.hp();
+    this._userStatusRemoved = [];
 
+    switch (effect.effect) {
+        case "recoverHp":
+            this._resultSteps.push(["healUser", effect.value])
+            this._userEvolvingHp += effect.value;
+            this._userEvolvingHp.clamp(0,this._user.mhp())
+            break;
+        case "cureStatus":
+            switch (effect.status) {
+                case "burn":
+                    this._resultSteps.push(["burnHeal",this._user]);
+                    this._userStatusRemoved.push("burn")
+                    break;
+                case "paralysis":
+                    this._resultSteps.push(["paralyzeHeal",this._user]);
+                    break;
+                case "poison":
+                    this._resultSteps.push(["poisonHeal",this._user]);
+                    this._userStatusRemoved.push("poison")
+                    break;
+                case "sleep":
+                    this._resultSteps.push(["sleepHeal",this._user]);
+                    break;
+                case "freeze":
+                    this._resultSteps.push(["freezeHeal",this._user]);
+                    break;
+            }
+            break;
+    }
+    this._resultSteps.push(["waittext","usedItem",this.side(), item.name]);
+    this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
 };
 PokemonMZ_Game_Action.prototype.calculateNumHits = function() {
     // Calculate number of time the move will hit
@@ -2510,7 +2531,6 @@ PokemonMZ_Game_Action.prototype.isMoveEffectExcepted = function(effect, target) 
     }
 };
 PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effect, effectResults) { 
-
     switch (effect.type) {
     case "burnTarget":
         if (!this.isMoveEffectExcepted(effect, this._opponent)) {
@@ -2533,7 +2553,6 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
         } else {
         }
         break;
-
     case "poisonTarget":
         if (!this.isMoveEffectExcepted(effect, this._opponent)) {
             effectResults = this.effect_poisonTarget(battleData, effect, effectResults);
@@ -2585,8 +2604,6 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
             effectResults = this.effect_recoilPercent(battleData, effect, effectResults);
         }
         break;
-
-
     }
     return effectResults;
 };
@@ -2594,10 +2611,10 @@ PokemonMZ_Game_Action.prototype.calculateStatusEffects = function(userHp, oppone
     let userRemainingHp = userHp;
     let oppponentRemainingHp = opponentHp;
 
-    if (this._user.isBurned() && !this._user.isFainted()) {
+    if (this._user.isBurned() && !this._user.isFainted() && !this._userStatusRemoved.includes("burn")) {
         userRemainingHp = this.calculateBurnEffect(userRemainingHp);
     }
-    if (this._user.isPoisoned() && !this._user.isFainted()) {
+    if (this._user.isPoisoned() && !this._user.isFainted() && !this._userStatusRemoved.includes("poison")) {
         userRemainingHp = this.calculatePoisonEffect(userRemainingHp);
     }
     if (this._user.isSeeded() && !this._user.isFainted() && !this._opponent.isFainted()) {
@@ -2791,7 +2808,6 @@ PokemonMZ_Game_Action.prototype.moveDamage = function(critical) {
 };
 
 // FROM HERE CALCULATE STATUS EFFECTS
-
 PokemonMZ_Game_Action.prototype.calculateBurnEffect = function(userRemainingHp) {
     this.addResultSteps(["animateUserEffect", this.userBattleSprite(), "burned"])
     this.addResultSteps(["waittext","hurtburn",this.side()]);
@@ -2855,9 +2871,7 @@ PokemonMZ_Game_Action.prototype.calculateSeedHealEffect = function(opponentRemai
     return opponentRemainingHp;
 };
 
-
 // FROM HERE CALCULATE MOVE EFFECTS
-
 PokemonMZ_Game_Action.prototype.effect_burnTarget = function(battleData, effect, effectResults) {
     if (this._opponent.hp() - battleData.damageDealt <= 0) { 
         // No effect if target will faint
@@ -2999,9 +3013,6 @@ PokemonMZ_Game_Action.prototype.effect_sleepTarget = function(battleData, effect
     }
     return effectResults;
 };
-
-
-
 PokemonMZ_Game_Action.prototype.effect_pdefUpUser = function(battleData, effect, effectResults) {
     if (this._opponent.hp() - battleData.damageDealt <= 0) {
         // No effect if target will faint
@@ -3054,9 +3065,6 @@ PokemonMZ_Game_Action.prototype.effect_evaUpUser = function(battleData, effect, 
     }
     return effectResults;
 };
-
-
-
 PokemonMZ_Game_Action.prototype.effect_accDownTarget = function(battleData, effect, effectResults) {
     if (this._opponent.hp() - battleData.damageDealt <= 0) {
         // No effect if target will faint
@@ -3161,8 +3169,6 @@ PokemonMZ_Game_Action.prototype.effect_spdDownTarget = function(battleData, effe
     }
     return effectResults;
 };
-
-
 PokemonMZ_Game_Action.prototype.effect_recoilPercent = function(battleData, effect, effectResults) {
     const damageDealt = Math.floor(battleData.damageDealt * effect.value/100);
     if (damageDealt > 0) {

@@ -185,14 +185,12 @@ ConfigManager.makeData = function() {
     config.battleStyle = this.battleStyle;
     return config;
 };
-
 PokemonMZ_ConfigManager_applyData = ConfigManager.applyData;
 ConfigManager.applyData = function(config) {
     PokemonMZ_ConfigManager_applyData.call(this, config);
     this.battleAnimation = this.readFlag(config, "battleAnimation", true);
     this.battleStyle = this.PokemonMZ_readString(config, "battleStyle", "shift");
 };
-
 ConfigManager.PokemonMZ_readString = function(config, name, defaultValue) {
     if (name in config) {
         return config[name];
@@ -200,7 +198,6 @@ ConfigManager.PokemonMZ_readString = function(config, name, defaultValue) {
         return defaultValue;
     }
 };
-
 
 // ColorManager edits
 ColorManager.pokemonHpColor = function(pokemon) {
@@ -249,11 +246,9 @@ Object.defineProperty(ImageManager, "pokemonSpriteHeight", {
 // PokemonMZ_BattleManager
 //
 // The static class that manages battle progress.
-
 function PokemonMZ_BattleManager() {
     throw new Error("This is a static class");
 }
-
 PokemonMZ_BattleManager.setup = function(troopId, canEscape, canLose) {
     this.initMembers();
     this._canEscape = canEscape;
@@ -284,7 +279,6 @@ PokemonMZ_BattleManager.setup = function(troopId, canEscape, canLose) {
     }
 };
 PokemonMZ_BattleManager.initMembers = function() {
-
     this._debugPhase = "";
     this._debugSubPhase = "";
     this._debugStep = "";
@@ -333,6 +327,7 @@ PokemonMZ_BattleManager.initMembers = function() {
 
     
     this._playerUseItem = null;
+    this._enemyUseItem = null;
     this._thrownBall = null;
     this._pokemonCaptureResult = null;
     this._capturedPokemon = null;
@@ -351,7 +346,6 @@ PokemonMZ_BattleManager.initMembers = function() {
 
     this._evolvingPokemons = [];
 };
-
 PokemonMZ_BattleManager.capturedPokemon = function() {
     return this._capturedPokemon;
 };
@@ -364,7 +358,6 @@ PokemonMZ_BattleManager.moveAskedFor = function() {
 PokemonMZ_BattleManager.clearMoveAskedFor = function() {
     this._moveAskedFor = null;
 }
-
 PokemonMZ_BattleManager.changePhase = function(newPhase) {
     this._previousPhase = this._phase;
     this._phase = newPhase;
@@ -712,6 +705,12 @@ PokemonMZ_BattleManager.updateSubPhase = function(timeActive) {
         case "proceedHealOpponent":
             this.proceedHealOpponent();
             break;
+        case "startHealUser":
+            this.startHealUser();
+            break;
+        case "proceedHealUser":
+            this.proceedHealUser();
+            break;
         case "startDamageUser":
             this.startDamageUser();
             break;
@@ -735,6 +734,9 @@ PokemonMZ_BattleManager.updateSubPhase = function(timeActive) {
             break; 
         case "inflictPokemonStatus":
             this.inflictPokemonStatus();
+            break;
+        case "removePokemonStatus":
+            this.removePokemonStatus();
             break;
         case "animateUserEffect":
             this.animateUserEffect();
@@ -1839,10 +1841,6 @@ PokemonMZ_BattleManager.exitBattleScene = function() {
     this.replayBgmAndBgs();
     SceneManager.pop();
 };
-
-
-
-
 PokemonMZ_BattleManager.afterGameOver = function() {
     if ($gameMessage.isBusy()) { return; }
     this._playerChosenPokemon.removeTemporaryStatuses();
@@ -1890,32 +1888,109 @@ PokemonMZ_BattleManager.playerMoveForbidden = function() {
 };
 PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
     const trainer = $PokemonMZ_gameBattle.enemy1();
-    const enemy = this._enemyChosenPokemon;
+    const enemyPokemon = this._enemyChosenPokemon;
 
-    // TODO - check forced moves
-    const availableMoves = [];
-    const moves = enemy.moves();
+    // Start with IA modifiers
+    this._enemyUseItem = null;
+
+    const modifiers = trainer.iaModifiers();
+    if (modifiers) {
+        this.calculateComputerItemUse(modifiers);
+    }
+
+    // If enemy use item, skip other calculations
+    if (this._enemyUseItem) {
+        this._enemyMoveIndex = null;
+        this.calculateBattleActions();
+        return;
+    }
+
+    // Define a list of possible move indexes and default scoring
+    let scoringTable = [];
+
+    const moves = enemyPokemon.moves();
     for (let i=0; i<moves.length; i++) {
         if (this.enemyMoveUseability(i) == "") {
-            availableMoves.push(i)
+            scoringTable.push({"index":i, "score":0})
         }
     }
 
-    const numAvailableMoves = availableMoves.length;
-    const ia = $PokemonMZ_gameBattle.isTrainerBattle() ? trainer.ia() : "generic"
-
-    if (numAvailableMoves > 0) {
-        switch (ia) {
-        case "generic":
-            // Random move
-            this._enemyMoveIndex = Math.randomInt(availableMoves.length)
-        }
-    } else {
+    if (scoringTable.length == 0) {
+        // No available moves, use struggle
         this._enemyMoveIndex = -1;
+    } else {
+        // Bring IA Scoring modifications
+        const ia = $PokemonMZ_gameBattle.isTrainerBattle() ? trainer.ia() : "random"
+        switch (ia) {
+        case "random": // No changes
+            break;
+        case "basic": // Avoid status
+            scoringTable = this.adjustScoringForBasic(scoringTable);
+            break;
+        case "buffer": // Start with buffs - TODO
+            break;
+        case "effective": // Avoid status, use super effective attacks, avoid ineffective
+            scoringTable = this.adjustScoringForBasic(scoringTable);
+            break;
+        }
+
+        // Set up the list of wanted moves
+        let maxScore = null;
+        for (const move of scoringTable) {
+            if (!maxScore || move.score > maxScore) {
+                maxScore = move.score;
+            }
+        }
+        const choosableMoves = scoringTable.filter(move => move.score === maxScore);
+        const randomIndex = Math.randomInt(choosableMoves.length);
+        this._enemyMoveIndex = choosableMoves[randomIndex].index;
     }
 
     // Determine skill order
     this.calculateBattleActions();
+};
+PokemonMZ_BattleManager.adjustScoringForBasic = function(scoringTable) {
+    const playerPokemon = this._playerChosenPokemon;
+    const enemyPokemon = this._enemyChosenPokemon;
+
+    for (let i=0; i<scoringTable.length; i++) {
+        let index = scoringTable[i].index;
+        if (enemyPokemon.isMoveStatusOnly(index) && playerPokemon.hasStatus()) {
+            scoringTable[i].score--;
+        }
+        if (enemyPokemon.isMoveSeedOnly(index) && playerPokemon.isSeed()) {
+            scoringTable[i].score--;
+        }
+        if (enemyPokemon.isMoveConfuseOnly(index) && playerPokemon.isConfused()) {
+            scoringTable[i].score--;
+        }
+    }
+    return scoringTable;
+};
+PokemonMZ_BattleManager.calculateComputerItemUse = function(modifiers) {
+    if (!modifiers.item) { return; }    // Nothing if not item modifier
+    
+    const item = modifiers.item;
+    const enemyPokemon = this._enemyChosenPokemon;
+    
+    // Check item usage limit
+    if (enemyPokemon.receivedItemCount(item.id) == item.maxPerPokemon) {
+        // Impossible to use the item more than the max count per pokemon
+        return;
+    }
+
+    // Check item usage condition
+    switch(item.condition) {
+        case "hasStatus":
+            // Only checks item if the pokemon has a status
+            if (!enemyPokemon.hasStatus()) { return; }
+            break;
+    }
+
+    // Check item usage probability
+    if (Math.randomInt(100) < item.chance) {
+        this._enemyUseItem = item.id;
+    }
 };
 PokemonMZ_BattleManager.calculateBattleActions = function() {
     // Determine skill order, but also other effect like switching
@@ -1949,6 +2024,14 @@ PokemonMZ_BattleManager.calculateBattleActions = function() {
             this._battleActions.push("playerUsedItem");
         }
         this._battleActions.push("enemyMove");
+        this.changePhase("nextBattleAction"); 
+        return;
+    }
+
+    // If computer uses item - move before else
+    if (this._enemyUseItem) {
+        this._battleActions.push("enemyStartUsingItem");
+        this._battleActions.push("playerMove");
         this.changePhase("nextBattleAction"); 
         return;
     }
@@ -2006,6 +2089,9 @@ PokemonMZ_BattleManager.nextBattleAction = function() {
             case "playerUsedItem":
                 this.endPlayerItem();
                 break;
+            case "enemyStartUsingItem":
+                this.startEnemyItem();
+                break;
             case "playerMove":
                 this.startPlayerMove();
                 break;
@@ -2026,10 +2112,6 @@ PokemonMZ_BattleManager.nextBattleAction = function() {
         this.startPlayerInput();
     }
 };
-
-
-
-
 PokemonMZ_BattleManager.startMove = function(side) {
     let nextPhase;
     let pokemon;
@@ -2131,20 +2213,12 @@ PokemonMZ_BattleManager.startMove = function(side) {
     this._currentAction.insertResultStepsAt(["autotext","useMove",this._currentAction.side(),moveName], battleIndex)
     this.changePhase(nextPhase);
 };
-
-
 PokemonMZ_BattleManager.startPlayerMove = function() {
     this.startMove("player")
 };
 PokemonMZ_BattleManager.startEnemyMove = function() {
     this.startMove("enemy");
 };
-
-
-
-
-
-
 PokemonMZ_BattleManager.startPlayerItem = function() {
     // Direct item uses
     switch (this._playerUseItem.pkmz_data.effect) {
@@ -2163,6 +2237,14 @@ PokemonMZ_BattleManager.endPlayerItem = function() {
     this._currentAction = new PokemonMZ_Game_Action(pokemon, "player");
     this._currentAction.calculateStatusEffects(pokemon.hp());
     this.changePhase("playerResolveActionSteps");
+};
+PokemonMZ_BattleManager.startEnemyItem = function() {
+    this._enemyChosenPokemon.addReceivedItem(this._enemyUseItem);
+    this._currentAction = new PokemonMZ_Game_Action(this._enemyChosenPokemon, "enemy");
+    this._currentAction.setItem(this._enemyUseItem)
+    this._currentAction.calculate();
+    AudioManager.playStandardSe(PokemonMZ.recoverySE);
+    this.changePhase("enemyResolveActionSteps"); 
 };
 PokemonMZ_BattleManager.resolveNextResultStep = function() {
     if ($gameMessage.isBusy() || this._spriteset.isAnimationPlaying() ) { return; }
@@ -2195,6 +2277,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 break;
             case "healOpponent":
                 this.changeSubPhase("startHealOpponent");
+                this._subPhaseParams = [step[1]];
+                break;
+            case "healUser":
+                this.changeSubPhase("startHealUser");
                 this._subPhaseParams = [step[1]];
                 break;
             case "autotext":
@@ -2244,6 +2330,22 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
             case "paralyzePokemon":
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["paralysis", step[1]];
+                break;
+            case "burnHeal":
+                this.changeSubPhase("removePokemonStatus");
+                this._subPhaseParams = ["burn", step[1]];
+                break;
+            case "paralyzeHeal":
+                this.changeSubPhase("removePokemonStatus");
+                this._subPhaseParams = ["paralyze", step[1]];
+                break;
+            case "sleepHeal":
+                this.changeSubPhase("removePokemonStatus");
+                this._subPhaseParams = ["sleep", step[1]];
+                break; 
+            case "poisonHeal":
+                this.changeSubPhase("removePokemonStatus");
+                this._subPhaseParams = ["poison", step[1]];
                 break;
         }
     } else {
@@ -2400,8 +2502,62 @@ PokemonMZ_BattleManager.proceedHealOpponent = function() {
         this.clearSubPhase();
     }
 };
+PokemonMZ_BattleManager.startHealUser = function() {
+    const user = this._currentAction.user();
+    const heal = this._subPhaseParams[0];
 
+    this._damageTransition.start = user.hp();
+    this._damageTransition.end = (user.hp() + heal).clamp(0, user.mhp());
 
+    // Calculate how fast the hp bar will go up
+    // If attack drops between 0-100% hp, the curve is linear, 
+    // up to 200 frames for 100% hp
+    // If attack drops above 100% hp, the curvez is linear decrease
+    // up to 30 frames for 1000% hp
+    // If attack drops above 1000% hp, the curve is contant, 30 frames
+    const percentDamage = heal / user.mhp() * 100;
+    const numFramesCompleteBar = 120;
+    const numFramesOverkill = 30;
+    let coefA = 0;
+    let coefB = 0;
+
+    if (percentDamage <= 100) {
+        coefA = numFramesCompleteBar/100;
+        coefB = 0;
+    } else if (percentDamage <= 1000) {
+        coefA = (numFramesOverkill - numFramesCompleteBar) / (1000 - 100);
+        coefB = numFramesCompleteBar - 100*coefA;
+    } else {
+        coefA = 0;
+        coefB = numFramesOverkill;
+    }
+
+    const numFrames = coefA * percentDamage + coefB;
+    this._subPhaseParams[0] = heal / numFrames;
+
+    this.changeSubPhase("proceedHealUser");
+};
+PokemonMZ_BattleManager.proceedHealUser = function() {
+    const user = this._currentAction.user();
+    const heal = this._subPhaseParams[0];
+    const userHp = user.hp();
+    const userMhp = user.mhp();
+
+    if (userHp < this._damageTransition.end && userHp > 0 && userHp < userMhp) {
+        let newHp = (userHp + heal).clamp(0, this._damageTransition.end);
+        if (newHp > userMhp) { newHp = userMhp; }
+
+        user.setHp(newHp)
+
+        if (this._phase == "playerResolveActionSteps") {
+            this._enemyPokemonStatusWindow.refresh(true);
+        } else if (this._phase == "enemyResolveActionSteps") {
+            this._playerPokemonStatusWindow.refresh(true);
+        }
+    } else {
+        this.clearSubPhase();
+    }
+};
 PokemonMZ_BattleManager.startDamageUser = function() {
     const user = this._currentAction.user();
     const damage = this._subPhaseParams[0];
@@ -2500,6 +2656,39 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
     }
     this.clearSubPhase();
 };
+PokemonMZ_BattleManager.removePokemonStatus = function() {
+    const status = this._subPhaseParams[0];
+    const target = this._subPhaseParams[1];
+
+    switch (status) {
+        case "burn":
+            target.unburn();
+            this._enemyPokemonStatusWindow.refresh(true);
+            this._playerPokemonStatusWindow.refresh(true);
+            break;
+        case "poison":
+            target.unpoison();
+            this._enemyPokemonStatusWindow.refresh(true);
+            this._playerPokemonStatusWindow.refresh(true);
+            break;
+        case "paralysis":
+            target.unparalyze();
+            this._enemyPokemonStatusWindow.refresh(true);
+            this._playerPokemonStatusWindow.refresh(true);
+            break;
+        case "freeze":
+            target.unfreeze();
+            this._enemyPokemonStatusWindow.refresh(true);
+            this._playerPokemonStatusWindow.refresh(true);
+            break;
+        case "sleep":
+            target.unsleep();
+            this._enemyPokemonStatusWindow.refresh(true);
+            this._playerPokemonStatusWindow.refresh(true);
+            break;
+    }
+    this.clearSubPhase();
+};
 PokemonMZ_BattleManager.startFaintPokemon = function() {
     // Remove all turn phases for KO
     const targetType = this._subPhaseParams[0];
@@ -2555,8 +2744,6 @@ PokemonMZ_BattleManager.proceedFaintPokemon = function() {
         }
     };
 };
-
-
 PokemonMZ_BattleManager.animateUserEffect = function() {
     if (ConfigManager.battleAnimation) {
         const sprite = this._subPhaseParams[0];
@@ -2603,10 +2790,10 @@ PokemonMZ_BattleManager.animateUserEffect = function() {
     }
     this.clearSubPhase();
 };
-
 PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
     const prefix = (side == "enemy") ? "Enemy " : "";
     const pokemon = (side == "enemy") ? this._enemyChosenPokemon : this._playerChosenPokemon;
+    const trainer = (side == "enemy") ? $PokemonMZ_gameBattle.enemy1().name() : $gamePlayerTrainer.name();
 
     switch(key) {
 
@@ -2692,8 +2879,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return "It hurt itself in its confusion!";
     case "outConfusion":
         return prefix + pokemon.name() + "'s confused no more!";
-
-
+    case "usedItem":
+        return trainer + " used " + String(ext1) + " on " +  prefix + pokemon.name() + "!"
     }
 
     return ""
@@ -2701,7 +2888,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
 PokemonMZ_BattleManager.displayWaitText = function() {
     const key = this._subPhaseParams[0];
     const side = this._subPhaseParams[1];
-    const message = this.textFromKey(key, side);
+    const ext1 = this._subPhaseParams[2];
+    const message = this.textFromKey(key, side, ext1);
     $gameMessage.add(message);
     this.clearSubPhase();
 }; 
