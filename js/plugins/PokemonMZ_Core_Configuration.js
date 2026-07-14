@@ -184,8 +184,8 @@ PokemonMZ.debugLog = false;
 PokemonMZ.playerActorID = Number(parameters.playerActorID);
 PokemonMZ.badgeItemIds = JSON.parse(parameters.badgesId).map(Number);
 PokemonMZ.pokemonMaxLevel = Number(parameters.pokemonMaxLevel);
-PokemonMZ.bagMechanicsGeneration = Number(parameters.pokemonGenBag).clamp(1,1);
-PokemonMZ.pokemonMechanicsGeneration = Number(parameters.pokemonGenPkmn).clamp(1,1);
+PokemonMZ.bagMechanicsGeneration = Math.min(Math.max(Number(parameters.pokemonGenBag),1),1);
+PokemonMZ.pokemonMechanicsGeneration = Math.min(Math.max(Number(parameters.pokemonGenPkmn),1),1);
 PokemonMZ.maxPokemonInTeam = 6;
 
 PokemonMZ.frozenAnimation = parameters.frozenAnimation;

@@ -960,7 +960,10 @@ PokemonMZ_Game_TrainerPlayer.prototype.calculatePoisonOnMap = function() {
         if (!pokemon.isPoisoned()) { continue; }
         let pokemonMaxHp = pokemon.mhp();
 
-        let newHp = (pokemon.hp() - poisonDamage).clamp(0,pokemonMaxHp);
+        let newHp = pokemon.hp() - poisonDamage;
+        if (newHp < 0) { newHp = 0; }
+        if (newHp > pokemonMaxHp) { newHp = pokemonMaxHp; }
+
         pokemon.setHp(newHp);
         if (pokemon.isFainted()) {
             pokemon.cleanAfterFaint();
@@ -1148,11 +1151,12 @@ PokemonMZ_Game_Pokemon.prototype.gainEv = function(hp,patk,pdef,satk,sdef,spd) {
         this._ev.pdef += pdef;
         this._ev.satk += satk;
         this._ev.spd += spd;
-        this._ev.hp.clamp(0, evLimit);
-        this._ev.patk.clamp(0, evLimit);
-        this._ev.pdef.clamp(0, evLimit);
-        this._ev.satk.clamp(0, evLimit);
-        this._ev.spd.clamp(0, evLimit);
+
+        if (this._ev.hp > evLimit) { this._ev.hp = evLimit; }
+        if (this._ev.patk > evLimit) { this._ev.patk = evLimit; }
+        if (this._ev.pdef > evLimit) { this._ev.pdef = evLimit; }
+        if (this._ev.satk > evLimit) { this._ev.satk = evLimit; }
+        if (this._ev.spd > evLimit) { this._ev.spd = evLimit; }
 
         // Increase current hp
         const newMhp = this.mhp();
@@ -1603,9 +1607,13 @@ PokemonMZ_Game_Pokemon.prototype.itemEffect = function(item) {
     switch(item.pkmz_data.effect) {
     case "recover_hp_fixed":
         const currentHp = this.hp();
-        const nextHp = (this.hp() + item.pkmz_data.value).clamp(0,this.mhp());
+        const mHp = this.mhp();
+        let nextHp = currentHp + item.pkmz_data.value;
+        if (nextHp < 0) { nextHp = 0; }
+        if (nextHp > mHp) { nextHp = mHp; }
+
         const recovered = nextHp - currentHp;
-        const recoverPercent = 100 * recovered / this.mhp();
+        const recoverPercent = 100 * recovered / mHp;
         return {"effect":"recoverHp","value":recovered,"percentValue":recoverPercent};
     case "cureStatus":
         return {"effect":"cureStatus","status":item.pkmz_data.status};
@@ -2269,6 +2277,7 @@ PokemonMZ_Game_Action.prototype.calculate = function(item) {
 PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO  
     const item = $dataItems[$dataItemsIndex[this._item]];
     const effect = this._user.itemEffect(item);
+    const mhp = this._user.mhp();
     this._userEvolvingHp = this._user.hp();
     this._userStatusRemoved = [];
 
@@ -2276,7 +2285,8 @@ PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO
         case "recoverHp":
             this._resultSteps.push(["healUser", effect.value])
             this._userEvolvingHp += effect.value;
-            this._userEvolvingHp.clamp(0,this._user.mhp())
+            if (this._userEvolvingHp < 0) { this._userEvolvingHp = 0; }
+            if (this._userEvolvingHp > mhp) { this._userEvolvingHp = mhp; }
             break;
         case "cureStatus":
             switch (effect.status) {
@@ -2650,7 +2660,9 @@ PokemonMZ_Game_Action.prototype.moveHit = function() {
             const targetEvasion = this._opponent.evasion();
             const brightPowder = 0;
 
-            const accuracyModified = Math.floor(moveAccuracy * userAccuracy * targetEvasion - brightPowder).clamp(0,100);
+            let accuracyModified = Math.floor(moveAccuracy * userAccuracy * targetEvasion - brightPowder);
+            if (accuracyModified < 0) { accuracyModified = 0; }
+            if (accuracyModified > 100) { accuracyModified = 100; }
 
             const randomValue = Math.randomInt(100);
             const isHitting = randomValue <= accuracyModified;
@@ -2691,7 +2703,10 @@ PokemonMZ_Game_Action.prototype.moveCritical = function() {
     switch (PokemonMZ.pokemonMechanicsGeneration) {
         case 1:
             const criticalFactor = highCritical ? 8 : 1;
-            const threshold = Math.floor(criticalFactor * this._user.spd() / 2).clamp(0,255); 
+            let threshold = Math.floor(criticalFactor * this._user.spd() / 2); 
+            if (threshold < 0) { threshold = 0; }
+            if (threshold > 255) { threshold = 255; }
+
             const randomValue = Math.randomInt(256);
             isCritical = randomValue < threshold
 
@@ -2827,12 +2842,15 @@ PokemonMZ_Game_Action.prototype.moveDamage = function(critical) {
 
 // FROM HERE CALCULATE STATUS EFFECTS
 PokemonMZ_Game_Action.prototype.calculateBurnEffect = function(userRemainingHp) {
+    const mHp = this._user.mhp();
     this.addResultSteps(["animateUserEffect", this.userBattleSprite(), "burned"])
     this.addResultSteps(["waittext","hurtburn",this.side()]);
-    const burnDamage = Math.floor(this._user.mhp() / 16).clamp(1,this._user.mhp());
+    let burnDamage = Math.floor(mHp / 16);
+    if (burnDamage < 1) { burnDamage = 1; }
+    if (burnDamage > mHp) { burnDamage = mHp; }
 
     if (PokemonMZ.debugLog) {
-        console.log({"PokemonMZ_Game_Action.calculateBurnEffect > ":{"mhp":this._user.mhp(), "damage":burnDamage}})
+        console.log({"PokemonMZ_Game_Action.calculateBurnEffect > ":{"mhp":mHp, "damage":burnDamage}})
     }
 
     this._resultSteps.push(["damageUser",burnDamage]);
@@ -2843,12 +2861,15 @@ PokemonMZ_Game_Action.prototype.calculateBurnEffect = function(userRemainingHp) 
     return userRemainingHp;
 };
 PokemonMZ_Game_Action.prototype.calculatePoisonEffect = function(userRemainingHp) {
+    const mHp = this._user.mhp();
     this.addResultSteps(["animateUserEffect", this.userBattleSprite(), "poisoned"])
     this.addResultSteps(["waittext","hurtpoison",this.side()]);
-    const poisonDamage = Math.floor(this._user.mhp() / 16).clamp(1,this._user.mhp());
+    let poisonDamage = Math.floor(mHp / 16);
+    if (poisonDamage < 1) { poisonDamage = 1; }
+    if (poisonDamage > mHp) { poisonDamage = mHp; }
 
     if (PokemonMZ.debugLog) {
-        console.log({"PokemonMZ_Game_Action.calculatePoisonEffect > ":{"mhp":this._user.mhp(), "damage":poisonDamage}})
+        console.log({"PokemonMZ_Game_Action.calculatePoisonEffect > ":{"mhp":mHp, "damage":poisonDamage}})
     }
 
     this._resultSteps.push(["damageUser",poisonDamage]);
@@ -2859,12 +2880,15 @@ PokemonMZ_Game_Action.prototype.calculatePoisonEffect = function(userRemainingHp
     return userRemainingHp;
 };
 PokemonMZ_Game_Action.prototype.calculateSeedDamageEffect = function(userRemainingHp) {
+    const mHp = this._user.mhp();
     this.addResultSteps(["animateUserEffect", this.userBattleSprite(), "seeded"])
 
-    const seedDamage = Math.floor(this._user.mhp() / 16).clamp(1,this._user.mhp());
+    let seedDamage = Math.floor(mHp / 16);
+    if (seedDamage < 1) { seedDamage = 1; }
+    if (seedDamage > mHp) { seedDamage = mHp; }
 
     if (PokemonMZ.debugLog) {
-        console.log({"PokemonMZ_Game_Action.calculateSeedDamageEffect > ":{"mhp":this._user.mhp(), "damage":seedDamage}})
+        console.log({"PokemonMZ_Game_Action.calculateSeedDamageEffect > ":{"mhp":mHp, "damage":seedDamage}})
     }
 
     this._resultSteps.push(["damageUser",seedDamage]);
@@ -2872,9 +2896,13 @@ PokemonMZ_Game_Action.prototype.calculateSeedDamageEffect = function(userRemaini
     return userRemainingHp;
 };
 PokemonMZ_Game_Action.prototype.calculateSeedHealEffect = function(opponentRemainingHp, userKo) {
-    const seedHeal = Math.floor(this._opponent.mhp() / 16).clamp(1,this._opponent.mhp());
+    const mHp = this._opponent.mhp();
+    let seedHeal = Math.floor(mHp / 16);
+    if (seedHeal < 1) { seedHeal = 1; }
+    if (seedHeal > mHp) { seedHeal = mHp; }
+
     if (PokemonMZ.debugLog) {
-        console.log({"PokemonMZ_Game_Action.calculateSeedHealEffect > ":{"mhp":this._user.mhp(), "heal":seedHeal}})
+        console.log({"PokemonMZ_Game_Action.calculateSeedHealEffect > ":{"mhp":mHp, "heal":seedHeal}})
     }
 
     this.addResultSteps(["animateUserEffect", this.opponentBattleSprite(), "seedHealed"])
@@ -2885,7 +2913,10 @@ PokemonMZ_Game_Action.prototype.calculateSeedHealEffect = function(opponentRemai
         this._resultSteps.push(["faintPokemon","user",this._user._battleSprite]);
     }
 
-    opponentRemainingHp += seedHeal.clamp(0, this._opponent.mhp());
+    opponentRemainingHp += seedHeal;
+    if (opponentRemainingHp < 0) { opponentRemainingHp = 0; }
+    if (opponentRemainingHp > mHp) { opponentRemainingHp = mHp; }
+
     return opponentRemainingHp;
 };
 
@@ -3045,7 +3076,7 @@ PokemonMZ_Game_Action.prototype.effect_pdefUpUser = function(battleData, effect,
     if (randomNumber < effect.percentChance) {
         if (this._user._stageModifiers.pdef < 6) {
             this._user._stageModifiers.pdef += effect.stage;
-            this._user._stageModifiers.pdef.clamp(-6,6);
+            if (this._user._stageModifiers.pdef > 6) { this._user._stageModifiers.pdef = 6; }
             effectResults.success = true;
             this._resultSteps.push(["autotext","defenseRose",this.side()])
         } else {
@@ -3071,7 +3102,7 @@ PokemonMZ_Game_Action.prototype.effect_evaUpUser = function(battleData, effect, 
     if (randomNumber < effect.percentChance) {
         if (this._user._stageModifiers.eva < 6) {
             this._user._stageModifiers.eva += effect.stage;
-            this._user._stageModifiers.eva.clamp(-6,6);
+            if (this._user._stageModifiers.eva > 6) { this._user._stageModifiers.eva = 6; }
             effectResults.success = true;
             this._resultSteps.push(["autotext","evasionRose",this.side()])
         } else {
@@ -3097,7 +3128,7 @@ PokemonMZ_Game_Action.prototype.effect_accDownTarget = function(battleData, effe
     if (randomNumber < effect.percentChance) {
         if (this._opponent._stageModifiers.acc > -6) {
             this._opponent._stageModifiers.acc -= effect.stage;
-            this._opponent._stageModifiers.acc.clamp(-6,6);
+            if (this._opponent._stageModifiers.acc < -6) { this._opponent._stageModifiers.acc = -6; }
             effectResults.success = true;
             this._resultSteps.push(["autotext","accuracyFell",this.oppositeSide()])
         } else {
@@ -3123,7 +3154,7 @@ PokemonMZ_Game_Action.prototype.effect_patkDownTarget = function(battleData, eff
     if (randomNumber < effect.percentChance) {
         if (this._opponent._stageModifiers.patk > -6) {
             this._opponent._stageModifiers.patk -= effect.stage;
-            this._opponent._stageModifiers.patk.clamp(-6,6);
+            if (this._opponent._stageModifiers.patk < -6) { this._opponent._stageModifiers.patk = -6; }
             effectResults.success = true;
             this._resultSteps.push(["autotext","attackFell",this.oppositeSide()])
         } else {
@@ -3150,9 +3181,7 @@ PokemonMZ_Game_Action.prototype.effect_pdefDownTarget = function(battleData, eff
         const initialStage = this._opponent._stageModifiers.pdef
         if (initialStage > -6) {
             this._opponent._stageModifiers.pdef -= effect.stage;
-            if (this._opponent._stageModifiers.pdef < -6) {
-                this._opponent._stageModifiers.pdef = -6;
-            }
+            if (this._opponent._stageModifiers.pdef < -6) { this._opponent._stageModifiers.pdef = -6; }
             effectResults.success = true;
             const droppedStages = initialStage - this._opponent._stageModifiers.pdef;
             switch (droppedStages) {
@@ -3186,7 +3215,7 @@ PokemonMZ_Game_Action.prototype.effect_spdDownTarget = function(battleData, effe
     if (randomNumber < effect.percentChance) {
         if (this._opponent._stageModifiers.spd > -6) {
             this._opponent._stageModifiers.spd -= effect.stage;
-            this._opponent._stageModifiers.spd.clamp(-6,6);
+            if (this._opponent._stageModifiers.spd < -6) { this._opponent._stageModifiers.spd = -6; }
             effectResults.success = true;
             this._resultSteps.push(["autotext","speedFell",this.oppositeSide()])
         } else {

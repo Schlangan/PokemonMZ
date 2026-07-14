@@ -2431,13 +2431,15 @@ PokemonMZ_BattleManager.startDamageOpponent = function() {
 };
 PokemonMZ_BattleManager.proceedDamageOpponent = function() {
     const opponent = this._currentAction.opponent();
+    const opponentMhp = opponent.mhp();
     const damage = this._subPhaseParams[0];
     const opponentHp = opponent.hp();
 
     if (opponentHp > this._damageTransition.end && opponentHp > 0) {
-        let newHp = (opponentHp - this._subPhaseParams[0]).clamp(this._damageTransition.end, opponent.mhp());
+        let newHp = opponentHp - this._subPhaseParams[0];
+        if (newHp < this._damageTransition.end) { newHp = this._damageTransition.end; }
+        if (newHp > opponentMhp) { newHp = opponentMhp; }
         if (newHp < 0) { newHp = 0; }
-
         opponent.setHp(newHp)
 
         if (this._phase == "playerResolveActionSteps") {
@@ -2451,10 +2453,13 @@ PokemonMZ_BattleManager.proceedDamageOpponent = function() {
 };
 PokemonMZ_BattleManager.startHealOpponent = function() {
     const opponent = this._currentAction.opponent();
+    const opponentMHp = opponent.mhp()
     const heal = this._subPhaseParams[0];
 
     this._damageTransition.start = opponent.hp();
-    this._damageTransition.end = (opponent.hp() + heal).clamp(0, opponent.mhp());
+    this._damageTransition.end = (opponent.hp() + heal)
+    if (this._damageTransition.end < 0) { this._damageTransition.end = 0; }
+    if (this._damageTransition.end > opponentMHp) { this._damageTransition.end = opponentMHp; }
 
     // Calculate how fast the hp bar will go up
     // If attack drops between 0-100% hp, the curve is linear, 
@@ -2462,7 +2467,7 @@ PokemonMZ_BattleManager.startHealOpponent = function() {
     // If attack drops above 100% hp, the curvez is linear decrease
     // up to 30 frames for 1000% hp
     // If attack drops above 1000% hp, the curve is contant, 30 frames
-    const percentDamage = heal / opponent.mhp() * 100;
+    const percentDamage = heal / opponentMHp * 100;
     const numFramesCompleteBar = 120;
     const numFramesOverkill = 30;
     let coefA = 0;
@@ -2491,8 +2496,9 @@ PokemonMZ_BattleManager.proceedHealOpponent = function() {
     const opponentMhp = opponent.mhp();
 
     if (opponentHp < this._damageTransition.end && opponentHp > 0 && opponentHp < opponentMhp) {
-        let newHp = (opponentHp + heal).clamp(0, this._damageTransition.end);
-        if (newHp > opponentMhp) { newHp = opponentMhp; }
+        let newHp = (opponentHp + heal);
+        if (newHp < 0) { newHp = 0; }
+        if (newHp > this._damageTransition.end) { newHp = this._damageTransition.end; }
 
         opponent.setHp(newHp)
 
@@ -2507,10 +2513,15 @@ PokemonMZ_BattleManager.proceedHealOpponent = function() {
 };
 PokemonMZ_BattleManager.startHealUser = function() {
     const user = this._currentAction.user();
+    const userHp = user.hp();
+    const userMhp = user.mhp();
     const heal = this._subPhaseParams[0];
 
-    this._damageTransition.start = user.hp();
-    this._damageTransition.end = (user.hp() + heal).clamp(0, user.mhp());
+    this._damageTransition.start = userHp;
+    this._damageTransition.end = userHp + heal;
+    if (this._damageTransition.end < 0) { this._damageTransition.end = 0; }
+    if (this._damageTransition.end > userMhp) { this._damageTransition.end = userMhp; }
+
 
     // Calculate how fast the hp bar will go up
     // If attack drops between 0-100% hp, the curve is linear, 
@@ -2518,7 +2529,7 @@ PokemonMZ_BattleManager.startHealUser = function() {
     // If attack drops above 100% hp, the curvez is linear decrease
     // up to 30 frames for 1000% hp
     // If attack drops above 1000% hp, the curve is contant, 30 frames
-    const percentDamage = heal / user.mhp() * 100;
+    const percentDamage = heal / userMhp * 100;
     const numFramesCompleteBar = 120;
     const numFramesOverkill = 30;
     let coefA = 0;
@@ -2547,8 +2558,9 @@ PokemonMZ_BattleManager.proceedHealUser = function() {
     const userMhp = user.mhp();
 
     if (userHp < this._damageTransition.end && userHp > 0 && userHp < userMhp) {
-        let newHp = (userHp + heal).clamp(0, this._damageTransition.end);
-        if (newHp > userMhp) { newHp = userMhp; }
+        let newHp = userHp + heal;
+        if (newHp < 0) { newHp = 0; }
+        if (newHp > this._damageTransition.end) { newHp = this._damageTransition.end; }
 
         user.setHp(newHp)
 
@@ -2600,10 +2612,12 @@ PokemonMZ_BattleManager.proceedDamageUser = function() {
     const user = this._currentAction.user();
     const damage = this._subPhaseParams[0];
     const userHp = user.hp();
+    const userMhp = user.mhp();
 
     if (userHp > this._damageTransition.end && userHp > 0) {
-        let newHp = (userHp - this._subPhaseParams[0]).clamp(this._damageTransition.end, user.mhp());
-        if (newHp < 0) { newHp = 0; }
+        let newHp = userHp - this._subPhaseParams[0]
+        if (newHp < this._damageTransition.end) { newHp = this._damageTransition.end; }
+        if (newHp > userMhp) { newHp = userMhp; }
 
         user.setHp(newHp)
 

@@ -651,7 +651,9 @@ PokemonMZ_Window_ComputerItemsNumber.prototype.setMaxValue = function(value) {
     this._maxDigits = String(value).length;
 };
 PokemonMZ_Window_ComputerItemsNumber.prototype.start = function() {
-    this._number = this._initialValue.clamp(this._minValue, this._maxValue);
+    this._number = this._initialValue;
+    if (this._number < this._minValue) { this._number = this._minValue; }
+    if (this._number > this._maxValue) { this._number = this._maxValue; }
     this.placeButtons();
     this.createContents();
     this.refresh();
@@ -663,7 +665,8 @@ const PokemonMZ_Window_NumberInput_changeDigit = Window_NumberInput.prototype.ch
 PokemonMZ_Window_ComputerItemsNumber.prototype.changeDigit = function(up) {
     PokemonMZ_Window_NumberInput_changeDigit.call(this,up);
     const currentNumber = this.getValue();
-    this._number = this._number.clamp(this._minValue, this._maxValue);
+    if (this._number < this._minValue) { this._number = this._minValue; }
+    if (this._number > this._maxValue) { this._number = this._maxValue; }
     if (this._number != currentNumber) {
         this.refresh();
     }
