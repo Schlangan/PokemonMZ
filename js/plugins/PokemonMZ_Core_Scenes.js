@@ -195,6 +195,7 @@ Scene_Title.prototype.commandContinue = function() {
 };
 Scene_Title.prototype.onLoadSuccess = function() {
     Scene_Load.prototype.onLoadSuccess.call(this, 1);
+    $gamePlayerTrainer.reloadAllPokemonData();
     $gameSystem.onAfterLoad();
 };
 Scene_Title.prototype.reloadMapIfUpdated = function() {
