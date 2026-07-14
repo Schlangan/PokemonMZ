@@ -709,6 +709,17 @@ PokemonMZ_Game_TrainerPlayer.prototype.pokedexRegion = function() {
     return this._pokedexRegion;
 };
 
+PokemonMZ_Game_TrainerPlayer.prototype.reloadAllPokemonData = function() {
+    for (const pokemon of this._pokemons) {
+        pokemon.reloadData();
+    }
+    for (const box of this._boxes) {
+        for (const pokemon of box.pokemons) {
+            pokemon.reloadData();
+        }
+    }
+};
+
 
 PokemonMZ_Game_TrainerPlayer.prototype.addSeenPokemon = function(pokemonStrId) {
     if (!this._seenPokemons.includes(pokemonStrId)) {
@@ -997,8 +1008,8 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._hp = 0;
     this._originalTrainerId = 0;
     this._originalTrainerName = "";
-    this._dv = {"hp":0,"patk":0,"pdef":0,"satk":0,"spd":0};
-    this._ev = {"hp":0,"patk":0,"pdef":0,"satk":0,"spd":0};
+    this._dv = {"hp":0,"patk":0,"pdef":0,"satk":0,"spd":0}; //Note: spc is set into satk
+    this._ev = {"hp":0,"patk":0,"pdef":0,"satk":0,"spd":0}; //Note: spc is set into satk
     this._status = "";
     this._battleSprite = null;
     this._damageDealt = 0;
@@ -1022,6 +1033,13 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._hasBattled = false;
     this._hasLeveledUp = false;
 };
+
+PokemonMZ_Game_Pokemon.prototype.reloadData = function() {
+    this._data = $dataEnemies[this._enemyId].pkmz_data;
+    const newMhp = this.mhp();
+    if (this._hp > newMhp) { this._hp = newMhp; }
+};
+
 PokemonMZ_Game_Pokemon.prototype.cloneFromPokemon = function(pokemon) {
     this._nickname = pokemon._nickname;
     this._exp = pokemon._exp;
@@ -1597,22 +1615,29 @@ PokemonMZ_Game_Pokemon.prototype.pdef = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.satk = function() {
     const base = this._data.baseStats ? this._data.baseStats.satk : 0;
-
     if (PokemonMZ.pokemonMechanicsGeneration == 1) {
-        const unbuffed = this.gen1_calc_stat(base, this._level, this._dv.satk, this._ev.satk);
-        const buffed = unbuffed; // TODO...
-        return Math.floor(buffed);
+        return this.spc();
     }
     return 0
 };
 PokemonMZ_Game_Pokemon.prototype.sdef = function() {
     const base = this._data.baseStats ? this._data.baseStats.sdef : 0;
-
     if (PokemonMZ.pokemonMechanicsGeneration == 1) {
-        return this.satk();
+        return this.spc();
     }
     return 0;
 };
+PokemonMZ_Game_Pokemon.prototype.spc = function() {
+    const base = this._data.baseStats ? this._data.baseStats.spc : 0;
+    if (PokemonMZ.pokemonMechanicsGeneration == 1) {
+        const unbuffed = this.gen1_calc_stat(base, this._level, this._dv.satk, this._ev.satk);
+        const buffed = unbuffed; // TODO...
+        return Math.floor(buffed);
+    }
+    return 0;
+};
+
+
 PokemonMZ_Game_Pokemon.prototype.spd = function() {
     const base = this._data.baseStats ? this._data.baseStats.spd : 0;
 

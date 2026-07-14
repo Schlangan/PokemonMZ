@@ -18,9 +18,10 @@ pokemonData
     - hp, **int** : Base HP value
     - patk, **int** : Base Attack value
     - pdef, **int** : Base Defense value
-    - satk, **int** : Base Special Attack value. Note, in generation 1, this becomes the Special value
-    - sdef, **int** : Base Special Defense value. Note, in generation 1, this value is unused, and satk is used instead.
+    - satk, **int** : Base Special Attack value. Note, in generation 1, this value is unused, and spc is used instead.
+    - sdef, **int** : Base Special Defense value. Note, in generation 1, this value is unused, and spc is used instead.
     - spd, **int** : Base Speed value
+    - spc, **int** : Base Special value. In generation 1, this value sets the special attack and special defense.
 - expCurve, **string** : The experience curve of the pokemon. Possible values are **erratic**, **fast**, **mediumFast**, **mediumSlow**, **slow**, **fluctuating**
 - catchRate, **int** : The catch rate of the pokemon. Max value is **255** for the easiest, while lower values made them harder to catch.
 - xpYield, **int** : The base amount of experience given when defeated
