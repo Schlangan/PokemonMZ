@@ -1235,8 +1235,12 @@ PokemonMZ_Game_Pokemon.prototype.heal = function() {
     for (move of this._moves) {
         move.pp = this.movePP(move.id, move.ppup);
     }
+    this.removeTemporaryStatuses();
     this.unburn();
+    this.unfreeze();
+    this.unparalyze();
     this.unpoison();
+    this.unsleep();
 };
 PokemonMZ_Game_Pokemon.prototype.resetStageModifiers = function() {
     this._stageModifiers = {
