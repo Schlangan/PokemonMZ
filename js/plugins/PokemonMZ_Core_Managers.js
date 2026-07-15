@@ -1892,11 +1892,13 @@ PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
     // Start with IA modifiers
     this._enemyUseItem = null;
 
-    const modifiers = trainer.iaModifiers();
-    if (modifiers) {
-        this.calculateComputerItemUse(modifiers);
+    if (trainer) {
+        const modifiers = trainer.iaModifiers();
+        if (modifiers) {
+            this.calculateComputerItemUse(modifiers);
+        }
     }
-
+    
     // If enemy use item, skip other calculations
     if (this._enemyUseItem) {
         this._enemyMoveIndex = null;
@@ -2820,7 +2822,9 @@ PokemonMZ_BattleManager.animateUserEffect = function() {
 PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
     const prefix = (side == "enemy") ? "Enemy " : "";
     const pokemon = (side == "enemy") ? this._enemyChosenPokemon : this._playerChosenPokemon;
-    const trainer = (side == "enemy") ? $PokemonMZ_gameBattle.enemy1().name() : $gamePlayerTrainer.name();
+
+    const trainerData = $PokemonMZ_gameBattle.enemy1();
+    const trainer = trainerData ? (side == "enemy") ? trainerData.name() : $gamePlayerTrainer.name() : "";
 
     switch(key) {
 
