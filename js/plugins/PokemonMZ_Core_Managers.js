@@ -1906,6 +1906,13 @@ PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
         return;
     }
 
+    // If biding, next move is bide
+    if (enemyPokemon.isBiding()) {
+        this._enemyMoveIndex = enemyPokemon.lastMoveIndex();
+        this.calculateBattleActions();
+        return;
+    }
+
     // Define a list of possible move indexes and default scoring
     let scoringTable = [];
 
@@ -1945,6 +1952,7 @@ PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
         const choosableMoves = scoringTable.filter(move => move.score === maxScore);
         const randomIndex = Math.randomInt(choosableMoves.length);
         this._enemyMoveIndex = choosableMoves[randomIndex].index;
+        enemyPokemon.setLastMoveIndex(this._enemyMoveIndex);
     }
 
     // Determine skill order
@@ -2150,6 +2158,7 @@ PokemonMZ_BattleManager.startMove = function(side) {
 
     // Calculate paralysis
     if (pokemon.isParalyzed() && Math.random() < 0.25) {
+        if (pokemon.isBiding()) { pokemon.endBide() };  // Paralysis interrupts bide
         this._currentAction.addResultSteps(["animateUserEffect", this._currentAction.userBattleSprite(), "paralyzed"])
         this._currentAction.addResultSteps(["autotext","isParalyzed",this._currentAction.side()])
         this.changePhase(nextPhase);
@@ -2186,6 +2195,7 @@ PokemonMZ_BattleManager.startMove = function(side) {
             this._currentAction.addResultSteps(["animateUserEffect", this._currentAction.userBattleSprite(), "confused"])
             this._currentAction.addResultSteps(["autotext","isConfused",this._currentAction.side()])
             if (Math.random() < 0.5) {
+                if (pokemon.isBiding()) { pokemon.endBide() };  // Confusion interrupts bide
                 this._currentAction.addResultSteps(["autotext","confusedHurt",this._currentAction.side()])
                 move = pokemon.moveSelfHurtConfusion();
                 this._currentAction.setMove(move.id, pokemon);
@@ -2202,8 +2212,20 @@ PokemonMZ_BattleManager.startMove = function(side) {
     // Get battle result index to insert text
     let battleIndex = this._currentAction.resultStepsLength();
 
-    // Consume PP
-    pokemon.consumePP(moveIndex);
+    // Special skips
+    let skipPP = false;
+    let skipMessage = false;
+    if (pokemon.isBiding() && pokemon.isMoveBide(moveIndex)) {
+        // No PP consumption for bide once it has been launched
+        skipPP = true;
+        skipMessage = true;
+    }
+
+    // Consume PP if needed
+    if (!skipPP) {
+        pokemon.consumePP(moveIndex);
+    }
+
     this._currentAction.setMove(move.id, oppositePokemon);
     this._currentAction.calculate();
 
@@ -2211,7 +2233,10 @@ PokemonMZ_BattleManager.startMove = function(side) {
         this._currentAction.insertResultStepsAt(["autotext","noMovesLeft",this._currentAction.side()], battleIndex)
         battleIndex++;
     };
-    this._currentAction.insertResultStepsAt(["autotext","useMove",this._currentAction.side(),moveName], battleIndex)
+
+    if (!skipMessage) {
+        this._currentAction.insertResultStepsAt(["autotext","useMove",this._currentAction.side(),moveName], battleIndex)
+    }
     this.changePhase(nextPhase);
 };
 PokemonMZ_BattleManager.startPlayerMove = function() {
@@ -2398,10 +2423,20 @@ PokemonMZ_BattleManager.playSe = function() {
 };
 PokemonMZ_BattleManager.startDamageOpponent = function() {
     const opponent = this._currentAction.opponent();
+    const opponentHp = opponent.hp();
     const damage = this._subPhaseParams[0];
 
-    this._damageTransition.start = opponent.hp();
-    this._damageTransition.end = opponent.hp() - damage;
+    this._damageTransition.start = opponentHp;
+    this._damageTransition.end = opponentHp - damage;
+
+    // Sets bide damage if needed
+    if (opponent.isBiding()) {
+        if (damage > opponentHp) {
+            opponent.addToBideDamage(opponentHp);
+        } else {
+            opponent.addToBideDamage(damage);
+        }
+    }
 
     // Calculate how fast the hp bar will drop down
     // If attack drops between 0-100% hp, the curve is linear, 
@@ -2578,9 +2613,19 @@ PokemonMZ_BattleManager.proceedHealUser = function() {
 PokemonMZ_BattleManager.startDamageUser = function() {
     const user = this._currentAction.user();
     const damage = this._subPhaseParams[0];
+    const userHp = user.hp();
 
-    this._damageTransition.start = user.hp();
-    this._damageTransition.end = user.hp() - damage;
+    this._damageTransition.start = userHp;
+    this._damageTransition.end = userHp - damage;
+
+    // Sets bide damage if needed
+    if (user.isBiding()) {
+        if (damage > userHp) {
+            user.addToBideDamage(userHp);
+        } else {
+            user.addToBideDamage(damage);
+        }
+    }
 
     // Calculate how fast the hp bar will drop down
     // If attack drops between 0-100% hp, the curve is linear, 
@@ -2914,8 +2959,11 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + "'s confused no more!";
     case "usedItem":
         return trainer + " used " + String(ext1) + " on " +  prefix + pokemon.name() + "!"
+    case "bideUnleashed":
+        return prefix + pokemon.name() + " unleashed energy!";
+    case "bideMissed":
+        return prefix + pokemon.name() + "'s attack missed!";
     }
-
     return ""
 };
 PokemonMZ_BattleManager.displayWaitText = function() {

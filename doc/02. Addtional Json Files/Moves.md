@@ -28,6 +28,9 @@ moveEffect
 
 List of implemented effects and their additional parameters:
 
+- effect = **bide** : Special move bide
+    - unleashAnimationId, **int** : RPG Maker animation Id for bide unleash phase.
+
 - effect = **burnTarget** : Burn the target 
     - percentChance, **int** : Chance out of 100 of the burn to happen
 - effect = **paralyzeTarget** : Paralyze the target 

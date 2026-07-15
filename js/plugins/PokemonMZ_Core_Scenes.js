@@ -2668,9 +2668,15 @@ PokemonMZ_Scene_Battle.prototype.menuSelectedPokemon = function() {
     return $gamePlayerTrainer.pokemon(this._pokemonListWindow.index());
 };
 PokemonMZ_Scene_Battle.prototype.commandFight = function() {
+    const pokemon = PokemonMZ_BattleManager.playerPokemon();
+
+    // Bide - Cannot choose moves
+    if (pokemon.isBiding()) {
+        this.forceMove(pokemon.lastMoveIndex());
+        return;
+    }
 
     if (PokemonMZ_BattleManager.hasPlayerAnyMoveUseable()) {
-        const pokemon = PokemonMZ_BattleManager.playerPokemon();
         const lastIndex = pokemon.lastMoveIndex();
         this._pokemonMovesWindow.setPokemon(pokemon);
         if (lastIndex) {
@@ -2687,15 +2693,19 @@ PokemonMZ_Scene_Battle.prototype.commandFight = function() {
         this._playerInputWindow.deactivate();
     } else {
         // Force struggle action
-        this._pokemonCommandWindow.close();
-        this._pokemonMovesWindow.close();
-        this._playerInputWindow.close();
-        this._staticMessageWindow.hide();
-        PokemonMZ_BattleManager.resetPlayerEscapeAttempts();
-        PokemonMZ_BattleManager.setPlayerMoveIndex(-1);
-        PokemonMZ_BattleManager.calculateComputerMove();
+        this.forceMove(-1);
     }
 };
+PokemonMZ_Scene_Battle.prototype.forceMove = function(index) {
+    this._pokemonCommandWindow.close();
+    this._pokemonMovesWindow.close();
+    this._playerInputWindow.close();
+    this._staticMessageWindow.hide();
+    PokemonMZ_BattleManager.resetPlayerEscapeAttempts();
+    PokemonMZ_BattleManager.setPlayerMoveIndex(index);
+    PokemonMZ_BattleManager.calculateComputerMove();
+};
+
 PokemonMZ_Scene_Battle.prototype.commandPokemon = function() {
     this._pokemonSelectMode = "commandPokemon";
     this._pokemonListWindow.authorizeCancel();

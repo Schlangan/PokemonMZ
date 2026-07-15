@@ -1012,8 +1012,12 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._isFlinched = false;
     this._isSeeded = false;
     this._isConfused = false;
+    this._isBiding = false;
     this._turnsSleep = 0;
     this._turnsConfusion = 0;
+    this._turnsBide = 0;
+    this._damagedBide = 0;
+
     this._receivedItems = [];
 
     this._hasBattled = false;
@@ -1388,6 +1392,14 @@ PokemonMZ_Game_Pokemon.prototype.isMoveConfuseOnly = function(index) {
     if (move.category != "status") { return false; }
     for (const effect of move.effects) {
         if (effect.type == "confuseTarget") { return true; }
+    }
+    return false;
+};
+PokemonMZ_Game_Pokemon.prototype.isMoveBide = function(index) {
+    // Returns if a move only sets a status to the target
+    const move = this.moveDataFromIndex(index);
+    for (const effect of move.effects) {
+        if (effect.type == "bide") { return true; }
     }
     return false;
 };
@@ -1770,6 +1782,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.unflinch();
     this.unseed();
     this.unconfuse();
+    this.endBide();
 };
 PokemonMZ_Game_Pokemon.prototype.isFainted = function() {
     return this._hp == 0;
@@ -1991,6 +2004,32 @@ PokemonMZ_Game_Pokemon.prototype.evolveTo = function(newPokemonStrId) {
     this._data = $dataEnemies[this._enemyId].pkmz_data;
     this._hp = Math.floor(this.mhp() * currentHpFactor);
 };
+PokemonMZ_Game_Pokemon.prototype.startBide = function() {
+    this._isBiding = true;
+    this._turnsBide = 1 + Math.randomInt(2);
+    this._damagedBide = 0;
+};
+PokemonMZ_Game_Pokemon.prototype.isBiding = function() {
+    return this._isBiding;
+};
+PokemonMZ_Game_Pokemon.prototype.isBidingOver = function() {
+    return this._isBiding && this._turnsBide == 0;
+};
+PokemonMZ_Game_Pokemon.prototype.nextBide = function() {
+    this._turnsBide--;
+};
+PokemonMZ_Game_Pokemon.prototype.addToBideDamage = function(damage) {
+    this._damagedBide += damage;
+};
+PokemonMZ_Game_Pokemon.prototype.damageTakenBide = function() {
+    return this._damagedBide;
+};
+PokemonMZ_Game_Pokemon.prototype.endBide = function() {
+    this._isBiding = false;
+    this._turnsBide = 0;
+    this._damagedBide = 0;
+};
+
 
 // PokemonMZ_Game_Battle
 // The class for a pokemon battle
@@ -2191,6 +2230,15 @@ PokemonMZ_Game_Action.prototype.isItem = function() {
 PokemonMZ_Game_Action.prototype.isMove = function() {
     return (this._move);
 };
+PokemonMZ_Game_Action.prototype.isMoveEffectBide = function() {
+    if (!this._moveData) { return false; }
+    for (const effect of this._moveData.effects) {
+        if (effect.type == "bide") {
+            return true;
+        }
+    }
+    return false;
+};
 PokemonMZ_Game_Action.prototype.opponent = function() {
     return this._opponent;
 };
@@ -2355,6 +2403,12 @@ PokemonMZ_Game_Action.prototype.calculateMove = function() { //TODO
 
     this._userEvolvingHp = this._user.hp();
     this._opponentEvolvingHp = this._opponent.hp();
+
+    // Specific behavior for bide
+    if (this.isMoveEffectBide()) {
+        this.calculateMoveBide();
+        return;
+    }
 
     // Prepare for multi hits
     this.calculateNumHits();
@@ -2537,6 +2591,46 @@ PokemonMZ_Game_Action.prototype.calculateMoveStatus = function() {
 
     this.calculateStatusEffects(this._user.hp(), this._opponent.hp());
 };
+
+PokemonMZ_Game_Action.prototype.calculateMoveBide = function() { 
+    // Specific code for bide
+    console.log(this._user._damagedBide)
+    if (!this._user.isBiding()) {
+        // First turn bide
+        this._user.startBide();
+        this._resultSteps.push(["hitAnimation", this._user._battleSprite, this._moveAnimationId]);
+    } else if (this._user.isBidingOver()) {
+        const damage = this._user.damageTakenBide() * 2;
+        this._resultSteps.push(["autotext","bideUnleashed",this.side()])
+        if (damage > 0) {
+            let bideAnimation = 0;
+            for (const effect of this._moveData.effects) {
+                if (effect.type == "bide") { bideAnimation = effect.unleashAnimationId; }
+            }
+            this._resultSteps.push(["hitAnimation", this._opponent._battleSprite, bideAnimation]);
+
+            // Generation I bide hit through ghost or rock without hindrance - no stab calculation either
+            this._resultSteps.push(["se","normal"]);
+            this._resultSteps.push(["damageOpponent", damage]);
+            
+            this._opponentEvolvingHp -= damage
+            if (this._opponentEvolvingHp <= 0) {
+                this._resultSteps.push(["faintPokemon","opponent",this._opponent._battleSprite]);
+            }
+        } else {
+            // No damage taken during bide - attack miss
+            this._resultSteps.push(["autotext","bideMissed",this.side()])
+        }
+        this._user.endBide();
+    } else {
+        // Next turns bide
+        this._user.nextBide();
+    }
+
+    this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
+};
+
+
 PokemonMZ_Game_Action.prototype.calculateMoveEffects = function(battleData) { // TODO ADD ALL MOVE EFFECTS
     const effects = this._moveData.effects;
     if (!effects) { return {}; }
