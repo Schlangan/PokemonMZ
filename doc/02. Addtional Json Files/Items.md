@@ -9,7 +9,7 @@ main, **Array:itemData** : Array of **itemData**. The first element is null, mim
 itemData
 - id, **string** : Identifier of the item. The same identifier must be set up inside the notetag id:xxxxx of the Item object in RPG Maker's Database.
 - user, **string** : For now, only **trainer**.
-- category, **string** : Either **regular** or **key** items. Key items cannot be tossed, while regular can.
+- category, **string** : Either **regular**, **key** or **badge** items. Key items cannot be tossed, while regular can. Badge item must not be given, and have passive effects.
 - battle, **bool** : Set the value to true if the item can be used during battle. Else, the item won't appear inside the battle screen.
 - target, *optional*,**string**: Set the value to **pokemon** if the item requires the pokemon selection screen to be used.
 - price, **int** : Price of the item, when bought.
@@ -29,5 +29,7 @@ Depending on the effet, additional parameters are required.
     - value,**int** : Amount of fixed hp recovered
 - effect = **townMap** : Opens the current region map.
 - effect = **escapeRope** : Use an escape rope.
+- effect = **passivePatkBoost**, **passivePdefBoost**, **passiveSpcBoost**, **passiveSpdBoost** : Passive attack, defense, special and speed bonus for badges. Applies only if badge owned.
+    - boostPercent,**float**: Attack bonus percentage.
 
 ---

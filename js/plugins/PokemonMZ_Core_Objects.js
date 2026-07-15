@@ -791,6 +791,41 @@ PokemonMZ_Game_TrainerPlayer.prototype.badgesCount = function() {
 PokemonMZ_Game_TrainerPlayer.prototype.hasBadge = function(id) {
     return this._badges.includes(id);
 };
+PokemonMZ_Game_TrainerPlayer.prototype.giveBadge = function(id) {
+    if (!this.hasBadge(id)) {
+        this._badges.push(id);
+    }
+};
+PokemonMZ_Game_TrainerPlayer.prototype.badgeBoosts = function(side, mode) {
+    let patk = 1.0;
+    let pdef = 1.0;
+    let satk = 1.0;
+    let sdef = 1.0;
+    let spd = 1.0;
+
+    if ((side == "player" && mode == "attack") || (side == "enemy" && mode == "defense")) {
+        for (const badgeIntId of this._badges) {
+            let itemData = $dataItems[badgeIntId].pkmz_data;
+            if (itemData.category != "badge") { continue; }
+            switch(itemData.effect) {
+            case "passivePatkBoost":
+                patk += itemData.boostPercent/100;
+                break;
+            case "passivePdefBoost":
+                pdef += itemData.boostPercent/100;
+                break;
+            case "passiveSpcBoost":
+                satk += itemData.boostPercent/100;
+                sdef += itemData.boostPercent/100;
+                break;
+            case "passiveSpdBoost":
+                spd += itemData.boostPercent/100;
+                break;
+            }
+        }
+    }
+    return {"patk":patk,"pdef":pdef,"satk":satk,"sdef":sdef,"spd":spd}
+};
 PokemonMZ_Game_TrainerPlayer.prototype.canDash = function() {
     // Placeholder for later - running Shoes
     return false;
@@ -2826,6 +2861,9 @@ PokemonMZ_Game_Action.prototype.moveDamageCategory = function() {
     return this.typeInfo(this._moveData.type).damage
 };
 PokemonMZ_Game_Action.prototype.moveDamage = function(critical) {
+    const playerAtkBadgeBoosts = $gamePlayerTrainer.badgeBoosts(this._side, "attack");
+    const playerDefBadgeBoosts = $gamePlayerTrainer.badgeBoosts(this._side, "defense");
+
     const damageCategory = this.moveDamageCategory();
     let attackBaseStat = 0;
     let attackModifiedStats = 0;
@@ -2841,17 +2879,17 @@ PokemonMZ_Game_Action.prototype.moveDamage = function(critical) {
             debugLogging.category = "physical"
             debugLogging.attackStats = {"base":this._user.patk(), "modified":this._user.patkModified()}
 
-            attackBaseStat = this._user.patk();
-            attackModifiedStats = this._user.patkModified();
+            attackBaseStat = this._user.patk() * playerAtkBadgeBoosts.patk;
+            attackModifiedStats = this._user.patkModified() * playerAtkBadgeBoosts.patk;
 
             if (this._moveData.target == "opponent") {
                 debugLogging.defenseStats = {"base":this._opponent.pdef(), "modified":this._opponent.pdefModified()}
-                defenseBaseStat = this._opponent.pdef();
-                defenseModifiedStats = this._opponent.pdefModified();
+                defenseBaseStat = this._opponent.pdef() * playerDefBadgeBoosts.pdef;
+                defenseModifiedStats = this._opponent.pdefModified() * playerDefBadgeBoosts.pdef;
             } else if (this._moveData.target == "user") {
                 debugLogging.defenseStats = {"base":this._user.pdef(), "modified":this._user.pdefModified()}
-                defenseBaseStat = this._user.pdef();
-                defenseModifiedStats = this._user.pdefModified();
+                defenseBaseStat = this._user.pdef() * playerAtkBadgeBoosts.pdef;
+                defenseModifiedStats = this._user.pdefModified() * playerAtkBadgeBoosts.pdef;
             }
 
             // TODO : barrierAmplifier=2 if reflect is up on opponent side and not critical
@@ -2859,18 +2897,18 @@ PokemonMZ_Game_Action.prototype.moveDamage = function(critical) {
         case "special":
             debugLogging.category = "special"
             debugLogging.attackStats = {"base":this._user.satk(), "modified":this._user.satkModified()}
-            attackBaseStat = this._user.satk();
-            attackModifiedStats = this._user.satkModified();
+            attackBaseStat = this._user.satk() * playerAtkBadgeBoosts.satk;
+            attackModifiedStats = this._user.satkModified() * playerAtkBadgeBoosts.satk;
 
             if (this._moveData.target == "opponent") {
                 debugLogging.defenseStats = {"base":this._opponent.sdef(), "modified":this._opponent.sdefModified()}
-                defenseBaseStat = this._opponent.sdef();
-                defenseModifiedStats = this._opponent.sdefModified();
+                defenseBaseStat = this._opponent.sdef() * playerDefBadgeBoosts.sdef;
+                defenseModifiedStats = this._opponent.sdefModified() * playerDefBadgeBoosts.sdef;
 
             } else if (this._moveData.target == "user") {
                 debugLogging.defenseStats = {"base":this._user.sdef(), "modified":this._user.sdefModified()}
-                defenseBaseStat = this._user.sdef();
-                defenseModifiedStats = this._user.sdefModified();
+                defenseBaseStat = this._user.sdef() * playerAtkBadgeBoosts.sdef;
+                defenseModifiedStats = this._user.sdefModified() * playerAtkBadgeBoosts.sdef;
             }
 
             // TODO : barrierAmplifier=2 if light screen is up on opponent side and not critical

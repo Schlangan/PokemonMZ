@@ -2060,7 +2060,8 @@ PokemonMZ_BattleManager.calculateBattleActions = function() {
     }
 
     // Calculate speed to determine order
-    const playerSpeed = this._playerChosenPokemon.spdModified();
+    const playerBadgeBoosts = $gamePlayerTrainer.badgeBoosts("player", "attack");
+    const playerSpeed = this._playerChosenPokemon.spdModified() * playerBadgeBoosts.spd;
     const enemySpeed = this._enemyChosenPokemon.spdModified();
 
     if (playerSpeed > enemySpeed) {

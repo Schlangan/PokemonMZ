@@ -121,6 +121,17 @@
  * @text Quantity
  * @desc The quantity of the item to give.
  
+
+ * //////////////////////////////////////////
+ * @command GiveBadge
+ * @text Give Badge
+ * @desc Gives a badge to the player
+ * 
+ * @arg item
+ * @type item
+ * @text Badge
+ * @desc The badge to give. Do not select an item which is not a badge, as it won't do anything.
+
  * //////////////////////////////////////////
  * @command LoseItem
  * @text Lose Item
@@ -202,6 +213,15 @@ PluginManager.registerCommand(pluginName, "LoseItem", function(args) {
     const itemId = Number(args.item);
     $gamePlayerTrainer.loseBagItem(itemId);
 });
+PluginManager.registerCommand(pluginName, "GiveBadge", function(args) {
+    const itemId = Number(args.item);
+    if (PokemonMZ.badgeItemIds.includes(itemId)) {
+        $gamePlayerTrainer.giveBadge(itemId);
+    }
+});
+
+
+
 
 // Pokedex
 PluginManager.registerCommand(pluginName, "GivePokedex", function(args) {
