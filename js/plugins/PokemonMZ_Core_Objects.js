@@ -2594,7 +2594,6 @@ PokemonMZ_Game_Action.prototype.calculateMoveStatus = function() {
 
 PokemonMZ_Game_Action.prototype.calculateMoveBide = function() { 
     // Specific code for bide
-    console.log(this._user._damagedBide)
     if (!this._user.isBiding()) {
         // First turn bide
         this._user.startBide();
