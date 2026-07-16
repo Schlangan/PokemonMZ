@@ -2466,9 +2466,10 @@ PokemonMZ_Scene_Evolutions.prototype.onSelectForgetPokemonMove = function() {
     const move = this._nextLearnedAttack;
     const pokemon = this._currentlyEvolvingPokemonData[0];
     const moveName = pokemon.moveNameFromStringId(move);
+    const forgottenMove = pokemon.moveNameFromIndex(index);
     const index = this._forgetPokemonMovesWindow.currentSymbol();
     pokemon.replaceMoveAtIndexBy(index, move);
-    const message = "1, 2 and... Poof!\n" + pokemon.name() + " forgot " + moveName + "!\nAnd..."
+    const message = "1, 2 and... Poof!\n" + pokemon.name() + " forgot " + forgottenMove + "!\nAnd..."
     this._staticMessageWindow.setText(message)
     this._waitCount = 150;
     this._phase = "finishReplacingMove";
@@ -3389,8 +3390,9 @@ PokemonMZ_Scene_Battle.prototype.onSelectForgetPokemonMove = function() {
     const pokemon = PokemonMZ_BattleManager.levelingUpPokemon();
     const moveName = pokemon.moveNameFromStringId(move);
     const index = this._forgetPokemonMovesWindow.currentSymbol();
+    const forgottenMove = pokemon.moveNameFromIndex(index);
     pokemon.replaceMoveAtIndexBy(index, move);
-    const message = "1, 2 and... Poof! " + pokemon.name() + " forgot " + moveName + "! And..."
+    const message = "1, 2 and... Poof! " + pokemon.name() + " forgot " + forgottenMove + "! And..."
     $gameMessage.add(message)
     PokemonMZ_BattleManager.changePhase("finishReplacingMove");
 };
