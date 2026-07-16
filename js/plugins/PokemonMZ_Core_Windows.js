@@ -1273,8 +1273,13 @@ PokemonMZ_Window_MenuPokemonList.prototype.initialize = function(rect) {
     this.loadPokemonImages();
     this._pendingIndex = -1;
     this._forbidCancel = false;
+    this._learningMove = null;
     this.refresh();
     this.select(0);
+};
+PokemonMZ_Window_MenuPokemonList.prototype.setLearningMove = function(move) {
+    this._learningMove = move.pkmz_data;
+    this.refresh();
 };
 PokemonMZ_Window_MenuPokemonList.prototype.forbidCancel = function() {
     this._forbidCancel = true;
@@ -1308,6 +1313,9 @@ PokemonMZ_Window_MenuPokemonList.prototype.drawItem = function(index) {
     this.drawItemImage(index);
     this.drawItemStatus(index);
     this.drawPokemonStatus(index);
+    if (this._learningMove) {
+        this.drawPokemonLearnAbility(index);
+    }
 };
 PokemonMZ_Window_MenuPokemonList.prototype.drawItemImage = function(index) {
     const pokemon = this.pokemon(index);
@@ -1343,9 +1351,6 @@ PokemonMZ_Window_MenuPokemonList.prototype.drawPokemonStatus = function(index) {
         const y = rect.y + this.lineHeight();
         this.drawText(status, x, y, 64, "right");
     }
-
-
-   
 };
 PokemonMZ_Window_MenuPokemonList.prototype.placeBasicGauges = function(pokemon, index, x, y) {
     this.placeGauge(pokemon, "hp", index, x, y);
@@ -1356,6 +1361,17 @@ PokemonMZ_Window_MenuPokemonList.prototype.placeGauge = function(pokemon, type, 
     sprite.setup(pokemon, type);
     sprite.move(x, y);
     sprite.show();
+};
+PokemonMZ_Window_MenuPokemonList.prototype.drawPokemonLearnAbility = function(index) {
+    const pokemon = this.pokemon(index);
+    const rect = this.itemRect(index);
+    const x = rect.x + 600;
+    const y = rect.y + this.lineHeight();
+    if (pokemon.canLearnMove(this._learningMove.id)) {
+        this.drawText("Able", x, y, 200);
+    } else {
+        this.drawText("Not Able", x, y, 200);
+    }
 };
 PokemonMZ_Window_MenuPokemonList.prototype.processOk = function() {
     Window_StatusBase.prototype.processOk.call(this);
@@ -1586,6 +1602,7 @@ PokemonMZ_Window_MenuPokemonMessage.prototype.onEndOfText = function() {
     if (!this._hasDisplayedMessage) {
         this._hasDisplayedMessage = true;
         this.startPause();
+        this.callHandler("messageDisplayed");
     } else {
         this.terminateMessage();
         this.callHandler("messageTerminated");
@@ -1599,6 +1616,12 @@ PokemonMZ_Window_MenuPokemonMessage.prototype.terminateMessage = function() {
     this._text = "";
     this._hasDisplayedMessage = false;
     this._textState = null;
+};
+PokemonMZ_Window_MenuPokemonMessage.prototype.updateInput = function() {
+    if (!this.active) {
+        return false;
+    }
+    return Window_Message.prototype.updateInput.call(this);
 };
 
 // PokemonMZ_Window_Pokedex_Gen1_PokemonList

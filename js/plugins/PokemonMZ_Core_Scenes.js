@@ -677,6 +677,7 @@ PokemonMZ_Scene_Item_Gen1.prototype.constructor = PokemonMZ_Scene_Item_Gen1;
 PokemonMZ_Scene_Item_Gen1.prototype.initialize = function() {
     Scene_ItemBase.prototype.initialize.call(this);
     this._itemSelectMode = '';
+    this._usingTm = false;
 };
 PokemonMZ_Scene_Item_Gen1.prototype.create = function() {
     Scene_ItemBase.prototype.create.call(this);
@@ -685,6 +686,7 @@ PokemonMZ_Scene_Item_Gen1.prototype.create = function() {
     this.createItemSelectWindow();
     this.createItemNumberWindow();
     this.createMessageWindow();
+    this.createYesNoWindow();
 };
 PokemonMZ_Scene_Item_Gen1.prototype.createItemWindow = function() {
     const rect = this.itemWindowRect();
@@ -699,6 +701,7 @@ PokemonMZ_Scene_Item_Gen1.prototype.createMessageWindow = function() {
     const rect = this.messageWindowRect();
     this._messageWindow = new PokemonMZ_Window_MenuPokemonMessage(rect);
     this._messageWindow.setHandler("messageTerminated", this.onMessageTerminated.bind(this))
+    this._messageWindow.setHandler("messageDisplayed", this.onMessageDisplayed.bind(this))
     this.addWindow(this._messageWindow);
 };
 PokemonMZ_Scene_Item_Gen1.prototype.messageWindowRect = function() {
@@ -739,6 +742,21 @@ PokemonMZ_Scene_Item_Gen1.prototype.createItemNumberWindow = function() {
     this._numberWindow.setHandler("numberCancel", this.onItemNumberCancel.bind(this));
     this.addWindow(this._numberWindow);
 };
+PokemonMZ_Scene_Item_Gen1.prototype.createYesNoWindow = function() {
+    const rect = this.yesNoWindowRect();
+    this._yesNoWindow = new PokemonMZ_BattleYesNoWindow(rect);
+    this._yesNoWindow.setHandler("yes", this.commandYes.bind(this));
+    this._yesNoWindow.setHandler("no", this.commandNo.bind(this));
+    this._yesNoWindow.openness = 0;
+    this.addWindow(this._yesNoWindow);
+};
+PokemonMZ_Scene_Item_Gen1.prototype.yesNoWindowRect = function() {
+    const ww = this.mainCommandWidth();
+    const wh = this.calcWindowHeight(2, true);
+    const wx = Graphics.boxWidth - ww;
+    const wy = Graphics.boxHeight - this._messageWindow.height - wh;
+    return new Rectangle(wx, wy, ww, wh);
+};
 PokemonMZ_Scene_Item_Gen1.prototype.onItemOk = function() {
     const item = this.item();
     if (item) {
@@ -776,6 +794,18 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
             this._messageWindow.setText("This isn't the time to use that!");
             this._messageWindow.startMessage();
             break;
+        case "tm":
+            const moveStrId = itemDict.pkmz_data.move;
+            let tmName = "????"
+            if (moveStrId) {
+                const moveIntId = $dataSkillsIndex[moveStrId];
+                tmName = $dataSkills[moveIntId].name;
+            }
+            this._usingTm = true;
+            this._itemSelectWindow.close();
+            this._messageWindow.setText("Booted up a TM!\nIt contained " + tmName + "!\nTeach " + tmName + " to a Pokémon?");
+            this._messageWindow.startMessage();
+            break;
         case "escapeRope":
             if ($gameMap.PokemonMZ_isRopeEscapable()) {
                 $gamePlayerTrainer.gainBagItem(itemDict.id, -1);
@@ -794,10 +824,19 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
     }
 
 };
+PokemonMZ_Scene_Item_Gen1.prototype.onMessageDisplayed = function() {
+    if (this._usingTm) {
+        this._messageWindow.deactivate();
+        this._yesNoWindow.setMode("useTm");
+        this._yesNoWindow.open();
+        this._yesNoWindow.activate();
+    }
+};
 PokemonMZ_Scene_Item_Gen1.prototype.onMessageTerminated = function() {
     this._itemSelectWindow.close();
     this._itemSelectWindow.deactivate();
     this._itemWindow.activate();
+
 };
 PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectToss = function() {
     const itemDict = this.item();
@@ -848,6 +887,23 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemNumberCancel = function() {
     this._numberWindow.close();
     this._itemSelectWindow.activate();
 };
+PokemonMZ_Scene_Item_Gen1.prototype.commandYes = function() {
+    const itemDict = this.item();
+    SceneManager.push(PokemonMZ_Scene_PokemonMenu);
+    SceneManager.prepareNextScene(itemDict);
+};
+PokemonMZ_Scene_Item_Gen1.prototype.commandNo = function() {
+    this._usingTm = false;
+    this._yesNoWindow.close();
+    this._yesNoWindow.deactivate();
+    this._messageWindow.activate();
+    this._messageWindow.pause = false;
+    this._messageWindow.terminateMessage();
+
+    this.onMessageTerminated()
+
+};
+
 
 
 // PokemonMZ_Scene_Player
@@ -1456,11 +1512,19 @@ PokemonMZ_Scene_PokemonMenu.prototype.initialize = function() {
     Scene_MenuBase.prototype.initialize.call(this);
     this._pokemon = $gamePlayerTrainer.firstPokemon();
     this._item = null;
+    this._learnedMove = null;
+    this._hasLearnedMove = null;
     this._pokemonRecoveringData = null;
     this._mustReturnToItemMenu = false;
+    this._afterTextPhase = "";
 };
 PokemonMZ_Scene_PokemonMenu.prototype.prepare = function(item) {
     this._usedItem = item;
+    if (item.pkmz_data.effect == "tm") {
+        const moveStrId = item.pkmz_data.move;
+        const moveIntId = $dataSkillsIndex[moveStrId];
+        this._learnedMove = $dataSkills[moveIntId];
+    }
 }
 PokemonMZ_Scene_PokemonMenu.prototype.pokemon = function() {
     return this._pokemon;
@@ -1471,12 +1535,18 @@ PokemonMZ_Scene_PokemonMenu.prototype.usedItem = function() {
 PokemonMZ_Scene_PokemonMenu.prototype.isUsingItem = function() {
     return this._usedItem != null;
 };
+PokemonMZ_Scene_PokemonMenu.prototype.isLearningMove = function() {
+    return this._learnedMove != null;
+};
 PokemonMZ_Scene_PokemonMenu.prototype.create = function() {
     Scene_MenuBase.prototype.create.call(this);
     this.createPokemonListWindow();
     this.createPokemonCommandWindow();
     this.createPokemonStatusWindow();
     this.createPokemonMessageWindow();
+    this.createMoveWindow();
+    this.createYesNoWindow();
+
     this._messageWindow.setPokemonListWindow(this._listWindow);
 };
 PokemonMZ_Scene_PokemonMenu.prototype.createPokemonListWindow = function() {
@@ -1484,6 +1554,9 @@ PokemonMZ_Scene_PokemonMenu.prototype.createPokemonListWindow = function() {
     this._listWindow = new PokemonMZ_Window_MenuPokemonList(rect);
     this._listWindow.setHandler("ok", this.onSelectPokemon.bind(this));
     this._listWindow.setHandler("cancel", this.onCancelPokemon.bind(this));
+    if (this._learnedMove) {
+        this._listWindow.setLearningMove(this._learnedMove);
+    }
     this.addWindow(this._listWindow);
     this._listWindow.activate();
 };
@@ -1532,7 +1605,38 @@ PokemonMZ_Scene_PokemonMenu.prototype.createPokemonMessageWindow = function() {
     const rect = this.messageWindowRect();
     this._messageWindow = new PokemonMZ_Window_MenuPokemonMessage(rect);
     this._messageWindow.setHandler("messageTerminated", this.onMessageTerminated.bind(this))
+    this._messageWindow.setHandler("messageDisplayed", this.onMessageDisplayed.bind(this))
     this.addWindow(this._messageWindow);
+};
+PokemonMZ_Scene_PokemonMenu.prototype.createMoveWindow = function() {
+    const rect2 = this.forgetPokemonMovesWindowRect();
+    this._forgetPokemonMovesWindow = new PokemonMZ_Window_PokemonForgetMoves(rect2);
+    this._forgetPokemonMovesWindow.openness = 0;
+    this._forgetPokemonMovesWindow.setHandler("ok", this.onSelectForgetPokemonMove.bind(this));
+    this._forgetPokemonMovesWindow.setHandler("cancel", this.onCancelForgetPokemonMove.bind(this));
+    this.addWindow(this._forgetPokemonMovesWindow);
+};
+PokemonMZ_Scene_PokemonMenu.prototype.forgetPokemonMovesWindowRect = function() {
+    const ww = this.mainCommandWidth();
+    const wh = this.calcWindowHeight(4, true);
+    const wx = Graphics.boxWidth - ww;
+    const wy = Graphics.boxHeight - this._messageWindow.height - wh;
+    return new Rectangle(wx, wy, ww, wh);
+};
+PokemonMZ_Scene_PokemonMenu.prototype.createYesNoWindow = function() {
+    const rect = this.yesNoWindowRect();
+    this._yesNoWindow = new PokemonMZ_BattleYesNoWindow(rect);
+    this._yesNoWindow.setHandler("yes", this.commandForgetYes.bind(this));
+    this._yesNoWindow.setHandler("no", this.commandForgetNo.bind(this));
+    this._yesNoWindow.openness = 0;
+    this.addWindow(this._yesNoWindow);
+};
+PokemonMZ_Scene_PokemonMenu.prototype.yesNoWindowRect = function() {
+    const ww = this.mainCommandWidth();
+    const wh = this.calcWindowHeight(2, true);
+    const wx = Graphics.boxWidth - ww;
+    const wy = Graphics.boxHeight - this._messageWindow.height - wh;
+    return new Rectangle(wx, wy, ww, wh);
 };
 PokemonMZ_Scene_PokemonMenu.prototype.messageWindowRect = function() {
     const ww = Graphics.boxWidth;
@@ -1547,6 +1651,8 @@ PokemonMZ_Scene_PokemonMenu.prototype.selectedPokemon = function() {
 PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemon = function() {
     if (this._listWindow.formationMode()) {
         this.onSelectPokemonSwitch();
+    } else if (this.isLearningMove()) {
+        this.onSelectPokemonLearn();
     } else if (this.isUsingItem()) {
         this.onSelectPokemonUse();
     } else {
@@ -1591,8 +1697,91 @@ PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemonUse = function() {
         this._messageWindow.startMessage();
     }
 };
+PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemonLearn = function() {
+    const moveName = this._learnedMove.name;
+    const moveStrId = this._learnedMove.pkmz_data.id;
+    const pokemon = this.selectedPokemon();
+    const pokemonName = pokemon.name();
+
+    if (pokemon.knowsMove(moveStrId)) {
+        SoundManager.playBuzzer();
+        this._listWindow.deactivate();
+        this._messageWindow.setText(pokemonName + " knows " + moveName + "!");
+        this._messageWindow.startMessage();
+    } else if (!pokemon.canLearnMove(moveStrId)) {
+        SoundManager.playBuzzer();
+        this._listWindow.deactivate();
+        this._messageWindow.setText(pokemonName + " is not compatible with " + moveName + ".\nIt can't learn " + moveName + ".");
+        this._messageWindow.startMessage();
+    } else {
+        this._listWindow.deactivate();
+        if (pokemon.moves().length < 4) {
+            this.proceedLearningMoveInstant();
+        } else {
+            this.proceedLearningMoveAsk();
+        }
+    }
+};
+PokemonMZ_Scene_PokemonMenu.prototype.proceedLearningMoveInstant = function() {
+    AudioManager.playStandardSe(PokemonMZ.learnMoveSE);
+    const pokemon = this.selectedPokemon();
+    const moveName = this._learnedMove.name;
+    const moveStringId = this._learnedMove.pkmz_data.id;
+    pokemon.learnMove(moveStringId);
+    const message = pokemon.name() + " learned " + moveName + "!";
+    this._hasLearnedMove = true;
+    this._afterTextPhase = "";
+    this._messageWindow.setText(message)
+    this._messageWindow.startMessage();
+};
+PokemonMZ_Scene_PokemonMenu.prototype.proceedLearningMoveAsk = function() {
+    const pokemon = this.selectedPokemon();
+    const pokemonName = pokemon.name();
+    const moveName = this._learnedMove.name;
+    const moveStringId = this._learnedMove.pkmz_data.id;
+
+    let message = pokemonName + " is trying to learn " +  moveName + "!";
+    message += "\nBut, " + pokemonName + " can't learn more than 4 moves!";
+    message += "\n\nDelete an older move to make room for " + moveName + "?";
+    this._messageWindow.setText(message)
+    this._messageWindow.startMessage();
+    this._afterTextPhase = "yesNoLearnMove"
+};
+PokemonMZ_Scene_PokemonMenu.prototype.onMessageDisplayed = function() {
+    switch (this._afterTextPhase) {
+    case "yesNoLearnMove":
+        this._afterTextPhase = "";
+        this._messageWindow.deactivate();
+        this._yesNoWindow.setMode("learnMove")
+        this._yesNoWindow.open();
+        this._yesNoWindow.activate();
+        break;
+    case "yesNoAbandonMove":
+        this._afterTextPhase = "";
+        this._messageWindow.deactivate();
+        this._yesNoWindow.setMode("abandonMove")
+        this._yesNoWindow.activate();
+        this._yesNoWindow.select(0);
+        this._yesNoWindow.open();
+        break;
+    case "selectForgottenMove":
+        this._afterTextPhase = "";
+        this._messageWindow.deactivate();
+        this._forgetPokemonMovesWindow.show();
+        this._forgetPokemonMovesWindow.open();
+        this._forgetPokemonMovesWindow.activate();
+        this._forgetPokemonMovesWindow.select(0);
+        break;
+    }
+};
 PokemonMZ_Scene_PokemonMenu.prototype.onMessageTerminated = function() {
-    if (this._usedItem) {
+    if (this._afterTextPhase == "forgotMove") {
+        this._afterTextPhase = "";
+        this.finishReplacingMove();
+    } else if (this._hasLearnedMove) {
+        $gamePlayerTrainer.gainBagItem(this._usedItem.id, -1);
+        this.popScene();
+    } else if (this._usedItem) {
         if ($gamePlayerTrainer.numBagItems(this._usedItem.id) > 0) {
             // If remaining items of the same id, stay on the window
             this._listWindow.activate();
@@ -1661,6 +1850,114 @@ PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemonSwitch = function() {
     this._listWindow.refresh();
     this._listWindow.activate();
 };
+
+PokemonMZ_Scene_PokemonMenu.prototype.commandForgetYes = function() {
+    // Pressed yes on yes/no window
+    const mode = this._yesNoWindow.mode();
+    const pokemon = this.selectedPokemon();
+    const pokemonName = pokemon.name();
+    const moveName = this._learnedMove.name;
+    const moveStringId = this._learnedMove.pkmz_data.id;
+    
+    switch(mode) {
+    case "learnMove":
+        // Said yes to delete an older move
+        this._yesNoWindow.close();
+        this._forgetPokemonMovesWindow.clearCommandList();
+        this._forgetPokemonMovesWindow.setPokemon(pokemon);
+        this._afterTextPhase = "selectForgottenMove"
+        this._messageWindow.terminateMessage();
+        this._messageWindow.pause = false;
+        this._messageWindow.activate();
+        this._messageWindow.setText("Which move should be forgotten?");
+        this._messageWindow.startMessage();
+        break;
+    case "abandonMove":
+        // Said yes to abandon move
+        this._yesNoWindow.close();
+        const message = pokemonName + " did not learn " + moveName + "!";
+        //this._afterTextPhase = ""
+        this._messageWindow.terminateMessage();
+        this._messageWindow.pause = false;
+        this._messageWindow.activate();
+        this._messageWindow.setText(message);
+        this._messageWindow.startMessage();
+        break;
+    }
+
+};
+PokemonMZ_Scene_PokemonMenu.prototype.commandForgetNo = function() {
+    // Pressed yes on yes/no window
+    const mode = this._yesNoWindow.mode();
+    const pokemon = this.selectedPokemon();
+    const moveName = this._learnedMove.name;
+    
+    switch(mode) {
+    case "learnMove":
+        // Said no to delete an older move
+        this._yesNoWindow.close();
+        const message = "Abandon learning " + moveName + "?";
+        this._afterTextPhase = "yesNoAbandonMove"
+        this._messageWindow.terminateMessage();
+        this._messageWindow.pause = false;
+        this._messageWindow.activate();
+        this._messageWindow.setText(message);
+        this._messageWindow.startMessage();
+        break;
+    case "abandonMove":
+        // Said no to abandon move
+        this._yesNoWindow.close();
+        this._messageWindow.terminateMessage();
+        this._messageWindow.pause = false;
+        this._messageWindow.activate();
+        this.proceedLearningMoveAsk();
+        break;
+    }
+};
+PokemonMZ_Scene_PokemonMenu.prototype.onSelectForgetPokemonMove = function() {
+    const pokemon = this.selectedPokemon();
+    const moveName = this._learnedMove.name;
+    const moveStringId = this._learnedMove.pkmz_data.id;
+
+    this._forgetPokemonMovesWindow.close();
+    this._yesNoWindow.close();
+    AudioManager.playStandardSe(PokemonMZ.forgetMoveSE);
+
+    const index = this._forgetPokemonMovesWindow.currentSymbol();
+    const forgottenMove = pokemon.moveNameFromIndex(index);
+    pokemon.replaceMoveAtIndexBy(index, moveStringId);
+    const message = "1, 2 and... Poof!\n" + pokemon.name() + " forgot " + forgottenMove + "!\nAnd..."
+    this._afterTextPhase = "forgotMove"
+    this._messageWindow.terminateMessage();
+    this._messageWindow.pause = false;
+    this._messageWindow.activate();
+    this._messageWindow.setText(message);
+    this._messageWindow.startMessage();
+};
+PokemonMZ_Scene_PokemonMenu.prototype.onCancelForgetPokemonMove = function() {
+    const moveName = this._learnedMove.name;
+    this._forgetPokemonMovesWindow.close();
+    this._yesNoWindow.close();
+    const message = "Abandon learning " + moveName + "?";
+    this._afterTextPhase = "yesNoAbandonMove"
+    this._messageWindow.terminateMessage();
+    this._messageWindow.pause = false;
+    this._messageWindow.activate();
+    this._messageWindow.setText(message);
+    this._messageWindow.startMessage();
+};
+PokemonMZ_Scene_PokemonMenu.prototype.finishReplacingMove = function() { 
+    AudioManager.playStandardSe(PokemonMZ.learnMoveSE);
+    const pokemon = this.selectedPokemon();
+    const moveName = this._learnedMove.name;
+    const moveStringId = this._learnedMove.pkmz_data.id;
+    const message = pokemon.name() + " learned " + moveName + "!";
+    this._hasLearnedMove = true;
+    this._afterTextPhase = "";
+    this._messageWindow.setText(message)
+    this._messageWindow.startMessage();
+};
+
 
 
 // PokemonMZ_Scene_Shop

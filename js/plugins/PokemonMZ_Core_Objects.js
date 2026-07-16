@@ -1556,6 +1556,9 @@ PokemonMZ_Game_Pokemon.prototype.removeOlderMoves = function() {
         this._moves.splice(0, numMoves - 4);
     }
 };
+PokemonMZ_Game_Pokemon.prototype.canLearnMove = function(moveStringId) {
+    return this._data.tmMoves.includes(moveStringId) || this._data.hmMoves.includes(moveStringId);
+};
 PokemonMZ_Game_Pokemon.prototype.learnMove = function(moveStringId) {
     this._moves.push({
         "id":moveStringId,
