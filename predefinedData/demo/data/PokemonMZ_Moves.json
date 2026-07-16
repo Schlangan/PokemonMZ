@@ -12,6 +12,17 @@
         "effects":[]
     },
     {
+        "id":"bide",
+        "type":"normal",
+        "target":"opponent",
+        "pp":10,
+        "power":0,
+        "accuracy":100,
+        "effects":[
+            {"type":"bide", "unleashAnimationId":2}
+        ]
+    },
+    {
         "id":"bubble",
         "type":"water",
         "target":"opponent",
@@ -31,6 +42,17 @@
         "accuracy":100,
         "effects":[
             {"type":"confuseTarget","percentChance":10}
+        ]
+    },
+    {
+        "id":"defenseCurl",
+        "category":"status",
+        "type":"normal",
+        "target":"user",
+        "pp":40,
+        "accuracy":100,
+        "effects":[
+            {"type":"pdefUpUser","stage":1,"percentChance":100}
         ]
     },
     {
@@ -234,6 +256,17 @@
         "effects":[]
     },
     {
+        "id":"screech",
+        "category":"status",
+        "type":"normal",
+        "target":"opponent",
+        "pp":40,
+        "accuracy":85,
+        "effects":[
+            {"type":"pdefDownTarget","stage":2,"percentChance":100}
+        ]
+    }, 
+    {
         "id":"sleepPowder",
         "category":"status",
         "type":"grass",
@@ -258,6 +291,7 @@
     {
         "id":"struggle",
         "type":"normal",
+        "target":"opponent",
         "pp":-1,
         "power":50,
         "effects":[

@@ -4,7 +4,7 @@
         "id":"rival1_starter_bulbasaur",
         "type":"trainer",
         "trainerActor":2,
-        "ia":"generic",
+        "ia":"basic",
         "pokemons":[
             {"id":"charmander","level":5,"moveset":"default","dv":"default","ev":"default"}
         ],
@@ -16,7 +16,7 @@
         "id":"rival1_starter_charmander",
         "type":"trainer",
         "trainerActor":2,
-        "ia":"generic",
+        "ia":"basic",
         "pokemons":[
             {"id":"squirtle","level":5,"moveset":"default","dv":"default","ev":"default"}
         ],
@@ -28,7 +28,7 @@
         "id":"rival1_starter_squirtle",
         "type":"trainer",
         "trainerActor":2,
-        "ia":"generic",
+        "ia":"basic",
         "pokemons":[
             {"id":"bulbasaur","level":5,"moveset":"default","dv":"default","ev":"default"}
         ],
@@ -40,7 +40,7 @@
         "id":"rival2_starter_bulbasaur",
         "type":"trainer",
         "trainerActor":2,
-        "ia":"generic",
+        "ia":"basic",
         "pokemons":[
             {"id":"pidgey","level":9,"moveset":"default","dv":"default","ev":"default"},
             {"id":"charmander","level":8,"moveset":"default","dv":"default","ev":"default"}
@@ -53,7 +53,7 @@
         "id":"rival2_starter_charmander",
         "type":"trainer",
         "trainerActor":2,
-        "ia":"generic",
+        "ia":"basic",
         "pokemons":[
             {"id":"pidgey","level":9,"moveset":"default","dv":"default","ev":"default"},
             {"id":"squirtle","level":8,"moveset":"default","dv":"default","ev":"default"}
@@ -66,7 +66,7 @@
         "id":"rival2_starter_squirtle",
         "type":"trainer",
         "trainerActor":2,
-        "ia":"generic",
+        "ia":"basic",
         "pokemons":[
             {"id":"pidgey","level":9,"moveset":"default","dv":"default","ev":"default"},
             {"id":"bulbasaur","level":8,"moveset":"default","dv":"default","ev":"default"}
@@ -110,7 +110,7 @@
         "id":"viridian_lass1",
         "type":"trainer",
         "trainerActor":4,
-        "ia":"generic",
+        "ia":"basic",
         "pokemons":[
             {"id":"nidoranf","level":6,"moveset":"default","dv":"default","ev":"default"},
             {"id":"nidoranm","level":6,"moveset":"default","dv":"default","ev":"default"}
@@ -122,7 +122,7 @@
         "id":"viridian_bug1",
         "type":"trainer",
         "trainerActor":3,
-        "ia":"generic",
+        "ia":"basic",
         "pokemons":[
             {"id":"weedle","level":6,"moveset":"default","dv":"default","ev":"default"},
             {"id":"caterpie","level":6,"moveset":"default","dv":"default","ev":"default"}
@@ -134,7 +134,7 @@
         "id":"viridian_bug2",
         "type":"trainer",
         "trainerActor":3,
-        "ia":"generic",
+        "ia":"basic",
         "pokemons":[
             {"id":"weedle","level":7,"moveset":"default","dv":"default","ev":"default"},
             {"id":"kakuna","level":7,"moveset":"default","dv":"default","ev":"default"},
@@ -147,7 +147,7 @@
         "id":"viridian_bug3",
         "type":"trainer",
         "trainerActor":3,
-        "ia":"generic",
+        "ia":"basic",
         "pokemons":[
             {"id":"caterpie","level":8,"moveset":"default","dv":"default","ev":"default"},
             {"id":"metapod","level":8,"moveset":"add","addMoves":["tackle","stringShot"],"dv":"default","ev":"default"}
@@ -159,7 +159,7 @@
         "id":"viridian_bug4",
         "type":"trainer",
         "trainerActor":3,
-        "ia":"generic",
+        "ia":"basic",
         "pokemons":[
             {"id":"caterpie","level":10,"moveset":"default","dv":"default","ev":"default"}
         ],
@@ -177,6 +177,32 @@
             {"id":"kakuna","levelMin":7, "levelMax":7, "rate":10},
             {"id":"pikachu","levelMin":3, "levelMax":5, "rate":5}
         ]
+    },
+    {
+        "id":"pewter_jrtrainerm1",
+        "type":"trainer",
+        "trainerActor":5,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"diglett","level":10,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"sandshrew","level":10,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Darn! Light years isn't time!\nIt measures distance!",
+        "money":200
+    },
+    {
+        "id":"pewter_brock",
+        "type":"trainer",
+        "trainerActor":6,
+        "ia":"basic",
+        "iaModifiers":{
+            "item":{"id":"fullHeal","condition":"hasStatus","chance":100,"maxPerPokemon":5}
+        },
+        "pokemons":[
+            {"id":"geodude","level":11,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"onix","level":12,"moveset":"add","addMoves":["bide"],"dv":"default","ev":"default"}
+        ],
+        "defeatText":"I took you for granted. As proof\nof your victory, here's the\nBoulder Badge!",
+        "money":1287
     }
-
 ]

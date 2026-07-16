@@ -1,6 +1,12 @@
 [
     null,
     {
+        "id":"boulderBadge",
+        "category":"badge",
+        "effect":"passivePatkBoost",
+        "boostPercent":12.5
+    },
+    {
         "id":"potion",
         "user":"trainer",
         "category":"regular",
@@ -103,5 +109,34 @@
         "effect":"cureStatus",
         "status":"sleep",
         "price":200
+    },
+    {
+        "id":"escapeRope",
+        "user":"trainer",
+        "category":"regular",
+        "battle":false,
+        "target":"trainer",
+        "effect":"escapeRope",
+        "price":550
+    },
+    {
+        "id":"fullHeal",
+        "user":"trainer",
+        "category":"regular",
+        "battle":true,
+        "target":"trainer",
+        "effect":"cureStatus",
+        "status":"all",
+        "price":600
+    },
+    {
+        "id":"tm34",
+        "user":"trainer",
+        "category":"regular",
+        "battle":false,
+        "target":"pokemon",
+        "effect":"tm",
+        "move":"bide",
+        "price":2000
     }
 ]

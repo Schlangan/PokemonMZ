@@ -379,6 +379,37 @@
         ]
     },
     {
+        "id":"sandshrew",
+        "pokedex":[{"region":"kanto","number":27}],
+        "category":"Mouse",
+        "description":"Burrows deep underground in arid locations far from water. It only emerges to hunt for food. Its body is dry. When it gets cold at night, its hide is said to become coated with a fine dew.",
+        "height":0.6,
+        "weight":12.0,
+        "types":["ground"],
+        "baseStats":{"hp":50,"patk":75,"pdef":85,"satk":20,"sdef":30,"spd":40,"spc":30},
+        "expCurve":"mediumFast",
+        "catchRate":255,
+        "xpYield":93,
+        "ev":[{"pdef":1}],
+        "evolutions":[
+            {"to":"sandslash","mode":"level","level":22}
+        ],
+        "learnedMoves":[
+            {"lvl":1,"move":"scratch"},
+            {"lvl":10,"move":"sandAttack"},
+            {"lvl":17,"move":"slash"},
+            {"lvl":24,"move":"poisonSting"},
+            {"lvl":31,"move":"swift"},
+            {"lvl":38,"move":"furySwipes"}
+        ],
+        "hmMoves":["cut","strength"],
+        "tmMoves":[
+            "swordsDance","toxic","bodySlam","takeDown","doubleEdge","submission",
+            "seismicToss","rage","earthquake","fissure","dig","mimic","doubleTeam",
+            "bide","swift","skullBash","rest","rockSlide","substitute"
+        ]
+    },
+    {
         "id":"nidoranf",
         "pokedex":[{"region":"kanto","number":29}],
         "category":"Poison Pin",
@@ -443,6 +474,37 @@
         ]
     },
     {
+        "id":"diglett",
+        "pokedex":[{"region":"kanto","number":50}],
+        "category":"Mole",
+        "description":"Lives about one yard underground where it feeds on plant roots. It sometimes appears above ground. It prefers dark places. It spends most of its time underground, though it may pop up in caves.",
+        "height":0.2,
+        "weight":0.8,
+        "types":["ground"],
+        "baseStats":{"hp":10,"patk":55,"pdef":25,"satk":35,"sdef":45,"spd":95,"spc":45},
+        "expCurve":"mediumFast",
+        "catchRate":255,
+        "xpYield":81,
+        "ev":[{"spd":1}],
+        "evolutions":[
+            {"to":"dugtrio","mode":"level","level":26}
+        ],
+        "learnedMoves":[
+            {"lvl":1,"move":"scratch"},
+            {"lvl":15,"move":"growl"},
+            {"lvl":19,"move":"dig"},
+            {"lvl":24,"move":"sandAttack"},
+            {"lvl":31,"move":"slash"},
+            {"lvl":40,"move":"earthquake"}
+        ],
+        "hmMoves":["cut"],
+        "tmMoves":[
+            "toxic","bodySlam","takeDown","doubleEdge","rage",
+            "earthquake","fissure","dig","mimic","doubleTeam","bide",
+            "rest","rockSlide","substitute"
+        ]
+    },
+    {
         "id":"mankey",
         "pokedex":[{"region":"kanto","number":56}],
         "category":"Pig Monkey",
@@ -474,6 +536,69 @@
             "megaPunch","megaKick","toxic","bodySlam","takeDown","doubleEdge","payDay","submission","counter", 
             "seismicToss","rage","thunderbolt","thunder","dig","mimic","doubleTeam","bide","metronome","swift",
             "skullBash","rest","rockSlide","substitute"
+        ]
+    },
+    {
+        "id":"geodude",
+        "pokedex":[{"region":"kanto","number":74}],
+        "category":"Rock",
+        "description":"Found in fields and mountains. Mistaking them for boulders, people often step or trip on them. ommonly found near mountain trails, etc. If you step on one by accident, it gets angry.",
+        "height":0.4,
+        "weight":20.0,
+        "types":["rock","ground"],
+        "baseStats":{"hp":40,"patk":80,"pdef":100,"satk":30,"sdef":30,"spd":20,"spc":30},
+        "expCurve":"mediumSlow",
+        "catchRate":255,
+        "xpYield":86,
+        "ev":[{"pdef":1}],
+        "evolutions":[
+            {"to":"graveler","mode":"level","level":25}
+        ],
+        "learnedMoves":[
+            {"lvl":1,"move":"tackle"},
+            {"lvl":11,"move":"defenseCurl"},
+            {"lvl":16,"move":"rockThrow"},
+            {"lvl":21,"move":"selfdestruct"},
+            {"lvl":26,"move":"harden"},
+            {"lvl":31,"move":"earthquake"},
+            {"lvl":36,"move":"explosion"}
+        ],
+        "hmMoves":["strength"],
+        "tmMoves":[
+            "megaPunch","toxic","bodySlam","takeDown","doubleEdge","submission",
+            "counter","seismicToss","rage","earthquake","fissure","dig",
+            "mimic","doubleTeam","bide","metronome","selfdestrcut","fireBlast",
+            "rest","explosion","rockSlide","substitute"
+        ]
+    },
+    {
+        "id":"onix",
+        "pokedex":[{"region":"kanto","number":95}],
+        "category":"Rock Snake",
+        "description":"As it grows, the stone portions of its body harden to become similar to a diamond, but colored black. Burrows at high speed in search of food. The tunnels it leaves are used as homes by Digletts.",
+        "height":8.8,
+        "weight":210.0,
+        "types":["rock","ground"],
+        "baseStats":{"hp":35,"patk":45,"pdef":160,"satk":30,"sdef":45,"spd":70,"spc":30},
+        "expCurve":"mediumFast",
+        "catchRate":45,
+        "xpYield":108,
+        "ev":[{"pdef":1}],
+        "evolutions":[],
+        "learnedMoves":[
+            {"lvl":1,"move":"tackle"},
+            {"lvl":1,"move":"screech"},
+            {"lvl":15,"move":"bind"},
+            {"lvl":19,"move":"rockThrow"},
+            {"lvl":25,"move":"rage"},
+            {"lvl":33,"move":"slam"},
+            {"lvl":43,"move":"harden"}
+        ],
+        "hmMoves":["strength"],
+        "tmMoves":[
+            "toxic","bodySlam","takeDown","doubleEdge","rage",
+            "earthquake","fissure","dig","mimic","doubleTeam","bide",
+            "selfdestruct","skullBash","rest","explosion","rockSlide","substitute"
         ]
     },
     {
