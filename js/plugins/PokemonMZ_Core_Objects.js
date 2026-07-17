@@ -1052,6 +1052,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._turnsConfusion = 0;
     this._turnsBide = 0;
     this._damagedBide = 0;
+    this._hasFocusEnergy = false;
 
     this._receivedItems = [];
 
@@ -1821,6 +1822,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.unseed();
     this.unconfuse();
     this.endBide();
+    this.unfocusEnergy();
 };
 PokemonMZ_Game_Pokemon.prototype.isFainted = function() {
     return this._hp == 0;
@@ -1860,6 +1862,9 @@ PokemonMZ_Game_Pokemon.prototype.nextConfusionTurn = function() {
     if (this._turnsConfusion == 0) {
         this.unconfuse();
     }
+};
+PokemonMZ_Game_Pokemon.prototype.hasFocusEnergy = function() {
+    return this._hasFocusEnergy;
 };
 PokemonMZ_Game_Pokemon.prototype.isBurnable = function() {
     // Cannot burn pokemon with PSN/SLP/FRZ/PAR/BRN/FNT
@@ -1936,6 +1941,13 @@ PokemonMZ_Game_Pokemon.prototype.isConfusable = function() {
 
     return true;
 };
+PokemonMZ_Game_Pokemon.prototype.canGetFocusEnergy = function() {
+    // Cannot flinch FNT/FOCUSED pokemon
+    if (this.isFainted() || this.hasFocusEnergy()) {
+        return false;
+    }
+    return true;
+};
 PokemonMZ_Game_Pokemon.prototype.burn = function(force) {
     if (this.isBurnable() || force) {
         this._isBurned = true;
@@ -1978,6 +1990,11 @@ PokemonMZ_Game_Pokemon.prototype.confuse = function(turns, force) {
         this._turnsConfusion = Math.randomInt(4) + 2;   // 2 to 5
     }
 };
+PokemonMZ_Game_Pokemon.prototype.focusEnergy = function(force) {
+    if (this.canGetFocusEnergy() || force) {
+        this._hasFocusEnergy = true;
+    }
+};
 PokemonMZ_Game_Pokemon.prototype.unburn = function() {
     if (this.isBurned()) {
         this._isBurned = false;
@@ -2018,6 +2035,11 @@ PokemonMZ_Game_Pokemon.prototype.unconfuse = function() {
     if (this.isConfused()) {
         this._isConfused = false;
         this._turnsConfusion = 0;
+    }
+};
+PokemonMZ_Game_Pokemon.prototype.unfocusEnergy = function() {
+    if (this.hasFocusEnergy()) {
+        this._hasFocusEnergy = false;
     }
 };
 PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolution = function(evolutionMode) {
@@ -2776,6 +2798,11 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
         break;
     case "forceSwitchOut":
         effectResults = this.effect_forceSwitchOut(battleData, effect, effectResults);
+        break;
+    case "focusEnergy":
+        effectResults = this.effect_focusEnergy(battleData, effect, effectResults);
+        break;
+
     }
     return effectResults;
 };
@@ -2841,13 +2868,15 @@ PokemonMZ_Game_Action.prototype.moveCritical = function() {
 
     let isCritical = false;
     const criticalStage = 0;
+    const hasFocusEnergy = this._user.hasFocusEnergy();
     //TODO : Evolution of critical stage - item held, abilites, use of items, certains moves
 
     // GEN 1 critical calculation
     switch (PokemonMZ.pokemonMechanicsGeneration) {
         case 1:
             const criticalFactor = highCritical ? 8 : 1;
-            let threshold = Math.floor(criticalFactor * this._user.spd() / 2); 
+            const focusEnergyFactor = hasFocusEnergy ? 4 : 1;
+            let threshold = Math.floor(focusEnergyFactor * criticalFactor * this._user.spd() / 2); 
             if (threshold < 0) { threshold = 0; }
             if (threshold > 255) { threshold = 255; }
 
@@ -2859,9 +2888,10 @@ PokemonMZ_Game_Action.prototype.moveCritical = function() {
                     {
                         "01. User speed":this._user.spd(),
                         "02. Move critical factor":criticalFactor,
-                        "03. Threshold":threshold,
-                        "04. Random value":randomValue,
-                        "05. Is critical":isCritical
+                        "03. Focus energy factor":focusEnergyFactor,
+                        "04. Threshold":threshold,
+                        "05. Random value":randomValue,
+                        "06. Is critical":isCritical
                     }
                 })
             }
@@ -3437,6 +3467,18 @@ PokemonMZ_Game_Action.prototype.effect_forceSwitchOut = function(battleData, eff
         effectResults.success = false;
         this._resultSteps.push(["waittext","unaffected",this.oppositeSide()]);
 
+    }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_focusEnergy = function(battleData, effect, effectResults) {
+    
+    if (this._user.hasFocusEnergy()) {
+        effectResults.success = false;
+        this._resultSteps.push(["waittext","statusFailed",this.side()]);
+    } else {
+        effectResults.success = true;
+        this._user.focusEnergy();
+        this._resultSteps.push(["waittext","gettingPumped",this.side()]);
     }
     return effectResults;
 };

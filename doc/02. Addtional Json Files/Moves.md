@@ -48,6 +48,7 @@ List of implemented effects and their additional parameters:
     - percentChance, **int** : Chance out of 100 of the seed to hit
 
 - effect = **highCritical** : Move with high critical chance. No additional parameters.
+- effect = **focusEnergy** : Focus Energy move. Increase by 4 critical chances (Original RBY games had a bug in which the value was divided by 4 instead. Here, the bug is fixed.)
 
 - effect = **mulitHit** : Chance of hitting several times
     - min, **int** : Minimum number of hits

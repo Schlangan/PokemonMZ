@@ -3008,7 +3008,9 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
     case "bideMissed":
         return prefix + pokemon.name() + "'s attack missed!";
     case "blownAway":
-        return prefix + pokemon.name() + " was blown away!";  
+        return prefix + pokemon.name() + " was blown away!";
+    case "gettingPumped":
+        return prefix + pokemon.name() + "'s getting pumped!";
     }
     return ""
 };
