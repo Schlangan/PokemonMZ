@@ -3104,6 +3104,10 @@ PokemonMZ_Game_Action.prototype.effect_confuseTarget = function(battleData, effe
             effectResults.success = true;
             this._resultSteps.push(["waittext","confused",this.oppositeSide()])
             this._resultSteps.push(["confusePokemon",this._opponent])
+        } else {
+            if (battleData.damageDealt == 0) {
+                this._resultSteps.push(["waittext","statusFailed",this.oppositeSide()]);
+            };
         }
     }
     return effectResults;
