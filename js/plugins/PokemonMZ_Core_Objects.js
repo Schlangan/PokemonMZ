@@ -1171,10 +1171,10 @@ PokemonMZ_Game_Pokemon.prototype.gainExp = function(expPoints) {
     }
 };
 PokemonMZ_Game_Pokemon.prototype.calculateEvolutionMoves = function() {
-    // Return level 1 learned moves when evolving
+    // Return moves of pokemon level when evolving
     this._movesLearnWaitlist = [];
     for (const moveInfo of this._data.learnedMoves) {
-        if (moveInfo.lvl == 1 && !this.knowsMove(moveInfo.move) && !this._movesLearnWaitlist.includes(moveInfo.move)) {
+        if (moveInfo.lvl == this._level && !this.knowsMove(moveInfo.move) && !this._movesLearnWaitlist.includes(moveInfo.move)) {
             this._movesLearnWaitlist.push(moveInfo.move);
         }
     }
