@@ -3259,7 +3259,15 @@ PokemonMZ_Game_Action.prototype.effect_accDownTarget = function(battleData, effe
             "chance":effect.percentChance, "randomNumber":randomNumber, "stageBefore":this._opponent._stageModifiers.acc}
         })
     }
-    if (randomNumber < effect.percentChance) {
+    
+    // In generation I, status has 25% of not happening if user is enemy
+    // Since pure status moves already passed that check, only applies to other move types
+    let additionalFailure = false;
+    if (PokemonMZ.pokemonMechanicsGeneration == 1) {
+        if (this._moveData.category != "status") { additionalFailure = (rnd < 0.25); }
+    }
+
+    if (randomNumber < effect.percentChance && !additionalFailure) {
         if (this._opponent._stageModifiers.acc > -6) {
             this._opponent._stageModifiers.acc -= effect.stage;
             if (this._opponent._stageModifiers.acc < -6) { this._opponent._stageModifiers.acc = -6; }
@@ -3285,7 +3293,15 @@ PokemonMZ_Game_Action.prototype.effect_patkDownTarget = function(battleData, eff
             "chance":effect.percentChance, "randomNumber":randomNumber, "stageBefore":this._opponent._stageModifiers.patk}
         })
     }
-    if (randomNumber < effect.percentChance) {
+
+    // In generation I, status has 25% of not happening if user is enemy
+    // Since pure status moves already passed that check, only applies to other move types
+    let additionalFailure = false;
+    if (PokemonMZ.pokemonMechanicsGeneration == 1) {
+        if (this._moveData.category != "status") { additionalFailure = (rnd < 0.25); }
+    }
+
+    if (randomNumber < effect.percentChance && !additionalFailure) {
         if (this._opponent._stageModifiers.patk > -6) {
             this._opponent._stageModifiers.patk -= effect.stage;
             if (this._opponent._stageModifiers.patk < -6) { this._opponent._stageModifiers.patk = -6; }
@@ -3311,7 +3327,15 @@ PokemonMZ_Game_Action.prototype.effect_pdefDownTarget = function(battleData, eff
             "chance":effect.percentChance, "randomNumber":randomNumber}
         })
     }
-    if (randomNumber < effect.percentChance) {
+
+    // In generation I, status has 25% of not happening if user is enemy
+    // Since pure status moves already passed that check, only applies to other move types
+    let additionalFailure = false;
+    if (PokemonMZ.pokemonMechanicsGeneration == 1) {
+        if (this._moveData.category != "status") { additionalFailure = (rnd < 0.25); }
+    }
+
+    if (randomNumber < effect.percentChance && !additionalFailure) {
         const initialStage = this._opponent._stageModifiers.pdef
         if (initialStage > -6) {
             this._opponent._stageModifiers.pdef -= effect.stage;
@@ -3346,7 +3370,15 @@ PokemonMZ_Game_Action.prototype.effect_spdDownTarget = function(battleData, effe
             "chance":effect.percentChance, "randomNumber":randomNumber, "stageBefore":this._opponent._stageModifiers.spd}
         })
     }
-    if (randomNumber < effect.percentChance) {
+
+    // In generation I, status has 25% of not happening if user is enemy
+    // Since pure status moves already passed that check, only applies to other move types
+    let additionalFailure = false;
+    if (PokemonMZ.pokemonMechanicsGeneration == 1) {
+        if (this._moveData.category != "status") { additionalFailure = (rnd < 0.25); }
+    }
+
+    if (randomNumber < effect.percentChance && !additionalFailure) {
         if (this._opponent._stageModifiers.spd > -6) {
             this._opponent._stageModifiers.spd -= effect.stage;
             if (this._opponent._stageModifiers.spd < -6) { this._opponent._stageModifiers.spd = -6; }
