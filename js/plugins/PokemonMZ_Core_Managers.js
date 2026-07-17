@@ -662,7 +662,6 @@ PokemonMZ_BattleManager.updatePhase = function(timeActive) {
         case "addWildToBox":
             this.addWildToBox();
             break;
-
         case "checkIfEvolution":
             this.checkIfEvolution();
             break;
@@ -740,6 +739,14 @@ PokemonMZ_BattleManager.updateSubPhase = function(timeActive) {
         case "animateUserEffect":
             this.animateUserEffect();
             break;
+        case "blowTargetAway":
+            if (this._subPhaseParams[0] == "player") {
+                this.updatePlayerPokemonBlownAway();
+            } else {
+                this.updateEnemyPokemonBlownAway();
+            }
+            break;
+
     }
 };
 PokemonMZ_BattleManager.initializeEnterTrainerVsWild = function() { 
@@ -878,6 +885,34 @@ PokemonMZ_BattleManager.enemyTrainerLeave = function() {
     }
     if (phaseCompleted) {
         this.changePhase("enemySendFirstPokemon");
+    }
+};
+PokemonMZ_BattleManager.updatePlayerPokemonBlownAway = function() {
+    let phaseCompleted = true;
+    const playerSprite = this._spriteset.playerPokemonSprite();
+
+    if (ConfigManager.battleAnimation) {
+        if (playerSprite.x > -200) {
+            playerSprite.placeBottomCenter(playerSprite._bottomCenterX  - 20, playerSprite._bottomCenterY);
+            phaseCompleted = false;
+        }
+    };
+    if (phaseCompleted) {
+        this.clearSubPhase();
+    }
+};
+PokemonMZ_BattleManager.updateEnemyPokemonBlownAway = function() {
+    let phaseCompleted = true;
+    const enemySprite = this._spriteset.enemyPokemonSprite();
+
+    if (ConfigManager.battleAnimation) {
+        if (enemySprite.x < Graphics.boxWidth + 5) {
+            enemySprite.placeBottomCenter(enemySprite._bottomCenterX + 20,enemySprite._bottomCenterY);
+            phaseCompleted = false;
+        }
+    };
+    if (phaseCompleted) {
+        this.clearSubPhase();
     }
 };
 PokemonMZ_BattleManager.markBattledPokemons = function() {
@@ -2378,6 +2413,13 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("removePokemonStatus");
                 this._subPhaseParams = ["all", step[1]];
                 break;
+            case "blowTargetAway":
+                this.changeSubPhase("blowTargetAway");
+                this._subPhaseParams = [step[1], step[2]];
+                break;
+            case "endBattle":
+                this.changePhase("endPlayerEscape");
+                break;
         }
     } else {
         if (PokemonMZ.debugLog) {
@@ -2390,7 +2432,6 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
     }
 };
 PokemonMZ_BattleManager.targetHitAnimation = function() {
-
     if (ConfigManager.battleAnimation) {
         const sprite = this._subPhaseParams[0];
         const animationId = this._subPhaseParams[1];
@@ -2902,6 +2943,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return "It doesn't affect " + prefix + pokemon.name() + "!";
     case "noAffect":
         return "It didn't affect " + prefix + pokemon.name() + "!";
+    case "unaffected":
+        return prefix + pokemon.name() + " is unaffected!";
     case "weak":
         return "It's not very effective...";
     case "evaded":
@@ -2964,6 +3007,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + " unleashed energy!";
     case "bideMissed":
         return prefix + pokemon.name() + "'s attack missed!";
+    case "blownAway":
+        return prefix + pokemon.name() + " was blown away!";  
     }
     return ""
 };

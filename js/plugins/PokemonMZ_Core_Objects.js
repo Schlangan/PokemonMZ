@@ -2277,6 +2277,15 @@ PokemonMZ_Game_Action.prototype.isMoveEffectBide = function() {
     }
     return false;
 };
+PokemonMZ_Game_Action.prototype.isMoveEffectSwitchOut = function() {
+    if (!this._moveData) { return false; }
+    for (const effect of this._moveData.effects) {
+        if (effect.type == "forceSwitchOut") {
+            return true;
+        }
+    }
+    return false;
+};
 PokemonMZ_Game_Action.prototype.opponent = function() {
     return this._opponent;
 };
@@ -2597,8 +2606,11 @@ PokemonMZ_Game_Action.prototype.calculateMoveStatus = function() {
     hit = this.moveHit() || this._moveData.target == "user";
     if (this.side() == "enemy" && this._moveData.target == "opponent") {
         // In generation 1, opponent status moves have an additional 1/4 chance to fail
-        const rnd = Math.random();
-        hit = hit && (rnd < 0.75);
+        // Doestn't apply to foce switch out
+        if (!this.isMoveEffectSwitchOut()) {
+            const rnd = Math.random();
+            hit = hit && (rnd < 0.75);
+        }
     }
     if (hit) {
         const nextResultIndex = this._resultSteps.length;
@@ -2757,12 +2769,13 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
             effectResults = this.effect_evaUpUser(battleData, effect, effectResults);
         }
         break;
-
     case "recoilPercent":
         if (!this.isMoveEffectExcepted(effect, this._user)) {
             effectResults = this.effect_recoilPercent(battleData, effect, effectResults);
         }
         break;
+    case "forceSwitchOut":
+        effectResults = this.effect_forceSwitchOut(battleData, effect, effectResults);
     }
     return effectResults;
 };
@@ -3406,5 +3419,32 @@ PokemonMZ_Game_Action.prototype.effect_recoilPercent = function(battleData, effe
         this._resultSteps.push(["damageUser",damageDealt]);
     }
     effectResults.userDamage = damageDealt;
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_forceSwitchOut = function(battleData, effect, effectResults) {
+    if ($PokemonMZ_gameBattle.isWildBattle()) {
+        const levelUser = this._user.level();
+        const levelTarget = this._opponent.level();
+        
+        let failureChance = 0.0;
+        if (levelUser < levelTarget) {
+            failureChance = (levelTarget / 4)/(levelTarget + levelUser + 1);
+        }
+        
+        if (Math.random() < failureChance) {
+            effectResults.success = false;
+            this._resultSteps.push(["waittext","noAffect",this.oppositeSide()]);
+        } else {
+            effectResults.success = true;
+            this._resultSteps.push(["blowTargetAway",this.oppositeSide()]);
+            this._resultSteps.push(["waittext","blownAway",this.oppositeSide()]);
+            this._resultSteps.push(["endBattle"]);
+        }
+    } else {
+        // No force switch out in trainer battles in generation I
+        effectResults.success = false;
+        this._resultSteps.push(["waittext","unaffected",this.oppositeSide()]);
+
+    }
     return effectResults;
 };
