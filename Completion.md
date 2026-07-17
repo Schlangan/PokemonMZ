@@ -3,8 +3,14 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 ## Pokemons
 
 - 0001. Bulbasaur
+- 0002. Ivysaur
+- (...)
 - 0004. Charmander
+- 0005. Charmeleon
+- (...)
 - 0007. Squirtle
+- 0008. Wartortle
+- (...)
 - 0010. Caterpie
 - 0011. Metapod
 - 0012. Butterfree
@@ -12,15 +18,29 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0014. Kakuna
 - 0015. Beedrill
 - 0016. Pidgey
+- 0017. Pidgeotto
+- (...)
 - 0019. Rattata
+- 0020. Raticate
 - 0021. Spearow
+- 0022. Fearow
+- (...)
 - 0025. Pikachu
+- (...)
 - 0027. Sandshrew
+- (...)
 - 0029. Nidoran♀
+- 0030. Nidorina
+- (...)
 - 0032. Nidoran♂
+- 0033. Nidorino
+- (...)
 - 0050. Diglett
+- (...)
 - 0056. Mankey
+- (...)
 - 0074. Geodude
+- (...)
 - 0095. Onix
 
 ## Moves
@@ -30,6 +50,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Horn Attack
     - Peck
     - Scratch
+    - Slam
     - Tackle
     - Vine Whip
     - Water Gun
@@ -43,6 +64,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - Moves hitting N times in one turn
     - Double kick (2-2)
     - Fury Attack (2-5)
+    - Twineedle (2-2)
 
 - Moves inflicting statuses
     - Confusion (confusion)
@@ -54,8 +76,10 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Poison Sting (poison)
     - Sleep Powder (sleep)
     - Stun Spore (paralysis)
+    - Supersonice (confusion)
     - Thunder Shock (paralysis, except Electric types)
     - Thunder Wave (paralysis)
+    - Twineedle (poison, after last hit)
 
 - Moves dropping target stats by one stage
     - Bubble (speed)
@@ -73,8 +97,12 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Double Team (evasion)
     - Harden (defense)
 
+- Moves forcing Pokemon to switch out (no effect in trainer battles in generation I)
+    - Whirlwind
+
 - Special moves
     - Bide (activate turn 1, wait 1-2 turns, and unleash last turn double damage taken while waiting)
+    - Focus Energy (multiply critical chances by 4 - bug fixed compared to original RBY games which were dividing by 4 instead)
     - Struggle (launched with 0pp, recoil damage)
 
 ## Items

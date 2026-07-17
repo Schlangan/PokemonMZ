@@ -1,3 +1,13 @@
+
+## [0.0.3] - TBD
+
+Pokemon can now reach level 20, hence new pokemon and skills have been analyzed.
+
+- New skill effects
+    - Whirlwind, blowing enemy away (only wild battles in generation I)
+    - Focus energy (critical chances x4 - but of original gen I games fixed)
+    - Poison on last hit of multi-hit move (twineedle)
+
 ## [0.0.2] - 2026-07-16
 
 An update to all mechanics that can be found after Viridian Forest, up to Pewter City.
