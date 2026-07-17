@@ -3259,11 +3259,11 @@ PokemonMZ_Game_Action.prototype.effect_accDownTarget = function(battleData, effe
             "chance":effect.percentChance, "randomNumber":randomNumber, "stageBefore":this._opponent._stageModifiers.acc}
         })
     }
-    
+
     // In generation I, status has 25% of not happening if user is enemy
     // Since pure status moves already passed that check, only applies to other move types
     let additionalFailure = false;
-    if (PokemonMZ.pokemonMechanicsGeneration == 1) {
+    if (PokemonMZ.pokemonMechanicsGeneration == 1 && this.side() == "enemy" && this._moveData.target == "opponent") {
         if (this._moveData.category != "status") { additionalFailure = (rnd < 0.25); }
     }
 
@@ -3297,7 +3297,7 @@ PokemonMZ_Game_Action.prototype.effect_patkDownTarget = function(battleData, eff
     // In generation I, status has 25% of not happening if user is enemy
     // Since pure status moves already passed that check, only applies to other move types
     let additionalFailure = false;
-    if (PokemonMZ.pokemonMechanicsGeneration == 1) {
+    if (PokemonMZ.pokemonMechanicsGeneration == 1 && this.side() == "enemy" && this._moveData.target == "opponent") {
         if (this._moveData.category != "status") { additionalFailure = (rnd < 0.25); }
     }
 
@@ -3331,7 +3331,7 @@ PokemonMZ_Game_Action.prototype.effect_pdefDownTarget = function(battleData, eff
     // In generation I, status has 25% of not happening if user is enemy
     // Since pure status moves already passed that check, only applies to other move types
     let additionalFailure = false;
-    if (PokemonMZ.pokemonMechanicsGeneration == 1) {
+    if (PokemonMZ.pokemonMechanicsGeneration == 1 && this.side() == "enemy" && this._moveData.target == "opponent") {
         if (this._moveData.category != "status") { additionalFailure = (rnd < 0.25); }
     }
 
@@ -3374,7 +3374,7 @@ PokemonMZ_Game_Action.prototype.effect_spdDownTarget = function(battleData, effe
     // In generation I, status has 25% of not happening if user is enemy
     // Since pure status moves already passed that check, only applies to other move types
     let additionalFailure = false;
-    if (PokemonMZ.pokemonMechanicsGeneration == 1) {
+    if (PokemonMZ.pokemonMechanicsGeneration == 1 && this.side() == "enemy" && this._moveData.target == "opponent") {
         if (this._moveData.category != "status") { additionalFailure = (rnd < 0.25); }
     }
 
