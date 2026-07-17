@@ -38,6 +38,7 @@ List of implemented effects and their additional parameters:
     - percentChance, **int** : Chance out of 100 of the paralysis to happen
 - effect = **poisonTarget** : Poison the target 
     - percentChance, **int** : Chance out of 100 of the poison to happen
+    - multiHitEffect, **string** : Force multihit skills (Twineedle), indicates if **all** hits try to poison, or if only the **last** hit calculates poison.
 - effect = **sleepTarget** : Put the target to sleep
     - percentChance, **int** : Chance out of 100 of the sleep to happen
 - effect = **confuseTarget** : Put confusion to the target 

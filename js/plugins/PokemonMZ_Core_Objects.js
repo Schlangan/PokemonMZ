@@ -2747,7 +2747,16 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
         }
         break;
     case "poisonTarget":
-        if (!this.isMoveEffectExcepted(effect, this._opponent)) {
+        // In case of several hits, check if the move data allow "all" for poison checks, or only "last"
+        let passMultiHitCheck = true;
+        if (this._moveHits > 1 && this._moveRemainingHits > 1 ) {
+            passMultiHitCheck = effect.multiHitEffect == "all";
+        } else if (this._moveHits > 1 && this._moveRemainingHits == 1 ) {
+            passMultiHitCheck = effect.multiHitEffect == "last";
+        } else if (this._moveHits > 1) {
+            passMultiHitCheck = false;
+        }
+        if (!this.isMoveEffectExcepted(effect, this._opponent) && passMultiHitCheck) {
             effectResults = this.effect_poisonTarget(battleData, effect, effectResults);
         }
         break;
