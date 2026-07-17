@@ -18,6 +18,7 @@ moveData
 - noCritical, **bool**, *optional* : If set to **true**, the move will never do critical damage.
 - noAccuracy, **bool**, *optional* : If set to **true**, the move won't do any accuracy calculation and always hit.
 - noVariance, **bool**, *optional* : If set to **true**, the move won't have any variance calculation and always do fixed damage.
+- cpuHigherEffectFailure, **bool**, *optional* : If set to **true**, the computer pokemon has an additional 25% chance of failing the effects of the move.
 - effects, **Array:moveEffect** : An array of the **moveEffect**, definining all secondary effects of the move.
 
 ---
@@ -55,6 +56,8 @@ List of implemented effects and their additional parameters:
 
 - effect = **recoilPercent** : Inflicts recoil damage after hitting
     - value : Percentage of the damage inflicted turning to recoil
+
+- effect = **forceSwitchOut** : In wild battles only for generation I, force the target to leave the fight, ending the battle.
 
 - effect = **pdefUpUser** : Increases the physical defense of the user
     - stage, **int** : Number of rised stages
