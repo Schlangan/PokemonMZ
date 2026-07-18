@@ -114,6 +114,14 @@ DataManager.enhanceTroops = function() {
         }
     }
 };
+DataManager.enhanceAnimations = function() {
+    $PokemonMZ_dataAnimations = {}
+    for (animation of $PokemonMZ_dataAnimationsList) {
+        if (animation) {
+            $PokemonMZ_dataAnimations[animation.id] = animation;
+        }
+    }
+}
 const PokemonMZ_DataManager_createGameObjects = DataManager.createGameObjects;
 DataManager.createGameObjects = function() {
     PokemonMZ_DataManager_createGameObjects.call(this);
@@ -287,6 +295,9 @@ PokemonMZ_BattleManager.initMembers = function() {
 
     this._phase = "";
     this._subPhase = "";
+    this._animationPhase = "";
+    this._animationData = null;
+
     this._previousPhase = "";
     this._spriteset = null;
     this._pokemonListWindow = null;
@@ -685,8 +696,11 @@ PokemonMZ_BattleManager.updateSubPhase = function(timeActive) {
         case "":
             this.resolveNextResultStep();
             break;
-        case "targetHitAnimation":
-            this.targetHitAnimation();
+        case "targetAnimation":
+            this.targetAnimation();
+            break;
+        case "animating":
+            this.updateAnimation();
             break;
         case "playSe":
             this.playSe();
@@ -2322,8 +2336,8 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
         }
         switch (step[0]) {
             case "hitAnimation":
-                this.changeSubPhase("targetHitAnimation");
-                this._subPhaseParams = [step[1], step[2]];
+                this.changeSubPhase("targetAnimation");
+                this._subPhaseParams = [step[1], step[2], step[3], step[4]];
                 break;
             case "se":
                 this.changeSubPhase("playSe");
@@ -2431,22 +2445,177 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
         this.nextBattleAction();
     }
 };
-PokemonMZ_BattleManager.targetHitAnimation = function() {
-    if (ConfigManager.battleAnimation) {
-        const sprite = this._subPhaseParams[0];
-        const animationId = this._subPhaseParams[1];
-        if (animationId) {
-            const request = {
-                targets: [sprite],
-                animationId: animationId,
-                mirror: false
-            };
-            this._spriteset.createAnimation(request);
-            sprite.updateTransform();
+PokemonMZ_BattleManager.targetAnimation = function() {
+    // Skip animation if disabled in configmanager
+    if (!ConfigManager.battleAnimation) { 
+        this.clearSubPhase();
+        return;
+    };
+
+    // Initialize animation list
+    const stringId = this._subPhaseParams[0];
+    const dataAnimation = $PokemonMZ_dataAnimations[stringId]
+
+    if (dataAnimation) {
+        const sequence = []
+        for (action of dataAnimation.sequence) {
+            sequence.push(action);
+        }
+        this._animationData = {
+            "stringId":stringId,
+            "sequence":sequence,
+            "userSprite":this._subPhaseParams[1],
+            "enemySprite":this._subPhaseParams[2],
+            "side":this._subPhaseParams[3],
+            "waitCount":0,
+            "currentSprite":null,
+        }
+        this._animationPhase = "nextAction"
+        this.changeSubPhase("animating");
+    } else {
+        // If animation not declared, skip
+        this.clearSubPhase();
+    }
+};
+PokemonMZ_BattleManager.updateAnimation = function() {
+    // Debug logger
+    if (PokemonMZ.debugLog) {
+        if (this._debugAnimationPhase != this._animationPhase) {
+            this._debugAnimationPhase = this._animationPhase;
+            if (this._debugAnimationPhase != "") {
+                console.log("PokemonMZ_BattleManager.updateAnimation > " + this._debugAnimationPhase);
+            }
         }
     }
-    this.clearSubPhase();
+    switch (this._animationPhase) {
+    case "nextAction":
+        if (this._animationData.sequence.length > 0) {
+            const actionData = this._animationData.sequence.splice(0,1)[0];
+            if (PokemonMZ.debugLog) {  console.log("PokemonMZ_BattleManager.updateAnimation > nextAction > " + actionData.type); }
+            switch (actionData.type) {
+            case "playAnimation":
+                this.animationStartPlaying(actionData);
+                break;
+            case "playSE":
+                AudioManager.playSe({"name":actionData.name,"volume":actionData.volume, "pitch":actionData.pitch, "pan":actionData.pan})
+                this._animationPhase = "nextAction";
+                break;
+            case "moveSpriteForward":
+                if (this._animationData.side == "player" && actionData.target == "user") {
+                    this.startAnimationMoveSprite(this._animationData.userSprite, actionData.distance, -actionData.distance, actionData.duration)
+                } else if (this._animationData.side == "player" && actionData.target == "opponent") {
+                    this.startAnimationMoveSprite(this._animationData.enemySprite, -actionData.distance, actionData.distance, actionData.duration)
+                } else if (this._animationData.side == "enemy" && actionData.target == "user") {
+                    this.startAnimationMoveSprite(this._animationData.userSprite, -actionData.distance, actionData.distance, actionData.duration)
+                } else if (this._animationData.side == "enemy" && actionData.target == "opponent") {
+                    this.startAnimationMoveSprite(this._animationData.enemySprite, actionData.distance, -actionData.distance, actionData.duration)
+                } else {
+                    this._animationPhase = "nextAction";
+                }
+                break;
+            case "moveSpriteBackward":
+                if (this._animationData.side == "player" && actionData.target == "user") {
+                    this.startAnimationMoveSprite(this._animationData.userSprite, -actionData.distance, actionData.distance, actionData.duration)
+                } else if (this._animationData.side == "player" && actionData.target == "opponent") {
+                    this.startAnimationMoveSprite(this._animationData.enemySprite, actionData.distance, -actionData.distance, actionData.duration)
+                } else if (this._animationData.side == "enemy" && actionData.target == "user") {
+                    this.startAnimationMoveSprite(this._animationData.userSprite, actionData.distance, -actionData.distance, actionData.duration)
+                } else if (this._animationData.side == "enemy" && actionData.target == "opponent") {
+                    this.startAnimationMoveSprite(this._animationData.enemySprite, -actionData.distance, actionData.distance, actionData.duration)
+                } else {
+                    this._animationPhase = "nextAction";
+                }
+                break;
+            case "moveSpriteLeft":
+                if (this._animationData.side == "player" && actionData.target == "user") {
+                    this.startAnimationMoveSprite(this._animationData.userSprite, -actionData.distance, 0, actionData.duration)
+                } else if (this._animationData.side == "player" && actionData.target == "opponent") {
+                    this.startAnimationMoveSprite(this._animationData.enemySprite, actionData.distance, 0, actionData.duration)
+                } else if (this._animationData.side == "enemy" && actionData.target == "user") {
+                    this.startAnimationMoveSprite(this._animationData.userSprite, actionData.distance, 0, actionData.duration)
+                } else if (this._animationData.side == "enemy" && actionData.target == "opponent") {
+                    this.startAnimationMoveSprite(this._animationData.enemySprite, -actionData.distance, 0, actionData.duration)
+                } else {
+                    this._animationPhase = "nextAction";
+                }
+                break;
+            case "moveSpriteRight":
+                if (this._animationData.side == "player" && actionData.target == "user") {
+                    this.startAnimationMoveSprite(this._animationData.userSprite, actionData.distance, 0, actionData.duration)
+                } else if (this._animationData.side == "player" && actionData.target == "opponent") {
+                    this.startAnimationMoveSprite(this._animationData.enemySprite, -actionData.distance, 0, actionData.duration)
+                } else if (this._animationData.side == "enemy" && actionData.target == "user") {
+                    this.startAnimationMoveSprite(this._animationData.userSprite, -actionData.distance, 0, actionData.duration)
+                } else if (this._animationData.side == "enemy" && actionData.target == "opponent") {
+                    this.startAnimationMoveSprite(this._animationData.enemySprite, actionData.distance, 0, actionData.duration)
+                } else {
+                    this._animationPhase = "nextAction";
+                }
+                break;
+            }
+        } else {
+            this.clearSubPhase();
+        }
+        break;
+    case "waitForAnimation":
+        if (!this._spriteset.isAnimationPlaying()) {
+            this._animationPhase = "nextAction";
+        }
+        break;
+    case "moving":
+        this.animationMoveSprite()
+        break;
+    }
+}
+PokemonMZ_BattleManager.animationStartPlaying = function(actionData) {
+    let sprite = null;
+    if (actionData.target == "user") {
+        sprite = this._animationData.userSprite;
+    } else if (actionData.target == "target") {
+        sprite = this._animationData.enemySprite;
+    }
+    const animationId = actionData.animationId;
+    if (sprite && animationId) {
+        const request = {
+            targets: [sprite],
+            animationId: animationId,
+            mirror: false
+        };
+        this._spriteset.createAnimation(request);
+        sprite.updateTransform();
+
+        // See if animation wait or not
+        const wait = actionData.wait;
+        if (wait) {
+            this._animationPhase = "waitForAnimation";
+        } else {
+            this._animationPhase = "nextAction";
+        }
+
+    } else {
+        this._animationPhase = "nextAction";
+    }    
 };
+PokemonMZ_BattleManager.startAnimationMoveSprite = function(sprite, dx, dy, duration) {
+    sprite.setDestination(dx,dy,duration);
+    this._animationData.waitCount = duration;
+    this._animationData.currentSprite = sprite;
+    this._animationPhase = "moving";
+};
+PokemonMZ_BattleManager.animationMoveSprite = function() {
+    const sprite = this._animationData.currentSprite;
+
+    sprite.advanceToDestination();
+    this._animationData.waitCount --;
+    if (this._animationData.waitCount <= 0) {
+        sprite.clearDestination();
+        this._animationData.waitCount = 0
+        this._animationData.currentSprite = null;
+        this._animationPhase = "nextAction";
+    }
+};
+
+
 PokemonMZ_BattleManager.playSe = function() {
     const se = this._subPhaseParams[0];
     let seName = "";

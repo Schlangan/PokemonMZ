@@ -20,6 +20,7 @@ moveData
 - noVariance, **bool**, *optional* : If set to **true**, the move won't have any variance calculation and always do fixed damage.
 - cpuHigherEffectFailure, **bool**, *optional* : If set to **true**, the computer pokemon has an additional 25% chance of failing the effects of the move.
 - effects, **Array:moveEffect** : An array of the **moveEffect**, definining all secondary effects of the move.
+- animation, **string**, *optional* : The animation string Id from the additional JSon file PokemonMZ_Animations.json.
 
 ---
 
@@ -30,7 +31,7 @@ moveEffect
 List of implemented effects and their additional parameters:
 
 - effect = **bide** : Special move bide
-    - unleashAnimationId, **int** : RPG Maker animation Id for bide unleash phase.
+    - unleashAnimationId, **int** : TAnimation string Id from the additional JSon file PokemonMZ_Animations.json -  Bide unleash phase.
 
 - effect = **burnTarget** : Burn the target 
     - percentChance, **int** : Chance out of 100 of the burn to happen
