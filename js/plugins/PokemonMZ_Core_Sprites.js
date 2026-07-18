@@ -190,6 +190,7 @@ PokemonMZ_Sprite_Pokemon.prototype.initialize = function(side) {
     this._side = side;
     this._bottomCenterX = 0;
     this._bottomCenterY = 0;
+    this.clearDestination();
 };
 PokemonMZ_Sprite_Pokemon.prototype.initMembers = function() {
     this._pokemon = null;
@@ -267,6 +268,44 @@ PokemonMZ_Sprite_Pokemon.prototype.getAnimationPosition = function() {
         x: bounds.x + bounds.width / 2,
         y: bounds.y + bounds.height / 2
     };
+};
+PokemonMZ_Sprite_Pokemon.prototype.setDestination = function(deltaX,deltaY,duration) {
+    this._destinationSet = true;
+    this._destinationData.x = this._bottomCenterX + deltaX;
+    this._destinationData.y = this._bottomCenterY + deltaY;
+    this._destinationData.dx = deltaX/duration;
+    this._destinationData.dy = deltaY/duration;
+};
+PokemonMZ_Sprite_Pokemon.prototype.clearDestination = function(x,y) {
+    this._destinationSet = false;
+    this._destinationData = {"x":0,"y":0,"dx":0,"dy":0};
+};
+PokemonMZ_Sprite_Pokemon.prototype.hasReachedDestination = function() {
+    return this._bottomCenterX == this._destinationData.x && this._bottomCenterY == this._destinationData.y;
+};
+PokemonMZ_Sprite_Pokemon.prototype.hasDestination = function() {
+    return this._destinationSet;
+};
+PokemonMZ_Sprite_Pokemon.prototype.advanceToDestination = function() {
+    if (this.hasDestination()) {
+        this._bottomCenterX += this._destinationData.dx;
+        this._bottomCenterY += this._destinationData.dy;
+
+        if (
+            (this._destinationData.dx > 0 && this._bottomCenterX > this._destinationData.x) ||
+            (this._destinationData.dx < 0 && this._bottomCenterX < this._destinationData.x)
+        ) { 
+            this._bottomCenterX = this._destinationData.x 
+        }
+
+        if (
+            (this._destinationData.dy > 0 && this._bottomCenterY > this._destinationData.y) ||
+            (this._destinationData.dy < 0 && this._bottomCenterY < this._destinationData.y)
+        ) { 
+            this._bottomCenterY = this._destinationData.y 
+        }
+    }
+    this.updateBottomCenterPlacement()
 };
 
 

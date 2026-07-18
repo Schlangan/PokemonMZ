@@ -136,6 +136,7 @@ Scene_Boot.prototype.create = function() {
     DataManager._databaseFiles.push({ name: "$PokemonMZ_dataTypes", src: "PokemonMZ_Types.json" });
     DataManager._databaseFiles.push({ name: "$PokemonMZ_dataItems", src: "PokemonMZ_Items.json" });
     DataManager._databaseFiles.push({ name: "$PokemonMZ_dataEncounters", src: "PokemonMZ_Encounters.json" });
+    DataManager._databaseFiles.push({ name: "$PokemonMZ_dataAnimationsList", src: "PokemonMZ_Animations.json" });
     PokemonMZ_Scene_Boot_create.call(this);
 };
 const PokemonMZ_Scene_Boot_onDatabaseLoaded = Scene_Boot.prototype.onDatabaseLoaded;
@@ -146,6 +147,7 @@ Scene_Boot.prototype.onDatabaseLoaded = function() {
     DataManager.enhanceSkills();
     DataManager.enhanceTypes();
     DataManager.enhanceTroops();
+    DataManager.enhanceAnimations();
 };
 
 // Scene_Title
