@@ -19,7 +19,8 @@ encounterData (Trainer)
 - id, **string** : Identifier of the encounter. It is eaxactly the name of the Troop inside RPG Maker MZ Database.
 - type, **string** : Equal to **trainer**
 - trainerActor, **int** : The numeric Id of the Actor in RPG Maker MZ Actor Database. It is used for the trainer appearance.
-- ia, **string** : The specific battle AI. Only **basic** is implemented for now.
+- ia, **string** : The specific battle AI. Only **random** and **basic** are implemented for now.
+    - **random** : The trainer will use random moves
     - **basic** : The trainer will use random moves, but will avoid using status-only moves if the player's pokemon has already a status.
 - iaModifiers: **iaModifierData**, *optional* : An iaModifierData object for specific Battle AI Behavior such as using items or switching out.
 - pokemons, **Array:trainerPokemonData** : An array of **trainerPokemonData**, defining the party of the trainer
