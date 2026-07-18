@@ -7,6 +7,8 @@ Pokemon can now reach level 20, hence new pokemon and skills have been analyzed.
     - Whirlwind, blowing enemy away (only wild battles in generation I)
     - Focus energy (critical chances x4 - but of original gen I games fixed)
     - Poison on last hit of multi-hit move (twineedle)
+- New battle mechanics
+    - Enhanced animation system: allowing to make pokemon move during animations
 
 ## [0.0.2] - 2026-07-16
 
