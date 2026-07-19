@@ -50,6 +50,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Gust
     - Horn Attack
     - Peck
+    - Pound
     - Scratch
     - Slam
     - Tackle
@@ -76,6 +77,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Low Kick (flinch)
     - Poison Powder (poison)
     - Poison Sting (poison)
+    - Sing (sleep)
     - Sleep Powder (sleep)
     - Stun Spore (paralysis)
     - Supersonice (confusion)
