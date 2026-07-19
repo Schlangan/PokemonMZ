@@ -931,13 +931,15 @@ PokemonMZ_Game_TrainerPlayer.prototype.canGetPokemon = function() {
 PokemonMZ_Game_TrainerPlayer.prototype.canGetPokemonInParty = function() {
     return this._pokemons.length < 6;
 };
-PokemonMZ_Game_TrainerPlayer.prototype.canGetPokemonInCurrentBox = function() { //TODO
+PokemonMZ_Game_TrainerPlayer.prototype.canGetPokemonInCurrentBox = function() {
     return this.currentBoxHasRoom(); 
 };
-PokemonMZ_Game_TrainerPlayer.prototype.givePokemonBeforeNickname = function(pokemon) {
+PokemonMZ_Game_TrainerPlayer.prototype.givePokemonBeforeNickname = function(pokemon, destination) {
     // Create Pokemon and display nickname windows
-    $gameTemp.pokemon = pokemon;
-    SceneManager.push(PokemonMZ_Scene_PokemonNickname);
+    if (this.canGetPokemon()) {
+        $gameTemp.pokemon = pokemon;
+        SceneManager.push(PokemonMZ_Scene_PokemonNickname);
+    }
 };
 PokemonMZ_Game_TrainerPlayer.prototype.givePokemonAfterNickname = function(pokemon) {
     this.addSeenPokemon(pokemon._data.id);
@@ -947,14 +949,16 @@ PokemonMZ_Game_TrainerPlayer.prototype.givePokemonAfterNickname = function(pokem
     if (this.canGetPokemonInParty()) {
         this.addPokemonToParty(pokemon);
     } else if (this.canGetPokemonInCurrentBox()) {
-        // TODO : DISPLAY SENT TO BOX MESSAGE
-    } else {
-        // TODO : DISPLAY NOT POSSIBLE
+        this.addPokemonToCurrentBox(pokemon);
+        const boxName = this.currentBoxName();
+        const message = "There's no more room for Pokémon!\n" + pokemon.name() + " was sent to Pokémon " + boxName + " on PC!"
+        $gameMessage.add(message);
     }
 };
-PokemonMZ_Game_TrainerPlayer.prototype.addPokemonToBox = function(pokemon, intBoxId) { //TODO
-    // CHECK IF ROOM
-    this._boxes[intBoxId].pokemons.push(pokemon);
+PokemonMZ_Game_TrainerPlayer.prototype.addPokemonToBox = function(pokemon, intBoxId) {
+    if (this.boxHasRoom(intBoxId)) {
+        this._boxes[intBoxId].pokemons.push(pokemon);
+    }
 };
 PokemonMZ_Game_TrainerPlayer.prototype.addPokemonToCurrentBox = function(pokemon) {
     this.addPokemonToBox(pokemon, this._selectedBoxIndex);

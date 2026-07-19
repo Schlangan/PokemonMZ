@@ -3,6 +3,9 @@
 
 Pokemon can now reach level 20, hence new pokemon and skills have been analyzed.
 
+- Standard mechanics
+    - Message preventing to receive a Pokemon if the current box and party are full. A switch can be selected to get the failure state and use it in other event commands.
+    - Send automatically a received Pokemon to a box, with a message, if the party is full and the current box has room.
 - New skill effects
     - Whirlwind, blowing enemy away (only wild battles in generation I)
     - Focus energy (critical chances x4 - but of original gen I games fixed)

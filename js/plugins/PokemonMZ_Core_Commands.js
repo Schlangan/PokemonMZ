@@ -170,6 +170,12 @@
  * @min 1
  * @max 100
  * @default 5
+ * @desc The level of the pokemon to give
+ * 
+ * @arg returnSwitchId
+ * @type switch
+ * @text Return switch
+ * @desc A switch that will take the value OFF is the pokemon cannot be given because of box+party full
 
 */
 const pluginName = 'PokemonMZ_Core_Commands';
@@ -233,12 +239,20 @@ PluginManager.registerCommand(pluginName, "GivePokedex", function(args) {
 PluginManager.registerCommand(pluginName, "GivePokemon", function(args) {
     const pokemonId = Number(args.pokemon);
     const level = Number(args.level)
-    const pokemon = new PokemonMZ_Game_Pokemon(pokemonId, level);
-    pokemon.setTrainerInfo(
-        $gamePlayerTrainer.trainerId(),
-        $gamePlayerTrainer.name()
-    );
-    $gamePlayerTrainer.givePokemonBeforeNickname(pokemon);
+    const switchId = Number(args.returnSwitchId)
+    if ($gamePlayerTrainer.canGetPokemon()) {
+        const pokemon = new PokemonMZ_Game_Pokemon(pokemonId, level);
+        pokemon.setTrainerInfo(
+            $gamePlayerTrainer.trainerId(),
+            $gamePlayerTrainer.name()
+        );
+        $gamePlayerTrainer.givePokemonBeforeNickname(pokemon);
+        if (args.returnSwitchId) { $gameSwitches.setValue(switchId, true); }
+    } else {
+        if (args.returnSwitchId) { $gameSwitches.setValue(switchId, false); }
+        const message = "There's no more room for Pokémon!\nThe Pokémon Box is full and can't accept any more! Change\nthe Box at a Pokémon Center!"
+        $gameMessage.add(message);
+    }
 });
 
 // User interface
