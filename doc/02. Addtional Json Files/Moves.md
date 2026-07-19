@@ -92,6 +92,8 @@ List of implemented effects and their additional parameters:
     - stage, **int** : Number of dropped down stages
     - percentChance, **int** : Chance out of 100 of the drop down to happen
 
+- type = **splash** : Useless move that makes no damage and simply displays 'No effect!' when used.
+
 ---
 
 exceptionData

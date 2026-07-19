@@ -33,11 +33,19 @@ animationActionData
     - target, **string** : The target sprite of the animation. Either **user** or **opponent**.
     - distance, **int** : The number of pixels the sprite will move (x and y will be set to equal)
     - duration, **int** : The number of frames for the move.
-- type = **moveSpriteLeft** : Move the sprite diagonally to its left at a given distance. (enemy will move to the right)
+- type = **moveSpriteLeft** : Move the sprite horizontally to its left at a given distance. (enemy will move to the right)
     - target, **string** : The target sprite of the animation. Either **user** or **opponent**.
     - distance, **int** : The number of pixels the sprite will move (x and y will be set to equal)
     - duration, **int** : The number of frames for the move.
-- type = **moveSpriteRight** : Move the sprite diagonally to its left at a given distance. (enemy will move to the left)
+- type = **moveSpriteRight** : Move the sprite horizontally to its right at a given distance. (enemy will move to the left)
+    - target, **string** : The target sprite of the animation. Either **user** or **opponent**.
+    - distance, **int** : The number of pixels the sprite will move (x and y will be set to equal)
+    - duration, **int** : The number of frames for the move.
+- type = **moveSpriteUp** : Move the sprite vertically up at a given distance.
+    - target, **string** : The target sprite of the animation. Either **user** or **opponent**.
+    - distance, **int** : The number of pixels the sprite will move (x and y will be set to equal)
+    - duration, **int** : The number of frames for the move.
+- type = **moveSpriteDown** : Move the sprite vertically down at a given distance.
     - target, **string** : The target sprite of the animation. Either **user** or **opponent**.
     - distance, **int** : The number of pixels the sprite will move (x and y will be set to equal)
     - duration, **int** : The number of frames for the move.

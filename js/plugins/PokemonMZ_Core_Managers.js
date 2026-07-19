@@ -2626,6 +2626,12 @@ PokemonMZ_BattleManager.updateAnimation = function() {
                     this._animationPhase = "nextAction";
                 }
                 break;
+            case "moveSpriteUp":
+                this.startAnimationMoveSprite(this._animationData.userSprite,0, -actionData.distance, actionData.duration);
+                break;
+            case "moveSpriteDown":
+                this.startAnimationMoveSprite(this._animationData.userSprite,0, actionData.distance, actionData.duration);
+                break;
             }
         } else {
             this.clearSubPhase();
@@ -3270,6 +3276,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + "'s " + String(ext1) + " is disabled!";
     case "freedDisabled":
         return prefix + pokemon.name() + "'s disabled no more!";
+    case "splashNoEffect":
+        return "No effect!";
     }
     return ""
 };

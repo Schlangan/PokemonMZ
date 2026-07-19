@@ -3002,6 +3002,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
     case "disableTargetMove":
         effectResults = this.effect_disableTargetMove(battleData, effect, effectResults);
         break;
+    case "splash":
+        effectResults = this.effect_splash(battleData, effect, effectResults);
+        break;
 
     }
     return effectResults;
@@ -3720,4 +3723,8 @@ PokemonMZ_Game_Action.prototype.effect_disableTargetMove = function(battleData, 
     return effectResults;
 };
 
-
+PokemonMZ_Game_Action.prototype.effect_splash = function(battleData, effect, effectResults) {
+    effectResults.success = true;
+    this._resultSteps.push(["waittext","splashNoEffect",this.oppositeSide()]);
+    return effectResults;
+};

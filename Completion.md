@@ -45,6 +45,9 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0074. Geodude
 - (...)
 - 0095. Onix
+- (...)
+- 0129. Magikarp
+- 0130. Gyarados
 
 ## Moves
 
@@ -72,20 +75,28 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Twineedle (2-2)
 
 - Moves inflicting statuses
-    - Confusion (confusion)
-    - Ember (burn)
-    - Hyper Fang (flinch)
-    - Leech Seed (seed)
-    - Low Kick (flinch)
-    - Poison Powder (poison)
-    - Poison Sting (poison)
-    - Sing (sleep)
-    - Sleep Powder (sleep)
-    - Stun Spore (paralysis)
-    - Supersonice (confusion)
-    - Thunder Shock (paralysis, except Electric types)
-    - Thunder Wave (paralysis)
-    - Twineedle (poison, after last hit)
+    - Burn
+        - Ember
+    - Confusion
+        - Confusion
+        - Supersonic
+    - Flinch
+        - Bite
+        - Hyper Fang
+        - Low Kick
+    - Paralysis
+        - Stun Spore
+        - Thunder Shock (except Electric types)
+        - Thunder Wave
+    - Poison
+        - Poison Powder
+        - Poison Sting
+        - Twineedle (after last hit)
+    - Seed
+        - Leech Seed
+    - Sleep
+        - Sing
+        - Sleep Powder
 
 - Moves dropping target stats by one stage
     - Bubble (speed)
@@ -113,6 +124,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Bide (activate turn 1, wait 1-2 turns, and unleash last turn double damage taken while waiting)
     - Disable (disable a random move from the enemy)
     - Focus Energy (multiply critical chances by 4 - bug fixed compared to original RBY games which were dividing by 4 instead)
+    - Splash (no effect at all)
     - Struggle (launched with 0pp, recoil damage)
 
 ## Items
