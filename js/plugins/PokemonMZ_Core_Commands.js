@@ -153,6 +153,16 @@
  * @text Region ID
  * @desc The region Id for the pokemon data. Ex: kanto
 
+ * //////////////////////////////////////////
+ * @command CanGetPokemon
+ * @text Can Player Get a Pokemon
+ * @desc Checks if the player can get a Pokemon or if their party and current box are full.
+ * 
+ * @arg returnSwitchId
+ * @type switch
+ * @text Return switch
+ * @desc A switch that will take the value ON if the player can get a pokemon or OFF if they cannot.
+
 
  * //////////////////////////////////////////
  * @command GivePokemon
@@ -236,6 +246,14 @@ PluginManager.registerCommand(pluginName, "GivePokedex", function(args) {
 });
 
 // Pokemon
+PluginManager.registerCommand(pluginName, "CanGetPokemon", function(args) {
+    const switchId = Number(args.returnSwitchId)
+    if ($gamePlayerTrainer.canGetPokemon()) {
+        if (args.returnSwitchId) { $gameSwitches.setValue(switchId, true); }
+    } else {
+        if (args.returnSwitchId) { $gameSwitches.setValue(switchId, false); }
+    }
+});
 PluginManager.registerCommand(pluginName, "GivePokemon", function(args) {
     const pokemonId = Number(args.pokemon);
     const level = Number(args.level)
