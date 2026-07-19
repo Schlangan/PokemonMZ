@@ -58,6 +58,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 
 - Moves with high critical
     - Karate Chop
+    - Slash
 
 - Moves with high priorities
     - Quick Attack (+1)
