@@ -24,6 +24,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0020. Raticate
 - 0021. Spearow
 - 0022. Fearow
+- 0023. Ekans
 - (...)
 - 0025. Pikachu
 - (...)
@@ -99,6 +100,9 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 
 - Moves forcing Pokemon to switch out (no effect in trainer battles in generation I)
     - Whirlwind
+
+- Moves binding the opponent
+    - Wrap
 
 - Special moves
     - Bide (activate turn 1, wait 1-2 turns, and unleash last turn double damage taken while waiting)

@@ -2969,9 +2969,16 @@ PokemonMZ_Scene_Battle.prototype.menuSelectedPokemon = function() {
 };
 PokemonMZ_Scene_Battle.prototype.commandFight = function() {
     const pokemon = PokemonMZ_BattleManager.playerPokemon();
+    const enemyPokemon = PokemonMZ_BattleManager.enemyPokemon();
 
     // Bide - Cannot choose moves
     if (pokemon.isBiding()) {
+        this.forceMove(pokemon.lastMoveIndex());
+        return;
+    }
+
+    // Opponent bound // player bound- Keep binding
+    if (pokemon.isBound() || enemyPokemon.isBound()) {
         this.forceMove(pokemon.lastMoveIndex());
         return;
     }

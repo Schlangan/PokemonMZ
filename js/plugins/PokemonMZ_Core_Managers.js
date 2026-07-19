@@ -457,6 +457,9 @@ PokemonMZ_BattleManager.startBattle = function() {
 PokemonMZ_BattleManager.playerPokemon = function() {
     return this._playerChosenPokemon;
 };
+PokemonMZ_BattleManager.enemyPokemon = function() {
+    return this._enemyChosenPokemon;
+};
 PokemonMZ_BattleManager.canSwitchPokemon = function(newPokemon) {
     if (newPokemon.isFainted()) {
         this._switchRefusalReason = "There's no will to fight!"
@@ -761,6 +764,7 @@ PokemonMZ_BattleManager.updateSubPhase = function(timeActive) {
             }
             break;
 
+
     }
 };
 PokemonMZ_BattleManager.initializeEnterTrainerVsWild = function() { 
@@ -1044,6 +1048,11 @@ PokemonMZ_BattleManager.playerPokemonRecall = function() {
     
     const pokemon = this._playerChosenPokemon;
     pokemon.removeTemporaryStatuses();
+
+    // Remove bind on enemy pokemon if recalling
+    if (this._enemyChosenPokemon.isBound()) {
+        this._enemyChosenPokemon.unBind();
+    };
 
     const pokemonSprite = this._spriteset.playerPokemonSprite();
 
@@ -1519,6 +1528,11 @@ PokemonMZ_BattleManager.endPlayerFaintedPokemon = function() {
 
     this._playerChosenPokemon.cleanAfterFaint();
 
+    // If enemy pokemon was bounded, get it free
+    if (this._enemyChosenPokemon.isBound()) {
+        this._enemyChosenPokemon.unBind();
+    };
+
     // Player turn is removed after faint
     let index = this._battleActions.indexOf("playerMove");
     while (index > -1) {
@@ -1532,6 +1546,11 @@ PokemonMZ_BattleManager.endEnemyFaintedPokemon = function() {
     if ($gameMessage.isBusy()) { return; }
 
     this._enemyChosenPokemon.cleanAfterFaint();
+
+    // If player pokemon was bounded, get it free
+    if (this._playerChosenPokemon.isBound()) {
+        this._playerChosenPokemon.unBind();
+    };
 
     // Enemy turn is removed after faint
     let index = this._battleActions.indexOf("enemyMove");
@@ -1937,6 +1956,7 @@ PokemonMZ_BattleManager.playerMoveForbidden = function() {
 PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
     const trainer = $PokemonMZ_gameBattle.enemy1();
     const enemyPokemon = this._enemyChosenPokemon;
+    const playerPokemon = this._playerChosenPokemon;
 
     // Start with IA modifiers
     this._enemyUseItem = null;
@@ -1955,12 +1975,22 @@ PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
         return;
     }
 
+    // If using biding move, same move is still used if opponent is bound
+    if (playerPokemon.isBound()) {
+        this._enemyMoveIndex = enemyPokemon.lastMoveIndex();
+        this.calculateBattleActions();
+        return;
+    }
+
     // If biding, next move is bide
     if (enemyPokemon.isBiding()) {
         this._enemyMoveIndex = enemyPokemon.lastMoveIndex();
         this.calculateBattleActions();
         return;
     }
+
+    // If biding, next move is the same if enemy still bound
+    
 
     // Define a list of possible move indexes and default scoring
     let scoringTable = [];
@@ -2165,9 +2195,10 @@ PokemonMZ_BattleManager.nextBattleAction = function() {
                 break;
         }
     } else {
-        // Remove flinch status after actions
-        this._playerChosenPokemon.unflinch();
-        this._enemyChosenPokemon.unflinch();
+        // Remove statuses finishing here (flinch, bound if over)
+        this._playerChosenPokemon.removeFinishedStatuses();
+        this._enemyChosenPokemon.removeFinishedStatuses();
+
         this.startPlayerInput();
     }
 };
@@ -2198,6 +2229,14 @@ PokemonMZ_BattleManager.startMove = function(side) {
 
     const moveName = pokemon.moveName(move)
     this._currentAction = new PokemonMZ_Game_Action(pokemon, side);
+
+    // If bound, only burn and poison are calculated, the pokemon does nothing
+    if (pokemon.isBound()) {
+        this._currentAction.setMove(move.id, oppositePokemon);
+        this._currentAction.calculate();
+        this.changePhase(nextPhase);
+        return;
+    }
 
     // Do not move if flinched
     if (pokemon.isFlinched()) {
@@ -2270,6 +2309,10 @@ PokemonMZ_BattleManager.startMove = function(side) {
         skipPP = true;
         skipMessage = true;
     }
+    if (oppositePokemon.isBound() && pokemon.isMoveBinding(moveIndex)) {
+        skipPP = true;
+    }
+
 
     // Consume PP if needed
     if (!skipPP) {
@@ -2285,7 +2328,11 @@ PokemonMZ_BattleManager.startMove = function(side) {
     };
 
     if (!skipMessage) {
-        this._currentAction.insertResultStepsAt(["autotext","useMove",this._currentAction.side(),moveName], battleIndex)
+        if (oppositePokemon.isBound() && pokemon.isMoveBinding(moveIndex)) {
+            this._currentAction.insertResultStepsAt(["autotext","attackContinues",this._currentAction.side()], battleIndex)
+        } else {
+            this._currentAction.insertResultStepsAt(["autotext","useMove",this._currentAction.side(),moveName], battleIndex)
+        }
     }
     this.changePhase(nextPhase);
 };
@@ -2406,6 +2453,14 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
             case "paralyzePokemon":
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["paralysis", step[1]];
+                break;
+            case "bindPokemon":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["bind", step[1], step[2], step[3], step[4]];
+                break;
+            case "keepBindingPokemon":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["keepBind", step[1]];
                 break;
             case "burnHeal":
                 this.changeSubPhase("removePokemonStatus");
@@ -2928,6 +2983,15 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
         case "seed":
             target.seed();
             break;
+        case "bind":
+            const bindMinTurns = this._subPhaseParams[2];
+            const bindMaxTurns = this._subPhaseParams[3];
+            const bindChances = this._subPhaseParams[4];
+            target.bind(bindMinTurns,bindMaxTurns,bindChances);
+            break;
+        case "keepBind":
+            target.keepBinding();
+            break;
     }
     this.clearSubPhase();
 };
@@ -2990,8 +3054,6 @@ PokemonMZ_BattleManager.startFaintPokemon = function() {
             this.changeSubPhase("animateFaintPokemon");
             this._subPhaseParams = ["player", targetSprite];
         }
-
-
     } else if (this._phase == "enemyResolveActionSteps") {
         if (targetType == "opponent") {
             AudioManager.playPokemonCry(this._playerChosenPokemon._data.id, true);
@@ -3088,6 +3150,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + " has no moves left!";
     case "useMove":
         return prefix + pokemon.name() + " used " + ext1 + "!";
+    case "attackContinues":
+        return prefix + pokemon.name() + "'s attack continues!";
     case "missed":
         return prefix + pokemon.name() + "'s attack missed!";
     case "defenseRose":

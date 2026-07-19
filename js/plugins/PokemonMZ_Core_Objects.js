@@ -1048,9 +1048,11 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._isSeeded = false;
     this._isConfused = false;
     this._isBiding = false;
+    this._isBound = false;
     this._turnsSleep = 0;
     this._turnsConfusion = 0;
     this._turnsBide = 0;
+    this._turnsBound = 0;
     this._damagedBide = 0;
     this._hasFocusEnergy = false;
 
@@ -1439,6 +1441,15 @@ PokemonMZ_Game_Pokemon.prototype.isMoveBide = function(index) {
     }
     return false;
 };
+PokemonMZ_Game_Pokemon.prototype.isMoveBinding = function(index) {
+    // Returns if a move only sets a status to the target
+    const move = this.moveDataFromIndex(index);
+    for (const effect of move.effects) {
+        if (effect.type == "bindTarget") { return true; }
+    }
+    return false;
+};
+
 PokemonMZ_Game_Pokemon.prototype.moveNameFromIndex = function(index) {
     const move = this._moves[index];
     return this.moveName(move);
@@ -1823,7 +1834,17 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.unconfuse();
     this.endBide();
     this.unfocusEnergy();
+    this.unBind();
 };
+PokemonMZ_Game_Pokemon.prototype.removeFinishedStatuses = function() {
+    // Remove statuses that disappear at the beginning of the next turn
+    this.unflinch();
+    if (this.isBound() && this.isBindingOver()) {
+        this.unBind();
+    }
+};
+
+
 PokemonMZ_Game_Pokemon.prototype.isFainted = function() {
     return this._hp == 0;
 };
@@ -1856,6 +1877,9 @@ PokemonMZ_Game_Pokemon.prototype.isSeeded = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.isConfused = function() {
     return this._isConfused;
+};
+PokemonMZ_Game_Pokemon.prototype.isBound = function() {
+    return this._isBound;
 };
 PokemonMZ_Game_Pokemon.prototype.nextConfusionTurn = function() {
     this._turnsConfusion--;
@@ -1941,6 +1965,13 @@ PokemonMZ_Game_Pokemon.prototype.isConfusable = function() {
 
     return true;
 };
+PokemonMZ_Game_Pokemon.prototype.isBoundable = function() {
+    // Cannot flinch FNT/CONFUSED pokemon
+    if (this.isFainted() || this.isBound()) {
+        return false;
+    }
+    return true;
+};
 PokemonMZ_Game_Pokemon.prototype.canGetFocusEnergy = function() {
     // Cannot flinch FNT/FOCUSED pokemon
     if (this.isFainted() || this.hasFocusEnergy()) {
@@ -1995,6 +2026,36 @@ PokemonMZ_Game_Pokemon.prototype.focusEnergy = function(force) {
         this._hasFocusEnergy = true;
     }
 };
+PokemonMZ_Game_Pokemon.prototype.bind = function(minTurns, maxTurns, chances, force) {
+    if (this.isBoundable() || force) {
+        this._isBound = true;
+
+        const turnsArray = [];
+        let rndMax = 0;
+        for (let i=minTurns; i<=maxTurns; i++) {
+            rndMax += chances[i-minTurns];
+            turnsArray.push(rndMax)
+        }
+
+        const rndValue = Math.randomInt(rndMax);
+        for (let i=minTurns; i<=maxTurns; i++) {
+            if (rndValue < turnsArray[i-minTurns]) {
+                this._turnsBound = i;   // 2 to 5
+                break;
+            }
+        }
+    }
+};
+PokemonMZ_Game_Pokemon.prototype.keepBinding = function() {
+    this._turnsBound--;
+};
+PokemonMZ_Game_Pokemon.prototype.isBindingOver = function() {
+    return this._turnsBound == 0;
+};
+
+
+
+
 PokemonMZ_Game_Pokemon.prototype.unburn = function() {
     if (this.isBurned()) {
         this._isBurned = false;
@@ -2042,6 +2103,15 @@ PokemonMZ_Game_Pokemon.prototype.unfocusEnergy = function() {
         this._hasFocusEnergy = false;
     }
 };
+PokemonMZ_Game_Pokemon.prototype.unBind = function() {
+    if (this.isBound()) {
+        this._isBound = false;
+        this._turnsBound = 0;
+    }
+};
+
+
+
 PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolution = function(evolutionMode) {
     switch(evolutionMode) {
     case "levelUp":
@@ -2299,6 +2369,15 @@ PokemonMZ_Game_Action.prototype.isMoveEffectBide = function() {
     }
     return false;
 };
+PokemonMZ_Game_Action.prototype.isMoveEffectBind = function() {
+    if (!this._moveData) { return false; }
+    for (const effect of this._moveData.effects) {
+        if (effect.type == "bindTarget") {
+            return true;
+        }
+    }
+    return false;
+};
 PokemonMZ_Game_Action.prototype.isMoveEffectSwitchOut = function() {
     if (!this._moveData) { return false; }
     for (const effect of this._moveData.effects) {
@@ -2473,9 +2552,21 @@ PokemonMZ_Game_Action.prototype.calculateMove = function() { //TODO
     this._userEvolvingHp = this._user.hp();
     this._opponentEvolvingHp = this._opponent.hp();
 
+    // If bound, only burn/poison effect are calculated
+    if (this._user.isBound()) {
+        this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
+        return;
+    }
+
     // Specific behavior for bide
     if (this.isMoveEffectBide()) {
         this.calculateMoveBide();
+        return;
+    }
+
+    // Specific behavior for bind attacks when enemy is bound already
+    if (this._opponent.isBound() && this.isMoveEffectBind()) {
+        this.calculateMoveBind();
         return;
     }
 
@@ -2488,7 +2579,11 @@ PokemonMZ_Game_Action.prototype.calculateMove = function() { //TODO
             this.calculateMoveStatus();
             break;
         default:
-            this.calculateMoveAttack();
+            if (this._opponent.isBound()) {
+                this.calculateMoveBind();
+            } else {
+                this.calculateMoveAttack();
+            }
             break;
         }
     }
@@ -2701,6 +2796,46 @@ PokemonMZ_Game_Action.prototype.calculateMoveBide = function() {
     this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
 };
 
+PokemonMZ_Game_Action.prototype.calculateMoveBind = function() { 
+    let enemyWillFaint = false;
+    let userWillFaint = false;
+
+    this._resultSteps.push(["hitAnimation", this._moveData.animationHit, this._user._battleSprite, this._opponent._battleSprite, this.side()]);
+
+    const damage = this.moveDamage(false);
+    userDamage = damage.user;
+    opponentDamage = damage.opponent
+    efficiency = damage.efficiency
+
+    this._resultSteps.push(["se","normal"]);
+    this._resultSteps.push(["damageOpponent",opponentDamage]);
+
+    const effectsResult = this.calculateMoveEffects({
+        "damageDealt":opponentDamage
+    });
+    this._opponentEvolvingHp -= opponentDamage;
+    if (this._opponentEvolvingHp <= 0) {
+        this._moveRemainingHits = 1;
+        enemyWillFaint = true;
+    }
+    if (effectsResult.userDamage) {
+        this._userEvolvingHp -= effectsResult.userDamage
+        if (this._userEvolvingHp <= 0) {
+            this._moveRemainingHits = 1;
+            userWillFaint = true;
+        }
+    }
+
+    if (enemyWillFaint) {
+        this._resultSteps.push(["faintPokemon","opponent",this._opponent._battleSprite]);
+    }
+    if (userWillFaint) {
+        this._resultSteps.push(["faintPokemon","user",this._user._battleSprite]);
+    }
+
+    this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
+
+};
 
 PokemonMZ_Game_Action.prototype.calculateMoveEffects = function(battleData) { // TODO ADD ALL MOVE EFFECTS
     const effects = this._moveData.effects;
@@ -2759,6 +2894,10 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
         if (!this.isMoveEffectExcepted(effect, this._opponent) && passMultiHitCheck) {
             effectResults = this.effect_poisonTarget(battleData, effect, effectResults);
         }
+        break;
+    
+    case "bindTarget":
+        effectResults = this.effect_bindTarget(battleData, effect, effectResults);
         break;
     case "seedTarget":
         if (!this.isMoveEffectExcepted(effect, this._opponent)) {
@@ -3488,6 +3627,22 @@ PokemonMZ_Game_Action.prototype.effect_focusEnergy = function(battleData, effect
         effectResults.success = true;
         this._user.focusEnergy();
         this._resultSteps.push(["waittext","gettingPumped",this.side()]);
+    }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_bindTarget = function(battleData, effect, effectResults) {
+    if (this._opponent.hp() - battleData.damageDealt <= 0) { 
+        // No effect if target will faint
+        return effectResults;
+    }
+    if (this._opponent.isBound()) {
+        effectResults.success = true;
+        this._resultSteps.push(["keepBindingPokemon",this._opponent])
+    } else {
+        if (this._opponent.isBoundable()) {
+            effectResults.success = true;
+            this._resultSteps.push(["bindPokemon",this._opponent, effect.min, effect.max, effect.percentChances])
+        }
     }
     return effectResults;
 };

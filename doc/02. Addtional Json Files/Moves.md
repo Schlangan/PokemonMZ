@@ -30,55 +30,60 @@ moveEffect
 
 List of implemented effects and their additional parameters:
 
-- effect = **bide** : Special move bide
+- type = **bide** : Special move bide
     - unleashAnimationId, **int** : TAnimation string Id from the additional JSon file PokemonMZ_Animations.json -  Bide unleash phase.
 
-- effect = **burnTarget** : Burn the target 
+- type = **bindTarget** : Move blocking the opponent attacks for N turns while inflicting damage (Wrap)
+    - min, **int** : Minimum number of turns of the effect
+    - max, **int** : Maximum number of turns of the effect
+    - percentChances, **Array:int** : From min to max, chances for each number of turns (ex; [38,37,13,12] for wrap)
+
+- type = **burnTarget** : Burn the target 
     - percentChance, **int** : Chance out of 100 of the burn to happen
-- effect = **paralyzeTarget** : Paralyze the target 
+- type = **paralyzeTarget** : Paralyze the target 
     - percentChance, **int** : Chance out of 100 of the paralysis to happen
-- effect = **poisonTarget** : Poison the target 
+- type = **poisonTarget** : Poison the target 
     - percentChance, **int** : Chance out of 100 of the poison to happen
     - multiHitEffect, **string** : Force multihit skills (Twineedle), indicates if **all** hits try to poison, or if only the **last** hit calculates poison.
-- effect = **sleepTarget** : Put the target to sleep
+- type = **sleepTarget** : Put the target to sleep
     - percentChance, **int** : Chance out of 100 of the sleep to happen
-- effect = **confuseTarget** : Put confusion to the target 
+- type = **confuseTarget** : Put confusion to the target 
     - percentChance, **int** : Chance out of 100 of the confusion to happen
-- effect = **flinchTarget** : Flinches the target 
+- type = **flinchTarget** : Flinches the target 
     - percentChance, **int** : Chance out of 100 of the flinch to happen
-- effect = **seedTarget** : Plants a leech seed in the target
+- type = **seedTarget** : Plants a leech seed in the target
     - percentChance, **int** : Chance out of 100 of the seed to hit
 
-- effect = **highCritical** : Move with high critical chance. No additional parameters.
-- effect = **focusEnergy** : Focus Energy move. Increase by 4 critical chances (Original RBY games had a bug in which the value was divided by 4 instead. Here, the bug is fixed.)
+- type = **highCritical** : Move with high critical chance. No additional parameters.
+- type = **focusEnergy** : Focus Energy move. Increase by 4 critical chances (Original RBY games had a bug in which the value was divided by 4 instead. Here, the bug is fixed.)
 
-- effect = **mulitHit** : Chance of hitting several times
+- type = **mulitHit** : Chance of hitting several times
     - min, **int** : Minimum number of hits
     - max, **int** : Maximum number of hits
     - percentChances, **Array:int** : From min to max, chances for each number of hits to happen (ex; [35,35,15,15] for fury attack, 4-5 hits less likely)
 
-- effect = **recoilPercent** : Inflicts recoil damage after hitting
+- type = **recoilPercent** : Inflicts recoil damage after hitting
     - value : Percentage of the damage inflicted turning to recoil
 
-- effect = **forceSwitchOut** : In wild battles only for generation I, force the target to leave the fight, ending the battle.
+- type = **forceSwitchOut** : In wild battles only for generation I, force the target to leave the fight, ending the battle.
 
-- effect = **pdefUpUser** : Increases the physical defense of the user
+- type = **pdefUpUser** : Increases the physical defense of the user
     - stage, **int** : Number of rised stages
     - percentChance, **int** : Chance out of 100 of the drop down to happen
-- effect = **evaUpUser** : Increases the speed of the user
+- type = **evaUpUser** : Increases the speed of the user
     - stage, **int** : Number of rised stages
     - percentChance, **int** : Chance out of 100 of the drop down to happen
 
-- effect = **patkDownTarget** : Decreases the physical attack of the target
+- type = **patkDownTarget** : Decreases the physical attack of the target
     - stage, **int** : Number of dropped down stages
     - percentChance, **int** : Chance out of 100 of the drop down to happen
-- effect = **pdefDownTarget** : Decreases the physical attack of the target
+- type = **pdefDownTarget** : Decreases the physical attack of the target
     - stage, **int** : Number of dropped down stages
     - percentChance, **int** : Chance out of 100 of the drop down to happen
-- effect = **spdDownTarget** : Decreases the speed of the target
+- type = **spdDownTarget** : Decreases the speed of the target
     - stage, **int** : Number of dropped down stages
     - percentChance, **int** : Chance out of 100 of the drop down to happen
-- effect = **accDownTarget** : Decreases the accuracy of the target
+- type = **accDownTarget** : Decreases the accuracy of the target
     - stage, **int** : Number of dropped down stages
     - percentChance, **int** : Chance out of 100 of the drop down to happen
 
