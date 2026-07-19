@@ -1,9 +1,10 @@
 
-## [0.0.3] - TBD
+## [0.0.3] - 2026-07-19
 
-Pokemon can now reach level 20, hence new pokemon and skills have been analyzed.
+Pokemon can now reach level 20, and all mechanics up to Route 3 have been added.
 
 - Standard mechanics
+    - Command Can Get a Pokemon, to check if the player has room inside the party or the current box.
     - Message preventing to receive a Pokemon if the current box and party are full. A switch can be selected to get the failure state and use it in other event commands.
     - Send automatically a received Pokemon to a box, with a message, if the party is full and the current box has room.
 - New skill effects
@@ -11,8 +12,34 @@ Pokemon can now reach level 20, hence new pokemon and skills have been analyzed.
     - Focus energy (critical chances x4 - but of original gen I games fixed)
     - Poison on last hit of multi-hit move (twineedle)
     - Binding move, preventing opponent attack for N turns and inflicting damage (wrap)
+    - Splash, no effect at all.
 - New battle mechanics
     - Enhanced animation system: allowing to make pokemon move during animations
+- New predefined Pokemon data
+    - Ivysaur
+    - Charmeleon
+    - Wartortle
+    - Pidgeotto
+    - Raticate
+    - Fearow
+    - Ekans
+    - Nidorina
+    - Nidorino
+    - Jigglypuff
+    - Magikarp
+    - Gyarados
+- New predefined moves data
+    - Bite
+    - Disable
+    - Focus Energy
+    - Pound
+    - Sing
+    - Slash
+    - Splash
+    - Supersonic
+    - Twineedle
+    - Whirlwind
+    - Wrap
 
 ## [0.0.2] - 2026-07-16
 

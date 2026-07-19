@@ -34,6 +34,39 @@
         ]
     },
     {
+        "id":"ivysaur",
+        "pokedex":[{"region":"kanto","number":2}],
+        "category":"Seed",
+        "description":"When the bulb on its back grows large, it appears to lose the ability to stand on its hind legs. The bulb on its back grows by drawing energy. It gives off an aroma when it is ready to bloom.",
+        "height":1.0,
+        "weight":13.0,
+        "types":["grass","poison"],
+        "baseStats":{"hp":60,"patk":62,"pdef":63,"satk":80,"sdef":80,"spd":60,"spc":80},
+        "expCurve":"mediumSlow",
+        "catchRate":45,
+        "xpYield":141,
+        "ev":[{"satk":1}],
+        "evolutions":[
+            {"to":"venusaur","mode":"level","level":32}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"tackle"},
+            {"lvl":1, "move":"growl"},
+            {"lvl":7, "move":"leechSeed"},
+            {"lvl":13, "move":"vineWhip"},
+            {"lvl":22, "move":"poisonPowder"},
+            {"lvl":30, "move":"razorLeaf"},
+            {"lvl":38, "move":"growth"},
+            {"lvl":46, "move":"sleepPowder"},
+            {"lvl":54, "move":"solarBeam"}
+        ],
+        "hmMoves":["cut"],
+        "tmMoves":[
+            "swordsDance","toxic","bodySlam","takeDown","doubleEdge","rage","megaDrain",
+            "soldarBeam","mimic","doubleTeam","reflect","bide","rest","substitute"
+        ]
+    },
+    {
         "id":"charmander",
         "pokedex":[{"region":"kanto","number":4}],
         "category":"Lizard",
@@ -67,6 +100,40 @@
         ]
     },
     {
+        "id":"charmeleon",
+        "pokedex":[{"region":"kanto","number":5}],
+        "category":"Flame",
+        "description":"When it swings its burning tail, it elevates the temperature to unbearably high levels. Tough fights could excite this Pokémon. When excited, it may blow out bluish-white flames.",
+        "height":1.1,
+        "weight":19.0,
+        "types":["fire"],
+        "baseStats":{"hp":58,"patk":64,"pdef":58,"satk":80,"sdef":65,"spd":80,"spc":65},
+        "expCurve":"mediumSlow",
+        "catchRate":45,
+        "xpYield":142,
+        "ev":[{"satk":1}],
+        "evolutions":[
+            {"to":"charizard","mode":"level","level":36}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"scratch"},
+            {"lvl":1, "move":"growl"},
+            {"lvl":1, "move":"ember"},
+            {"lvl":9, "move":"ember"},
+            {"lvl":15, "move":"leer"},
+            {"lvl":24, "move":"rage"},
+            {"lvl":33, "move":"slash"},
+            {"lvl":42, "move":"flamethrower"},
+            {"lvl":56, "move":"fireSpin"}
+        ],
+        "hmMoves":["cut","strength"],
+        "tmMoves":[
+            "megaPunch","swordsDance","megaKick","toxic","bodySlam","takeDown","doubleEdge",
+            "submission","counter","seismicToss","rage","dragonRage","dig","mimic","doubleTeam",
+            "reflect","bide","fireBlast","swift","skullBash","rest","substitute"
+        ]
+    },
+    {
         "id":"squirtle",
         "pokedex":[{"region":"kanto","number":7}],
         "category":"Tiny Turtle",
@@ -91,6 +158,40 @@
             {"lvl":28, "move":"withdraw"},
             {"lvl":35, "move":"skullBash"},
             {"lvl":42, "move":"hydroPump"}
+        ],
+        "hmMoves":["surf","strength"],
+        "tmMoves":[
+            "megaPunch","megaKick","toxic","bodySlam","takeDown","doubleEdge","bubbleBeam",
+            "waterGun","iceBeam","blizzard","submission","counter","seismicToss","rage","dig",
+            "mimic","doubleTeam","reflect","bide","skullBash","rest","substitute"
+        ]
+    },
+    {
+        "id":"wartortle",
+        "pokedex":[{"region":"kanto","number":8}],
+        "category":"Turtle",
+        "description":"Often hides in water to stalk unwary prey. For swimming fast, it moves its ears to maintain balance. When tapped, this Pokémon will pull in its head, but its tail will still stick out a little bit.",
+        "height":1.0,
+        "weight":22.5,
+        "types":["water"],
+        "baseStats":{"hp":59,"patk":63,"pdef":80,"satk":65,"sdef":80,"spd":58,"spc":65},
+        "expCurve":"mediumSlow",
+        "catchRate":45,
+        "xpYield":143,
+        "ev":[{"pdef":1,"sdef":1}],
+        "evolutions":[
+            {"to":"blastoise","mode":"level","level":36}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"tackle"},
+            {"lvl":1, "move":"tailWhip"},
+            {"lvl":1, "move":"bubble"},
+            {"lvl":8, "move":"bubble"},
+            {"lvl":15, "move":"waterGun"},
+            {"lvl":24, "move":"bite"},
+            {"lvl":31, "move":"withdraw"},
+            {"lvl":39, "move":"skullBash"},
+            {"lvl":47, "move":"hydroPump"}
         ],
         "hmMoves":["surf","strength"],
         "tmMoves":[
@@ -139,7 +240,8 @@
             {"to":"butterfree","mode":"level","level":10}
         ],
         "learnedMoves":[
-            {"lvl":1, "move":"harden"}
+            {"lvl":1, "move":"harden"},
+            {"lvl":7, "move":"harden"}
         ],
         "hmMoves":[],
         "tmMoves":[]
@@ -216,7 +318,8 @@
             {"to":"beedrill","mode":"level","level":10}
         ],
         "learnedMoves":[
-            {"lvl":1, "move":"harden"}
+            {"lvl":1, "move":"harden"},
+            {"lvl":7, "move":"harden"}
         ],
         "hmMoves":[],
         "tmMoves":[]
@@ -237,7 +340,7 @@
         "evolutions":[],
         "learnedMoves":[
             {"lvl":1, "move":"furyAttack"},
-            {"lvl":12, "move":"furyAttack"},
+            {"lvl":10, "move":"furyAttack"},
             {"lvl":16, "move":"focusEnergy"},
             {"lvl":20, "move":"twineedle"},
             {"lvl":25, "move":"rage"},
@@ -283,6 +386,38 @@
         ]
     },
     {
+        "id":"pidgeotto",
+        "pokedex":[{"region":"kanto","number":17}],
+        "category":"Bird",
+        "description":"Very protective of its sprawling territorial area, this Pokémon will fiercely peck at any intruder. This Pokémon is full of vitality. It constantly flies around its large territory in search of prey.",
+        "height":1.1,
+        "weight":30.00,
+        "types":["normal","flying"],
+        "baseStats":{"hp":63,"patk":60,"pdef":55,"satk":50,"sdef":50,"spd":71,"spc":50},
+        "expCurve":"mediumSlow",
+        "catchRate":120,
+        "xpYield":113,
+        "ev":[{"spd":2}],
+        "evolutions":[
+            {"to":"pidgeot","mode":"level","level":36}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"gust"},
+            {"lvl":1, "move":"sandAttack"},
+            {"lvl":5, "move":"sandAttack"},
+            {"lvl":12, "move":"quickAttack"},
+            {"lvl":21, "move":"whirlwind"},
+            {"lvl":31, "move":"wingAttack"},
+            {"lvl":40, "move":"agility"},
+            {"lvl":49, "move":"mirrorMove"}
+        ],
+        "hmMoves":["fly"],
+        "tmMoves":[
+            "razorWind","whirlwind","toxic","takeDown","doubleEdge","rage","mimic","doubleTeam",
+            "reflect","bide","swift","skyAttack","rest","substitute"
+        ]
+    },
+    {
         "id":"rattata",
         "pokedex":[{"region":"kanto","number":19}],
         "category":"Rat",
@@ -310,6 +445,36 @@
         "tmMoves":[
             "toxic","bodySlam","takeDown","doubleEdge","bubbleBeam","waterGun","blizzard","rage","thunderbolt",
             "thunder","dig","mimic","doubleTeam","bide","swift","skullBash","rest","substitute"
+        ]
+    },
+    {
+        "id":"raticate",
+        "pokedex":[{"region":"kanto","number":20}],
+        "category":"Mouse",
+        "description":"It uses its whiskers to maintain its balance. It apparently slows down if they are cut off. Its hind feet are webbed. They act as flippers, so it can swim in rivers and hunt for prey.",
+        "height":0.7,
+        "weight":18.5,
+        "types":["normal"],
+        "baseStats":{"hp":55,"patk":81,"pdef":60,"satk":50,"sdef":70,"spd":97,"spc":50},
+        "expCurve":"mediumFast",
+        "catchRate":127,
+        "xpYield":116,
+        "ev":[{"spd":2}],
+        "evolutions":[],
+        "learnedMoves":[
+            {"lvl":1, "move":"tackle"},
+            {"lvl":1, "move":"tailWhip"},
+            {"lvl":1, "move":"quickAttack"},
+            {"lvl":7, "move":"quickAttack"},
+            {"lvl":14, "move":"hyperFang"},
+            {"lvl":27, "move":"focusEnergy"},
+            {"lvl":41, "move":"superFang"}
+        ],
+        "hmMoves":[],
+        "tmMoves":[
+            "toxic","bodySlam","takeDown","doubleEdge","bubbleBeam","waterGun","iceBeam","blizzard",
+            "hyperBeam","rage","thunderbolt","thunder","dig","mimic","doubleTeam","bide","swift",
+            "skullBash","rest","substitute"
         ]
     },
     {
@@ -344,6 +509,68 @@
         ]
     },
     {
+        "id":"fearow",
+        "pokedex":[{"region":"kanto","number":22}],
+        "category":"Beak",
+        "description":"With its huge and magnificent wings, it can keep aloft without ever having to land for rest. A Pokémon that dates back many years. If it senses danger, it flies high and away, instantly. ",
+        "height":1.2,
+        "weight":38.0,
+        "types":["normal","flying"],
+        "baseStats":{"hp":65,"patk":90,"pdef":65,"satk":61,"sdef":61,"spd":100,"spc":61},
+        "expCurve":"mediumFast",
+        "catchRate":90,
+        "xpYield":162,
+        "ev":[{"spd":2}],
+        "evolutions":[],
+        "learnedMoves":[
+            {"lvl":1, "move":"peck"},
+            {"lvl":1, "move":"growl"},
+            {"lvl":1, "move":"leer"},
+            {"lvl":9, "move":"leer"},
+            {"lvl":15, "move":"furyAttack"},
+            {"lvl":25, "move":"mirrorMove"},
+            {"lvl":34, "move":"drillPeck"},
+            {"lvl":43, "move":"agility"}
+        ],
+        "hmMoves":["fly"],
+        "tmMoves":[
+            "razorWind","whirlwind","toxic","takeDown","doubleEdge","hyperBeam","rage","mimic","doubleTeam",
+            "bide","swift","skyAttack","rest","substitute"
+        ]
+    },
+    {
+        "id":"ekans",
+        "pokedex":[{"region":"kanto","number":23}],
+        "category":"Snake",
+        "description":"Moves silently and stealthily. Eats the eggs of birds, such as Pidgey and Spearow, whole. The older it gets, the longer it grows. At night, it wraps its long body around tree branches to rest.",
+        "height":2.0,
+        "weight":6.9,
+        "types":["poison"],
+        "baseStats":{"hp":35,"patk":60,"pdef":44,"satk":40,"sdef":54,"spd":55,"spc":40},
+        "expCurve":"mediumFast",
+        "catchRate":255,
+        "xpYield":62,
+        "ev":[{"patk":1}],
+        "evolutions":[
+            {"to":"arbok","mode":"level","level":22}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"wrap"},
+            {"lvl":1, "move":"leer"},
+            {"lvl":10, "move":"poisonSting"},
+            {"lvl":17, "move":"bite"},
+            {"lvl":24, "move":"glare"},
+            {"lvl":31, "move":"screech"},
+            {"lvl":38, "move":"acid"}
+        ],
+        "hmMoves":["strength"],
+        "tmMoves":[
+            "toxic","bodySlam","takeDown","doubleEdge","rage","megaDrain","earthquake",
+            "fissure","dig","mimic","doubleTeam","bide","skullBash","rest","rockSlide",
+            "substitute"
+        ]
+    },
+    {
         "id":"pikachu",
         "pokedex":[{"region":"kanto","number":25}],
         "category":"Mouse",
@@ -375,7 +602,7 @@
         "hmMoves":["flash"],
         "tmMoves":[
             "megaPunch","megaKick","toxic","toxic","bodySlam","takeDown","doubleEdge","payDay","submission","seismicToss",
-            "rage","thunderbolt","thunder","mimic","doubleTeam","reflect","bide","swift","skullBach","rest","thunderWave","substitute"
+            "rage","thunderbolt","thunder","mimic","doubleTeam","reflect","bide","swift","skullBash","rest","thunderWave","substitute"
         ]
     },
     {
@@ -442,6 +669,39 @@
         ]
     },
     {
+        "id":"nidorina",
+        "pokedex":[{"region":"kanto","number":30}],
+        "category":"Poison Pin",
+        "description":"The female's horn develops slowly. Prefers physical attacks such as clawing and biting. When resting deep in its burrow, its thorns always retract. This is proof that it is relaxed.",
+        "height":0.8,
+        "weight":20.0,
+        "types":["poison"],
+        "baseStats":{"hp":70,"patk":62,"pdef":67,"satk":55,"sdef":55,"spd":56,"spc":55},
+        "expCurve":"mediumSlow",
+        "catchRate":120,
+        "xpYield":117,
+        "ev":[{"hp":2}],
+        "evolutions":[
+            {"to":"nidoqueen","mode":"useItem","item":"moonStone"}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"growl"},
+            {"lvl":1, "move":"tackle"},
+            {"lvl":1, "move":"scratch"},
+            {"lvl":8, "move":"scratch"},
+            {"lvl":12, "move":"doubleKick"},
+            {"lvl":19, "move":"poisonSting"},
+            {"lvl":27, "move":"tailWhip"},
+            {"lvl":36, "move":"bite"},
+            {"lvl":46, "move":"furySwipes"}
+        ],
+        "hmMoves":[],
+        "tmMoves":[
+            "toxic","hornDrill","bodySlam","takeDown","doubleEdge","bubbleBeam","waterGun","iceBeam","blizzard",
+            "rage","thunderbolt","thunder","mimic","doubleTeam","reflect","bide","skullBash","rest","substitute"
+        ]
+    },
+    {
         "id":"nidoranm",
         "pokedex":[{"region":"kanto","number":32}],
         "category":"Poison Pin",
@@ -471,6 +731,72 @@
         "tmMoves":[
             "toxic","hornDrill","bodySlam","takeDown","doubleEdge","blizzard","rage","thunderbolt",
             "thunder","mimic","doubleTeam","reflect","bide","skullBash","rest","substitute"
+        ]
+    },
+    {
+        "id":"nidorino",
+        "pokedex":[{"region":"kanto","number":33}],
+        "category":"Poison Pin",
+        "description":"An aggressive Pokémon that is quick to attack. The horn on its head secretes a powerful venom. Its horns contain venom. If they are stabbed into an enemy, the impact makes the poison leak out.",
+        "height":0.9,
+        "weight":19.5,
+        "types":["poison"],
+        "baseStats":{"hp":61,"patk":72,"pdef":57,"satk":55,"sdef":55,"spd":65,"spc":55},
+        "expCurve":"mediumSlow",
+        "catchRate":120,
+        "xpYield":118,
+        "ev":[{"atk":2}],
+        "evolutions":[
+            {"to":"nidoking","mode":"useItem","item":"moonStone"}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"leer"},
+            {"lvl":1, "move":"tackle"},
+            {"lvl":1, "move":"hornAttack"},
+            {"lvl":8, "move":"hornAttack"},
+            {"lvl":12, "move":"doubleKick"},
+            {"lvl":19, "move":"poisonSting"},
+            {"lvl":27, "move":"focusEnergy"},
+            {"lvl":36, "move":"furyAttack"},
+            {"lvl":46, "move":"hornDrill"}
+        ],
+        "hmMoves":[],
+        "tmMoves":[
+            "toxic","hornDrill","bodySlam","takeDown","doubleEdge","bubbleBeam","waterGun","iceBeam","blizzard","rage","thunderbolt",
+            "thunder","mimic","doubleTeam","reflect","bide","skullBash","rest","substitute"
+        ]
+    },
+    {
+        "id":"jigglypuff",
+        "pokedex":[{"region":"kanto","number":39}],
+        "category":"Balloon",
+        "description":"When its huge eyes light up, it sings a mysteriously soothing melody that lulls its enemies to sleep. Uses its alluring eyes to enrapture its foe. It then sings a pleasing melody that lulls the foe to sleep. ",
+        "height":0.5,
+        "weight":5.5,
+        "types":["normal"],
+        "baseStats":{"hp":115,"patk":45,"pdef":20,"satk":45,"sdef":25,"spd":20,"spc":25},
+        "expCurve":"fast",
+        "catchRate":170,
+        "xpYield":76,
+        "ev":[{"hp":2}],
+        "evolutions":[
+            {"to":"wigglytuff","mode":"useItem","item":"moonStone"}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"sing"},
+            {"lvl":9, "move":"pound"},
+            {"lvl":14, "move":"disable"},
+            {"lvl":19, "move":"defenseCurl"},
+            {"lvl":24, "move":"doubleSlap"},
+            {"lvl":29, "move":"rest"},
+            {"lvl":34, "move":"bodySlam"},
+            {"lvl":39, "move":"doubleEdge"}
+        ],
+        "hmMoves":["strength","flash"],
+        "tmMoves":[
+            "megaPunch","megaKick","toxic","bodySlam","takeDown","doubleEdge","bubbleBeam","waterGun","iceBeam","blizzard",
+            "submission","counter","seismicToss","rage","soldarBeam","thunderbolt","thunder","psychic","teleport","mimic",
+            "doubleTeam","reflect","bide","fireBlast","skullBash","rest","thunderWave","psywave","triAttack","substitute"
         ]
     },
     {
@@ -599,6 +925,58 @@
             "toxic","bodySlam","takeDown","doubleEdge","rage",
             "earthquake","fissure","dig","mimic","doubleTeam","bide",
             "selfdestruct","skullBash","rest","explosion","rockSlide","substitute"
+        ]
+    },
+    {
+        "id":"magikarp",
+        "pokedex":[{"region":"kanto","number":129}],
+        "category":"Fish",
+        "description":"In the distant past, it was somewhat stronger than the horribly weak descendants that exist today. Famous for being very unreliable. It can be found swimming in seas, lakes, rivers and shallow puddles.",
+        "height":0.9,
+        "weight":10.0,
+        "types":["water"],
+        "baseStats":{"hp":20,"patk":10,"pdef":55,"satk":15,"sdef":20,"spd":80,"spc":20},
+        "expCurve":"slow",
+        "catchRate":255,
+        "xpYield":20,
+        "ev":[{"spd":1}],
+        "evolutions":[
+            {"to":"gyarados","mode":"level","level":20}
+        ],
+        "learnedMoves":[
+            {"lvl":1,"move":"splash"},
+            {"lvl":15,"move":"tackle"}
+        ],
+        "hmMoves":[],
+        "tmMoves":[]
+    },
+    {
+        "id":"gyarados",
+        "pokedex":[{"region":"kanto","number":130}],
+        "category":"Atrocious",
+        "description":"Rarely seen in the wild. Huge and vicious, it is capable of destroying entire cities in a rage. Brutally vicious and enormously destructive. Known for totally destroying cities in ancient times.",
+        "height":6.5,
+        "weight":235.0,
+        "types":["water","flying"],
+        "baseStats":{"hp":95,"patk":125,"pdef":79,"satk":60,"sdef":100,"spd":81,"spc":100},
+        "expCurve":"slow",
+        "catchRate":45,
+        "xpYield":214,
+        "ev":[{"patk":2}],
+        "evolutions":[],
+        "learnedMoves":[
+            {"lvl":1,"move":"tackle"},
+            {"lvl":20,"move":"bite"},
+            {"lvl":25,"move":"dragonRage"},
+            {"lvl":32,"move":"leer"},
+            {"lvl":41,"move":"hydroPump"},
+            {"lvl":52,"move":"hyperBeam"}
+        ],
+        "hmMoves":["surf","strength"],
+        "tmMoves":[
+            "toxic","bodySlam","takeDown","doubleEdge","bubbleBeam","waterGun","iceBeam",
+            "blizzard","hyperBeam","rage","dragonRage","thunderbolt","thunder","mimic",
+            "doubleTeam","reflect","bide","fireBlast","skullBash","rest","substitute"
         ]
     },
     {

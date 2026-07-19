@@ -13,7 +13,7 @@
             {"id":5,"name":"Viridian Forest","x":4,"y":4,"pokemons":["pidgey","caterpie","weedle","metapod","kakuna","pikachu"]},
             {"id":6,"name":"Diglett's Cave","x":5,"y":4,"pokemons":[]},
             {"id":7,"name":"Pewter city","x":4,"y":3,"pokemons":[]},
-            {"id":8,"name":"Route 3","x":6,"y":3,"pokemons":[]},
+            {"id":8,"name":"Route 3","x":6,"y":3,"pokemons":["pidgey","rattata","spearow","sandshrew","jigglypuff","mankey"]},
             {"id":9,"name":"Mt Moon","x":8,"y":2,"pokemons":[]},
             {"id":10,"name":"Route 4","x":10,"y":2,"pokemons":[]},
             {"id":11,"name":"Cerulean City","x":12,"y":2,"pokemons":[]},

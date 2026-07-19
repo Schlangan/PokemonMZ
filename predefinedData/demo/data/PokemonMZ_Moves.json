@@ -19,9 +19,22 @@
         "power":0,
         "accuracy":100,
         "effects":[
-            {"type":"bide", "unleashAnimationId":2}
-        ]
+            {"type":"bide", "unleashAnimationId":"hitTargetEffect"}
+        ],
+        "animationHit":"powerUpUser2"
     },
+    {
+		"id":"bite",
+		"type":"normal",
+		"target":"opponent",
+		"pp":25,
+		"power":60,
+		"accuracy":100,
+		"effects":[
+			{"type":"flinchTarget","percentChance":10}
+		],
+        "animationHit":"pierceTargetPhysical"
+	},		
     {
         "id":"bubble",
         "type":"water",
@@ -29,9 +42,11 @@
         "pp":30,
         "power":20,
         "accuracy":100,
+        "cpuHigherEffectFailure":true,
         "effects":[
             {"type":"spdDownTarget","stage":1,"percentChance":33}
-        ]
+        ],
+        "animationHit":"waterTarget1"
     },
     {
         "id":"confusion",
@@ -42,7 +57,8 @@
         "accuracy":100,
         "effects":[
             {"type":"confuseTarget","percentChance":10}
-        ]
+        ],
+        "animationHit":"lightTarget2"
     },
     {
         "id":"defenseCurl",
@@ -53,7 +69,20 @@
         "accuracy":100,
         "effects":[
             {"type":"pdefUpUser","stage":1,"percentChance":100}
-        ]
+        ],
+        "animationHit":"powerUpUser1"
+    },
+    {
+        "id":"disable",
+        "category":"status",
+        "type":"normal",
+        "target":"opponent",
+        "pp":20,
+        "accuracy":55,
+        "effects":[
+            {"type":"disableTargetMove", "select":"random", "minTurn":0, "maxTurn":7}
+        ],
+        "animationHit":"silence"
     },
     {
         "id":"doubleKick",
@@ -64,7 +93,8 @@
         "accuracy":100,
         "effects":[
             {"type":"multiHit","min":2, "max":2, "percentChances":[100]}
-        ]
+        ],
+        "animationHit":"hitTargetPhysical"
     },
     {
         "id":"doubleTeam",
@@ -75,7 +105,8 @@
         "accuracy":100,
         "effects":[
             {"type":"evaUpUser","stage":1,"percentChance":100}
-        ]
+        ],
+        "animationHit":"doubleTeam"
     },
     {
         "id":"ember",
@@ -86,7 +117,20 @@
         "accuracy":100,
         "effects":[
             {"type":"burnTarget","percentChance":10}
-        ]
+        ],
+        "animationHit":"fireTarget1"
+    },
+    {
+        "id":"focusEnergy",
+        "category":"status",
+        "type":"normal",
+        "target":"user",
+        "pp":30,
+        "accuracy":100,
+        "effects":[
+            {"type":"focusEnergy"}
+        ],
+        "animationHit":"powerUpUser2"
     },
     {
         "id":"furyAttack",
@@ -97,7 +141,8 @@
         "accuracy":85,
         "effects":[
             {"type":"multiHit","min":2, "max":5, "percentChances":[35,35,15,15]}
-        ]
+        ],
+        "animationHit":"pierceTargetPhysicalFast"
     },
     {
         "id":"growl",
@@ -106,9 +151,11 @@
         "target":"opponent",
         "pp":40,
         "accuracy":100,
+        "cpuHigherEffectFailure":true,
         "effects":[
             {"type":"patkDownTarget","stage":1,"percentChance":100}
-        ]
+        ],
+        "animationHit":"growl"
     },
     {
         "id":"gust",
@@ -117,7 +164,8 @@
         "pp":35,
         "power":40,
         "accuracy":100,
-        "effects":[]
+        "effects":[],
+        "animationHit":"windTarget2"
     },
     {
         "id":"harden",
@@ -128,7 +176,8 @@
         "accuracy":100,
         "effects":[
             {"type":"pdefUpUser","stage":1,"percentChance":100}
-        ]
+        ],
+        "animationHit":"powerUpUser1"
     },
     {
         "id":"hornAttack",
@@ -137,7 +186,8 @@
         "pp":25,
         "power":65,
         "accuracy":100,
-        "effects":[]
+        "effects":[],
+        "animationHit":"pierceTargetPhysical"
     },
     {
         "id":"hyperFang",
@@ -148,7 +198,8 @@
         "accuracy":90,
         "effects":[
             {"type":"flinchTarget","percentChance":10}
-        ]
+        ],
+        "animationHit":"pierceTargetPhysical"
     },
     {
         "id":"karateChop",
@@ -159,7 +210,8 @@
         "accuracy":100,
         "effects":[
             {"type":"highCritical"}
-        ]
+        ],
+        "animationHit":"hitTargetPhysical"
     },
     {
         "id":"leechSeed",
@@ -170,7 +222,8 @@
         "accuracy":90,
         "effects":[
             {"type":"seedTarget","percentChance":100}
-        ]
+        ],
+        "animationHit":"grassTarget1"
     },
     {
         "id":"leer",
@@ -179,9 +232,11 @@
         "target":"opponent",
         "pp":30,
         "accuracy":100,
+        "cpuHigherEffectFailure":true,
         "effects":[
             {"type":"pdefDownTarget","stage":1,"percentChance":100}
-        ]
+        ],
+        "animationHit":"leer"
     },
     {
         "id":"lowKick",
@@ -192,7 +247,8 @@
         "accuracy":90,
         "effects":[
             {"type":"flinchTarget","percentChance":30}
-        ]
+        ],
+        "animationHit":"sweepTarget"
     },
     {
         "id":"peck",
@@ -201,7 +257,8 @@
         "pp":35,
         "power":35,
         "accuracy":100,
-        "effects":[]
+        "effects":[],
+        "animationHit":"hitTargetPhysical"
     },
     {
         "id":"poisonPowder",
@@ -212,7 +269,8 @@
         "accuracy":75,
         "effects":[
             {"type":"poisonTarget","percentChance":100}
-        ]
+        ],
+        "animationHit":"powder"
     },
     {
         "id":"poisonSting",
@@ -223,7 +281,18 @@
         "accuracy":100,
         "effects":[
             {"type":"poisonTarget","percentChance":20}
-        ]
+        ],
+        "animationHit":"hitTargetPhysical"
+    },
+    {
+        "id":"pound",
+        "type":"normal",
+        "target":"opponent",
+        "pp":35,
+        "power":40,
+        "accuracy":100,
+        "effects":[],
+        "animationHit":"hitTargetPhysical"
     },
     {
         "id":"quickAttack",
@@ -233,7 +302,8 @@
         "pp":30,
         "power":40,
         "accuracy":100,
-        "effects":[]
+        "effects":[],
+        "animationHit":"hitTargetPhysicalFast"
     },
     {
         "id":"sandAttack",
@@ -242,9 +312,11 @@
         "target":"opponent",
         "pp":15,
         "accuracy":100,
+        "cpuHigherEffectFailure":true,
         "effects":[
             {"type":"accDownTarget","stage":1,"percentChance":100}
-        ]
+        ],
+        "animationHit":"powder"
     },
     {
         "id":"scratch",
@@ -253,7 +325,8 @@
         "pp":35,
         "power":40,
         "accuracy":100,
-        "effects":[]
+        "effects":[],
+        "animationHit":"slashTargetPhysical"
     },
     {
         "id":"screech",
@@ -262,10 +335,46 @@
         "target":"opponent",
         "pp":40,
         "accuracy":85,
+        "cpuHigherEffectFailure":true,
         "effects":[
             {"type":"pdefDownTarget","stage":2,"percentChance":100}
-        ]
+        ],
+        "animationHit":"screech"
+    },
+    {
+        "id":"sing",
+        "category":"status",
+        "type":"normal",
+        "target":"opponent",
+        "pp":15,
+        "accuracy":55,
+        "effects":[
+            {"type":"sleepTarget","percentChance":100}
+        ],
+        "animationHit":"song"
+    },
+    {
+        "id":"slam",
+        "type":"normal",
+        "target":"opponent",
+        "pp":20,
+        "power":80,
+        "accuracy":75,
+        "effects":[],
+        "animationHit":"slashTargetPhysical"
     }, 
+    {
+        "id":"slash",
+        "type":"normal",
+        "target":"opponent",
+        "pp":20,
+        "power":70,
+        "accuracy":100,
+        "effects":[
+            {"type":"highCritical"}
+        ],
+        "animationHit":"slashTargetPhysical"
+    },
     {
         "id":"sleepPowder",
         "category":"status",
@@ -275,7 +384,20 @@
         "accuracy":75,
         "effects":[
             {"type":"sleepTarget","percentChance":100}
-        ]
+        ],
+        "animationHit":"powder"
+    },
+    {
+        "id":"splash",
+        "category":"status",
+        "type":"normal",
+        "target":"user",
+        "pp":40,
+        "accuracy":100,
+        "effects":[
+            {"type":"splash"}
+        ],
+        "animationHit":"splash"
     },
     {
         "id":"stringShot",
@@ -284,9 +406,11 @@
         "target":"opponent",
         "pp":40,
         "accuracy":95,
+        "cpuHigherEffectFailure":true,
         "effects":[
             {"type":"spdDownTarget","stage":1,"percentChance":100}
-        ]
+        ],
+        "animationHit":"bind"
     },
     {
         "id":"struggle",
@@ -296,7 +420,8 @@
         "power":50,
         "effects":[
             {"type":"recoilPercent", "value":50}
-        ]
+        ],
+        "animationHit":"hitTargetPhysical"
     },
     {
         "id":"stunSpore",
@@ -307,15 +432,20 @@
         "accuracy":75,
         "effects":[
             {"type":"paralyzeTarget","percentChance":100}
-        ]
+        ],
+        "animationHit":"powder"
     },
     {
         "id":"supersonic",
         "type":"normal",
+        "category":"status",
         "target":"opponent",
-        "pp":30,
-        "accuracy":100,
-        "effects":[]
+        "pp":20,
+        "accuracy":55,
+        "effects":[
+            {"type":"confuseTarget","percentChance":100}
+        ],
+        "animationHit":"supersonic"
     },
     {
         "id":"tackle",
@@ -324,7 +454,8 @@
         "pp":35,
         "power":35,
         "accuracy":95,
-        "effects":[]
+        "effects":[],
+        "animationHit":"hitTargetPhysical"
     },
     {
         "id":"tailWhip",
@@ -333,9 +464,11 @@
         "target":"opponent",
         "pp":30,
         "accuracy":100,
+        "cpuHigherEffectFailure":true,
         "effects":[
             {"type":"pdefDownTarget","stage":1,"percentChance":100}
-        ]
+        ],
+        "animationHit":"tailWhip"
     },
     {
         "id":"thunderShock",
@@ -346,7 +479,8 @@
         "accuracy":100,
         "effects":[
             {"type":"paralyzeTarget","except":[{"type":"electric"}],"percentChance":10}
-        ]
+        ],
+        "animationHit":"thunderTarget1"
     },
     {
         "id":"thunderWave",
@@ -357,7 +491,21 @@
         "accuracy":90,
         "effects":[
             {"type":"paralyzeTarget","percentChance":100}
-        ]
+        ],
+        "animationHit":"thunderTarget2"
+    },
+    {
+        "id":"twineedle",
+        "type":"bug",
+        "target":"opponent",
+        "pp":20,
+        "power":25,
+        "accuracy":100,
+        "effects":[
+            {"type":"multiHit","min":2, "max":2, "percentChances":[100]},
+            {"type":"poisonTarget","percentChance":20,"multiHitEffect":"last"}
+        ],
+        "animationHit":"pierceTargetPhysicalFast"
     },
     {
         "id":"vineWhip",
@@ -366,7 +514,8 @@
         "pp":10,
         "power":35,
         "accuracy":100,
-        "effects":[]
+        "effects":[],
+        "animationHit":"slashTargetPhysical"
     },
     {
         "id":"waterGun",
@@ -375,8 +524,32 @@
         "pp":25,
         "power":40,
         "accuracy":100,
-        "effects":[]
+        "effects":[],
+        "animationHit":"waterTarget1"
+    },
+    {
+        "id":"whirlwind",
+        "category":"status",
+        "type":"normal",
+        "target":"opponent",
+        "pp":20,
+        "accuracy":85,
+        "hitDig":true,
+        "effects":[
+            {"type":"forceSwitchOut"}
+        ],
+        "animationHit":"windTarget2"
+    },
+    {
+        "id":"wrap",
+        "type":"normal",
+        "target":"opponent",
+        "pp":20,
+        "power":15,
+        "accuracy":85,
+        "effects":[
+            {"type":"bindTarget","min":2, "max":5, "percentChances":[38,37,13,12]}
+        ],
+        "animationHit":"bindTargetPhysical"
     }
-    
-    
 ]

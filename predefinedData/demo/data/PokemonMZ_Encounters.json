@@ -204,5 +204,114 @@
         ],
         "defeatText":"I took you for granted. As proof\nof your victory, here's the\nBoulder Badge!",
         "money":1287
+    },
+    {
+        "id":"route3_lass1",
+        "type":"trainer",
+        "trainerActor":4,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"pidgey","level":9,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"pidgey","level":9,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"You're mean!",
+        "money":135
+    },
+    {
+        "id":"route3_young1",
+        "type":"trainer",
+        "trainerActor":7,
+        "ia":"random",
+        "pokemons":[
+            {"id":"rattata","level":11,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"ekans","level":11,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I don't believe it!",
+        "money":165
+    },
+    {
+        "id":"route3_bug1",
+        "type":"trainer",
+        "trainerActor":3,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"caterpie","level":10,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"weedle","level":10,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"caterpie","level":10,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"You beat me again!",
+        "money":100
+    },
+    {
+        "id":"route3_bug2",
+        "type":"trainer",
+        "trainerActor":3,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"weedle","level":9,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"kakuna","level":9,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"caterpie","level":9,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"metapod","level":9,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"If I had new Pokémon, I would've won!",
+        "money":90
+    },
+    {
+        "id":"route3_young2",
+        "type":"trainer",
+        "trainerActor":7,
+        "ia":"random",
+        "pokemons":[
+            {"id":"spearow","level":14,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Lost! Lost! Lost!",
+        "money":210
+    },
+    {
+        "id":"route3_lass2",
+        "type":"trainer",
+        "trainerActor":4,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"rattata","level":10,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"nidoranm","level":10,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Be nice!",
+        "money":150
+    },
+    {
+        "id":"route3_bug3",
+        "type":"trainer",
+        "trainerActor":3,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"caterpie","level":11,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"metapod","level":11,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Done like dinner!",
+        "money":110
+    },
+    {
+        "id":"route3_grass_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"pidgey","levelMin":6, "levelMax":8, "rate":45},
+            {"id":"rattata","levelMin":10, "levelMax":12, "rate":15},
+            {"id":"spearow","levelMin":6, "levelMax":10, "rate":50},
+            {"id":"sandshrew","levelMin":8, "levelMax":10, "rate":15},
+            {"id":"jigglypuff","levelMin":3, "levelMax":7, "rate":10},
+            {"id":"mankey","levelMin":9, "levelMax":9, "rate":15}
+        ]
+    },
+    {
+        "id":"route3_lass3",
+        "type":"trainer",
+        "trainerActor":4,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"jigglypuff","level":14,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"That's it?",
+        "money":210
     }
 ]

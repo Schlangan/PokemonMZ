@@ -1,0 +1,249 @@
+[
+    null,
+    {
+        "id":"hitTargetPhysical",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":5},
+            {"type":"playAnimation", "target":"target", "animationId":1},
+            {"type":"moveSpriteBackward", "target":"user", "distance":35, "duration":5}
+        ]
+    },
+    {
+        "id":"hitTargetPhysicalFast",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":3},
+            {"type":"playAnimation", "target":"target", "animationId":1},
+            {"type":"moveSpriteBackward", "target":"user", "distance":35, "duration":3}
+        ]
+    },
+    {
+        "id":"hitTargetEffect",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":45, "duration":5},
+            {"type":"playAnimation", "target":"target", "animationId":2},
+            {"type":"moveSpriteBackward", "target":"user", "distance":45, "duration":5}
+        ]
+    },
+    {
+        "id":"slashTargetPhysical",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":5},
+            {"type":"playAnimation", "target":"target", "animationId":6},
+            {"type":"moveSpriteBackward", "target":"user", "distance":35, "duration":5}
+        ]
+    },
+    {
+        "id":"pierceTargetPhysical",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":5},
+            {"type":"playAnimation", "target":"target", "animationId":11},
+            {"type":"moveSpriteBackward", "target":"user", "distance":35, "duration":5}
+        ]
+    },
+    {
+        "id":"pierceTargetPhysicalFast",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":3},
+            {"type":"playAnimation", "target":"target", "animationId":11},
+            {"type":"moveSpriteBackward", "target":"user", "distance":35, "duration":3}
+        ]
+    },
+    {
+        "id":"bindTargetPhysical",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":3},
+            {"type":"playAnimation", "target":"target", "animationId":16},
+            {"type":"moveSpriteBackward", "target":"user", "distance":35, "duration":3}
+        ]
+    },
+    {
+        "id":"sweepTarget",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":3},
+            {"type":"playAnimation", "target":"target", "animationId":38},
+            {"type":"moveSpriteBackward", "target":"user", "distance":35, "duration":3}
+        ]
+    },
+    {
+        "id":"waterTarget1",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":81},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"fireTarget1",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":66},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"lightTarget2",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":97},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"windTarget2",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":92},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"grassTarget1",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":59},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"thunderTarget1",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":76},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"thunderTarget2",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":77},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"bind",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":57},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"silence",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":61},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"growl",
+        "sequence":[
+            {"type":"playAnimation", "target":"user", "animationId":37, "wait":true},
+            {"type":"playAnimation", "target":"target", "animationId":54}
+        ]
+    },
+    {
+        "id":"leer",
+        "sequence":[
+            {"type":"playAnimation", "target":"user", "animationId":40, "wait":true},
+            {"type":"playAnimation", "target":"target", "animationId":54}
+        ]
+    },
+    {
+        "id":"screech",
+        "sequence":[
+            {"type":"playAnimation", "target":"user", "animationId":34, "wait":true},
+            {"type":"playAnimation", "target":"target", "animationId":54}
+        ]
+    },
+    {
+        "id":"supersonic",
+        "sequence":[
+            {"type":"playAnimation", "target":"user", "animationId":34, "wait":true},
+            {"type":"playAnimation", "target":"target", "animationId":63}
+        ]
+    },
+    {
+        "id":"powder",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":33},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"song",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":36},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"powerUpUser1",
+        "sequence":[
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"user", "animationId":51, "wait":true},
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"powerUpUser2",
+        "sequence":[
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"user", "animationId":52, "wait":true},
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"doubleTeam",
+        "sequence":[
+            {"type":"playSE", "name":"Slash9", "volume":90, "pitch":100, "pan":0},
+            {"type":"moveSpriteLeft", "target":"user", "distance":20, "duration":4},
+            {"type":"moveSpriteRight", "target":"user", "distance":40, "duration":4},
+            {"type":"moveSpriteLeft", "target":"user", "distance":40, "duration":4},
+            {"type":"moveSpriteRight", "target":"user", "distance":40, "duration":4},
+            {"type":"playSE", "name":"Slash9", "volume":90, "pitch":100, "pan":0},
+            {"type":"moveSpriteLeft", "target":"user", "distance":40, "duration":4},
+            {"type":"moveSpriteRight", "target":"user", "distance":40, "duration":4},
+            {"type":"moveSpriteLeft", "target":"user", "distance":40, "duration":4},
+            {"type":"moveSpriteRight", "target":"user", "distance":40, "duration":4},
+            {"type":"playSE", "name":"Slash9", "volume":90, "pitch":100, "pan":0},
+            {"type":"moveSpriteLeft", "target":"user", "distance":40, "duration":4},
+            {"type":"moveSpriteRight", "target":"user", "distance":40, "duration":4},
+            {"type":"moveSpriteLeft", "target":"user", "distance":40, "duration":4},
+            {"type":"moveSpriteRight", "target":"user", "distance":20, "duration":4},
+            {"type":"playAnimation", "target":"user", "animationId":51}
+        ]
+    },
+    {
+        "id":"tailWhip",
+        "sequence":[
+            {"type":"playSE", "name":"Jump1", "volume":90, "pitch":100, "pan":0},
+            {"type":"moveSpriteLeft", "target":"user", "distance":20, "duration":8},
+            {"type":"playSE", "name":"Jump1", "volume":90, "pitch":100, "pan":0},
+            {"type":"moveSpriteRight", "target":"user", "distance":40, "duration":8},
+            {"type":"playSE", "name":"Jump1", "volume":90, "pitch":100, "pan":0},
+            {"type":"moveSpriteLeft", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":54}
+        ]
+    },
+    {
+        "id":"splash",
+        "sequence":[
+            {"type":"playSE", "name":"Jump1", "volume":90, "pitch":100, "pan":0},
+            {"type":"moveSpriteUp", "target":"user", "distance":20, "duration":8},
+            {"type":"playSE", "name":"Water1", "volume":90, "pitch":100, "pan":0},
+            {"type":"moveSpriteDown", "target":"user", "distance":40, "duration":8},
+            {"type":"playSE", "name":"Jump1", "volume":90, "pitch":100, "pan":0},
+            {"type":"moveSpriteUp", "target":"user", "distance":40, "duration":8},
+            {"type":"playSE", "name":"Water1", "volume":90, "pitch":100, "pan":0},
+            {"type":"moveSpriteDown", "target":"user", "distance":40, "duration":8},
+            {"type":"playSE", "name":"Jump1", "volume":90, "pitch":100, "pan":0},
+            {"type":"moveSpriteUp", "target":"user", "distance":40, "duration":8},
+            {"type":"playSE", "name":"Water1", "volume":90, "pitch":100, "pan":0},
+            {"type":"moveSpriteDown", "target":"user", "distance":20, "duration":8}
+        ]
+    }
+]
