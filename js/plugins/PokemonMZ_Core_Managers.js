@@ -763,8 +763,6 @@ PokemonMZ_BattleManager.updateSubPhase = function(timeActive) {
                 this.updateEnemyPokemonBlownAway();
             }
             break;
-
-
     }
 };
 PokemonMZ_BattleManager.initializeEnterTrainerVsWild = function() { 
@@ -2238,30 +2236,6 @@ PokemonMZ_BattleManager.startMove = function(side) {
         return;
     }
 
-    // Do not move if flinched
-    if (pokemon.isFlinched()) {
-        this._currentAction.addResultSteps(["autotext","isFlinched",this._currentAction.side()])
-        this.changePhase(nextPhase);
-        return;
-    };
-
-    // Calculate paralysis
-    if (pokemon.isParalyzed() && Math.random() < 0.25) {
-        if (pokemon.isBiding()) { pokemon.endBide() };  // Paralysis interrupts bide
-        this._currentAction.addResultSteps(["animateUserEffect", this._currentAction.userBattleSprite(), "paralyzed"])
-        this._currentAction.addResultSteps(["autotext","isParalyzed",this._currentAction.side()])
-        this.changePhase(nextPhase);
-        return;
-    }
-
-    // Calculate freeze
-    if (pokemon.isFrozen()) {
-        this._currentAction.addResultSteps(["animateUserEffect", this._currentAction.userBattleSprite(), "frozen"])
-        this._currentAction.addResultSteps(["autotext","isFrozen",this._currentAction.side()])
-        this.changePhase(nextPhase);
-        return;
-    }
-
     // Calculate sleep
     // Gen 1 : doesn't move when wakes up
     if (pokemon.isAsleep()) {
@@ -2276,6 +2250,14 @@ PokemonMZ_BattleManager.startMove = function(side) {
         this.changePhase(nextPhase);
         return;
     }
+
+    // Do not move if flinched
+    if (pokemon.isFlinched()) {
+        this._currentAction.addResultSteps(["autotext","isFlinched",this._currentAction.side()])
+        this._currentAction.calculateResidualEffectsOnly();
+        this.changePhase(nextPhase);
+        return;
+    };
 
     // Calculate confusion
     if (pokemon.isConfused()) {
@@ -2295,6 +2277,39 @@ PokemonMZ_BattleManager.startMove = function(side) {
         } else {
             // Add message but plays action as intended
             this._currentAction.addResultSteps(["autotext","outConfusion",this._currentAction.side()])
+        }
+    }
+
+    // Calculate paralysis
+    if (pokemon.isParalyzed() && Math.random() < 0.25) {
+        if (pokemon.isBiding()) { pokemon.endBide() };  // Paralysis interrupts bide
+        this._currentAction.addResultSteps(["animateUserEffect", this._currentAction.userBattleSprite(), "paralyzed"])
+        this._currentAction.addResultSteps(["autotext","isParalyzed",this._currentAction.side()])
+        this.changePhase(nextPhase);
+        return;
+    }
+
+    // Calculate freeze
+    if (pokemon.isFrozen()) {
+        this._currentAction.addResultSteps(["animateUserEffect", this._currentAction.userBattleSprite(), "frozen"])
+        this._currentAction.addResultSteps(["autotext","isFrozen",this._currentAction.side()])
+        this.changePhase(nextPhase);
+        return;
+    }
+
+    // If move is selected despite disabled, display disabled message and end turn
+    if (pokemon.isMoveDisabled(moveIndex)) {
+        this._currentAction.addResultSteps(["waittext","moveDisabled",this._currentAction.side(), moveName])
+        this._currentAction.calculateResidualEffectsOnly();
+        this.changePhase(nextPhase);
+        return;
+    }
+
+    // If user has a disabled move, calculation is done here to reduce the counter
+    if (pokemon.hasAnyDisabledMove()) {
+        const isFreed = pokemon.reduceDisableTurn();
+        if (isFreed) {
+            this._currentAction.addResultSteps(["waittext","freedDisabled",this._currentAction.side()])
         }
     }
 
@@ -2453,6 +2468,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
             case "paralyzePokemon":
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["paralysis", step[1]];
+                break;
+            case "disableMove":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["disabled", step[1], step[2], step[3]];
                 break;
             case "bindPokemon":
                 this.changeSubPhase("inflictPokemonStatus");
@@ -2669,8 +2688,6 @@ PokemonMZ_BattleManager.animationMoveSprite = function() {
         this._animationPhase = "nextAction";
     }
 };
-
-
 PokemonMZ_BattleManager.playSe = function() {
     const se = this._subPhaseParams[0];
     let seName = "";
@@ -2992,6 +3009,9 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
         case "keepBind":
             target.keepBinding();
             break;
+        case "disabled":
+            target.disableMove(this._subPhaseParams[2], this._subPhaseParams[3]);
+            break;
     }
     this.clearSubPhase();
 };
@@ -3244,6 +3264,12 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + " was blown away!";
     case "gettingPumped":
         return prefix + pokemon.name() + "'s getting pumped!";
+    case "disabled":
+        return prefix + pokemon.name() + "'s " + String(ext1) + " was disabled!";
+    case "moveDisabled":
+        return prefix + pokemon.name() + "'s " + String(ext1) + " is disabled!";
+    case "freedDisabled":
+        return prefix + pokemon.name() + "'s disabled no more!";
     }
     return ""
 };

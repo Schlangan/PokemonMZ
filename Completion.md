@@ -36,6 +36,8 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0032. Nidoran♂
 - 0033. Nidorino
 - (...)
+- 0039. Jigglypuff
+- (...)
 - 0050. Diglett
 - (...)
 - 0056. Mankey
@@ -109,6 +111,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 
 - Special moves
     - Bide (activate turn 1, wait 1-2 turns, and unleash last turn double damage taken while waiting)
+    - Disable (disable a random move from the enemy)
     - Focus Energy (multiply critical chances by 4 - bug fixed compared to original RBY games which were dividing by 4 instead)
     - Struggle (launched with 0pp, recoil damage)
 

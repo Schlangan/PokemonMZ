@@ -2154,7 +2154,14 @@ PokemonMZ_Window_PokemonBattleMoves.prototype.drawItem = function(index) {
 
     this.drawText(this.commandName(index), rect.x, rect.y, rect.width, "left");
     this.drawText("Type: " + typeName, rect.x+380, rect.y, rect.width, "left");
-    this.drawText("PP: " + String(currentPP) + " / " + String(maxPP), rect.x, rect.y, rect.width, "right");
+
+    if (this._pokemon.isMoveDisabled(index)) {
+        this.drawText("Disabled!", rect.x, rect.y, rect.width, "right");
+    } else {
+        this.drawText("PP: " + String(currentPP) + " / " + String(maxPP), rect.x, rect.y, rect.width, "right");
+    }
+
+    
 };
 
 function PokemonMZ_Window_PokemonForgetMoves() {

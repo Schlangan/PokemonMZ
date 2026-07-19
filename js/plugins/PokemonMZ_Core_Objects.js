@@ -1049,6 +1049,11 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._isConfused = false;
     this._isBiding = false;
     this._isBound = false;
+
+    this._hasMoveDisabled = false;
+    this._disabledMoveIndex = -1;
+    this._disabledMoveTurns = 0;
+
     this._turnsSleep = 0;
     this._turnsConfusion = 0;
     this._turnsBide = 0;
@@ -1393,12 +1398,25 @@ PokemonMZ_Game_Pokemon.prototype.moveSelfHurtConfusion = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.moveUseability = function(index) {
     const move = this._moves[index];
+    if (this.isMoveDisabled(index)) {
+        return "The move is disabled!"
+    }
     if (move.pp == 0) {
         return "No PP left for this move!"
     }
-    //TODO Disable etc
 
     return "";
+};
+PokemonMZ_Game_Pokemon.prototype.hasAnyDisabledMove = function() {
+    for (let i=0; i<this._moves.length; i++) {
+        if (this.isMoveDisabled(i)) {
+            return true;
+        }
+    }
+    return false;
+};
+PokemonMZ_Game_Pokemon.prototype.isMoveDisabled = function(index) {
+    return this._hasMoveDisabled && this._disabledMoveIndex == index;
 };
 PokemonMZ_Game_Pokemon.prototype.isMoveStatusOnly = function(index) {
     // Returns if a move only sets a status to the target
@@ -1449,7 +1467,6 @@ PokemonMZ_Game_Pokemon.prototype.isMoveBinding = function(index) {
     }
     return false;
 };
-
 PokemonMZ_Game_Pokemon.prototype.moveNameFromIndex = function(index) {
     const move = this._moves[index];
     return this.moveName(move);
@@ -1835,6 +1852,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.endBide();
     this.unfocusEnergy();
     this.unBind();
+    this.removeDisable();
 };
 PokemonMZ_Game_Pokemon.prototype.removeFinishedStatuses = function() {
     // Remove statuses that disappear at the beginning of the next turn
@@ -1843,8 +1861,6 @@ PokemonMZ_Game_Pokemon.prototype.removeFinishedStatuses = function() {
         this.unBind();
     }
 };
-
-
 PokemonMZ_Game_Pokemon.prototype.isFainted = function() {
     return this._hp == 0;
 };
@@ -1972,6 +1988,13 @@ PokemonMZ_Game_Pokemon.prototype.isBoundable = function() {
     }
     return true;
 };
+PokemonMZ_Game_Pokemon.prototype.canBeDisabled = function() {
+    // Cannot disable FNT pokemon, pokemon already under Disable, or pokemon with no PP left
+    if (this.isFainted() || this.hasAnyDisabledMove() || !this.hasAnyMoveUseable()) {
+        return false;
+    }
+    return true;
+};
 PokemonMZ_Game_Pokemon.prototype.canGetFocusEnergy = function() {
     // Cannot flinch FNT/FOCUSED pokemon
     if (this.isFainted() || this.hasFocusEnergy()) {
@@ -2052,10 +2075,33 @@ PokemonMZ_Game_Pokemon.prototype.keepBinding = function() {
 PokemonMZ_Game_Pokemon.prototype.isBindingOver = function() {
     return this._turnsBound == 0;
 };
-
-
-
-
+PokemonMZ_Game_Pokemon.prototype.selectDisableRandomMove = function() {
+    const possibleMovesIndex = [];
+    for (let i=0; i<this._moves.length; i++) {
+        if (this._moves[i].pp > 0) {
+            possibleMovesIndex.push(i)
+        }
+    }
+    return possibleMovesIndex[Math.randomInt(possibleMovesIndex.length)];
+};
+PokemonMZ_Game_Pokemon.prototype.disableMove = function(index, duration) {
+    this._hasMoveDisabled = true;
+    this._disabledMoveIndex = index;
+    this._disabledMoveTurns = duration;
+};
+PokemonMZ_Game_Pokemon.prototype.reduceDisableTurn = function() {
+    this._disabledMoveTurns--;
+    if (this._disabledMoveTurns <= 0) {
+        this.removeDisable();
+        return true; // Indicates disable is over
+    }
+    return false; // Indicates disable is not over
+};
+PokemonMZ_Game_Pokemon.prototype.removeDisable = function() {
+    this._disabledMoveTurns = 0;
+    this._disabledMoveIndex = -1;
+    this._hasMoveDisabled = false;
+};
 PokemonMZ_Game_Pokemon.prototype.unburn = function() {
     if (this.isBurned()) {
         this._isBurned = false;
@@ -2109,7 +2155,6 @@ PokemonMZ_Game_Pokemon.prototype.unBind = function() {
         this._turnsBound = 0;
     }
 };
-
 
 
 PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolution = function(evolutionMode) {
@@ -2470,6 +2515,9 @@ PokemonMZ_Game_Action.prototype.calculate = function(item) {
         this.calculateMove();
     }
 };
+PokemonMZ_Game_Action.prototype.calculateResidualEffectsOnly = function() {
+    this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
+};
 PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO  
     const item = $dataItems[$dataItemsIndex[this._item]];
     const effect = this._user.itemEffect(item);
@@ -2758,7 +2806,6 @@ PokemonMZ_Game_Action.prototype.calculateMoveStatus = function() {
 
     this.calculateStatusEffects(this._user.hp(), this._opponent.hp());
 };
-
 PokemonMZ_Game_Action.prototype.calculateMoveBide = function() { 
     // Specific code for bide
     if (!this._user.isBiding()) {
@@ -2795,7 +2842,6 @@ PokemonMZ_Game_Action.prototype.calculateMoveBide = function() {
 
     this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
 };
-
 PokemonMZ_Game_Action.prototype.calculateMoveBind = function() { 
     let enemyWillFaint = false;
     let userWillFaint = false;
@@ -2836,7 +2882,6 @@ PokemonMZ_Game_Action.prototype.calculateMoveBind = function() {
     this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
 
 };
-
 PokemonMZ_Game_Action.prototype.calculateMoveEffects = function(battleData) { // TODO ADD ALL MOVE EFFECTS
     const effects = this._moveData.effects;
     if (!effects) { return {}; }
@@ -2949,6 +2994,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
         break;
     case "focusEnergy":
         effectResults = this.effect_focusEnergy(battleData, effect, effectResults);
+        break;
+    case "disableTargetMove":
+        effectResults = this.effect_disableTargetMove(battleData, effect, effectResults);
         break;
 
     }
@@ -3646,3 +3694,26 @@ PokemonMZ_Game_Action.prototype.effect_bindTarget = function(battleData, effect,
     }
     return effectResults;
 };
+PokemonMZ_Game_Action.prototype.effect_disableTargetMove = function(battleData, effect, effectResults) {
+    if (this._opponent.hp() - battleData.damageDealt <= 0) { 
+        // No effect if target will faint
+        return effectResults;
+    }
+    if (this._opponent.canBeDisabled()) {
+        let moveIndex = 0;
+        if (effect.select == "random") {
+            moveIndex = this._opponent.selectDisableRandomMove();
+        }
+        const duration = Math.randomInt(effect.maxTurn - effect.minTurn + 1) + effect.minTurn;
+        effectResults.success = true;
+        this._resultSteps.push(["waittext","disabled",this.oppositeSide(), this._opponent.moveNameFromIndex(moveIndex)])
+        this._resultSteps.push(["disableMove",this._opponent, moveIndex, duration])
+    } else {
+        if (battleData.damageDealt == 0) {
+            this._resultSteps.push(["waittext","statusFailed",this.oppositeSide()]);
+        };
+    }
+    return effectResults;
+};
+
+

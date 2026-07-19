@@ -54,6 +54,11 @@ List of implemented effects and their additional parameters:
 - type = **seedTarget** : Plants a leech seed in the target
     - percentChance, **int** : Chance out of 100 of the seed to hit
 
+- type = **disableTargetMove** : Disable a move from the target, if possible
+    - minTurn, **int** : Minimum amount of turns for disabled. 0 means only stopping enemy attack if it is slower than player, for ex.
+    - maxTurn, **int** : Maximum amount of turns for disabled.
+    - select, **string** : Only **random** possible for now, disable a random move. Later generations will get another option for last move used.
+
 - type = **highCritical** : Move with high critical chance. No additional parameters.
 - type = **focusEnergy** : Focus Energy move. Increase by 4 critical chances (Original RBY games had a bug in which the value was divided by 4 instead. Here, the bug is fixed.)
 
