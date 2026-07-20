@@ -68,7 +68,7 @@
         "id":"poison",
         "name":"Poison",
         "weak":["ground","psychic","bug"],
-        "strong":["grass","fighting"],
+        "strong":["grass","fighting","poison"],
         "immune":[],
         "damage":"physical"
     },
