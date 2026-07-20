@@ -1277,6 +1277,16 @@ PokemonMZ_Window_MenuPokemonList.prototype.initialize = function(rect) {
     this.refresh();
     this.select(0);
 };
+PokemonMZ_Window_MenuPokemonList.prototype.show = function() {
+    this.refresh();
+    Window_MenuStatus.prototype.show.call(this);
+};
+
+PokemonMZ_Window_MenuPokemonList.prototype.open = function() {
+    this.refresh();
+    Window_MenuStatus.prototype.open.call(this);
+};
+
 PokemonMZ_Window_MenuPokemonList.prototype.setLearningMove = function(move) {
     this._learningMove = move.pkmz_data;
     this.refresh();
