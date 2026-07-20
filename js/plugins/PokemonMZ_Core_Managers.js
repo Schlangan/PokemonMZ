@@ -2245,6 +2245,7 @@ PokemonMZ_BattleManager.startMove = function(side) {
             this._currentAction.addResultSteps(["animateUserEffect", this._currentAction.userBattleSprite(), "asleep"])
             this._currentAction.addResultSteps(["autotext","isAsleep",this._currentAction.side()])
         } else {
+            this._currentAction.addResultSteps(["refreshStatusWindow",this._currentAction.side()])
             this._currentAction.addResultSteps(["autotext","wokeUp",this._currentAction.side()])
         }
         this.changePhase(nextPhase);
@@ -2397,6 +2398,9 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
             }
         }
         switch (step[0]) {
+            case "refreshStatusWindow":
+                this.askRefreshStatusWindow(step[1]);
+                break;
             case "hitAnimation":
                 this.changeSubPhase("targetAnimation");
                 this._subPhaseParams = [step[1], step[2], step[3], step[4]];
@@ -2519,6 +2523,15 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
         this.nextBattleAction();
     }
 };
+PokemonMZ_BattleManager.askRefreshStatusWindow = function(side) {
+    if (side == "player") {
+        this._playerPokemonStatusWindow.refresh(true);
+    } else if (side == "enemey") {
+        this._enemyPokemonStatusWindow.refresh(true);
+    }
+    this.clearSubPhase();
+};
+
 PokemonMZ_BattleManager.targetAnimation = function() {
     // Skip animation if disabled in configmanager
     if (!ConfigManager.battleAnimation) { 
