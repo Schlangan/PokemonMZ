@@ -3291,6 +3291,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + "'s disabled no more!";
     case "splashNoEffect":
         return "No effect!";
+    case "suckedHealth":
+        return "Sucked health from " + prefix + pokemon.name() + "!"
     }
     return ""
 };

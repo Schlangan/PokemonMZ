@@ -3005,6 +3005,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
     case "splash":
         effectResults = this.effect_splash(battleData, effect, effectResults);
         break;
+    case "drainTargetHp":
+        effectResults = this.effect_drainTargetHp(battleData, effect, effectResults);
+        break;
 
     }
     return effectResults;
@@ -3722,9 +3725,24 @@ PokemonMZ_Game_Action.prototype.effect_disableTargetMove = function(battleData, 
     }
     return effectResults;
 };
-
 PokemonMZ_Game_Action.prototype.effect_splash = function(battleData, effect, effectResults) {
     effectResults.success = true;
     this._resultSteps.push(["waittext","splashNoEffect",this.oppositeSide()]);
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_drainTargetHp = function(battleData, effect, effectResults) {
+    let damageDealt = Math.floor(battleData.damageDealt * effect.percentDamageDrain/100);
+    if (battleData.damageDealt > 0) {
+        if (damageDealt < 1) { damageDealt = 1; }
+        if (PokemonMZ.debugLog) {
+            console.log({"PokemonMZ_Game_Action.effect_drainTargetHp > ":{
+                "originalDamage":battleData.damageDealt, "effect":effect.percentDamageDrain, "drainDamage":damageDealt}
+            })
+        }
+        effectResults.success = true;
+        this._resultSteps.push(["healUser",damageDealt]);
+        this._resultSteps.push(["waittext", effect.text,this.oppositeSide()])
+    }
+    effectResults.userDamage = damageDealt;
     return effectResults;
 };
