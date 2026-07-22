@@ -53,7 +53,7 @@ Depending on the mode, additional parameters are required.
 
 - mode = **level** : Evolution by reaching a specific level
     - level,**int** : Level minimum to reach to evolve.
-- mode = **useItem** : Evolution by using an item of the pokemon (not implemented yet)
+- mode = **useItem** : Evolution by using an item of the pokemon
     - item,**string** : Item identifier (from the RPG Maker Item Database note id)
 
 ---

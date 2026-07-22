@@ -2165,13 +2165,15 @@ PokemonMZ_Game_Pokemon.prototype.unBind = function() {
         this._turnsBound = 0;
     }
 };
-PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolution = function(evolutionMode) {
+PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolution = function(evolutionMode, ext1) {
     switch(evolutionMode) {
     case "levelUp":
         return this.firstPossibleEvolutionLevelUp();
+    case "useItem":
+        return this.firstPossibleEvolutionItem(ext1);
     }
     return "";
-}
+};
 PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolutionLevelUp = function() {
     for (const evolution of this._data.evolutions) {
         if (evolution.mode == "level" && this._level >= evolution.level) {
@@ -2179,7 +2181,16 @@ PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolutionLevelUp = function() {
         }
     }
     return "";
-}
+};
+PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolutionItem = function(itemStrId) {
+    for (const evolution of this._data.evolutions) {
+        if (evolution.mode == "useItem" && itemStrId == evolution.item) {
+            return evolution.to;
+        }
+    }
+    return "";
+};
+
 PokemonMZ_Game_Pokemon.prototype.evolveTo = function(newPokemonStrId) {
     const enemyId = $dataPokemonsIndex[newPokemonStrId];
     const currentHpFactor = this._hp / this.mhp();

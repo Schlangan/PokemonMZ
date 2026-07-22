@@ -245,6 +245,7 @@ Scene_Map.prototype.callMenu = function() {
 };
 Scene_Map.prototype.update = function() {
     Scene_Message.prototype.update.call(this);
+    $gameTemp._fromEvolution = false;
     this.updateDestination();
     this.updateMenuButton();
     this.updateMapNameWindow();
@@ -1522,17 +1523,25 @@ PokemonMZ_Scene_PokemonMenu.prototype = Object.create(Scene_MenuBase.prototype);
 PokemonMZ_Scene_PokemonMenu.prototype.constructor = PokemonMZ_Scene_PokemonMenu;
 PokemonMZ_Scene_PokemonMenu.prototype.initialize = function() {
     Scene_MenuBase.prototype.initialize.call(this);
-    if (SceneManager.isPreviousScene(PokemonMZ_Scene_PokemonMenu))
+    this._mustExit = false;
+    this._evolutionItem = null;
+    this._pokemon = $gamePlayerTrainer.firstPokemon();
+
+    if ($gameTemp._fromEvolution)
     {
         // Return from evolution scene
+        $gameTemp._fromEvolution = false;
         this._usedItem = $gameTemp._menuUsedItem;
+        this._evolutionItem = $gameTemp._menuUsedEvolutionItem;
         this._forceIndex = $gameTemp._menuSelectedPokemonIndex;
-        console.log("come back from evolution")
+        if ($gamePlayerTrainer.numBagItems(this._usedItem.id) <= 0 ) {
+            this._mustExit = true;
+        };
     }
 
-    this._pokemon = $gamePlayerTrainer.firstPokemon();
     this._item = null;
     this._learnedMove = null;
+    
     this._hasLearnedMove = null;
     this._hasLeveledUp = null;
     this._pokemonEvolvesTo = null;
@@ -1540,6 +1549,7 @@ PokemonMZ_Scene_PokemonMenu.prototype.initialize = function() {
     this._hasUsedRecoveryItem = null;
     this._hasUsedIncreaseLevelItem = null;
     this._hasUsedLearnMoveItem = null;
+    this._hasUsedEvolutionItem = null;
 
     this._pokemonRecoveringData = null;
     this._mustReturnToItemMenu = false;
@@ -1552,7 +1562,18 @@ PokemonMZ_Scene_PokemonMenu.prototype.prepare = function(item) {
         const moveIntId = $dataSkillsIndex[moveStrId];
         this._learnedMove = $dataSkills[moveIntId];
     }
+    if (item.pkmz_data.effect == "evolutionItem") {
+        this._evolutionItem = item;
+    }
 }
+PokemonMZ_Scene_PokemonMenu.prototype.start = function() {
+    Scene_MenuBase.prototype.start.call(this);
+    if (this._mustExit) {
+        this._mustExit = false; 
+        this.popScene(); 
+    }
+};
+
 PokemonMZ_Scene_PokemonMenu.prototype.pokemon = function() {
     return this._pokemon;
 };
@@ -1561,6 +1582,9 @@ PokemonMZ_Scene_PokemonMenu.prototype.usedItem = function() {
 };
 PokemonMZ_Scene_PokemonMenu.prototype.isUsingItem = function() {
     return this._usedItem != null;
+};
+PokemonMZ_Scene_PokemonMenu.prototype.isUsingEvolutionItem = function() {
+    return this._evolutionItem != null;
 };
 PokemonMZ_Scene_PokemonMenu.prototype.isLearningMove = function() {
     return this._learnedMove != null;
@@ -1584,6 +1608,9 @@ PokemonMZ_Scene_PokemonMenu.prototype.createPokemonListWindow = function() {
     this._listWindow.setHandler("cancel", this.onCancelPokemon.bind(this));
     if (this._learnedMove) {
         this._listWindow.setLearningMove(this._learnedMove);
+    }
+    if (this._evolutionItem) {
+        this._listWindow.setEvolutionItem(this._evolutionItem);
     }
     if (this._forceIndex) {
         this._listWindow._index = this._forceIndex;
@@ -1689,7 +1716,6 @@ PokemonMZ_Scene_PokemonMenu.prototype.pokemonLevelUpWindowRect = function() {
     const wy = Graphics.boxHeight - 2*wh - 8;
     return new Rectangle(wx, wy, ww, wh);
 };
-
 PokemonMZ_Scene_PokemonMenu.prototype.selectedPokemon = function() {
     return $gamePlayerTrainer.pokemon(this._listWindow.index());
 };
@@ -1698,6 +1724,8 @@ PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemon = function() {
         this.onSelectPokemonSwitch();
     } else if (this.isLearningMove()) {
         this.onSelectPokemonLearn();
+    } else if (this.isUsingEvolutionItem()) {
+        this.onSelectPokemonEvolutionItem();
     } else if (this.isUsingItem()) {
         this.onSelectPokemonUse();
     } else {
@@ -1765,6 +1793,30 @@ PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemonLearn = function() {
         this.proceedLearningMove();
     }
 };
+PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemonEvolutionItem = function() {
+    const pokemon = this.selectedPokemon();
+    const firstEvolution = pokemon.firstPossibleEvolution("useItem", this._evolutionItem.pkmz_data.id);
+
+    if (firstEvolution != "") {
+        $gamePlayerTrainer.gainBagItem(this._usedItem.id, -1);
+        $gameTemp._menuUsedItem = this._usedItem;
+        $gameTemp._menuUsedEvolutionItem = this._evolutionItem;
+        $gameTemp._menuSelectedPokemonIndex = this._listWindow._index;
+        SceneManager.push(PokemonMZ_Scene_Evolutions);
+        SceneManager.prepareNextScene(
+            [[pokemon, firstEvolution]], 
+            AudioManager.saveBgm(),
+            AudioManager.saveBgs()
+        );
+        this._listWindow.activate();
+    } else {
+        SoundManager.playBuzzer();
+        this._listWindow.deactivate();
+        this._messageWindow.setText("It won't have any effect.");
+        this._messageWindow.startMessage();
+    }
+};
+
 PokemonMZ_Scene_PokemonMenu.prototype.proceedLearningMove = function() {
     const pokemon = this.selectedPokemon();
     if (pokemon.moves().length < 4) {
@@ -1873,6 +1925,9 @@ PokemonMZ_Scene_PokemonMenu.prototype.onUsingLevelUp = function() {
         this.afterUsingItem(false);
     }
 };
+
+
+
 PokemonMZ_Scene_PokemonMenu.prototype.afterUsingItem = function(forceClose) {
     // Decrease item count and close window if necessary
     this._hasUsedRecoveryItem = null;
@@ -2493,6 +2548,7 @@ PokemonMZ_Scene_Evolutions.prototype.update = function() {
         this.finishReplacingMove();
         break;
     case "exitScene":
+        $gameTemp._fromEvolution = true;
         this.replayBgmAndBgs();
         SceneManager.pop();
         break;

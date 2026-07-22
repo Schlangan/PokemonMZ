@@ -1274,6 +1274,7 @@ PokemonMZ_Window_MenuPokemonList.prototype.initialize = function(rect) {
     this._pendingIndex = -1;
     this._forbidCancel = false;
     this._learningMove = null;
+    this._evolutionItem = null;
     this.refresh();
     this.select(0);
 };
@@ -1289,6 +1290,10 @@ PokemonMZ_Window_MenuPokemonList.prototype.open = function() {
 
 PokemonMZ_Window_MenuPokemonList.prototype.setLearningMove = function(move) {
     this._learningMove = move.pkmz_data;
+    this.refresh();
+};
+PokemonMZ_Window_MenuPokemonList.prototype.setEvolutionItem = function(item) {
+    this._evolutionItem = item.pkmz_data;
     this.refresh();
 };
 PokemonMZ_Window_MenuPokemonList.prototype.forbidCancel = function() {
@@ -1325,6 +1330,9 @@ PokemonMZ_Window_MenuPokemonList.prototype.drawItem = function(index) {
     this.drawPokemonStatus(index);
     if (this._learningMove) {
         this.drawPokemonLearnAbility(index);
+    }
+    if (this._evolutionItem) {
+        this.drawPokemonEvolutionItemAbility(index);
     }
 };
 PokemonMZ_Window_MenuPokemonList.prototype.drawItemImage = function(index) {
@@ -1383,6 +1391,21 @@ PokemonMZ_Window_MenuPokemonList.prototype.drawPokemonLearnAbility = function(in
         this.drawText("Not Able", x, y, 200);
     }
 };
+PokemonMZ_Window_MenuPokemonList.prototype.drawPokemonEvolutionItemAbility = function(index) {
+    const pokemon = this.pokemon(index);
+    const rect = this.itemRect(index);
+    const x = rect.x + 600;
+    const y = rect.y + this.lineHeight();
+
+    const firstEvolution = pokemon.firstPossibleEvolution("useItem", this._evolutionItem.id);
+    if (firstEvolution != "") {
+        this.drawText("Able", x, y, 200);
+    } else {
+        this.drawText("Not Able", x, y, 200);
+    }
+};
+
+
 PokemonMZ_Window_MenuPokemonList.prototype.processOk = function() {
     Window_StatusBase.prototype.processOk.call(this);
 };

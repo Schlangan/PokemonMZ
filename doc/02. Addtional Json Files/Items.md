@@ -28,6 +28,7 @@ Depending on the effet, additional parameters are required.
 - effect = **recover_hp_fixed** : Recover a specific amount of hp (ex: potion)
     - value,**int** : Amount of fixed hp recovered
 - effect = **increaseLevel** : Increase the level of the pokemon by 1 (ex: rare candy)
+- effect = **evolutionItem** : Use as an evolution item (ex: moon stone)
 - effect = **townMap** : Opens the current region map.
 - effect = **escapeRope** : Use an escape rope.
 - effect = **passivePatkBoost**, **passivePdefBoost**, **passiveSpcBoost**, **passiveSpdBoost** : Passive attack, defense, special and speed bonus for badges. Applies only if badge owned.
