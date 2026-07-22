@@ -67,6 +67,11 @@ List of implemented effects and their additional parameters:
     - max, **int** : Maximum number of hits
     - percentChances, **Array:int** : From min to max, chances for each number of hits to happen (ex; [35,35,15,15] for fury attack, 4-5 hits less likely)
 
+- type = **drainTargetHp** : Absorb a part of the damage done to the opponent
+    - percentDamageDrain, **int** : Percentage of the damage absorbed
+    - text, **string** : Key string for the message
+        - *suckedHealth*: "Sucked health from xxxxx!"
+
 - type = **recoilPercent** : Inflicts recoil damage after hitting
     - value : Percentage of the damage inflicted turning to recoil
 
