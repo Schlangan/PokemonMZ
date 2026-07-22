@@ -320,10 +320,10 @@ Game_Map.prototype.setup = function(mapId) {
 
     if (noteData.regionId) { this._regionMapId = Number(noteData.regionId) }
     if (noteData.regionPoi) { this._regionMapPoiId = Number(noteData.regionPoi) }
-    if (noteData.ledgeDownRegion) { this._ledgeRegions.down = Number(noteData.ledgeDownRegion) }
-    if (noteData.ledgeUpRegion) { this._ledgeRegions.up = Number(noteData.ledgeUpRegion) }
-    if (noteData.ledgeLeftRegion) { this._ledgeRegions.left = Number(noteData.ledgeLeftRegion) }
-    if (noteData.ledgeRightRegion) { this._ledgeRegions.right = Number(noteData.ledgeRightRegion) }
+    if (noteData.ledgeDownRegion) { this._ledgeRegions.down = Number(noteData.ledgeDownRegion) } else { this._ledgeRegions.down = -1; }
+    if (noteData.ledgeUpRegion) { this._ledgeRegions.up = Number(noteData.ledgeUpRegion) } else { this._ledgeRegions.up = -1; }
+    if (noteData.ledgeLeftRegion) { this._ledgeRegions.left = Number(noteData.ledgeLeftRegion) } else { this._ledgeRegions.left = -1; }
+    if (noteData.ledgeRightRegion) { this._ledgeRegions.right = Number(noteData.ledgeRightRegion) } else { this._ledgeRegions.right = -1; }
     this._isRopeEscapable = Boolean(noteData.escapeRope)
 };
 Game_Map.prototype.PokemonMZ_eventsAggro = function(x, y) {
