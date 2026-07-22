@@ -1683,6 +1683,10 @@ PokemonMZ_Game_Pokemon.prototype.canUseItemOn = function(item) {
             if (this.hasStatus()) { return canUseResult; }
             break;
         }
+        break;
+    case "increaseLevel":
+        if (this.canLevelUp()) { return canUseResult; }
+        break;
     }
     return cannotUseResult;
 };
@@ -1700,6 +1704,8 @@ PokemonMZ_Game_Pokemon.prototype.itemEffect = function(item) {
         return {"effect":"recoverHp","value":recovered,"percentValue":recoverPercent};
     case "cureStatus":
         return {"effect":"cureStatus","status":item.pkmz_data.status};
+    case "increaseLevel":
+        return {"effect":"increaseLevel"};
     }
     return {"effect":""};
 };
@@ -2159,8 +2165,6 @@ PokemonMZ_Game_Pokemon.prototype.unBind = function() {
         this._turnsBound = 0;
     }
 };
-
-
 PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolution = function(evolutionMode) {
     switch(evolutionMode) {
     case "levelUp":
@@ -2208,6 +2212,11 @@ PokemonMZ_Game_Pokemon.prototype.endBide = function() {
     this._turnsBide = 0;
     this._damagedBide = 0;
 };
+PokemonMZ_Game_Pokemon.prototype.forceLevelUp = function() {
+    const exp = this.expForNextLevel();
+    this.gainExp(exp);
+};
+
 
 
 // PokemonMZ_Game_Battle

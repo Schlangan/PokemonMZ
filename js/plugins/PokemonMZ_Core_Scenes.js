@@ -21,6 +21,9 @@ Scene_Base.prototype.PokemonMZ_updateItemEffects = function() {
         case "cureStatus":
             this.updatePokemonCureStatus();
             break;
+        case "increaseLevel":
+            this.updatePokemonIncreaseLevel();
+            break;
         }
     }
 }
@@ -42,6 +45,13 @@ Scene_Base.prototype.PokemonMZ_createRecoveryData = function(pokemon, effect, li
             "pokemon":pokemon,
             "windowIndex":listWindow.index(),
             "statusCured":effect.status
+        }
+        break;
+    case "increaseLevel":
+        this._pokemonRecoveringData = {
+            "type":"increaseLevel",
+            "pokemon":pokemon,
+            "windowIndex":listWindow.index()
         }
         break;
     }
@@ -1512,10 +1522,25 @@ PokemonMZ_Scene_PokemonMenu.prototype = Object.create(Scene_MenuBase.prototype);
 PokemonMZ_Scene_PokemonMenu.prototype.constructor = PokemonMZ_Scene_PokemonMenu;
 PokemonMZ_Scene_PokemonMenu.prototype.initialize = function() {
     Scene_MenuBase.prototype.initialize.call(this);
+    if (SceneManager.isPreviousScene(PokemonMZ_Scene_PokemonMenu))
+    {
+        // Return from evolution scene
+        this._usedItem = $gameTemp._menuUsedItem;
+        this._forceIndex = $gameTemp._menuSelectedPokemonIndex;
+        console.log("come back from evolution")
+    }
+
     this._pokemon = $gamePlayerTrainer.firstPokemon();
     this._item = null;
     this._learnedMove = null;
     this._hasLearnedMove = null;
+    this._hasLeveledUp = null;
+    this._pokemonEvolvesTo = null;
+
+    this._hasUsedRecoveryItem = null;
+    this._hasUsedIncreaseLevelItem = null;
+    this._hasUsedLearnMoveItem = null;
+
     this._pokemonRecoveringData = null;
     this._mustReturnToItemMenu = false;
     this._afterTextPhase = "";
@@ -1548,6 +1573,7 @@ PokemonMZ_Scene_PokemonMenu.prototype.create = function() {
     this.createPokemonMessageWindow();
     this.createMoveWindow();
     this.createYesNoWindow();
+    this.createPokemonLevelUpWindow();
 
     this._messageWindow.setPokemonListWindow(this._listWindow);
 };
@@ -1558,6 +1584,10 @@ PokemonMZ_Scene_PokemonMenu.prototype.createPokemonListWindow = function() {
     this._listWindow.setHandler("cancel", this.onCancelPokemon.bind(this));
     if (this._learnedMove) {
         this._listWindow.setLearningMove(this._learnedMove);
+    }
+    if (this._forceIndex) {
+        this._listWindow._index = this._forceIndex;
+        this._forceIndex = null;
     }
     this.addWindow(this._listWindow);
     this._listWindow.activate();
@@ -1647,6 +1677,19 @@ PokemonMZ_Scene_PokemonMenu.prototype.messageWindowRect = function() {
     const wy = 0;
     return new Rectangle(wx, wy, ww, wh);
 };
+PokemonMZ_Scene_PokemonMenu.prototype.createPokemonLevelUpWindow = function() {
+    const rect = this.pokemonLevelUpWindowRect();
+    this._pokemonLevelUpWindow = new PokemonMZ_PokemonLevelUpWindow(rect);
+    this.addWindow(this._pokemonLevelUpWindow);
+};
+PokemonMZ_Scene_PokemonMenu.prototype.pokemonLevelUpWindowRect = function() {
+    const ww = 200;
+    const wh = this.calcWindowHeight(4, false);
+    const wx = Graphics.boxWidth - ww;
+    const wy = Graphics.boxHeight - 2*wh - 8;
+    return new Rectangle(wx, wy, ww, wh);
+};
+
 PokemonMZ_Scene_PokemonMenu.prototype.selectedPokemon = function() {
     return $gamePlayerTrainer.pokemon(this._listWindow.index());
 };
@@ -1689,8 +1732,9 @@ PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemonUse = function() {
     const useResult = pokemon.canUseItemOn(this._usedItem);
 
     if (useResult.success) {
-        $gamePlayerTrainer.gainBagItem(this._usedItem.id, -1);
+        //$gamePlayerTrainer.gainBagItem(this._usedItem.id, -1);
         const effect = pokemon.itemEffect(this._usedItem);
+        this._hasUsedRecoveryItem = true;
         this.PokemonMZ_createRecoveryData(pokemon, effect, this._listWindow);
     } else {
         // Display message if there is one
@@ -1717,11 +1761,16 @@ PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemonLearn = function() {
         this._messageWindow.startMessage();
     } else {
         this._listWindow.deactivate();
-        if (pokemon.moves().length < 4) {
-            this.proceedLearningMoveInstant();
-        } else {
-            this.proceedLearningMoveAsk();
-        }
+        this._hasUsedLearnMoveItem = true;
+        this.proceedLearningMove();
+    }
+};
+PokemonMZ_Scene_PokemonMenu.prototype.proceedLearningMove = function() {
+    const pokemon = this.selectedPokemon();
+    if (pokemon.moves().length < 4) {
+        this.proceedLearningMoveInstant();
+    } else {
+        this.proceedLearningMoveAsk();
     }
 };
 PokemonMZ_Scene_PokemonMenu.prototype.proceedLearningMoveInstant = function() {
@@ -1777,20 +1826,73 @@ PokemonMZ_Scene_PokemonMenu.prototype.onMessageDisplayed = function() {
     }
 };
 PokemonMZ_Scene_PokemonMenu.prototype.onMessageTerminated = function() {
+    if (this._hasUsedIncreaseLevelItem) {
+        this.onUsingLevelUp();
+    } else if (this._hasUsedLearnMoveItem) {
+        this.onUsingTmHm();
+    } else if (this._hasUsedRecoveryItem) {
+        this.afterUsingItem();
+    } else {
+        this._listWindow.activate();
+    }
+};
+
+PokemonMZ_Scene_PokemonMenu.prototype.onUsingTmHm = function() {
     if (this._afterTextPhase == "forgotMove") {
+        // Forgot a move
         this._afterTextPhase = "";
         this.finishReplacingMove();
     } else if (this._hasLearnedMove) {
-        $gamePlayerTrainer.gainBagItem(this._usedItem.id, -1);
+        // Finished learning a move
+        this.afterUsingItem(true);
+    } else {
+        // Didn't learn a move
+        this._listWindow.activate();
+    }
+};
+
+PokemonMZ_Scene_PokemonMenu.prototype.onUsingLevelUp = function() {
+    if (this._afterTextPhase == "forgotMove") {
+        // Forgot a move
+        this._afterTextPhase = "";
+        this.finishReplacingMove();
+    } else if (this._afterTextPhase == "levelingUp" && (this._learnedMove)) {
+        // Level up has a move learned
+        this._afterTextPhase = "";
+        this._pokemonLevelUpWindow.hide();
+        this.proceedLearningMove();
+    } else if (this._hasLearnedMove) {
+        // After learning move
+        this._hasLearnedMove = null;
+        this._learnedMove = null;
+        this.afterUsingItem(false);
+    } else {
+        // No move learned
+        this._learnedMove = null;
+        this._pokemonLevelUpWindow.hide();
+        this.afterUsingItem(false);
+    }
+};
+PokemonMZ_Scene_PokemonMenu.prototype.afterUsingItem = function(forceClose) {
+    // Decrease item count and close window if necessary
+    this._hasUsedRecoveryItem = null;
+    this._hasUsedIncreaseLevelItem = null;
+    this._hasUsedLearnMoveItem = null;
+    this._hasLeveledUp = null;
+    this._hasLearnedMove = null;
+    $gamePlayerTrainer.gainBagItem(this._usedItem.id, -1);
+    if (this._pokemonEvolvesTo) {
+        $gameTemp._menuUsedItem = this._usedItem;
+        $gameTemp._menuSelectedPokemonIndex = this._listWindow._index;
+        SceneManager.push(PokemonMZ_Scene_Evolutions);
+        SceneManager.prepareNextScene(
+            [[this.selectedPokemon(), this._pokemonEvolvesTo]], 
+            AudioManager.saveBgm(),
+            AudioManager.saveBgs()
+        );
+        this._listWindow.activate();
+    } else if ($gamePlayerTrainer.numBagItems(this._usedItem.id) <= 0 || forceClose) {
         this.popScene();
-    } else if (this._usedItem) {
-        if ($gamePlayerTrainer.numBagItems(this._usedItem.id) > 0) {
-            // If remaining items of the same id, stay on the window
-            this._listWindow.activate();
-        } else {
-            // Go back to item list
-            this.popScene();
-        }
     } else {
         this._listWindow.activate();
     }
@@ -1839,6 +1941,39 @@ PokemonMZ_Scene_PokemonMenu.prototype.updatePokemonCureStatus = function() {
          this._messageWindow
     );
 };
+PokemonMZ_Scene_PokemonMenu.prototype.updatePokemonIncreaseLevel = function() { 
+    const pokemon = this._pokemonRecoveringData.pokemon;
+    if (pokemon) {
+        AudioManager.playStandardSe(PokemonMZ.levelUpSE);
+        pokemon.forceLevelUp();
+        this._hasUsedIncreaseLevelItem = true;
+        const message = pokemon.name() + " grew to level " + String(pokemon.level()) + "!";
+        const learnedMove = pokemon.getNextMoveLearned();
+        if (learnedMove) {
+            const moveIntId = $dataSkillsIndex[learnedMove];
+            this._learnedMove = $dataSkills[moveIntId];
+        } else {
+            this._learnedMove = null;
+        }
+
+        const possibleEvolution = pokemon.firstPossibleEvolution("levelUp")
+        if (possibleEvolution != "") {
+            this._pokemonEvolvesTo = possibleEvolution;
+        }
+
+        this._listWindow.clearItem(this._pokemonRecoveringData.windowIndex);
+        this._listWindow.drawItem(this._pokemonRecoveringData.windowIndex);
+        this._pokemonLevelUpWindow.setPokemon(pokemon);
+        this._pokemonLevelUpWindow.show();
+        this._pokemonRecoveringData = null;
+        this._listWindow.deactivate();
+        this._messageWindow.setText(message);
+        this._messageWindow.startMessage();
+        this._afterTextPhase = "levelingUp";
+        return true;
+
+    }
+};
 PokemonMZ_Scene_PokemonMenu.prototype.onMenuSwitchOk = function() {
 };
 PokemonMZ_Scene_PokemonMenu.prototype.onMenuCancelOk = function() {
@@ -1852,7 +1987,6 @@ PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemonSwitch = function() {
     this._listWindow.refresh();
     this._listWindow.activate();
 };
-
 PokemonMZ_Scene_PokemonMenu.prototype.commandForgetYes = function() {
     // Pressed yes on yes/no window
     const mode = this._yesNoWindow.mode();
@@ -1954,11 +2088,15 @@ PokemonMZ_Scene_PokemonMenu.prototype.finishReplacingMove = function() {
     const moveName = this._learnedMove.name;
     const moveStringId = this._learnedMove.pkmz_data.id;
     const message = pokemon.name() + " learned " + moveName + "!";
+    this._learnedMove = null;
     this._hasLearnedMove = true;
     this._afterTextPhase = "";
     this._messageWindow.setText(message)
     this._messageWindow.startMessage();
 };
+
+
+
 
 
 
