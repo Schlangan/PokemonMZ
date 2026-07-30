@@ -1333,18 +1333,18 @@ PokemonMZ_Game_Pokemon.prototype.isHalfHp = function() {
 PokemonMZ_Game_Pokemon.prototype.level = function() {
     return this._level;
 };
-PokemonMZ_Game_Pokemon.prototype.moveBasePP = function(moveId) {
-    const move = $dataSkills[$dataSkillsIndex[moveId]];
+PokemonMZ_Game_Pokemon.prototype.moveBasePP = function(moveStrId) {
+    const move = $dataSkills[$dataSkillsIndex[moveStrId]];
     if (move) {
         const moveData = move.pkmz_data;
         return moveData.pp ? moveData.pp : 0;
     } else {
-        console.error("Unknown move data for id " + moveId);
+        console.error("Unknown move data for id " + moveStrId);
         return 0;
     }
 }
-PokemonMZ_Game_Pokemon.prototype.movePP = function(moveId, ppUp) {
-    const basePP = this.moveBasePP(moveId);
+PokemonMZ_Game_Pokemon.prototype.movePP = function(moveStrId, ppUp) {
+    const basePP = this.moveBasePP(moveStrId);
     if (basePP == 40 && PokemonMZ.pokemonMechanicsGeneration < 3 ) {
         // First and second generations were limited to 63 in memory, hence they gave 7 pp per pp-up instead of 8
         return basePP + ppUp*7;
@@ -1352,6 +1352,19 @@ PokemonMZ_Game_Pokemon.prototype.movePP = function(moveId, ppUp) {
         return basePP + ppUp*basePP/5;
     }
 };
+PokemonMZ_Game_Pokemon.prototype.movePPAtIndex = function(index) {
+    const moveData = this._moves[index];
+    return this.movePP(moveData.id, moveData.ppup);
+};
+PokemonMZ_Game_Pokemon.prototype.recoverPpAtIndex = function(index, ppRecovered) {
+    const maxPP = this.movePPAtIndex(index);
+    this._moves[index].pp += ppRecovered;
+    if (this._moves[index].pp > maxPP) {
+        this._moves[index].pp = maxPP;
+    }
+};
+
+
 PokemonMZ_Game_Pokemon.prototype.consumePP = function(index) {
     // No PP consumption for index -1 -> struggle
     if (index != -1) {
@@ -1657,7 +1670,7 @@ PokemonMZ_Game_Pokemon.prototype.typeName = function(type) {
         return "";
     }
 };
-PokemonMZ_Game_Pokemon.prototype.canUseItemOn = function(item) {
+PokemonMZ_Game_Pokemon.prototype.canUseItemOn = function(item, ext1) {
     const canUseResult = {"success":true, "message":""}
     const cannotUseResult = {"success":false, "message":"It won't have any effect."}
 
@@ -1708,10 +1721,26 @@ PokemonMZ_Game_Pokemon.prototype.canUseItemOn = function(item) {
             if (this._ev.spd < item.pkmz_data.maxValue) { return canUseResult; }
             break;
         }
+        break;
+    case "restorePp":
+        if (item.pkmz_data.range == "single") {
+            const currentPP = this._moves[ext1].pp;
+            const maxPP = this.movePPAtIndex(ext1);
+            if (currentPP < maxPP) {
+                return canUseResult;
+            }
+        } else if (item.pkmz_data.range == "all") {
+            for (let i=0; i < this._moves.length; i++) {
+                if (this._moves[i].pp < this.movePPAtIndex(i)) {
+                    return canUseResult;
+                }
+            } 
+        }
+        break;
     }
     return cannotUseResult;
 };
-PokemonMZ_Game_Pokemon.prototype.itemEffect = function(item) {
+PokemonMZ_Game_Pokemon.prototype.itemEffect = function(item, ext1) {
     switch(item.pkmz_data.effect) {
     case "recover_hp_fixed":
         const currentHp = this.hp();
@@ -1750,6 +1779,28 @@ PokemonMZ_Game_Pokemon.prototype.itemEffect = function(item) {
             break;
         }
         return {"effect":"increaseEv","stat":item.pkmz_data.stat, "value":newValue}
+    case "restorePp":
+        const ppRecovery = [];
+        const isSingle = item.pkmz_data.range == "single";
+
+        for (let i=0; i<this._moves.length; i++) {
+            let currentPP = this._moves[i].pp;
+            let maxPP = this.movePPAtIndex(i);
+            if (currentPP < maxPP) {
+                if (i == ext1 || !isSingle) {
+                    let recovered = maxPP - currentPP;
+                    if (item.pkmz_data.value > -1 && recovered > item.pkmz_data.value) {
+                        recovered = item.pkmz_data.value;
+                    }
+                    ppRecovery.push(recovered);
+                } else {
+                    ppRecovery.push(0);
+                }
+            } else {
+                ppRecovery.push(0);
+            }
+        }
+        return {"effect":"restorePp", "ppRecovery":ppRecovery}
     }
     return {"effect":""};
 };

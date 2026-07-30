@@ -27,6 +27,9 @@ Depending on the effet, additional parameters are required.
     - useMessage,**string** : Message shown on screen when attempting to use the item
 - effect = **recover_hp_fixed** : Recover a specific amount of hp (ex: potion)
     - value,**int** : Amount of fixed hp recovered
+- effect = **restorePp** : Recover PP for one or several moves (ex: ether/elixir)
+    - range,**string** : The range of effect of the recovery. Either **single**, affecting one move (ether), or **all** for all moves at once (elixir)
+    - value,**int** : Amount of PP recovered, either -1 for all PP, or a specific value.
 - effect = **increaseLevel** : Increase the level of the pokemon by 1 (ex: rare candy)
 - effect = **increaseEv** : Increase the EV of a stats by a specific value, up to a limit
     - stat,**string** : Stat increased, **hp**, **patk**, **pdef**, **satk**, **sdef** or **spd**. For gen 1 Special stat, use **satk**.
