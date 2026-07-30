@@ -24,6 +24,9 @@ Scene_Base.prototype.PokemonMZ_updateItemEffects = function() {
         case "increaseLevel":
             this.updatePokemonIncreaseLevel();
             break;
+        case "increaseEv":
+            this.updatePokemonIncreaseEv();
+            break;
         }
     }
 }
@@ -52,6 +55,15 @@ Scene_Base.prototype.PokemonMZ_createRecoveryData = function(pokemon, effect, li
             "type":"increaseLevel",
             "pokemon":pokemon,
             "windowIndex":listWindow.index()
+        }
+        break;
+    case "increaseEv":
+        this._pokemonRecoveringData = {
+            "type":"increaseEv",
+            "pokemon":pokemon,
+            "windowIndex":listWindow.index(),
+            "stat":effect.stat,
+            "value":effect.value,
         }
         break;
     }
@@ -133,7 +145,48 @@ Scene_Base.prototype.PokemonMZ_updatePokemonCureStatus = function(listWindow, me
         return true;
     }
 };
+Scene_Base.prototype.PokemonMZ_updatePokemonIncreaseEv = function(listWindow, messageWindow) { 
+    const pokemon = this._pokemonRecoveringData.pokemon;
+    const stat = this._pokemonRecoveringData.stat;
+    const value = this._pokemonRecoveringData.value;
+    if (pokemon) {
+        let message = "";
 
+        switch(stat) {
+        case "hp":
+            pokemon.gainEv(value,0,0,0,0,0);
+            message = pokemon.name() + "'s Health rose.";
+            break;
+        case "patk":
+            pokemon.gainEv(0,value,0,0,0,0);
+            message = pokemon.name() + "'s Attack rose.'";
+            break;
+        case "pdef":
+            pokemon.gainEv(0,0,value,0,0,0);
+            message = pokemon.name() + "'s Defense rose.'";
+            break;
+        case "satk":
+            pokemon.gainEv(0,0,0,value,0,0);
+            message = pokemon.name() + "'s Special rose.";
+            break;
+        case "sdef":
+            // TODO in gen 2 with Zinc
+            break;
+        case "spd":
+            pokemon.gainEv(0,0,0,0,0,value);
+            message = pokemon.name() + "'s Speed rose.";
+            break;
+        }
+
+        listWindow.clearItem(this._pokemonRecoveringData.windowIndex);
+        listWindow.drawItem(this._pokemonRecoveringData.windowIndex);
+        this._pokemonRecoveringData = null;
+        listWindow.deactivate();
+        messageWindow.setText(message);
+        messageWindow.startMessage();
+        return true;
+    }
+};
 
 
 // Scene_Boot
@@ -1816,7 +1869,6 @@ PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemonEvolutionItem = function() 
         this._messageWindow.startMessage();
     }
 };
-
 PokemonMZ_Scene_PokemonMenu.prototype.proceedLearningMove = function() {
     const pokemon = this.selectedPokemon();
     if (pokemon.moves().length < 4) {
@@ -1888,7 +1940,6 @@ PokemonMZ_Scene_PokemonMenu.prototype.onMessageTerminated = function() {
         this._listWindow.activate();
     }
 };
-
 PokemonMZ_Scene_PokemonMenu.prototype.onUsingTmHm = function() {
     if (this._afterTextPhase == "forgotMove") {
         // Forgot a move
@@ -1902,7 +1953,6 @@ PokemonMZ_Scene_PokemonMenu.prototype.onUsingTmHm = function() {
         this._listWindow.activate();
     }
 };
-
 PokemonMZ_Scene_PokemonMenu.prototype.onUsingLevelUp = function() {
     if (this._afterTextPhase == "forgotMove") {
         // Forgot a move
@@ -1925,9 +1975,6 @@ PokemonMZ_Scene_PokemonMenu.prototype.onUsingLevelUp = function() {
         this.afterUsingItem(false);
     }
 };
-
-
-
 PokemonMZ_Scene_PokemonMenu.prototype.afterUsingItem = function(forceClose) {
     // Decrease item count and close window if necessary
     this._hasUsedRecoveryItem = null;
@@ -2028,6 +2075,12 @@ PokemonMZ_Scene_PokemonMenu.prototype.updatePokemonIncreaseLevel = function() {
         return true;
 
     }
+};
+PokemonMZ_Scene_PokemonMenu.prototype.updatePokemonIncreaseEv = function() { 
+    this._mustReturnToItemMenu = this.PokemonMZ_updatePokemonIncreaseEv(
+         this._listWindow, 
+         this._messageWindow
+    );
 };
 PokemonMZ_Scene_PokemonMenu.prototype.onMenuSwitchOk = function() {
 };

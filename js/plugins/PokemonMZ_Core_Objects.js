@@ -1687,6 +1687,27 @@ PokemonMZ_Game_Pokemon.prototype.canUseItemOn = function(item) {
     case "increaseLevel":
         if (this.canLevelUp()) { return canUseResult; }
         break;
+    case "increaseEv":
+        switch (item.pkmz_data.stat) {
+        case "hp":
+            if (this._ev.hp < item.pkmz_data.maxValue) { return canUseResult; }
+            break;
+        case "patk":
+            if (this._ev.patk < item.pkmz_data.maxValue) { return canUseResult; }
+            break;
+        case "pdef":
+            if (this._ev.pdef < item.pkmz_data.maxValue) { return canUseResult; }
+            break;
+        case "satk":
+            if (this._ev.satk < item.pkmz_data.maxValue) { return canUseResult; }
+            break;
+        case "sdef":
+            if (this._ev.sdef < item.pkmz_data.maxValue) { return canUseResult; }
+            break;
+        case "spd":
+            if (this._ev.spd < item.pkmz_data.maxValue) { return canUseResult; }
+            break;
+        }
     }
     return cannotUseResult;
 };
@@ -1706,6 +1727,29 @@ PokemonMZ_Game_Pokemon.prototype.itemEffect = function(item) {
         return {"effect":"cureStatus","status":item.pkmz_data.status};
     case "increaseLevel":
         return {"effect":"increaseLevel"};
+    case "increaseEv":
+        let newValue = item.pkmz_data.value;
+        switch (item.pkmz_data.stat) {
+        case "hp":
+            if (this._ev.hp + newValue > item.pkmz_data.maxValue) { newValue = item.pkmz_data.maxValue - this._ev.hp}
+            break;
+        case "patk":
+            if (this._ev.patk + newValue > item.pkmz_data.maxValue) { newValue = item.pkmz_data.maxValue - this._ev.patk}
+            break;
+        case "pdef":
+            if (this._ev.pdef + newValue > item.pkmz_data.maxValue) { newValue = item.pkmz_data.maxValue - this._ev.pdef}
+            break;
+        case "satk":
+            if (this._ev.satk + newValue > item.pkmz_data.maxValue) { newValue = item.pkmz_data.maxValue - this._ev.satk}
+            break;
+        case "sdef":
+            if (this._ev.sdef + newValue > item.pkmz_data.maxValue) { newValue = item.pkmz_data.maxValue - this._ev.sdef}
+            break;
+        case "spd":
+            if (this._ev.spd + newValue > item.pkmz_data.maxValue) { newValue = item.pkmz_data.maxValue - this._ev.spd}
+            break;
+        }
+        return {"effect":"increaseEv","stat":item.pkmz_data.stat, "value":newValue}
     }
     return {"effect":""};
 };

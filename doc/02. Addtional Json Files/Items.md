@@ -28,6 +28,10 @@ Depending on the effet, additional parameters are required.
 - effect = **recover_hp_fixed** : Recover a specific amount of hp (ex: potion)
     - value,**int** : Amount of fixed hp recovered
 - effect = **increaseLevel** : Increase the level of the pokemon by 1 (ex: rare candy)
+- effect = **increaseEv** : Increase the EV of a stats by a specific value, up to a limit
+    - stat,**string** : Stat increased, **hp**, **patk**, **pdef**, **satk**, **sdef** or **spd**. For gen 1 Special stat, use **satk**.
+    - value,**int** : Increase value of the stat
+    - maxValue, **int** : Max value of increase with the item. Ex. gen1 hp up cannot go above 25600, even if the stat max EV is 65535.
 - effect = **evolutionItem** : Use as an evolution item (ex: moon stone)
 - effect = **townMap** : Opens the current region map.
 - effect = **escapeRope** : Use an escape rope.
