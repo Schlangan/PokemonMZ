@@ -25,6 +25,22 @@
         "useMessage":"This isn't yours to use!"
     },
     {
+		"id":"domeFossil",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+        "effect":"lockedItem",
+        "useMessage":"This isn't the time to use that!"
+	},
+    {
+		"id":"helixFossil",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+        "effect":"lockedItem",
+        "useMessage":"This isn't the time to use that!"
+	},
+    {
         "id":"townMap",
         "user":"trainer",
         "category":"key",
@@ -130,6 +146,56 @@
         "price":600
     },
     {
+		"id":"moonStone",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"evolutionItem",
+		"price":0
+	},
+    {
+		"id":"rareCandy",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"increaseLevel",
+		"price":4800
+	},
+    {
+		"id":"hpUp",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"increaseEv",
+        "stat":"hp",
+		"value":2560,
+		"maxValue":25600,
+		"price":9800
+	},
+    {
+		"id":"tm01",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"megaPunch",
+		"price":3000
+	},
+    {
+        "id":"tm12",
+        "user":"trainer",
+        "category":"regular",
+        "battle":false,
+        "target":"pokemon",
+        "effect":"tm",
+        "move":"waterGun",
+        "price":500
+    },
+    {
         "id":"tm34",
         "user":"trainer",
         "category":"regular",
@@ -138,5 +204,15 @@
         "effect":"tm",
         "move":"bide",
         "price":2000
-    }
+    },
+    {
+		"id":"ether",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"restorePp",
+        "range":"single",
+		"value":10	
+	}
 ]

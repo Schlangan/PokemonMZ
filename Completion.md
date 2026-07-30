@@ -32,19 +32,40 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - (...)
 - 0029. Nidoran♀
 - 0030. Nidorina
-- (...)
+- 0031. Nidoqueen
 - 0032. Nidoran♂
 - 0033. Nidorino
+- 0034. Nidoking
+- 0035. Clefairy
+- 0036. Clefable
 - (...)
 - 0039. Jigglypuff
+- 0040. Wigglytuff
+- 0041. Zubat
+- (...)
+- 0043. Oddish
+- (...)
+- 0046. Paras
 - (...)
 - 0050. Diglett
 - (...)
+- 0052. Meowth
+- (...)
 - 0056. Mankey
+- (...)
+- 0069. Bellsprout
 - (...)
 - 0074. Geodude
 - (...)
+- 0081. Magnemite
+- (...)
+- 0088. Grimer
+- (...)
 - 0095. Onix
+- (...)
+- 0100. Voltorb
+- (...)
+- 0109. Koffing
 - (...)
 - 0129. Magikarp
 - 0130. Gyarados
@@ -56,6 +77,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Horn Attack
     - Peck
     - Pound
+    - Rock Throw
     - Scratch
     - Slam
     - Tackle
@@ -70,9 +92,14 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Quick Attack (+1)
 
 - Moves hitting N times in one turn
-    - Double kick (2-2)
+    - Double Kick (2-2)
+    - Double Slap (2-5)
     - Fury Attack (2-5)
     - Twineedle (2-2)
+
+- Moves draining HP
+    - Absorb
+    - Leech Life
 
 - Moves inflicting statuses
     - Burn
@@ -91,6 +118,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Poison
         - Poison Powder
         - Poison Sting
+        - Smog
         - Twineedle (after last hit)
     - Seed
         - Leech Seed
@@ -142,6 +170,14 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Burn Heal
     - Awakening
     - Full Heal
+    - Ether
+
+- Permanent Power-up
+    - Hp Up
+    - Rare Candy
+
+- Evolution
+    - Moon Stone
 
 - Key Items
     - Oak's Parcel
@@ -151,5 +187,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Escape rope
 
 - TMs / HMs
+    - TM01 - Mega punch
+    - TM12 - Water gun
     - TM34 - Bide
 

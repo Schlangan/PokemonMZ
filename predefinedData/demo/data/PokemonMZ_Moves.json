@@ -12,6 +12,18 @@
         "effects":[]
     },
     {
+        "id":"absorb",
+        "type":"grass",
+        "target":"opponent",
+        "pp":20,
+        "power":20,
+        "accuracy":100,
+        "effects":[
+            {"type":"drainTargetHp","percentDamageDrain":50,"text":"suckedHealth"}
+        ],
+        "animationHit":"absorb"
+    },
+    {
         "id":"bide",
         "type":"normal",
         "target":"opponent",
@@ -96,6 +108,18 @@
         ],
         "animationHit":"hitTargetPhysical"
     },
+    {
+		"id":"doubleSlap",
+		"type":"normal",
+		"target":"opponent",
+		"pp":10,
+		"power":15,
+		"accuracy":85,
+		"effects":[
+			{"type":"multiHit","min":2,"max":5,"percentChances":[38,37,13,12]}
+		],
+        "animationHit":"hitTargetPhysical"
+	},
     {
         "id":"doubleTeam",
         "category":"status",
@@ -226,6 +250,18 @@
         "animationHit":"grassTarget1"
     },
     {
+        "id":"leechLife",
+        "type":"bug",
+        "target":"opponent",
+        "pp":15,
+        "power":20,
+        "accuracy":100,
+        "effects":[
+            {"type":"drainTargetHp","percentDamageDrain":50,"text":"suckedHealth"}
+        ],
+        "animationHit":"absorb"
+    },   
+    {
         "id":"leer",
         "category":"status",
         "type":"normal",
@@ -249,6 +285,16 @@
             {"type":"flinchTarget","percentChance":30}
         ],
         "animationHit":"sweepTarget"
+    },
+    {
+        "id":"megaPunch",
+        "type":"normal",
+        "target":"opponent",
+        "pp":20,
+        "power":80,
+        "accuracy":85,
+        "effects":[],
+        "animationHit":"hitTargetPhysical"
     },
     {
         "id":"peck",
@@ -304,6 +350,16 @@
         "accuracy":100,
         "effects":[],
         "animationHit":"hitTargetPhysicalFast"
+    },
+    {
+        "id":"rockThrow",
+        "type":"rock",
+        "target":"opponent",
+        "pp":15,
+        "power":50,
+        "accuracy":65,
+        "effects":[],
+        "animationHit":"rockTarget1"
     },
     {
         "id":"sandAttack",
@@ -384,6 +440,18 @@
         "accuracy":75,
         "effects":[
             {"type":"sleepTarget","percentChance":100}
+        ],
+        "animationHit":"powder"
+    },
+    {
+        "id":"smog",
+        "type":"poison",
+        "target":"opponent",
+        "pp":20,
+        "power":20,
+        "accuracy":70,
+        "effects":[
+            {"type":"poisonTarget","percentChance":40}
         ],
         "animationHit":"powder"
     },

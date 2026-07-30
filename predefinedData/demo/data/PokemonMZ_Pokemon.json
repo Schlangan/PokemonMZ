@@ -30,7 +30,7 @@
         "hmMoves":["cut"],
         "tmMoves":[
             "swordsDance","toxic","bodySlam","takeDown","doubleEdge","rage","megaDrain",
-            "soldarBeam","mimic","doubleTeam","reflect","bide","rest","substitute"
+            "solarBeam","mimic","doubleTeam","reflect","bide","rest","substitute"
         ]
     },
     {
@@ -702,6 +702,37 @@
         ]
     },
     {
+        "id":"nidoqueen",
+        "pokedex":[{"region":"kanto","number":31}],
+        "category":"Drill",
+        "description":"Its hard scales provide strong protection. It uses its hefty bulk to execute powerful moves. Tough scales cover the sturdy body of this Pokémon. It appears that the scales grow in cycles.",
+        "height":1.3,
+        "weight":60.0,
+        "types":["poison","ground"],
+        "baseStats":{"hp":90,"patk":82,"pdef":87,"satk":75,"sdef":85,"spd":76,"spc":75},
+        "expCurve":"mediumSlow",
+        "catchRate":45,
+        "xpYield":194,
+        "ev":[{"hp":3}],
+        "evolutions":[],
+        "learnedMoves":[
+            {"lvl":1, "move":"tackle"},
+            {"lvl":1, "move":"scratch"},
+            {"lvl":1, "move":"tailWhip"},
+            {"lvl":1, "move":"bodySlam"},
+            {"lvl":8, "move":"scratch"},
+            {"lvl":12, "move":"doubleKick"},
+            {"lvl":14, "move":"poisonSting"},
+            {"lvl":23, "move":"bodySlam"}
+        ],
+        "hmMoves":["surf","strength"],
+        "tmMoves":[
+            "megaPunch","megaKick","toxic","hornDrill","bodySlam","takeDown","doubleEdge","bubbleBeam","waterGun","iceBeam","blizzard",
+            "hyperBeam","payDay","submission","counter","seismicToss","rage","thunderbolt","thunder","earthquake","fissure","mimic",
+            "doubleTeam","reflect","bide","fireBlast","skullBash","rest","rockSlide","substitute"
+        ]
+    },
+    {
         "id":"nidoranm",
         "pokedex":[{"region":"kanto","number":32}],
         "category":"Poison Pin",
@@ -767,6 +798,97 @@
         ]
     },
     {
+        "id":"nidoking",
+        "pokedex":[{"region":"kanto","number":34}],
+        "category":"Drill",
+        "description":"It uses its powerful tail in battle to smash, constrict, then break the prey's bones. Its steel-like hide adds to its powerful tackle. Its horns are so hard, they can pierce a diamond. ",
+        "height":1.4,
+        "weight":62.0,
+        "types":["poison","ground"],
+        "baseStats":{"hp":81,"patk":92,"pdef":77,"satk":85,"sdef":75,"spd":85,"spc":75},
+        "expCurve":"mediumSlow",
+        "catchRate":45,
+        "xpYield":195,
+        "ev":[{"atk":3}],
+        "evolutions":[],
+        "learnedMoves":[
+            {"lvl":1, "move":"tackle"},
+            {"lvl":1, "move":"hornAttack"},
+            {"lvl":1, "move":"poisonSting"},
+            {"lvl":1, "move":"thrash"},
+            {"lvl":8, "move":"hornAttack"},
+            {"lvl":12, "move":"doubleKick"},
+            {"lvl":14, "move":"poisonSting"},
+            {"lvl":23, "move":"thrash"}
+        ],
+        "hmMoves":["surf","strength"],
+        "tmMoves":[
+            "megaPunch","megaKick","toxic","hornDrill","bodySlam","takeDown","doubleEdge","bubbleBeam","waterGun","iceBeam","blizzard",
+            "hyperBeam","payDay","submission","counter","seismicToss","rage","thunderbolt","thunder","earthquake","fissure","mimic",
+            "doubleTeam","reflect","bide","fireBlast","skullBash","rest","rockSlide","substitute"
+        ]
+    },
+    {
+        "id":"clefairy",
+        "pokedex":[{"region":"kanto","number":35}],
+        "category":"Fairy",
+        "description":"Its magical and cute appeal has many admirers. It is rare and found only in certain areas. Adored for their cute looks and playfulness. They are thought to be rare, as they do not appear often.",
+        "height":0.6,
+        "weight":7.5,
+        "types":["normal"],
+        "baseStats":{"hp":70,"patk":45,"pdef":48,"satk":60,"sdef":65,"spd":35,"spc":60},
+        "expCurve":"fast",
+        "catchRate":150,
+        "xpYield":68,
+        "ev":[{"hp":2}],
+        "evolutions":[
+            {"to":"clefable","mode":"useItem","item":"moonStone"}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"pound"},
+            {"lvl":9, "move":"growl"},
+            {"lvl":13, "move":"sing"},
+            {"lvl":19, "move":"doubleSlap"},
+            {"lvl":24, "move":"minimize"},
+            {"lvl":31, "move":"metronome"},
+            {"lvl":39, "move":"defenseCurl"},
+            {"lvl":48, "move":"lightScreen"}
+        ],
+        "hmMoves":["strength","flash"],
+        "tmMoves":[
+            "megaPunch","megaKick","toxic","bodySlam","takeDown","doubleEdge","bubbleBeam","waterGun","iceBeam","blizzard",
+            "submission","counter","seismicToss","rage","solarBeam","thunderbolt","thunder","psychic","teleport","mimic",
+            "doubleTeam","reflect","bide","metronome","fireBlast","skullBash","rest","thunderWave","psywave","triAttack","substitute"
+        ]
+    },
+    {
+        "id":"clefable",
+        "pokedex":[{"region":"kanto","number":36}],
+        "category":"Fairy",
+        "description":"A timid fairy Pokémon that is rarely seen. It will run and hide the moment it senses people. They appear to be very protective of their own world. It is a kind of fairy, rarely seen by people.",
+        "height":1.3,
+        "weight":40.0,
+        "types":["normal"],
+        "baseStats":{"hp":95,"patk":70,"pdef":73,"satk":85,"sdef":90,"spd":60,"spc":85},
+        "expCurve":"fast",
+        "catchRate":25,
+        "xpYield":129,
+        "ev":[{"hp":3}],
+        "evolutions":[],
+        "learnedMoves":[
+            {"lvl":1, "move":"sing"},
+            {"lvl":1, "move":"doubleSlap"},
+            {"lvl":1, "move":"minimize"},
+            {"lvl":1, "move":"metronome"}
+        ],
+        "hmMoves":["strength","flash"],
+        "tmMoves":[
+            "megaPunch","megaKick","toxic","bodySlam","takeDown","doubleEdge","bubbleBeam","waterGun","iceBeam","blizzard","hyperBeam",
+            "submission","counter","seismicToss","rage","solarBeam","thunderbolt","thunder","psychic","teleport","mimic",
+            "doubleTeam","reflect","bide","metronome","fireBlast","skullBash","rest","thunderWave","psywave","triAttack","substitute"
+        ]
+    },
+    {
         "id":"jigglypuff",
         "pokedex":[{"region":"kanto","number":39}],
         "category":"Balloon",
@@ -795,8 +917,125 @@
         "hmMoves":["strength","flash"],
         "tmMoves":[
             "megaPunch","megaKick","toxic","bodySlam","takeDown","doubleEdge","bubbleBeam","waterGun","iceBeam","blizzard",
-            "submission","counter","seismicToss","rage","soldarBeam","thunderbolt","thunder","psychic","teleport","mimic",
+            "submission","counter","seismicToss","rage","solarBeam","thunderbolt","thunder","psychic","teleport","mimic",
             "doubleTeam","reflect","bide","fireBlast","skullBash","rest","thunderWave","psywave","triAttack","substitute"
+        ]
+    },
+    {
+        "id":"wigglytuff",
+        "pokedex":[{"region":"kanto","number":40}],
+        "category":"Balloon",
+        "description":"The body is soft and rubbery. When angered, it will suck in air and inflate itself to an enormous size. Its body is full of elasticity. By inhaling deeply, it can continue to inflate itself without limit.",
+        "height":1.0,
+        "weight":12.0,
+        "types":["normal"],
+        "baseStats":{"hp":140,"patk":70,"pdef":45,"satk":75,"sdef":50,"spd":45,"spc":50},
+        "expCurve":"fast",
+        "catchRate":50,
+        "xpYield":109,
+        "ev":[{"hp":3}],
+        "evolutions":[],
+        "learnedMoves":[
+            {"lvl":1, "move":"sing"},
+            {"lvl":1, "move":"disable"},
+            {"lvl":1, "move":"defenseCurl"},
+            {"lvl":1, "move":"doubleSlap"}
+        ],
+        "hmMoves":["strength","flash"],
+        "tmMoves":[
+            "megaPunch","megaKick","toxic","bodySlam","takeDown","doubleEdge","bubbleBeam","waterGun","iceBeam","blizzard","hyperBeam",
+            "submission","counter","seismicToss","rage","solarBeam","thunderbolt","thunder","psychic","teleport","mimic",
+            "doubleTeam","reflect","bide","fireBlast","skullBash","rest","thunderWave","psywave","triAttack","substitute"
+        ]
+    },
+    {
+        "id":"zubat",
+        "pokedex":[{"region":"kanto","number":41}],
+        "category":"Bat",
+        "description":"Forms colonies in perpetually dark places. Uses ultrasonic waves to identify and approach targets. Emits ultrasonic cries while it flies. They act as a sonar used to check for objects in its way.",
+        "height":0.8,
+        "weight":7.5,
+        "types":["poison","flying"],
+        "baseStats":{"hp":40,"patk":45,"pdef":35,"satk":30,"sdef":40,"spd":55,"spc":40},
+        "expCurve":"mediumFast",
+        "catchRate":255,
+        "xpYield":54,
+        "ev":[{"spd":1}],
+        "evolutions":[
+            {"to":"golbat","mode":"level","level":22}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"leechLife"},
+            {"lvl":10, "move":"supersonic"},
+            {"lvl":15, "move":"bite"},
+            {"lvl":21, "move":"confuseRay"},
+            {"lvl":36, "move":"haze"}
+        ],
+        "hmMoves":[],
+        "tmMoves":[
+            "razorWind","whirlwind","toxic","takeDown","doubleEdge","rage","megaDrain","mimic",
+            "doubleTeam","bide","swift","rest","substitute"
+        ]
+    },
+    {
+        "id":"oddish",
+        "pokedex":[{"region":"kanto","number":43}],
+        "category":"Weed",
+        "description":"During the day, it keeps its face buried in the ground. At night, it wanders around sowing its seeds. It may be mistaken for a clump of weeds. If you try to yank it out of the ground, it shrieks horribly.",
+        "height":0.5,
+        "weight":5.4,
+        "types":["grass","poison"],
+        "baseStats":{"hp":45,"patk":50,"pdef":55,"satk":75,"sdef":65,"spd":30,"spc":75},
+        "expCurve":"mediumSlow",
+        "catchRate":255,
+        "xpYield":78,
+        "ev":[{"satk":1}],
+        "evolutions":[
+            {"to":"gloom","mode":"level","level":21}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"absorb"},
+            {"lvl":15, "move":"poisonPowder"},
+            {"lvl":17, "move":"stunSpore"},
+            {"lvl":19, "move":"sleepPowder"},
+            {"lvl":24, "move":"acid"},
+            {"lvl":33, "move":"petalDance"},
+            {"lvl":46, "move":"solarBeam"}
+        ],
+        "hmMoves":["cut"],
+        "tmMoves":[
+            "swordsDance","toxic","takeDown","doubleEdge","rage","megaDrain","solarBeam",
+            "mimic","doubleTeam","reflect","bide","rest","substitute"
+        ]
+    },
+    {
+        "id":"paras",
+        "pokedex":[{"region":"kanto","number":46}],
+        "category":"Mushroom",
+        "description":"Burrows to suck tree roots. The mushrooms on its back grow by drawing nutrients from the bug host. Burrows under the ground to gnaw on tree roots. The mushrooms on its back absorb most of the nutrition.",
+        "height":0.3,
+        "weight":5.4,
+        "types":["bug","grass"],
+        "baseStats":{"hp":35,"patk":70,"pdef":55,"satk":45,"sdef":55,"spd":25,"spc":55},
+        "expCurve":"mediumFast",
+        "catchRate":190,
+        "xpYield":70,
+        "ev":[{"patk":1}],
+        "evolutions":[
+            {"to":"parasect","mode":"level","level":24}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"scracth"},
+            {"lvl":13, "move":"stunSpore"},
+            {"lvl":20, "move":"leechLife"},
+            {"lvl":27, "move":"spore"},
+            {"lvl":34, "move":"slash"},
+            {"lvl":41, "move":"growth"}
+        ],
+        "hmMoves":["cut"],
+        "tmMoves":[
+            "swordsDance","toxic","bodySlam","takeDown","doubleEdge","rage","megaDrain","solarBeam",
+            "dig","mimic","doubleTeam","reflect","bide","skullBash","rest","substitute"
         ]
     },
     {
@@ -828,6 +1067,37 @@
             "toxic","bodySlam","takeDown","doubleEdge","rage",
             "earthquake","fissure","dig","mimic","doubleTeam","bide",
             "rest","rockSlide","substitute"
+        ]
+    },
+    {
+        "id":"meowth",
+        "pokedex":[{"region":"kanto","number":52}],
+        "category":"Scratch Cat",
+        "description":"Adores circular objects. Wanders the streets on a nightly basis to look for dropped loose change. Appears to be more active at night. It loves round and shiny things. It can't stop from picking them up.",
+        "height":0.4,
+        "weight":4.2,
+        "types":["normal"],
+        "baseStats":{"hp":40,"patk":45,"pdef":35,"satk":40,"sdef":40,"spd":90,"spc":40},
+        "expCurve":"mediumFast",
+        "catchRate":255,
+        "xpYield":69,
+        "ev":[{"spd":1}],
+        "evolutions":[
+            {"to":"persian","mode":"level","level":28}
+        ],
+        "learnedMoves":[
+            {"lvl":1,"move":"scratch"},
+            {"lvl":1,"move":"growl"},
+            {"lvl":12,"move":"bite"},
+            {"lvl":17,"move":"payDay"},
+            {"lvl":24,"move":"screech"},
+            {"lvl":33,"move":"furySwipes"},
+            {"lvl":44,"move":"slash"}
+        ],
+        "hmMoves":[],
+        "tmMoves":[
+            "toxic","bodySlam","takeDown","doubleEdge","bubbleBeam","waterGun","payDay","rage","thunderbolt","thunder",
+            "mimic","doubleTeam","bide","swift","skullBash","rest","substitute"
         ]
     },
     {
@@ -865,6 +1135,39 @@
         ]
     },
     {
+        "id":"bellsprout",
+        "pokedex":[{"region":"kanto","number":69}],
+        "category":"Flower",
+        "description":"A carnivorous Pokémon that traps and eats bugs. It uses its root feet to soak up needed moisture. Prefers hot and humid places. It ensnares tiny insects with its vines and devours them. ",
+        "height":0.7,
+        "weight":4.0,
+        "types":["grass","poison"],
+        "baseStats":{"hp":50,"patk":75,"pdef":35,"satk":70,"sdef":30,"spd":40,"spc":70},
+        "expCurve":"mediumSlow",
+        "catchRate":255,
+        "xpYield":84,
+        "ev":[{"patk":1}],
+        "evolutions":[
+            {"to":"weepinbell","mode":"level","level":21}
+        ],
+        "learnedMoves":[
+            {"lvl":1, "move":"vineWhip"},
+            {"lvl":1, "move":"growth"},
+            {"lvl":13, "move":"wrap"},
+            {"lvl":15, "move":"poisonPowder"},
+            {"lvl":18, "move":"sleepPowder"},
+            {"lvl":21, "move":"stunSpore"},
+            {"lvl":26, "move":"acid"},
+            {"lvl":33, "move":"razorLeaf"},
+            {"lvl":42, "move":"slam"}
+        ],
+        "hmMoves":["cut"],
+        "tmMoves":[
+            "swordsDance","toxic","takeDown","doubleEdge","rage","megaDrain","solarBeam",
+            "mimic","doubleTeam","reflect","bide","rest","substitute"
+        ]
+    },
+    {
         "id":"geodude",
         "pokedex":[{"region":"kanto","number":74}],
         "category":"Rock",
@@ -898,6 +1201,69 @@
         ]
     },
     {
+        "id":"magnemite",
+        "pokedex":[{"region":"kanto","number":81}],
+        "category":"Magnet",
+        "description":"Uses anti-gravity to stay suspended. Appears without warning and uses Thunder Wave and similar moves. It is born with the ability to defy gravity. It floats in air on powerful electromagnetic waves.",
+        "height":0.3,
+        "weight":6.0,
+        "types":["electric"],
+        "baseStats":{"hp":25,"patk":35,"pdef":70,"satk":95,"sdef":55,"spd":45,"spc":95},
+        "expCurve":"mediumFast",
+        "catchRate":190,
+        "xpYield":89,
+        "ev":[{"satk":1}],
+        "evolutions":[
+            {"to":"magneton","mode":"level","level":30}
+        ],
+        "learnedMoves":[
+            {"lvl":1,"move":"tackle"},
+            {"lvl":21,"move":"sonicBoom"},
+            {"lvl":25,"move":"thunderShock"},
+            {"lvl":29,"move":"supersonic"},
+            {"lvl":35,"move":"thunderWave"},
+            {"lvl":41,"move":"swift"},
+            {"lvl":47,"move":"screech"}
+        ],
+        "hmMoves":["flash"],
+        "tmMoves":[
+            "toxic","takeDown","doubleEdge","rage","thunderbolt","thunder", "teleport",
+            "mimic","doubleTeam","reflect","bide","swift","rest","thunderWave","substitute"
+        ]
+    },
+    {
+        "id":"grimer",
+        "pokedex":[{"region":"kanto","number":88}],
+        "category":"Sludge",
+        "description":"Appears in filthy areas. Thrives by sucking up polluted sludge that is pumped out of factories. Made of hardened sludge. It smells too putrid to touch. Even weeds won't grow in its path.",
+        "height":0.9,
+        "weight":30.0,
+        "types":["poison"],
+        "baseStats":{"hp":80,"patk":80,"pdef":50,"satk":40,"sdef":50,"spd":25,"spc":40},
+        "expCurve":"mediumFast",
+        "catchRate":190,
+        "xpYield":90,
+        "ev":[{"hp":1}],
+        "evolutions":[
+            {"to":"muk","mode":"level","level":38}
+        ],
+        "learnedMoves":[
+            {"lvl":1,"move":"pound"},
+            {"lvl":1,"move":"disable"},
+            {"lvl":30,"move":"poisonGas"},
+            {"lvl":33,"move":"minimize"},
+            {"lvl":37,"move":"sludge"},
+            {"lvl":42,"move":"harden"},
+            {"lvl":48,"move":"screech"},
+            {"lvl":55,"move":"acidArmor"}
+        ],
+        "hmMoves":[],
+        "tmMoves":[
+            "toxic","bodySlam","rage","megaDrain","thunderbolt","thunder","mimic","doubleTeam",
+            "bide","selfdestruct","fireBlast","rest","explosion","substitute"
+        ]
+    },
+    {
         "id":"onix",
         "pokedex":[{"region":"kanto","number":95}],
         "category":"Rock Snake",
@@ -925,6 +1291,69 @@
             "toxic","bodySlam","takeDown","doubleEdge","rage",
             "earthquake","fissure","dig","mimic","doubleTeam","bide",
             "selfdestruct","skullBash","rest","explosion","rockSlide","substitute"
+        ]
+    },
+    {
+        "id":"voltorb",
+        "pokedex":[{"region":"kanto","number":100}],
+        "category":"Ball",
+        "description":"Usually found in power plants. Easily mistaken for a Poké Ball, they have zapped many people. It is said to camouflage itself as a Poké Ball. It will self-destruct with very little stimulus.",
+        "height":0.5,
+        "weight":10.4,
+        "types":["electric"],
+        "baseStats":{"hp":40,"patk":30,"pdef":50,"satk":55,"sdef":55,"spd":100,"spc":55},
+        "expCurve":"mediumFast",
+        "catchRate":190,
+        "xpYield":103,
+        "ev":[{"spd":1}],
+        "evolutions":[
+            {"to":"electrode","mode":"level","level":30}
+        ],
+        "learnedMoves":[
+            {"lvl":1,"move":"tackle"},
+            {"lvl":1,"move":"screech"},
+            {"lvl":17,"move":"sonicBoom"},
+            {"lvl":22,"move":"selfdestruct"},
+            {"lvl":29,"move":"lightScreen"},
+            {"lvl":36,"move":"swift"},
+            {"lvl":43,"move":"explosion"}
+        ],
+        "hmMoves":["flash"],
+        "tmMoves":[
+            "toxic","takeDown","rage","thunderbolt","thunder","teleport","mimic",
+            "doubleTeam","reflect","bide","selfdestruct","swift","rest","thunderWave",
+            "explosion","substitute"
+        ]
+    },
+    {
+        "id":"koffing",
+        "pokedex":[{"region":"kanto","number":109}],
+        "category":"Poison Gas",
+        "description":"Because it stores several kinds of toxic gases in its body, it is prone to exploding without warning. In hot places, its internal gases could expand and explode without any warning. Be very careful!",
+        "height":0.6,
+        "weight":1.0,
+        "types":["poison"],
+        "baseStats":{"hp":40,"patk":65,"pdef":95,"satk":60,"sdef":45,"spd":35,"spc":60},
+        "expCurve":"mediumFast",
+        "catchRate":190,
+        "xpYield":114,
+        "ev":[{"pdef":1}],
+        "evolutions":[
+            {"to":"weezing","mode":"level","level":35}
+        ],
+        "learnedMoves":[
+            {"lvl":1,"move":"tackle"},
+            {"lvl":1,"move":"smog"},
+            {"lvl":32,"move":"sludge"},
+            {"lvl":37,"move":"smokeScreen"},
+            {"lvl":40,"move":"selfdestruct"},
+            {"lvl":45,"move":"haze"},
+            {"lvl":48,"move":"explosion"}
+        ],
+        "hmMoves":[],
+        "tmMoves":[
+            "toxic","rage","thunderbolt","thunder","mimic","doubleTeam",
+            "bide","selfdestruct","fireBlast","rest","explosion","substitute"
         ]
     },
     {

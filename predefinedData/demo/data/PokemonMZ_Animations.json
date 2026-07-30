@@ -121,6 +121,23 @@
         ]
     },
     {
+        "id":"rockTarget1",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":86},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"absorb",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":58, "wait":true},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"user", "animationId":41}
+        ]
+    },
+    {
         "id":"bind",
         "sequence":[
             {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},

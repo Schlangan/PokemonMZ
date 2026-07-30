@@ -313,5 +313,196 @@
         ],
         "defeatText":"That's it?",
         "money":210
+    },
+    {
+        "id":"mtmoon1_cave_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"zubat","levelMin":6, "levelMax":11, "rate":75},
+            {"id":"geodude","levelMin":8, "levelMax":10, "rate":15},
+            {"id":"paras","levelMin":8, "levelMax":8, "rate":5},
+            {"id":"sandshrew","levelMin":12, "levelMax":12, "rate":4},
+            {"id":"clefairy","levelMin":8, "levelMax":11, "rate":1}
+        ]
+    },
+    {
+        "id":"mtmoon1_lass1",
+        "type":"trainer",
+        "trainerActor":4,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"clefairy","level":14,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I lost?",
+        "money":210
+    },
+    {
+        "id":"mtmoon1_bug1",
+        "type":"trainer",
+        "trainerActor":3,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"weedle","level":11,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"kakuna","level":11,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"You got me!",
+        "money":110
+    },
+    {
+        "id":"mtmoon1_nerd1",
+        "type":"trainer",
+        "trainerActor":8,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"magnemite","level":11,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"voltorb","level":11,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"My Pokémon won't do!",
+        "money":275
+    },
+    {
+        "id":"mtmoon1_bug2",
+        "type":"trainer",
+        "trainerActor":3,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"caterpie","level":10,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"metapod","level":10,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"caterpie","level":10,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I lost.",
+        "money":100
+    },
+    {
+        "id":"mtmoon1_lass2",
+        "type":"trainer",
+        "trainerActor":4,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"oddish","level":11,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"bellsprout","level":11,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Oh! I lost it!",
+        "money":165
+    },
+    {
+        "id":"mtmoon1_young1",
+        "type":"trainer",
+        "trainerActor":7,
+        "ia":"random",
+        "pokemons":[
+            {"id":"rattata","level":10,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"rattata","level":10,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"zubat","level":10,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Losing stinks!",
+        "money":150
+    },
+    {
+        "id":"mtmoon1_hiker1",
+        "type":"trainer",
+        "trainerActor":9,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"geodude","level":10,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"geodude","level":10,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"onix","level":10,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Wow! Shocked again!",
+        "money":350
+    },
+    {
+        "id":"mtmoon2_cave_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"zubat","levelMin":7, "levelMax":11, "rate":65},
+            {"id":"geodude","levelMin":7, "levelMax":11, "rate":20},
+            {"id":"paras","levelMin":9, "levelMax":11, "rate":10},
+            {"id":"clefairy","levelMin":9, "levelMax":12, "rate":5}
+        ]
+    },
+    {
+        "id":"mtmoon3_cave_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"zubat","levelMin":9, "levelMax":13, "rate":55},
+            {"id":"geodude","levelMin":9, "levelMax":11, "rate":20},
+            {"id":"paras","levelMin":10, "levelMax":13, "rate":15},
+            {"id":"clefairy","levelMin":9, "levelMax":13, "rate":10}
+        ]
+    },
+    {
+        "id":"mtmoon3_rocket1",
+        "type":"trainer",
+        "trainerActor":10,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"sandshrew","level":11,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"rattata","level":11,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"zubat","level":11,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I blew it!",
+        "money":330
+    },
+    {
+        "id":"mtmoon3_rocket2",
+        "type":"trainer",
+        "trainerActor":10,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"zubat","level":12,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"ekans","level":12,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"So, you are good.",
+        "money":360
+    },
+    {
+        "id":"mtmoon3_rocket3",
+        "type":"trainer",
+        "trainerActor":10,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"rattata","level":13,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"zubat","level":13,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I'm steamed!",
+        "money":390
+    },
+    {
+        "id":"mtmoon3_rocket4",
+        "type":"trainer",
+        "trainerActor":10,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"rattata","level":16,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Urgh! Now I'm mad!",
+        "money":480
+    },
+    {
+        "id":"mtmoon3_nerd1",
+        "type":"trainer",
+        "trainerActor":8,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"grimer","level":12,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"voltorb","level":12,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"koffing","level":12,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"OK! I'll share!",
+        "money":300
+    },
+    {
+        "id":"mtmoon3_rocketadm",
+        "type":"trainer",
+        "trainerActor":11,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"ekans","level":14,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"meowth","level":14,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"koffing","level":14,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"A brat beat me?",
+        "money":420
     }
 ]

@@ -1,3 +1,44 @@
+## [0.0.4] - 2026-07-30
+
+All mechanics encountered until the end of Mt.Moon have been added.
+
+- New item effects
+    - Gaining one level (rare candies)
+    - Evolution item use (moon stone)
+    - Permanent stat boost (hp up)
+    - PP recovery (ether)
+- New skill effects
+    - Absorb life from opponent (absorb, leech life)
+- New predefined Pokemon data
+    - Bellsprout
+    - Clefable
+    - Clefairy
+    - Grimer
+    - Koffing
+    - Magnemite
+    - Meowth
+    - Nidoking
+    - Nidoqueen
+    - Oddish
+    - Paras
+    - Voltorb
+    - Wigglytuff
+    - Zubat
+- New predefined moves data
+    - Absorb
+    - Double Slap
+    - Leech Life
+    - Mega Punch
+    - Rock Throw
+    - Smog
+- New predefined item data
+    - Hp up
+    - Rare candy
+    - TM01 (Mega punch)
+    - TM12 (Water gun)
+    - Moon stone
+    - Ether
+
 
 ## [0.0.3] - 2026-07-19
 
