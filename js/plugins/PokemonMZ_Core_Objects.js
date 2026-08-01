@@ -39,14 +39,19 @@ Game_CharacterBase.prototype.moveStraight = function(d) {
         switch (d) {
             case 2: //down
                 this.jump(0,1);
+                break;
             case 4: //left
                 this.jump(-1,0);
+                break;
             case 6: //right
                 this.jump(1,0);
+                break;
             case 8: //up
                 this.jump(0,-1);
+                break;
             default:
                 PokemonMZ_Game_CharacterBase_moveStraight.call(this, d);
+                break;
         }
         return;
     }
@@ -294,6 +299,10 @@ Game_Map.prototype.initialize = function() {
         "down":-1,
         "left":-1,
         "right":-1,
+        "downLeft":-1,
+        "downRight":-1,
+        "upLeft":-1,
+        "upRight":-1,
     };
     this._isRopeEscapable = false;
     this._isUsingRope = false;
@@ -306,9 +315,12 @@ Game_Map.prototype.PokemonMZ_reinitialize = function() {
             "down":-1,
             "left":-1,
             "right":-1,
+            "downLeft":-1,
+            "downRight":-1,
+            "upLeft":-1,
+            "upRight":-1,
         };
     }
-
 };
 const PokemonMZ_Game_Map_setup = Game_Map.prototype.setup;
 Game_Map.prototype.setup = function(mapId) {
@@ -324,6 +336,11 @@ Game_Map.prototype.setup = function(mapId) {
     if (noteData.ledgeUpRegion) { this._ledgeRegions.up = Number(noteData.ledgeUpRegion) } else { this._ledgeRegions.up = -1; }
     if (noteData.ledgeLeftRegion) { this._ledgeRegions.left = Number(noteData.ledgeLeftRegion) } else { this._ledgeRegions.left = -1; }
     if (noteData.ledgeRightRegion) { this._ledgeRegions.right = Number(noteData.ledgeRightRegion) } else { this._ledgeRegions.right = -1; }
+    if (noteData.ledgeDownLeftRegion) { this._ledgeRegions.downLeft = Number(noteData.ledgeDownLeftRegion) } else { this._ledgeRegions.downLeft = -1; }
+    if (noteData.ledgeDownRightRegion) { this._ledgeRegions.downRight = Number(noteData.ledgeDownRightRegion) } else { this._ledgeRegions.downRight = -1; }
+    if (noteData.ledgeUpLeftRegion) { this._ledgeRegions.upLeft = Number(noteData.ledgeUpLeftRegion) } else { this._ledgeRegions.upLeft = -1; }
+    if (noteData.ledgeUpRightRegion) { this._ledgeRegions.upRight = Number(noteData.ledgeUpRightRegion) } else { this._ledgeRegions.upRight = -1; }
+
     this._isRopeEscapable = Boolean(noteData.escapeRope)
 };
 Game_Map.prototype.PokemonMZ_eventsAggro = function(x, y) {
@@ -332,15 +349,27 @@ Game_Map.prototype.PokemonMZ_eventsAggro = function(x, y) {
 Game_Map.prototype.PokemonMZ_isLedge = function(x,y,d) {
     // Check if character has reached a ledge and is in the propre direction
     if (!this._ledgeRegions) { return false; }
+
+    const regionId = this.regionId(x,y);
+
+    const isDownLedge = this._ledgeRegions.down != -1 && regionId == this._ledgeRegions.down;
+    const isLeftLedge = this._ledgeRegions.left != -1 && regionId == this._ledgeRegions.left;
+    const isRightLedge = this._ledgeRegions.right != -1 && regionId == this._ledgeRegions.right;
+    const isUpLedge = this._ledgeRegions.up != -1 && regionId == this._ledgeRegions.up;
+    const isDownLeftLedge = this._ledgeRegions.downLeft != -1 && regionId == this._ledgeRegions.downLeft;
+    const isDownRightLedge = this._ledgeRegions.downRight != -1 && regionId == this._ledgeRegions.downRight;
+    const isUpLeftLedge = this._ledgeRegions.upLeft != -1 && regionId == this._ledgeRegions.upLeft;
+    const isUpRightLedge = this._ledgeRegions.upRight != -1 && regionId == this._ledgeRegions.upRight;
+
     switch (d) {
         case 2: //down
-            return this._ledgeRegions.down != -1 && this.regionId(x,y) == this._ledgeRegions.down;
+            return isDownLedge || isDownLeftLedge || isDownRightLedge ;
         case 4: //left
-            return this._ledgeRegions.left != -1 && this.regionId(x,y) == this._ledgeRegions.left;
+            return isLeftLedge || isDownLeftLedge || isUpLeftLedge;
         case 6: //right
-            return this._ledgeRegions.right != -1 && this.regionId(x,y) == this._ledgeRegions.right;
+            return isRightLedge || isDownRightLedge || isUpRightLedge;
         case 8: //up
-            return this._ledgeRegions.up != -1 && this.regionId(x,y) == this._ledgeRegions.up;
+            return isUpLedge || isUpLeftLedge || isUpRightLedge;
     }
     return false;
 };

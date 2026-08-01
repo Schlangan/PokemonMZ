@@ -1,3 +1,8 @@
+## [0.0.5] - TBD
+
+Enhanced ledge jumping mechanics by adding ledge corners. Fixed an issue with left/right/up ledge not working as intended.
+
+
 ## [0.0.4] - 2026-07-30
 
 All mechanics encountered until the end of Mt.Moon have been added.
