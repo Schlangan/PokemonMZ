@@ -1,6 +1,12 @@
 ## [0.0.5] - TBD
 
-Enhanced ledge jumping mechanics by adding ledge corners. Fixed an issue with left/right/up ledge not working as intended.
+All mechanics encountered until Route 4 have been added.
+
+- New map mechanics
+    - Enhanced ledge jumping mechanics by adding ledge corners. Fixed an issue with left/right/up ledge not working as intended.
+
+- New predefined item data
+    - Great Ball
 
 
 ## [0.0.4] - 2026-07-30
