@@ -917,6 +917,13 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
                 this._messageWindow.startMessage();
             }
             break;
+        case "repel":
+            $gamePlayerTrainer.gainBagItem(itemDict.id, -1);
+            $gamePlayerTrainer.startRepelling(itemDict.pkmz_data.steps);
+            this._itemWindow.refresh();
+            this._messageWindow.setText($gamePlayerTrainer.name() + " used " + itemDict.name + "!");
+            this._messageWindow.startMessage();
+            break;
         default:
             // Open Pokemon menu
             SceneManager.push(PokemonMZ_Scene_PokemonMenu);

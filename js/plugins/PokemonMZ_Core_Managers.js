@@ -261,9 +261,16 @@ PokemonMZ_BattleManager.setup = function(troopId, canEscape, canLose) {
     this.initMembers();
     this._canEscape = canEscape;
     this._canLose = canLose;
+    
+    // Setup encounter
     $PokemonMZ_gameBattle.setup(troopId);
-    $gameScreen.onBattleStart();
 
+    // If wild battle and no valid encounter found (due to repel for ex., stop here)
+    if (this.abortingWildEncounter()) {
+        return;
+    }
+
+    $gameScreen.onBattleStart();
     $gamePlayerTrainer.resetAllLeveledUpStates();
 
     // Init player battled table
@@ -286,11 +293,15 @@ PokemonMZ_BattleManager.setup = function(troopId, canEscape, canLose) {
         }
     }
 };
+PokemonMZ_BattleManager.abortingWildEncounter = function() {
+    return $PokemonMZ_gameBattle.isWildBattle() && !$PokemonMZ_gameBattle.foundPossibleWildPokemon()
+}
 PokemonMZ_BattleManager.initMembers = function() {
     this._debugPhase = "";
     this._debugSubPhase = "";
     this._debugStep = "";
 
+    this._abortWildEncounter = false;
     this._phaseWaitForText = false;
 
     this._phase = "";

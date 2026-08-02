@@ -251,7 +251,7 @@ Game_Player.prototype.executeEncounter = function() {
         const troopId = this.makeEncounterTroopId();
         if ($dataTroops[troopId]) {
             PokemonMZ_BattleManager.setup(troopId, true, false);
-            return true;
+            return !PokemonMZ_BattleManager.abortingWildEncounter();
         } else {
             return false;
         }
@@ -263,6 +263,7 @@ Game_Player.prototype.increaseSteps = function() {
     Game_Character.prototype.increaseSteps.call(this);
     if (this.isNormal()) {
         $gameParty.increaseSteps();
+        $gamePlayerTrainer.decreaseRepelSteps();
         $gamePlayerTrainer.calculatePoisonOnMap();
     }
 };
@@ -399,6 +400,10 @@ Game_Map.prototype.update = function(sceneActive) {
         return;
     }
 
+    // Add message if repel is over
+    if ($gamePlayerTrainer.isRepelling() && $gamePlayerTrainer.repelSteps() == 0) {
+        this.updateRepelEnding();
+    }
     // Add message if pokemon fainted due to poison
     if (this._pokemonPoisonedFainted && this._pokemonPoisonedFainted.length > 0) {
         this.updatePoisonedFainted();
@@ -440,6 +445,11 @@ Game_Map.prototype.updateAfterFainted = function() {
         $gamePlayerTrainer.healTeam();
     }
     this._checkAfterFainted = false;
+};
+Game_Map.prototype.updateRepelEnding = function() {
+    if ($gameMap.isEventRunning() || $gameMessage.isBusy() || $gamePlayer.isMoving() ) { return; }
+    $gamePlayerTrainer.endRepelling();
+    $gameMessage.add("Repel's effect wore off.")
 };
 Game_Map.prototype.askForEvolutionCheck = function() {
     this._checkEvolution = true;
@@ -511,11 +521,13 @@ Game_Interpreter.prototype.command301 = function(params) {
         }
         if ($dataTroops[troopId]) {
             PokemonMZ_BattleManager.setup(troopId, params[2], params[3]);
-            PokemonMZ_BattleManager.setEventCallback(n => {
-                this._branch[this._indent] = n;
-            });
-            $gamePlayer.makeEncounterCount();
-            SceneManager.push(PokemonMZ_Scene_Battle);
+            if (!PokemonMZ_BattleManager.abortingWildEncounter()) {
+                PokemonMZ_BattleManager.setEventCallback(n => {
+                    this._branch[this._indent] = n;
+                });
+                $gamePlayer.makeEncounterCount();
+                SceneManager.push(PokemonMZ_Scene_Battle);
+            }
         }
     }
     return true;
@@ -675,6 +687,8 @@ PokemonMZ_Game_TrainerPlayer.prototype.initMembers = function(sourceActorId) {
     this._coins = 0;
     this._ia = "player";
     this._respawnLocation = {"mapId":1,"x":0,"y":0};
+    this._isRepelling = false;
+    this._repelSteps = 0;
     this.initializeItems();
     this.initializeBoxes();
     this.initializePokedex();
@@ -1043,7 +1057,26 @@ PokemonMZ_Game_TrainerPlayer.prototype.resetAllLeveledUpStates = function() {
     for (const pokemon of this._pokemons) {
         pokemon.resetHasLeveledUp();
     }
-}
+};
+PokemonMZ_Game_TrainerPlayer.prototype.startRepelling = function(steps) {
+    this._isRepelling = true;
+    this._repelSteps = steps;
+};
+PokemonMZ_Game_TrainerPlayer.prototype.endRepelling = function() {
+    this._isRepelling = false;
+    this._repelSteps = 0;
+};
+PokemonMZ_Game_TrainerPlayer.prototype.decreaseRepelSteps = function() {
+    if (this.isRepelling()) {
+        this._repelSteps--;
+    }
+};
+PokemonMZ_Game_TrainerPlayer.prototype.isRepelling = function() {
+    return this._isRepelling;
+};
+PokemonMZ_Game_TrainerPlayer.prototype.repelSteps = function() {
+    return this._repelSteps ? this._repelSteps : 0;
+};
 
 // PokemonMZ_Pokemon
 // The class for a pokemon
@@ -1392,8 +1425,6 @@ PokemonMZ_Game_Pokemon.prototype.recoverPpAtIndex = function(index, ppRecovered)
         this._moves[index].pp = maxPP;
     }
 };
-
-
 PokemonMZ_Game_Pokemon.prototype.consumePP = function(index) {
     // No PP consumption for index -1 -> struggle
     if (index != -1) {
@@ -2314,7 +2345,6 @@ PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolutionItem = function(itemStrId
     }
     return "";
 };
-
 PokemonMZ_Game_Pokemon.prototype.evolveTo = function(newPokemonStrId) {
     const enemyId = $dataPokemonsIndex[newPokemonStrId];
     const currentHpFactor = this._hp / this.mhp();
@@ -2387,16 +2417,38 @@ PokemonMZ_Game_Battle.prototype.setup = function(troopId) {
 };
 PokemonMZ_Game_Battle.prototype.chooseWildPokemon = function(pokemons) {
     // Choose wild pokemon from troop
+
+    // Identify minimum required pokemon level due to repelling
+    let minimumWildLevel = 0;
+
+    if ($gamePlayerTrainer.isRepelling()) {
+        // Generation 1 - Repel takes the level of the first pokemon in party, fainted or not
+        minimumWildLevel = $gamePlayerTrainer.firstPokemon().level();
+    }
+
     const rates = [];
     let minRate = 0;
     let maxRate = 0;
     for (let i=0; i< pokemons.length; i++) {
         // TODO : Check appearance conditions
-        maxRate += pokemons[i].rate;
+        let pokemonEncounterData = pokemons[i];
+
+        if (pokemonEncounterData.levelMax < minimumWildLevel) {
+            // Max level below minimum encounterable level -> match impossible
+            // The minimum wild level is equal to zero if there is no repel active
+            continue;
+        }
+
+        maxRate += pokemonEncounterData.rate;
         rates.push({"id":i, "minRate":minRate, "maxRate":maxRate})
         minRate = maxRate;
     };
-    
+
+    if (rates.length == 0) {
+        // If no rates, no encounter possible -> battle will be aborted 
+        return null;
+    }
+
     let chosenId = -1;
     const randomNumber = Math.randomInt(maxRate);
     for (const rate of rates) {
@@ -2406,13 +2458,23 @@ PokemonMZ_Game_Battle.prototype.chooseWildPokemon = function(pokemons) {
     }
 
     const chosenPokemon = pokemons[chosenId];
-    if (chosenPokemon.levelMin < chosenPokemon.levelMax) {
-        const level = chosenPokemon.levelMin + Math.randomInt(chosenPokemon.levelMax - chosenPokemon.levelMin + 1)
+    let minimumLevel = chosenPokemon.levelMin;
+    if (minimumLevel < minimumWildLevel) { 
+        // If minimum level below that of first pokemon repelling, set the minimum level to that value
+        minimumLevel = minimumWildLevel;
+    }
+
+    if (minimumLevel < chosenPokemon.levelMax) {
+        const level = minimumLevel + Math.randomInt(chosenPokemon.levelMax - minimumLevel + 1)
         return this.createWildPokemon(chosenPokemon.id, level);
     } else {
-        return this.createWildPokemon(chosenPokemon.id, chosenPokemon.levelMin);
+        return this.createWildPokemon(chosenPokemon.id, minimumLevel);
     }
 };
+PokemonMZ_Game_Battle.prototype.foundPossibleWildPokemon = function() {
+    return this._wildPokemon != null;
+};
+
 PokemonMZ_Game_Battle.prototype.createTrainer = function(trainerData) {
     const trainer = new PokemonMZ_Game_Trainer(trainerData.trainerActor);
     for (pokemonData of trainerData.pokemons) {
