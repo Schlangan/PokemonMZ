@@ -4,9 +4,9 @@ All mechanics encountered until Route 4 have been added.
 
 - New map mechanics
     - Enhanced ledge jumping mechanics by adding ledge corners. Fixed an issue with left/right/up ledge not working as intended.
+    - NPC asking for trade for a specific pokemon. Displays selection menu and return values according to choices. Trade itself **Not implemented** yet.
 - New item effects
     - Repel
-
 - New predefined item data
     - Great Ball
     - Repel

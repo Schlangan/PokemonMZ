@@ -187,6 +187,20 @@
  * @text Return switch
  * @desc A switch that will take the value OFF is the pokemon cannot be given because of box+party full
 
+ * //////////////////////////////////////////
+ * @command SelectPokemonTrade
+ * @text Select Pokemon For Trade
+ * @desc Select a Pokemon in Party for a trade and check match
+ * 
+ * @arg searchedPokemon
+ * @type enemy
+ * @text Searched Pokemon
+ * @desc The Pokemon wanted by the NPC
+ * 
+ * @arg returnVariable
+ * @type variable
+ * @text Return Variable
+ * @desc Variable that gets the pokemon index in the party if correct pokemon, -1 if wrong one, or -2 if canceled.
 */
 const pluginName = 'PokemonMZ_Core_Commands';
 
@@ -287,4 +301,9 @@ PluginManager.registerCommand(pluginName, "PlayerTeamHeal", function(args) {
     $gamePlayerTrainer.healTeam();
 });
 
-
+PluginManager.registerCommand(pluginName, "SelectPokemonTrade", function(args) {
+    const pokemonIntId = Number(args.searchedPokemon);
+    const returnVariable = Number(args.returnVariable);
+    SceneManager.push(PokemonMZ_Scene_PokemonMenu);
+    SceneManager.prepareNextScene("selectTrade",{"pokemonIntId":pokemonIntId, "returnVariable":returnVariable});
+});

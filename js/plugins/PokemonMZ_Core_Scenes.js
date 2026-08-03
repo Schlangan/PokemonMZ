@@ -927,7 +927,7 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
         default:
             // Open Pokemon menu
             SceneManager.push(PokemonMZ_Scene_PokemonMenu);
-            SceneManager.prepareNextScene(itemDict);
+            SceneManager.prepareNextScene("item",itemDict);
     }
 
 };
@@ -997,7 +997,7 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemNumberCancel = function() {
 PokemonMZ_Scene_Item_Gen1.prototype.commandYes = function() {
     const itemDict = this.item();
     SceneManager.push(PokemonMZ_Scene_PokemonMenu);
-    SceneManager.prepareNextScene(itemDict);
+    SceneManager.prepareNextScene("item",itemDict);
 };
 PokemonMZ_Scene_Item_Gen1.prototype.commandNo = function() {
     this._usingTm = false;
@@ -1649,8 +1649,23 @@ PokemonMZ_Scene_PokemonMenu.prototype.initialize = function() {
     this._pokemonRecoveringData = null;
     this._mustReturnToItemMenu = false;
     this._afterTextPhase = "";
+
+    this._tradeSelecting = false;
+    this._tradePokemon = null;
+    this._tradeVariable = null;
 };
-PokemonMZ_Scene_PokemonMenu.prototype.prepare = function(item) {
+PokemonMZ_Scene_PokemonMenu.prototype.prepare = function(type, data) {
+
+    switch(type) {
+    case "item":
+        this.prepareItem(data);
+        break;
+    case "selectTrade":
+        this.prepareSelectTrade(data);
+        break;
+    }
+}
+PokemonMZ_Scene_PokemonMenu.prototype.prepareItem = function(item) {
     this._usedItem = item;
     if (item.pkmz_data.effect == "tm") {
         const moveStrId = item.pkmz_data.move;
@@ -1660,7 +1675,14 @@ PokemonMZ_Scene_PokemonMenu.prototype.prepare = function(item) {
     if (item.pkmz_data.effect == "evolutionItem") {
         this._evolutionItem = item;
     }
-}
+};
+PokemonMZ_Scene_PokemonMenu.prototype.prepareSelectTrade = function(tradeData) {
+    this._tradeSelecting = true;
+    this._tradePokemonIntId = tradeData.pokemonIntId;
+    this._tradeVariable = tradeData.returnVariable;
+};
+
+
 PokemonMZ_Scene_PokemonMenu.prototype.start = function() {
     Scene_MenuBase.prototype.start.call(this);
     if (this._mustExit) {
@@ -1815,7 +1837,10 @@ PokemonMZ_Scene_PokemonMenu.prototype.selectedPokemon = function() {
     return $gamePlayerTrainer.pokemon(this._listWindow.index());
 };
 PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemon = function() {
-    if (this._listWindow.formationMode()) {
+    
+    if (this._tradeSelecting) {
+        this.onSelectPokemonTrade();
+    } else if (this._listWindow.formationMode()) {
         this.onSelectPokemonSwitch();
     } else if (this.isLearningMove()) {
         this.onSelectPokemonLearn();
@@ -1834,6 +1859,9 @@ PokemonMZ_Scene_PokemonMenu.prototype.onCancelPokemon = function() {
         this._listWindow.setPendingIndex(-1);
         this._listWindow.activate();
     } else {
+        if (this._tradeSelecting) {
+            $gameVariables.setValue(this._tradeVariable, -2);
+        }
         this.popScene();
     }
 };
@@ -1924,6 +1952,15 @@ PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemonEvolutionItem = function() 
         this._messageWindow.setText("It won't have any effect.");
         this._messageWindow.startMessage();
     }
+};
+PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemonTrade = function() {
+    const pokemon = this.selectedPokemon();
+    if (pokemon.intEnemyId() == this._tradePokemonIntId) {
+        $gameVariables.setValue(this._tradeVariable, this._listWindow.index());
+    } else {
+        $gameVariables.setValue(this._tradeVariable, -1);
+    }
+    this.popScene();
 };
 PokemonMZ_Scene_PokemonMenu.prototype.proceedLearningMove = function() {
     const pokemon = this.selectedPokemon();
