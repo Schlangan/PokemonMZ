@@ -2656,6 +2656,21 @@ PokemonMZ_BattleManager.updateAnimation = function() {
             case "moveSpriteDown":
                 this.startAnimationMoveSprite(this._animationData.userSprite,0, actionData.distance, actionData.duration);
                 break;
+            case "wait":
+                this._animationWaitFrames = actionData.frames;
+                this._animationPhase = "waitingFrames";
+                break;
+            case "hideSprite":
+                if (this._animationData.side == "player" && actionData.target == "user") {
+                    this._animationData.userSprite.opacity = 0;
+                } else if (this._animationData.side == "player" && actionData.target == "opponent") {
+                    this._animationData.enemySprite.opacity = 0;
+                } else if (this._animationData.side == "enemy" && actionData.target == "user") {
+                    this._animationData.userSprite.opacity = 0;
+                } else if (this._animationData.side == "enemy" && actionData.target == "opponent") {
+                    this._animationData.enemySprite.opacity = 0;
+                }
+                break;
             }
         } else {
             this.clearSubPhase();
@@ -2663,6 +2678,12 @@ PokemonMZ_BattleManager.updateAnimation = function() {
         break;
     case "waitForAnimation":
         if (!this._spriteset.isAnimationPlaying()) {
+            this._animationPhase = "nextAction";
+        }
+        break;
+    case "waitingFrames":
+        this._animationWaitFrames--;
+        if (this._animationWaitFrames == 0) {
             this._animationPhase = "nextAction";
         }
         break;
@@ -3304,6 +3325,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return "No effect!";
     case "suckedHealth":
         return "Sucked health from " + prefix + pokemon.name() + "!"
+    case "ranAway":
+        return prefix + pokemon.name() + " ran from battle!";
     }
     return ""
 };

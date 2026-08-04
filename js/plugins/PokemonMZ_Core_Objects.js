@@ -306,7 +306,9 @@ Game_Map.prototype.initialize = function() {
         "upRight":-1,
     };
     this._isRopeEscapable = false;
+    this._isTeleportAllowed = false;
     this._isUsingRope = false;
+    this._isUsingTeleport = false;
 };
 Game_Map.prototype.PokemonMZ_reinitialize = function() {
     // Used to create possible missing objects after update
@@ -343,6 +345,7 @@ Game_Map.prototype.setup = function(mapId) {
     if (noteData.ledgeUpRightRegion) { this._ledgeRegions.upRight = Number(noteData.ledgeUpRightRegion) } else { this._ledgeRegions.upRight = -1; }
 
     this._isRopeEscapable = Boolean(noteData.escapeRope)
+    this._isTeleportAllowed = Boolean(noteData.teleport)
 };
 Game_Map.prototype.PokemonMZ_eventsAggro = function(x, y) {
     return this.events().filter(event => (event.PokemonMZ_isAgrroable() && event.PokemonMZ_posAggro(x,y)));
@@ -388,10 +391,12 @@ const PokemonMZ_Game_Map_update = Game_Map.prototype.update;
 Game_Map.prototype.update = function(sceneActive) {
     PokemonMZ_Game_Map_update.call(this, sceneActive);
 
-    // Consider player spinning for ropes
-    if (this._isUsingRope) {
+    // Consider player spinning for ropes/teleports
+    // For now the code is the same for both.
+    if (this._isUsingRope || this._isUsingTeleport) {
         if (!$gamePlayer.PokemonMZ_isSpinning()) {
             this._isUsingRope = false;
+            this._isUsingTeleport = false;
             AudioManager.playStandardSe(PokemonMZ.teleportSE);
             const location = $gamePlayerTrainer.respawnLocation();
             $gamePlayer.reserveTransfer(location.mapId,location.x,location.y,2,0);
@@ -492,6 +497,19 @@ Game_Map.prototype.PokemonMZ_useEscapeRope = function() {
 Game_Map.prototype.PokemonMZ_isUsingEscapeRope = function() {
     return this._isUsingRope;
 };
+Game_Map.prototype.PokemonMZ_isTeleportAllowed = function() {
+    return this._isTeleportAllowed;
+};
+Game_Map.prototype.PokemonMZ_useTeleport = function() {
+    this._isUsingTeleport = true;
+    $gameSystem.disableMenu();
+    $gamePlayer.PokemonMZ_startSpinning(3, true);
+};
+Game_Map.prototype.PokemonMZ_isUsingTeleport = function() {
+    return this._isUsingTeleport;
+};
+
+
 
 // Game_Interpreter edits
 Game_Interpreter.prototype.command302 = function(params) {
@@ -2381,6 +2399,22 @@ PokemonMZ_Game_Pokemon.prototype.forceLevelUp = function() {
     const exp = this.expForNextLevel();
     this.gainExp(exp);
 };
+PokemonMZ_Game_Pokemon.prototype.mapMoves = function() {
+    const mapMoves = [];
+    for (let i=0; i<this._moves.length; i++) {
+        let moveName = this.moveNameFromIndex(i);
+        let moveData = this.moveDataFromIndex(i);
+        
+        if (moveData.mapEffect) {
+            // TODO: Check conditions for some moves such as HMs
+            mapMoves.push({
+                "name":moveName,
+                "effect":moveData.mapEffect,
+            })
+        };
+    }
+    return mapMoves;
+};
 
 
 
@@ -3214,7 +3248,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
     case "drainTargetHp":
         effectResults = this.effect_drainTargetHp(battleData, effect, effectResults);
         break;
-
+    case "teleport":
+        effectResults = this.effect_teleport(battleData, effect, effectResults);
+        break;
     }
     return effectResults;
 };
@@ -3950,5 +3986,29 @@ PokemonMZ_Game_Action.prototype.effect_drainTargetHp = function(battleData, effe
         this._resultSteps.push(["waittext", effect.text,this.oppositeSide()])
     }
     effectResults.userDamage = damageDealt;
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_teleport = function(battleData, effect, effectResults) {
+    if ($PokemonMZ_gameBattle.isWildBattle()) {
+        const levelUser = this._user.level();
+        const levelOpponent = this._opponent.level();
+        
+        let failureChance = 0.0;
+        if (levelUser < levelOpponent) {
+            failureChance = (levelOpponent / 4)/(levelOpponent + levelUser + 1);
+        }
+        if (Math.random() < failureChance) {
+            effectResults.success = false;
+            this._resultSteps.push(["waittext","statusFailed",this.side()]);
+        } else {
+            effectResults.success = true;
+            this._resultSteps.push(["waittext","ranAway",this.side()]);
+            this._resultSteps.push(["endBattle"]);
+        }
+    } else {
+        // Teleport ineffective in trainer battles in generation I
+        effectResults.success = false;
+        this._resultSteps.push(["waittext","statusFailed",this.side()]);
+    }
     return effectResults;
 };

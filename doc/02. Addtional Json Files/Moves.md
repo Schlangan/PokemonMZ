@@ -20,6 +20,7 @@ moveData
 - noVariance, **bool**, *optional* : If set to **true**, the move won't have any variance calculation and always do fixed damage.
 - cpuHigherEffectFailure, **bool**, *optional* : If set to **true**, the computer pokemon has an additional 25% chance of failing the effects of the move.
 - effects, **Array:moveEffect** : An array of the **moveEffect**, definining all secondary effects of the move.
+- mapEffect: **string**, *optional* : Move usable on the map, with a given effect. Only **teleport** is available for now.
 - animation, **string**, *optional* : The animation string Id from the additional JSon file PokemonMZ_Animations.json.
 
 ---
@@ -98,6 +99,7 @@ List of implemented effects and their additional parameters:
     - percentChance, **int** : Chance out of 100 of the drop down to happen
 
 - type = **splash** : Useless move that makes no damage and simply displays 'No effect!' when used.
+- type = **teleport** : Teleport the pokemon - ends wild battle with a given success chance. Always fail in trainer battles.
 
 ---
 

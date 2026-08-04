@@ -1653,6 +1653,8 @@ PokemonMZ_Scene_PokemonMenu.prototype.initialize = function() {
     this._tradeSelecting = false;
     this._tradePokemon = null;
     this._tradeVariable = null;
+
+    this._usingMapMove = null;
 };
 PokemonMZ_Scene_PokemonMenu.prototype.prepare = function(type, data) {
 
@@ -1754,6 +1756,7 @@ PokemonMZ_Scene_PokemonMenu.prototype.createPokemonCommandWindow = function() {
     this._commandWindow.openness = 0;
     this._commandWindow.setHandler("ok", this.onSelectCommand.bind(this));
     this._commandWindow.setHandler("cancel", this.onCancelCommand.bind(this));
+    this._commandWindow.setHandler("move", this.onMoveCommand.bind(this));
     this.addWindow(this._commandWindow);
 };
 PokemonMZ_Scene_PokemonMenu.prototype.pokemonCommandWindowRect = function() {
@@ -1867,6 +1870,8 @@ PokemonMZ_Scene_PokemonMenu.prototype.onCancelPokemon = function() {
 };
 PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemonInfo = function() {
     const pokemon = this.selectedPokemon();
+    this._commandWindow.makeCommandList(pokemon);   // Recreate command list for map moves
+
     const rect = this._listWindow.itemRect(this._listWindow.index());
     const commandHeight = this._commandWindow.height;
     const newX = this._listWindow.x + rect.x + rect.width - this._commandWindow.width;
@@ -2023,7 +2028,9 @@ PokemonMZ_Scene_PokemonMenu.prototype.onMessageDisplayed = function() {
     }
 };
 PokemonMZ_Scene_PokemonMenu.prototype.onMessageTerminated = function() {
-    if (this._hasUsedIncreaseLevelItem) {
+    if (this._usingMapMove) {
+        this.onUsingMapMove();
+    } else if (this._hasUsedIncreaseLevelItem) {
         this.onUsingLevelUp();
     } else if (this._hasUsedLearnMoveItem) {
         this.onUsingTmHm();
@@ -2033,6 +2040,16 @@ PokemonMZ_Scene_PokemonMenu.prototype.onMessageTerminated = function() {
         this._listWindow.activate();
     }
 };
+PokemonMZ_Scene_PokemonMenu.prototype.onUsingMapMove = function() {
+    // Map Moves effect after message displayed
+    switch (this._usingMapMove) {
+    case "teleport":
+        SceneManager.pop();
+        SceneManager.pop();
+        $gameMap.PokemonMZ_useTeleport();
+    }
+};
+
 PokemonMZ_Scene_PokemonMenu.prototype.onUsingTmHm = function() {
     if (this._afterTextPhase == "forgotMove") {
         // Forgot a move
@@ -2120,6 +2137,35 @@ PokemonMZ_Scene_PokemonMenu.prototype.onCancelCommand = function() {
     this._commandWindow.close();
     this._listWindow.activate();
 };
+PokemonMZ_Scene_PokemonMenu.prototype.onMoveCommand = function() {
+    const mapEffect = this._commandWindow.currentExt();
+    switch(mapEffect) {
+    case "teleport":
+        this.useTeleportCommand();
+        break;
+    default:
+        this._commandWindow.close();
+        this._listWindow.activate();
+    }
+};
+PokemonMZ_Scene_PokemonMenu.prototype.useTeleportCommand = function() {
+    const pokemon = this.selectedPokemon();
+
+    if ($gameMap.PokemonMZ_isTeleportAllowed()) {
+        this._commandWindow.close();
+        this._listWindow.deactivate();
+        this._messageWindow.setText("Warp to the last Pokémon Center.");
+        this._messageWindow.startMessage();
+        this._usingMapMove = "teleport"
+    } else {
+        // Display message  indicating no teleport
+        const message = pokemon.name() + " can't use Teleport now."
+        this._commandWindow.close();
+        this._listWindow.deactivate();
+        this._messageWindow.setText(message);
+        this._messageWindow.startMessage();
+    }
+}
 PokemonMZ_Scene_PokemonMenu.prototype.onCancelStatus = function() {
     this._statusWindow.close();
     this._listWindow.activate();

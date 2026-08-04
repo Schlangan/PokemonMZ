@@ -1438,10 +1438,29 @@ PokemonMZ_Window_MenuPokemonCommand.prototype.initialize = function(rect, inBatt
     Window_Command.prototype.initialize.call(this, rect);
 
 };
-PokemonMZ_Window_MenuPokemonCommand.prototype.makeCommandList = function() {
+PokemonMZ_Window_MenuPokemonCommand.prototype.makeCommandList = function(pokemon) {
+    this.clearCommandList();
+
+    // Add menu commands on map
+    if (!this._inBattle && pokemon) {
+        const mapMoves = pokemon.mapMoves();
+        for (moveData of mapMoves) {
+            this.addCommand(moveData.name, "move", true, moveData.effect);
+        }
+    }
     const switchEnabled = this._inBattle == true || $gamePlayerTrainer.numPokemons() > 1;
     this.addCommand("Stats", "stats", true);
     this.addCommand("Switch", "switch", switchEnabled);
+    this.resize();
+};
+PokemonMZ_Window_MenuPokemonCommand.prototype.resize = function() {
+    const height = this.fittingHeight(this.maxItems());
+    this.move(this.x, this.y, this.width, height);
+    this.createContents();
+    Window_Selectable.prototype.refresh.call(this);
+    if (this.index() >= this.maxItems()) {
+        this.select(Math.max(0, this.maxItems() - 1));
+    }
 };
 
 // PokemonMZ_Window_MenuPokemonStatus
