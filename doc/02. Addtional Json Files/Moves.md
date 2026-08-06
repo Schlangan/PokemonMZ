@@ -19,6 +19,7 @@ moveData
 - noAccuracy, **bool**, *optional* : If set to **true**, the move won't do any accuracy calculation and always hit.
 - noVariance, **bool**, *optional* : If set to **true**, the move won't have any variance calculation and always do fixed damage.
 - cpuHigherEffectFailure, **bool**, *optional* : If set to **true**, the computer pokemon has an additional 25% chance of failing the effects of the move.
+- fixedDamage, **int**, *optional* : If the value is set, the move will strictly do that amount of damage, without variance, critical or type effectiveness.
 - effects, **Array:moveEffect** : An array of the **moveEffect**, definining all secondary effects of the move.
 - mapEffect: **string**, *optional* : Move usable on the map, with a given effect. Only **teleport** is available for now.
 - animation, **string**, *optional* : The animation string Id from the additional JSon file PokemonMZ_Animations.json.

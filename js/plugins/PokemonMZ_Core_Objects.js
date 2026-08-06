@@ -3305,6 +3305,8 @@ PokemonMZ_Game_Action.prototype.moveHit = function() {
 };
 PokemonMZ_Game_Action.prototype.moveCritical = function() { 
     if (this._moveData.noCritical) { return false; } // Non criticable move, like hurting from confusion
+    if (this._moveData.fixedDamage) { return false; } // Fixed damage move, no critical possible
+
     if (!this._moveData.power) { return false; }
     
     let highCritical = false;
@@ -3355,6 +3357,21 @@ PokemonMZ_Game_Action.prototype.moveDamageCategory = function() {
     return this.typeInfo(this._moveData.type).damage
 };
 PokemonMZ_Game_Action.prototype.moveDamage = function(critical) {
+    const debugLogging = {}
+
+    if (this._moveData.fixedDamage) { 
+        // Case of fixed damage moves such as dragon rage
+        if (PokemonMZ.debugLog) {
+            debugLogging.damage = this._moveData.fixedDamage
+            console.log({"PokemonMZ_Game_Action.moveDamage > ":debugLogging})
+        }
+        if (this._moveData.target == "opponent") {
+            return {"user":0, "opponent":this._moveData.fixedDamage, "efficiency":1.0};
+        } else if (this._moveData.target == "user") {
+            return {"user":this._moveData.fixedDamage, "opponent":0, "efficiency":1.0};
+        }
+    }
+
     const playerAtkBadgeBoosts = $gamePlayerTrainer.badgeBoosts(this._side, "attack");
     const playerDefBadgeBoosts = $gamePlayerTrainer.badgeBoosts(this._side, "defense");
 
@@ -3365,8 +3382,6 @@ PokemonMZ_Game_Action.prototype.moveDamage = function(critical) {
     let defenseModifiedStats = 0;
     let barrierAmplifier = 1;
     let destructionDivider = 1;
-
-    const debugLogging = {}
 
     switch(damageCategory) {
         case "physical":
