@@ -1105,6 +1105,14 @@ PokemonMZ_BattleManager.startPlayerInput = function() {
     if ($gameMessage.isBusy() || this._regularMessageWindow.isClosing()) { return; }
     const pokemon = this._playerChosenPokemon;
 
+    if (pokemon.isBerserk()) {
+        // In case of berserk, the player cannot select any action - the phase immediatly switch to 
+        // berserk action chosen if berserk turns remain
+        this.setPlayerMoveIndex(pokemon.berserkMoveIndex());
+        this.calculateComputerMove();
+        return;
+    }
+
     this._trainerInputWindow.open()
     this._trainerInputWindow.activate()
     this._staticMessageWindow.setText("What should " + pokemon.name() + " do?")
@@ -1970,6 +1978,13 @@ PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
     // Start with IA modifiers
     this._enemyUseItem = null;
 
+    // If enemy pokemon is berserk, it only selects that move
+    if (playerPokemon.isBerserk()) {
+        this._enemyMoveIndex = enemyPokemon.berserkMoveIndex();
+        this.calculateBattleActions();
+        return;
+    }
+
     if (trainer) {
         const modifiers = trainer.iaModifiers();
         if (modifiers) {
@@ -1984,7 +1999,7 @@ PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
         return;
     }
 
-    // If using biding move, same move is still used if opponent is bound
+    // If using binding move, same move is still used if opponent is bound
     if (playerPokemon.isBound()) {
         this._enemyMoveIndex = enemyPokemon.lastMoveIndex();
         this.calculateBattleActions();
@@ -1997,9 +2012,6 @@ PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
         this.calculateBattleActions();
         return;
     }
-
-    // If biding, next move is the same if enemy still bound
-    
 
     // Define a list of possible move indexes and default scoring
     let scoringTable = [];
@@ -2055,7 +2067,7 @@ PokemonMZ_BattleManager.adjustScoringForBasic = function(scoringTable) {
         if (enemyPokemon.isMoveStatusOnly(index) && playerPokemon.hasStatus()) {
             scoringTable[i].score--;
         }
-        if (enemyPokemon.isMoveSeedOnly(index) && playerPokemon.isSeed()) {
+        if (enemyPokemon.isMoveSeedOnly(index) && playerPokemon.isSeeded()) {
             scoringTable[i].score--;
         }
         if (enemyPokemon.isMoveConfuseOnly(index) && playerPokemon.isConfused()) {
@@ -2279,6 +2291,8 @@ PokemonMZ_BattleManager.startMove = function(side) {
             this._currentAction.addResultSteps(["autotext","isConfused",this._currentAction.side()])
             if (Math.random() < 0.5) {
                 if (pokemon.isBiding()) { pokemon.endBide() };  // Confusion interrupts bide
+                if (pokemon.isBerserk()) { pokemon.unBerserk() } // Confusion hurt interrupts berserk moves
+
                 this._currentAction.addResultSteps(["autotext","confusedHurt",this._currentAction.side()])
                 move = pokemon.moveSelfHurtConfusion();
                 this._currentAction.setMove(move.id, pokemon);
@@ -2295,6 +2309,7 @@ PokemonMZ_BattleManager.startMove = function(side) {
     // Calculate paralysis
     if (pokemon.isParalyzed() && Math.random() < 0.25) {
         if (pokemon.isBiding()) { pokemon.endBide() };  // Paralysis interrupts bide
+        if (pokemon.isBerserk()) { pokemon.unBerserk() } // Paralysis interrupts berserk moves
         this._currentAction.addResultSteps(["animateUserEffect", this._currentAction.userBattleSprite(), "paralyzed"])
         this._currentAction.addResultSteps(["autotext","isParalyzed",this._currentAction.side()])
         this.changePhase(nextPhase);
@@ -2337,6 +2352,11 @@ PokemonMZ_BattleManager.startMove = function(side) {
         skipMessage = true;
     }
     if (oppositePokemon.isBound() && pokemon.isMoveBinding(moveIndex)) {
+        skipPP = true;
+    }
+    if (pokemon.isBerserk()) {
+        // No PP consumption for Berserk move once they have been launched, no message
+        skipMessage = true;
         skipPP = true;
     }
 
@@ -2495,6 +2515,14 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
             case "keepBindingPokemon":
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["keepBind", step[1]];
+                break;
+            case "berserkPokemon":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["berserk", step[1], step[2], step[3]];
+                break;
+            case "advanceBerserkPokemonTurn":
+                this.changeSubPhase("advanceBerserkPokemonTurn");
+                this._subPhaseParams = [step[1]];
                 break;
             case "burnHeal":
                 this.changeSubPhase("removePokemonStatus");
@@ -3063,6 +3091,12 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
         case "disabled":
             target.disableMove(this._subPhaseParams[2], this._subPhaseParams[3]);
             break;
+        case "berserk":
+            const berserkMinTurns = this._subPhaseParams[2] - 1;
+            const berserkMaxTurns = this._subPhaseParams[3] - 1;
+            const moveIndex = target.lastMoveIndex();
+            target.berserk(berserkMinTurns, berserkMaxTurns, moveIndex, true);
+            break;
     }
     this.clearSubPhase();
 };
@@ -3327,6 +3361,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return "Sucked health from " + prefix + pokemon.name() + "!"
     case "ranAway":
         return prefix + pokemon.name() + " ran from battle!";
+    case "thrashing":
+        return prefix + pokemon.name() + "'s thrashing about!"
     }
     return ""
 };

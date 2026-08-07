@@ -3871,6 +3871,12 @@ PokemonMZ_Scene_Battle.prototype.onSelectForgetPokemonMove = function() {
         const moveName = pokemon.moveNameFromStringId(move);
         const forgottenMove = pokemon.moveNameFromIndex(index);
         pokemon.replaceMoveAtIndexBy(index, move);
+
+        if (pokemon.isBerserk() && pokemon.berserkMoveIndex() == index) {
+            // Forgetting a berserk move while currently under this move's berserk instantly stops the berserk effect.
+            pokemon.unBerserk();
+        }
+
         const message = "1, 2 and... Poof! " + pokemon.name() + " forgot " + forgottenMove + "! And..."
         $gameMessage.add(message)
         PokemonMZ_BattleManager.changePhase("finishReplacingMove");
