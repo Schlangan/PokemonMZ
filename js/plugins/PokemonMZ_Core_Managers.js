@@ -2662,13 +2662,13 @@ PokemonMZ_BattleManager.updateAnimation = function() {
                 break;
             case "hideSprite":
                 if (this._animationData.side == "player" && actionData.target == "user") {
-                    this._animationData.userSprite.opacity = 0;
+                    this._animationData.userSprite.visible = false;
                 } else if (this._animationData.side == "player" && actionData.target == "opponent") {
-                    this._animationData.enemySprite.opacity = 0;
+                    this._animationData.enemySprite.visible = false;
                 } else if (this._animationData.side == "enemy" && actionData.target == "user") {
-                    this._animationData.userSprite.opacity = 0;
+                    this._animationData.userSprite.visible = false;
                 } else if (this._animationData.side == "enemy" && actionData.target == "opponent") {
-                    this._animationData.enemySprite.opacity = 0;
+                    this._animationData.enemySprite.visible = false;
                 }
                 break;
             }

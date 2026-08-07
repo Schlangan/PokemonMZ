@@ -2887,8 +2887,18 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
     let enemyWillFaint = false;
     let userWillFaint = false;
 
+    // Play animations always playing whether success or not
+    if (this._moveData.animationAlways) {
+        if (this._moveData.target == "opponent") {
+            this._resultSteps.push(["hitAnimation", this._moveData.animationAlways, this._user._battleSprite, this._opponent._battleSprite, this.side()]);
+        } else if (this._moveData.target == "user") {
+            this._resultSteps.push(["hitAnimation", this._moveData.animationAlways, this._user._battleSprite, this._user._battleSprite, this.side()]);
+        }
+    }
+
     // Hit calculation is only required for the first hit
     hit = this.moveHit() || this._moveData.target == "user";
+
 
     if (hit || this._moveExecutedHits > 0) {
         if (this._moveData.target == "opponent") {
@@ -2899,7 +2909,6 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
         
         crit = this.moveCritical();
         
-
         const damage = this.moveDamage(crit);
         userDamage = damage.user;
         opponentDamage = damage.opponent
@@ -2989,13 +2998,34 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
         } else {
             this._moveRemainingHits = 0;
             if (efficiency == 0) {
-               this._resultSteps.push(["autotext","noeffect",this.oppositeSide()]);
+                this._resultSteps.push(["autotext","noeffect",this.oppositeSide()]);
+                // Usually no damage does no effect, except if effect is forced; for example self-destruct
+                if (this._moveData.alwaysEffects) {
+                    const effectsResult = this.calculateMoveEffects({});
+                    if (effectsResult.userDamage) {
+                        this._userEvolvingHp -= effectsResult.userDamage
+                        if (this._userEvolvingHp <= 0) {
+                            userWillFaint = true;
+                        }
+                    }
+                }
             } 
-            
         }
     } else {
         this._moveRemainingHits = 0;
         this._resultSteps.push(["autotext","missed",this.side()])
+
+        // Usually missed move does no effect, except if effect is forced; for example self-destruct
+        if (this._moveData.alwaysEffects) {
+            const effectsResult = this.calculateMoveEffects({});
+            if (effectsResult.userDamage) {
+                this._userEvolvingHp -= effectsResult.userDamage
+                if (this._userEvolvingHp <= 0) {
+                    userWillFaint = true;
+                }
+            }
+        }
+
     }
 
     if (this._moveRemainingHits == 0) {
@@ -3015,6 +3045,16 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
     }
 };
 PokemonMZ_Game_Action.prototype.calculateMoveStatus = function() { 
+
+    // Play animations always playing whether success or not
+    if (this._moveData.animationAlways) {
+        if (this._moveData.target == "opponent") {
+            this._resultSteps.push(["hitAnimation", this._moveData.animationAlways, this._user._battleSprite, this._opponent._battleSprite, this.side()]);
+        } else if (this._moveData.target == "user") {
+            this._resultSteps.push(["hitAnimation", this._moveData.animationAlways, this._user._battleSprite, this._user._battleSprite, this.side()]);
+        }
+    }
+
     hit = this.moveHit() || this._moveData.target == "user";
 
     if (this.additionalFailure()) {
@@ -3233,6 +3273,11 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
             effectResults = this.effect_recoilPercent(battleData, effect, effectResults);
         }
         break;
+    case "faintUser":
+        if (!this.isMoveEffectExcepted(effect, this._user)) {
+            effectResults = this.effect_faintUser(battleData, effect, effectResults);
+        }
+        break;
     case "forceSwitchOut":
         effectResults = this.effect_forceSwitchOut(battleData, effect, effectResults);
         break;
@@ -3258,13 +3303,13 @@ PokemonMZ_Game_Action.prototype.calculateStatusEffects = function(userHp, oppone
     let userRemainingHp = userHp;
     let oppponentRemainingHp = opponentHp;
 
-    if (this._user.isBurned() && !this._user.isFainted() && !this._userStatusRemoved.includes("burn")) {
+    if (this._user.isBurned() && userRemainingHp > 0 && !this._userStatusRemoved.includes("burn")) {
         userRemainingHp = this.calculateBurnEffect(userRemainingHp);
     }
-    if (this._user.isPoisoned() && !this._user.isFainted() && !this._userStatusRemoved.includes("poison")) {
+    if (this._user.isPoisoned() && userRemainingHp > 0 && !this._userStatusRemoved.includes("poison")) {
         userRemainingHp = this.calculatePoisonEffect(userRemainingHp);
     }
-    if (this._user.isSeeded() && !this._user.isFainted() && !this._opponent.isFainted()) {
+    if (this._user.isSeeded() && userRemainingHp > 0 && oppponentRemainingHp > 0) {
         userRemainingHp = this.calculateSeedDamageEffect(userRemainingHp);
         opponentRemainingHp = this.calculateSeedHealEffect(oppponentRemainingHp, userRemainingHp <= 0);
     }
@@ -3381,7 +3426,11 @@ PokemonMZ_Game_Action.prototype.moveDamage = function(critical) {
     let defenseBaseStat = 0;
     let defenseModifiedStats = 0;
     let barrierAmplifier = 1;
-    let destructionDivider = 1;
+    let targetDefenseDivider = 1.0;
+
+    if (this._moveData.targetDefenseDivider) {
+        targetDefenseDivider = this._moveData.targetDefenseDivider;
+    }
 
     switch(damageCategory) {
         case "physical":
@@ -3426,14 +3475,14 @@ PokemonMZ_Game_Action.prototype.moveDamage = function(critical) {
 
     const effectiveAttack = (critical ? attackBaseStat : attackModifiedStats);
     const effectiveDefense = Math.max(
-        (critical ? defenseBaseStat : defenseModifiedStats) * barrierAmplifier / destructionDivider, 
+        (critical ? defenseBaseStat : defenseModifiedStats) * barrierAmplifier / targetDefenseDivider, 
         1
     );
 
     debugLogging.attackStats.effective = effectiveAttack;
     debugLogging.defenseStats.effective = effectiveDefense;
     debugLogging.defenseStats.barrierAmplifier = barrierAmplifier;
-    debugLogging.defenseStats.destructionDivider = destructionDivider;
+    debugLogging.defenseStats.targetDefenseDivider = targetDefenseDivider;
 
     const criticalCoef = critical ? 2.0 : 1.0;
     const moveType = this._moveData.type
@@ -3903,6 +3952,16 @@ PokemonMZ_Game_Action.prototype.effect_recoilPercent = function(battleData, effe
         this._resultSteps.push(["autotext","hitRecoil",this.side()])
         this._resultSteps.push(["damageUser",damageDealt]);
     }
+    effectResults.userDamage = damageDealt;
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_faintUser = function(battleData, effect, effectResults) {
+    const damageDealt = this.user().hp();
+    if (PokemonMZ.debugLog) {
+        console.log({"PokemonMZ_Game_Action.effect_faintUser > ":{"damage":damageDealt}})
+    }
+    effectResults.success = true;
+    this._resultSteps.push(["damageUser",damageDealt]);
     effectResults.userDamage = damageDealt;
     return effectResults;
 };

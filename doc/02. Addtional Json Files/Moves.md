@@ -14,6 +14,7 @@ moveData
 - power, **int**, *optional* : The damage power of the move. Parameter isn't needed for status moves.
 - accuracy, **int** : The accuracy out of 100 for the move
 - priority, **int** : The priority of the move (ex: 1 for quickAttack)
+- targetDefenseDivider, **float**, *optional* : The division of the target defense during attack. (ex 2.0 for self-destruct)
 
 - noCritical, **bool**, *optional* : If set to **true**, the move will never do critical damage.
 - noAccuracy, **bool**, *optional* : If set to **true**, the move won't do any accuracy calculation and always hit.
@@ -21,8 +22,10 @@ moveData
 - cpuHigherEffectFailure, **bool**, *optional* : If set to **true**, the computer pokemon has an additional 25% chance of failing the effects of the move.
 - fixedDamage, **int**, *optional* : If the value is set, the move will strictly do that amount of damage, without variance, critical or type effectiveness.
 - effects, **Array:moveEffect** : An array of the **moveEffect**, definining all secondary effects of the move.
+- alwaysEffects, **bool**, *optional* : If the value is set to true, the effects of the move will always happen, even if the move missed or did no damage due to immunity.
 - mapEffect: **string**, *optional* : Move usable on the map, with a given effect. Only **teleport** is available for now.
-- animation, **string**, *optional* : The animation string Id from the additional JSon file PokemonMZ_Animations.json.
+- animationAlways, **string**, *optional* : The animation string Id from the additional JSon file PokemonMZ_Animations.json when the move is launched, whether it hits or not.
+- animationHit, **string**, *optional* : The animation string Id from the additional JSon file PokemonMZ_Animations.json when the move hits.
 
 ---
 
