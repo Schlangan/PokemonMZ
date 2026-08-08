@@ -21,6 +21,9 @@ moveData
 - noVariance, **bool**, *optional* : If set to **true**, the move won't have any variance calculation and always do fixed damage.
 - cpuHigherEffectFailure, **bool**, *optional* : If set to **true**, the computer pokemon has an additional 25% chance of failing the effects of the move.
 - fixedDamage, **int**, *optional* : If the value is set, the move will strictly do that amount of damage, without variance, critical or type effectiveness.
+
+- forbidMirrorMove, **bool**, *optional* : If the value is set to true, the move cannot be reproduced by mirror move.
+
 - effects, **Array:moveEffect** : An array of the **moveEffect**, definining all secondary effects of the move.
 - alwaysEffects, **bool**, *optional* : If the value is set to true, the effects of the move will always happen, even if the move missed or did no damage due to immunity.
 - mapEffect: **string**, *optional* : Move usable on the map, with a given effect. Only **teleport** is available for now.
@@ -106,6 +109,12 @@ List of implemented effects and their additional parameters:
 
 - type = **splash** : Useless move that makes no damage and simply displays 'No effect!' when used.
 - type = **teleport** : Teleport the pokemon - ends wild battle with a given success chance. Always fail in trainer battles.
+- type = **mirrorMove** : Reproduce the last move the opponent launched. The move will fail in the following cases :
+    - The user hasn't seen the opponent send a move yet
+    - The opponent used Mirror Move
+    - The opponent is frozen or asleep
+    - The opponent switched out
+    - The opponent's trainer used an item
 
 ---
 

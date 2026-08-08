@@ -965,6 +965,12 @@ PokemonMZ_BattleManager.enemySendNextPokemon = function() {
     this.enemySendPokemon();
 };
 PokemonMZ_BattleManager.enemySendPokemon = function() {
+    // When enemy sends a pokemon, reset last seen move from player
+    // Mirror move fails if launched after switch
+    if (this._playerChosenPokemon) {
+        this._playerChosenPokemon.clearLastSeenEnemyMove();
+    }
+
     // Change sprite
     this._enemyTeamStatusWindow.hide();
     const pokemonSprite = this._spriteset.enemyPokemonSprite();
@@ -1037,6 +1043,13 @@ PokemonMZ_BattleManager.playerSendFirstPokemon = function() {
     this.playerSendPokemon();
 };
 PokemonMZ_BattleManager.playerSendPokemon = function() {
+    // When player sends a pokemon, reset last seen move from enemy
+    // Mirror move fails if launched after switch
+    if (this._enemyChosenPokemon) {
+        this._enemyChosenPokemon.clearLastSeenEnemyMove();
+    }
+
+
     this.markBattledPokemons();
 
     const pokemonSprite = this._spriteset.playerPokemonSprite();
@@ -2078,6 +2091,7 @@ PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
         const randomIndex = Math.randomInt(choosableMoves.length);
         this._enemyMoveIndex = choosableMoves[randomIndex].index;
         enemyPokemon.setLastMoveIndex(this._enemyMoveIndex);
+        enemyPokemon.setLastMoveUsed(enemyPokemon.move(this._enemyMoveIndex));
     }
 
     // Determine skill order
@@ -2267,13 +2281,14 @@ PokemonMZ_BattleManager.startMove = function(side) {
         moveIndex = this._enemyMoveIndex;
     }
 
+    // Check if struggle has been launched
     if (moveIndex == -1) {
         move = pokemon.moveStruggle();
     } else {
         move = pokemon.move(moveIndex);
     }
 
-    const moveName = pokemon.moveName(move)
+    let moveName = pokemon.moveName(move)
     this._currentAction = new PokemonMZ_Game_Action(pokemon, side);
 
     // If bound, only burn and poison are calculated, the pokemon does nothing
@@ -2287,6 +2302,10 @@ PokemonMZ_BattleManager.startMove = function(side) {
     // Calculate sleep
     // Gen 1 : doesn't move when wakes up
     if (pokemon.isAsleep()) {
+
+        // Sleeping sets to -1 the last move so nothing can be copied
+        oppositePokemon.clearLastSeenEnemyMove();
+
         pokemon.nextSleepTurn();
         let message = ""
         if (pokemon.isAsleep()) {
@@ -2343,6 +2362,9 @@ PokemonMZ_BattleManager.startMove = function(side) {
 
     // Calculate freeze
     if (pokemon.isFrozen()) {
+        // Sleeping sets to -1 the last move so nothing can be copied
+        oppositePokemon.clearLastSeenEnemyMove();
+
         this._currentAction.addResultSteps(["animateUserEffect", this._currentAction.userBattleSprite(), "frozen"])
         this._currentAction.addResultSteps(["autotext","isFrozen",this._currentAction.side()])
         this.changePhase(nextPhase);
@@ -2365,27 +2387,77 @@ PokemonMZ_BattleManager.startMove = function(side) {
         }
     }
 
+
+    // Special skips initialization
+    let skipPP = false;
+    let skipMessage = false;
+
+    // Check if Mirror Move is used
+    if (pokemon.isMoveMirrorMove(moveIndex)) {
+        let keepPreviousMirror = false;
+
+        if (pokemon.isBiding() || oppositePokemon.isBound() || pokemon.isBerserk() || pokemon.isRaging()) {
+            keepPreviousMirror = true;
+        }
+
+        if (keepPreviousMirror) {
+            move = pokemon.lastMoveUsed();
+            moveName = pokemon.moveName(move);
+            skipPP = true;
+        } else {
+            // Add text for use of mirror move 
+            this._currentAction.addResultSteps(["autotext","useMove",this._currentAction.side(),moveName])
+            if (pokemon.isLastSeenEnemyMoveMirrorable()) {
+                pokemon.consumePP(moveIndex);
+                move = pokemon.moveMirrored();
+                pokemon.setLastMoveUsed(move);
+                moveName = pokemon.moveName(move);
+                skipPP = true;
+            } else {
+                this._currentAction.addResultSteps(["waittext","mirrorMoveFailed",this._currentAction.side()])
+                this.changePhase(nextPhase);
+                return;
+            }
+        }
+    }
+
     // Get battle result index to insert text
     let battleIndex = this._currentAction.resultStepsLength();
 
-    // Special skips
-    let skipPP = false;
-    let skipMessage = false;
-    if (pokemon.isBiding() && pokemon.isMoveBide(moveIndex)) {
+    if (pokemon.isBiding()) {
         // No PP consumption for bide once it has been launched
-        skipPP = true;
-        skipMessage = true;
+        if (pokemon.isMoveBide(moveIndex)) {
+            skipPP = true;
+            skipMessage = true;
+        } else if (pokemon.isMoveMirrorMove(moveIndex)) {
+            move = pokemon.lastMoveUsed();
+            skipPP = true;
+            skipMessage = true;
+        }
+    }    
+    if (oppositePokemon.isBound()) {
+        if (pokemon.isMoveBinding(moveIndex)) {
+            skipPP = true;
+        } else if (pokemon.isMoveMirrorMove(moveIndex)) {
+            move = pokemon.lastMoveUsed();
+            skipPP = true;
+        }
+
     }
-    if (oppositePokemon.isBound() && pokemon.isMoveBinding(moveIndex)) {
-        skipPP = true;
-    }
+
     if (pokemon.isBerserk()) {
         // No PP consumption for Berserk move once they have been launched, no message
+        if (pokemon.isMoveMirrorMove(moveIndex)) {
+            move = pokemon.lastMoveUsed();
+        }
         skipMessage = true;
         skipPP = true;
     }
     if (pokemon.isRaging()) {
         // No PP consumption for Rage once launched. However standard message is left
+        if (pokemon.isMoveMirrorMove(moveIndex)) {
+            move = pokemon.lastMoveUsed();
+        }
         skipPP = true;
     }
 
@@ -2406,10 +2478,16 @@ PokemonMZ_BattleManager.startMove = function(side) {
     if (!skipMessage) {
         if (oppositePokemon.isBound() && pokemon.isMoveBinding(moveIndex)) {
             this._currentAction.insertResultStepsAt(["autotext","attackContinues",this._currentAction.side()], battleIndex)
+        } else if (oppositePokemon.isBound() && (pokemon.isMoveMirrorMove(moveIndex))) {
+            this._currentAction.insertResultStepsAt(["autotext","attackContinues",this._currentAction.side()], battleIndex)
         } else {
             this._currentAction.insertResultStepsAt(["autotext","useMove",this._currentAction.side(),moveName], battleIndex)
         }
     }
+
+    // Sets used move here for mirror move, mimic
+    oppositePokemon.setLastSeenEnemyMove(move.id);
+
     this.changePhase(nextPhase);
 };
 PokemonMZ_BattleManager.startPlayerMove = function() {
@@ -2433,11 +2511,19 @@ PokemonMZ_BattleManager.endPlayerItem = function() {
     // Called to deal with after effects such as burn, and so on
     this._playerPokemonStatusWindow.refresh(true);
     const pokemon = this._playerChosenPokemon;
+
+    // Clear enemy pokemon last move seen, so mirror move will fail
+    const enemyPokemon = this._enemyChosenPokemon;
+    enemyPokemon.clearLastSeenEnemyMove();
+
     this._currentAction = new PokemonMZ_Game_Action(pokemon, "player");
     this._currentAction.calculateStatusEffects(pokemon.hp());
     this.changePhase("playerResolveActionSteps");
 };
 PokemonMZ_BattleManager.startEnemyItem = function() {
+    // Clear player pokemon last move seen, so mirror move will fail
+    this._playerChosenPokemon.clearLastSeenEnemyMove();
+
     this._enemyChosenPokemon.addReceivedItem(this._enemyUseItem);
     this._currentAction = new PokemonMZ_Game_Action(this._enemyChosenPokemon, "enemy");
     this._currentAction.setItem(this._enemyUseItem)
@@ -3412,6 +3498,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + "'s thrashing about!"
     case "rageBuilding":
         return prefix + pokemon.name() + "'s rage is building!"
+    case "mirrorMoveFailed":
+        return "The Mirror Move failed!"
     }
     return ""
 };

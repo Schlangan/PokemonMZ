@@ -1119,6 +1119,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._damageDealt = 0;
     this._movesLearnWaitlist = []
     this._lastMoveIndex = 0;
+    this._lastMoveUsed = null;
     this.resetStageModifiers();
     this.randomizeDv();
     this.setDefaultMoves();
@@ -1151,6 +1152,8 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._hasFocusEnergy = false;
     this._berserkMoveIndex = -1;
     this._rageMoveIndex = -1;
+
+    this._lastSeenEnemyMove = null;
 
     this._receivedItems = [];
 
@@ -1217,10 +1220,43 @@ PokemonMZ_Game_Pokemon.prototype.battleSpriteMaxScale = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.lastMoveIndex = function() {
     return this._lastMoveIndex;
-}
+};
+PokemonMZ_Game_Pokemon.prototype.lastMoveUsed = function() {
+    return this._lastMoveUsed;
+};
 PokemonMZ_Game_Pokemon.prototype.setLastMoveIndex = function(index) {
     this._lastMoveIndex = index;
-}
+};
+PokemonMZ_Game_Pokemon.prototype.setLastMoveUsed = function(move) {
+    this._lastMoveUsed = move;
+};
+PokemonMZ_Game_Pokemon.prototype.lastSeenEnemyMove = function() {
+    return this._lastSeenEnemyMove;
+};
+PokemonMZ_Game_Pokemon.prototype.clearLastSeenEnemyMove = function() {
+    this._lastSeenEnemyMove = null;
+};
+PokemonMZ_Game_Pokemon.prototype.clearLastMoveUsed = function() {
+    this._lastMoveUsed = null;
+};
+PokemonMZ_Game_Pokemon.prototype.setLastSeenEnemyMove = function(moveStringId) {
+    this._lastSeenEnemyMove = moveStringId;
+};
+PokemonMZ_Game_Pokemon.prototype.isLastSeenEnemyMoveMirrorable = function() {
+    if (!this._lastSeenEnemyMove || this._lastSeenEnemyMove == null) { 
+        // Cannot mirror if no move has been seen
+        return false;
+    }
+
+    const moveData = this.moveDataFromStringId(this._lastSeenEnemyMove)
+    if (moveData.forbidMirrorMove) {
+        // Cannot mirror forbidden moves
+        return false;
+    }
+    return true;
+};
+
+
 PokemonMZ_Game_Pokemon.prototype.exp = function() {
     return this._exp;
 };
@@ -1502,6 +1538,9 @@ PokemonMZ_Game_Pokemon.prototype.hasAnyMoveUseable = function() {
 PokemonMZ_Game_Pokemon.prototype.moveStruggle = function() {
     return {"id":"struggle","pp":0, "ppup":0}
 };
+PokemonMZ_Game_Pokemon.prototype.moveMirrored = function() {
+    return {"id":this._lastSeenEnemyMove,"pp":1, "ppup":0}
+};
 PokemonMZ_Game_Pokemon.prototype.moveSelfHurtConfusion = function() {
     return {"id":"selfHurtConfusion","pp":0, "ppup":0}
 };
@@ -1568,11 +1607,25 @@ PokemonMZ_Game_Pokemon.prototype.isMoveBide = function(index) {
     }
     return false;
 };
+
 PokemonMZ_Game_Pokemon.prototype.isMoveBinding = function(index) {
     // Returns if a move only sets a status to the target
     const move = this.moveDataFromIndex(index);
     for (const effect of move.effects) {
         if (effect.type == "bindTarget") { return true; }
+    }
+    return false;
+};
+PokemonMZ_Game_Pokemon.prototype.isMoveMirrorMove = function(index) {
+    // Returns if the move at index is mirror move
+    if (index == -1 ) {
+        // Struggle cannot be mirror move
+        return false;
+    }
+
+    const move = this.moveDataFromIndex(index);
+    for (const effect of move.effects) {
+        if (effect.type == "mirrorMove") { return true; }
     }
     return false;
 };
@@ -1595,6 +1648,12 @@ PokemonMZ_Game_Pokemon.prototype.moveDataFromIndex = function(index) {
         } else {
             return "????"
         }
+    }
+};
+PokemonMZ_Game_Pokemon.prototype.moveDataFromStringId = function(stringId) {
+    if (Object.keys($dataSkillsIndex).includes(stringId)) {
+        const skillIndex = $dataSkillsIndex[stringId];
+        return $dataSkills[skillIndex].pkmz_data;
     }
 };
 PokemonMZ_Game_Pokemon.prototype.addReceivedItem = function(itemStrId) {
@@ -2049,6 +2108,8 @@ PokemonMZ_Game_Pokemon.prototype.cleanAfterFaint = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.resetStageModifiers();
+    this.clearLastSeenEnemyMove();
+    this.clearLastMoveUsed();
     this.unflinch();
     this.unseed();
     this.unconfuse();

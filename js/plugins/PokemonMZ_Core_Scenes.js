@@ -3683,7 +3683,9 @@ PokemonMZ_Scene_Battle.prototype.onSelectPokemonMove = function() {
 
     if (moveUseability == "") {
         const pokemon = PokemonMZ_BattleManager.playerPokemon();
+        const enemyPokemon = PokemonMZ_BattleManager.enemyPokemon();
         pokemon.setLastMoveIndex(moveIndex);
+        pokemon.setLastMoveUsed(pokemon.move(moveIndex));
         this._pokemonCommandWindow.close();
         this._pokemonMovesWindow.close();
         this._playerInputWindow.close();
