@@ -1135,6 +1135,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._isBound = false;
     this._isBerserk = false;
     this._isRaging = false;
+    this._isMinimized = false;
 
     this._hasMoveDisabled = false;
     this._disabledMoveIndex = -1;
@@ -1206,6 +1207,13 @@ PokemonMZ_Game_Pokemon.prototype.clearBattleSprite = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.battleImageId = function() { // TODO substitute or morph
     return this.id();
+};
+PokemonMZ_Game_Pokemon.prototype.battleSpriteMaxScale = function() {
+    // Return sprite max scale according to current effect
+    if (this._isMinimized) {
+        return 0.4;
+    }
+    return 1.0;
 };
 PokemonMZ_Game_Pokemon.prototype.lastMoveIndex = function() {
     return this._lastMoveIndex;
@@ -2050,6 +2058,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.removeDisable();
     this.unBerserk();
     this.unRage();
+    this.unMinimize();
 };
 PokemonMZ_Game_Pokemon.prototype.removeFinishedStatuses = function() {
     // Remove statuses that disappear at the beginning of the next turn
@@ -2099,6 +2108,9 @@ PokemonMZ_Game_Pokemon.prototype.isBerserk = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.isRaging = function() {
     return this._isRaging;
+};
+PokemonMZ_Game_Pokemon.prototype.isMinimized = function() {
+    return this._isMinimized;
 };
 PokemonMZ_Game_Pokemon.prototype.nextConfusionTurn = function() {
     this._turnsConfusion--;
@@ -2205,6 +2217,13 @@ PokemonMZ_Game_Pokemon.prototype.isRageable = function() {
     }
     return true;
 };
+PokemonMZ_Game_Pokemon.prototype.isMinimizeable = function() {
+    // Cannot minimize fainted pokemon
+    if (this.isMinimized() || this.isFainted()) {
+        return false;
+    }
+    return true;
+};
 PokemonMZ_Game_Pokemon.prototype.canBeDisabled = function() {
     // Cannot disable FNT pokemon, pokemon already under Disable, or pokemon with no PP left
     if (this.isFainted() || this.hasAnyDisabledMove() || !this.hasAnyMoveUseable()) {
@@ -2299,6 +2318,11 @@ PokemonMZ_Game_Pokemon.prototype.rage = function(moveIndex, force) {
         this._rageMoveIndex = moveIndex;
     }
 };
+PokemonMZ_Game_Pokemon.prototype.minimize = function(force) {
+    if (this.isMinimizeable() || force) {
+        this._isMinimized = true;
+    }
+};
 PokemonMZ_Game_Pokemon.prototype.keepBinding = function() {
     this._turnsBound--;
 };
@@ -2340,7 +2364,6 @@ PokemonMZ_Game_Pokemon.prototype.reduceBerserkTurn = function() {
         this.confuse(true)
     }
 };
-
 PokemonMZ_Game_Pokemon.prototype.unburn = function() {
     if (this.isBurned()) {
         this._isBurned = false;
@@ -2405,6 +2428,11 @@ PokemonMZ_Game_Pokemon.prototype.unRage = function() {
     if (this.isRaging()) {
         this._isRaging = false;
         this._rageMoveIndex = -1;
+    }
+};
+PokemonMZ_Game_Pokemon.prototype.unMinimize = function() {
+    if (this.isMinimized()) {
+        this._isMinimized = false;
     }
 };
 PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolution = function(evolutionMode, ext1) {
@@ -3388,6 +3416,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
     case "rage":
         effectResults = this.effect_rageUser(battleData, effect, effectResults);
         break;
+    case "minimizeUser":
+        effectResults = this.effect_minimizeUser(battleData, effect, effectResults);
+        break;
 
     }
     return effectResults;
@@ -4195,6 +4226,17 @@ PokemonMZ_Game_Action.prototype.effect_rageUser = function(battleData, effect, e
         if (this._user.isRageable()) {
             effectResults.success = true;
             this._resultSteps.push(["ragePokemon",this._user])
+        };
+    } else {
+        effectResults.success = true;
+    }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_minimizeUser = function(battleData, effect, effectResults) {
+    if (!this._user.isMinimized()) {
+        if (this._user.isMinimizeable()) {
+            effectResults.success = true;
+            this._resultSteps.push(["minimizePokemon",this._user])
         };
     } else {
         effectResults.success = true;

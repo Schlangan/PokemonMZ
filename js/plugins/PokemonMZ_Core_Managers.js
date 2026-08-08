@@ -985,7 +985,9 @@ PokemonMZ_BattleManager.enemySendPokemon = function() {
 };
 PokemonMZ_BattleManager.enemyPokemonAppear = function() {
     const pokemonSprite = this._spriteset.enemyPokemonSprite();
-    if (pokemonSprite.scale.x < 1.0) {
+    const maxScale = this._enemyChosenPokemon.battleSpriteMaxScale();
+
+    if (pokemonSprite.scale.x < maxScale) {
         pokemonSprite.modifyScale(0.1);
     } else {
         this._enemyPokemonStatusWindow.show();
@@ -1056,6 +1058,7 @@ PokemonMZ_BattleManager.playerPokemonRecall = function() {
     if ($gameMessage.isBusy()) { return; }
     
     const pokemon = this._playerChosenPokemon;
+    const maxScale = pokemon.battleSpriteMaxScale();
     pokemon.removeTemporaryStatuses();
 
     // Remove bind on enemy pokemon if recalling
@@ -1065,7 +1068,7 @@ PokemonMZ_BattleManager.playerPokemonRecall = function() {
 
     const pokemonSprite = this._spriteset.playerPokemonSprite();
 
-    if (pokemonSprite.scale.x == 1.0) {
+    if (pokemonSprite.scale.x == maxScale) {
         this._playerPokemonStatusWindow.hide();
     } else if (pokemonSprite.scale.x > 0) {
         pokemonSprite.modifyScale(-0.1);
@@ -1077,8 +1080,9 @@ PokemonMZ_BattleManager.playerPokemonRecall = function() {
     }
 };
 PokemonMZ_BattleManager.playerPokemonAppear = function() {
+    const maxScale = this._playerChosenPokemon.battleSpriteMaxScale();
     const pokemonSprite = this._spriteset.playerPokemonSprite();
-    if (pokemonSprite.scale.x < 1.0) {
+    if (pokemonSprite.scale.x < maxScale) {
         pokemonSprite.modifyScale(0.1);
     } else {
         this._playerPokemonStatusWindow.show();
@@ -2543,6 +2547,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["rage", step[1]];
                 break;
+            case "minimizePokemon":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["minimize", step[1]];
+                break;
             case "advanceBerserkPokemonTurn":
                 this.changeSubPhase("advanceBerserkPokemonTurn");
                 this._subPhaseParams = [step[1]];
@@ -3123,6 +3131,11 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
         case "rage":
             target.rage(moveIndex, true);
             break;
+        case "minimize":
+            target.minimize();
+            this._spriteset.playerPokemonSprite().setScale(this._playerChosenPokemon.battleSpriteMaxScale());
+            this._spriteset.enemyPokemonSprite().setScale(this._enemyChosenPokemon.battleSpriteMaxScale());
+            break;
     }
     this.clearSubPhase();
 };
@@ -3290,7 +3303,7 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
     case "defenseRose":
         return prefix + pokemon.name() + "'s defense rose!";
     case "evasionRose":
-        return prefix + pokemon.name() + "'s evasion rose!";
+        return prefix + pokemon.name() + "'s evade rose!";
     case "accuracyFell":
         return prefix + pokemon.name() + "'s accuracy fell!";
     case "attackFell":

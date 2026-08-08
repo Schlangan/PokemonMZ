@@ -102,6 +102,8 @@ List of implemented effects and their additional parameters:
     - stage, **int** : Number of dropped down stages
     - percentChance, **int** : Chance out of 100 of the drop down to happen
 
+- type = **minimize** : Add minimize effect to the pokemon, dividing the pokemon sprite scale by 2 the first time it is used. That state will be used in later generations for increased damage due to stomp
+
 - type = **splash** : Useless move that makes no damage and simply displays 'No effect!' when used.
 - type = **teleport** : Teleport the pokemon - ends wild battle with a given success chance. Always fail in trainer battles.
 
