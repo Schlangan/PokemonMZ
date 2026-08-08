@@ -1340,7 +1340,7 @@ PokemonMZ_Window_MenuPokemonList.prototype.drawItemImage = function(index) {
     const rect = this.itemRect(index);
     const height = rect.height - 2;
     const width = height;
-    this.PokemonMZ_drawPokemonFront(pokemon, rect.x+1, rect.y+1, width, height);
+    this.PokemonMZ_drawPokemonFront(pokemon, rect.x+1, rect.y-10, width, height);
 };
 PokemonMZ_Window_MenuPokemonList.prototype.drawItemStatus = function(index) {
     const pokemon = this.pokemon(index);
@@ -1485,7 +1485,7 @@ PokemonMZ_Window_MenuPokemonStatus.prototype.refresh = function() {
     const height = ImageManager.pokemonSpriteHeight;
     const x2 = width + 32;
 
-    this.PokemonMZ_drawPokemonFront(this._pokemon, 0, lineHeight, width, height);
+    this.PokemonMZ_drawPokemonFront(this._pokemon, 0, 32, width, height);
     this.drawPokemonName(this._pokemon, 32, 0)
     this.drawPokemonLevel(this._pokemon, x2, lineHeight * 1);
     this.placeBasicGauges(this._pokemon, x2, lineHeight * 2)
@@ -1828,7 +1828,7 @@ PokemonMZ_Window_Pokedex_Gen1_PokedexData.prototype.refresh = function() {
     const bottomY = 200;
     const lineHeight = this.lineHeight();
 
-    this.PokemonMZ_drawPokemonFront(new PokemonMZ_Game_Pokemon(enemyIntId,1), leftX+20, topY+20)
+    this.PokemonMZ_drawPokemonFront(new PokemonMZ_Game_Pokemon(enemyIntId,1), leftX+20, topY-5)
 
     this.changeTextColor(ColorManager.crisisColor());
     this.drawText(enemy.name, rightX, topY, rightWidth, "left");

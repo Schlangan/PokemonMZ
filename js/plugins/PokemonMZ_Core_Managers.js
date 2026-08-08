@@ -257,6 +257,12 @@ Object.defineProperty(ImageManager, "pokemonSpriteHeight", {
 function PokemonMZ_BattleManager() {
     throw new Error("This is a static class");
 }
+
+PokemonMZ_BattleManager.enemyTrainerSpriteY = 50;
+PokemonMZ_BattleManager.enemyPokemonSpriteY = 310;
+PokemonMZ_BattleManager.playerTrainerSpriteShiftY = 180;
+PokemonMZ_BattleManager.playerPokemonSpriteY = 445;
+
 PokemonMZ_BattleManager.setup = function(troopId, canEscape, canLose) {
     this.initMembers();
     this._canEscape = canEscape;
@@ -779,14 +785,14 @@ PokemonMZ_BattleManager.updateSubPhase = function(timeActive) {
 PokemonMZ_BattleManager.initializeEnterTrainerVsWild = function() { 
     const playerSprite = this._spriteset.playerTrainerSprite();
     playerSprite.x = Graphics.boxWidth;
-    playerSprite.y = Graphics.boxHeight - 180 - playerSprite.height*playerSprite.scale.y;
+    playerSprite.y = Graphics.boxHeight - PokemonMZ_BattleManager.playerTrainerSpriteShiftY - playerSprite.height*playerSprite.scale.y;
     playerSprite.visible = true;
     const pokemon = $PokemonMZ_gameBattle.wildPokemon();
     $gamePlayerTrainer.addSeenPokemon(pokemon._data.id);
 
     const enemySprite = this._spriteset.enemyPokemonSprite();
     enemySprite.setPokemon(pokemon);
-    enemySprite.placeBottomCenter(-100,350);
+    enemySprite.placeBottomCenter(-100,PokemonMZ_BattleManager.enemyPokemonSpriteY);
     enemySprite.visible = true;
     pokemon.setBattleSprite(enemySprite);
     this._enemyChosenPokemon = pokemon;
@@ -795,12 +801,12 @@ PokemonMZ_BattleManager.initializeEnterTrainerVsWild = function() {
 PokemonMZ_BattleManager.initializeEnterTrainers = function() {
     const playerSprite = this._spriteset.playerTrainerSprite();
     playerSprite.x = Graphics.boxWidth;
-    playerSprite.y = Graphics.boxHeight - 180 - playerSprite.height*playerSprite.scale.y;
+    playerSprite.y = Graphics.boxHeight - PokemonMZ_BattleManager.playerTrainerSpriteShiftY - playerSprite.height*playerSprite.scale.y;
     playerSprite.visible = true;
 
     for (const sprite of this._spriteset.enemyTrainerSprites()) {
         sprite.x = -100;
-        sprite.y = 50;
+        sprite.y = PokemonMZ_BattleManager.enemyTrainerSpriteY;
         sprite.visible = true;
     }
 };
@@ -832,7 +838,7 @@ PokemonMZ_BattleManager.updateEnterWild = function() {
         playerSprite.x -= 10;
     }
     if (enemySprite._bottomCenterX < 570) {
-        enemySprite.placeBottomCenter(enemySprite._bottomCenterX + 10,350);
+        enemySprite.placeBottomCenter(enemySprite._bottomCenterX + 10,PokemonMZ_BattleManager.enemyPokemonSpriteY);
         phaseCompleted = false;
     }      
     if (phaseCompleted) {
@@ -975,7 +981,7 @@ PokemonMZ_BattleManager.enemySendPokemon = function() {
     pokemon.resetStageModifiers();
     this._enemyPokemonStatusWindow.setPokemon(pokemon);
     pokemonSprite.setPokemon(pokemon);
-    pokemonSprite.placeBottomCenter(570,350);
+    pokemonSprite.placeBottomCenter(570,PokemonMZ_BattleManager.enemyPokemonSpriteY);
     pokemonSprite.setScale(0.1);
     pokemonSprite.visible = true;
     pokemon.setBattleSprite(pokemonSprite);
@@ -1038,7 +1044,7 @@ PokemonMZ_BattleManager.playerSendPokemon = function() {
     pokemon.resetStageModifiers();
     this._playerPokemonStatusWindow.setPokemon(pokemon);
     pokemonSprite.setPokemon(pokemon);
-    pokemonSprite.placeBottomCenter(130,445);
+    pokemonSprite.placeBottomCenter(130,PokemonMZ_BattleManager.playerPokemonSpriteY);
     pokemonSprite.setScale(0.1);
     pokemonSprite.visible = true;
     pokemon.setBattleSprite(pokemonSprite);
