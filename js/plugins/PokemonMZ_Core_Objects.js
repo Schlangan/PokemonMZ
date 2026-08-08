@@ -1134,6 +1134,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._isBiding = false;
     this._isBound = false;
     this._isBerserk = false;
+    this._isRaging = false;
 
     this._hasMoveDisabled = false;
     this._disabledMoveIndex = -1;
@@ -1148,6 +1149,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._damagedBide = 0;
     this._hasFocusEnergy = false;
     this._berserkMoveIndex = -1;
+    this._rageMoveIndex = -1;
 
     this._receivedItems = [];
 
@@ -1568,6 +1570,9 @@ PokemonMZ_Game_Pokemon.prototype.isMoveBinding = function(index) {
 };
 PokemonMZ_Game_Pokemon.prototype.berserkMoveIndex = function() {
     return this._berserkMoveIndex;
+};
+PokemonMZ_Game_Pokemon.prototype.rageMoveIndex = function() {
+    return this._rageMoveIndex;
 };
 PokemonMZ_Game_Pokemon.prototype.moveNameFromIndex = function(index) {
     const move = this._moves[index];
@@ -2043,6 +2048,8 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.unfocusEnergy();
     this.unBind();
     this.removeDisable();
+    this.unBerserk();
+    this.unRage();
 };
 PokemonMZ_Game_Pokemon.prototype.removeFinishedStatuses = function() {
     // Remove statuses that disappear at the beginning of the next turn
@@ -2089,6 +2096,9 @@ PokemonMZ_Game_Pokemon.prototype.isBound = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.isBerserk = function() {
     return this._isBerserk;
+};
+PokemonMZ_Game_Pokemon.prototype.isRaging = function() {
+    return this._isRaging;
 };
 PokemonMZ_Game_Pokemon.prototype.nextConfusionTurn = function() {
     this._turnsConfusion--;
@@ -2188,6 +2198,13 @@ PokemonMZ_Game_Pokemon.prototype.isBerserkable = function() {
     }
     return true;
 };
+PokemonMZ_Game_Pokemon.prototype.isRageable = function() {
+    // Cannot rage fainted pokemon
+    if (this.isFainted()) {
+        return false;
+    }
+    return true;
+};
 PokemonMZ_Game_Pokemon.prototype.canBeDisabled = function() {
     // Cannot disable FNT pokemon, pokemon already under Disable, or pokemon with no PP left
     if (this.isFainted() || this.hasAnyDisabledMove() || !this.hasAnyMoveUseable()) {
@@ -2274,6 +2291,12 @@ PokemonMZ_Game_Pokemon.prototype.berserk = function(minTurns, maxTurns, moveInde
         this._isBerserk = true;
         this._turnsBerserk = minTurns + Math.randomInt(maxTurns - minTurns + 1);
         this._berserkMoveIndex = moveIndex;
+    }
+};
+PokemonMZ_Game_Pokemon.prototype.rage = function(moveIndex, force) {
+    if (this.isRageable() || force) {
+        this._isRaging = true;
+        this._rageMoveIndex = moveIndex;
     }
 };
 PokemonMZ_Game_Pokemon.prototype.keepBinding = function() {
@@ -2376,6 +2399,12 @@ PokemonMZ_Game_Pokemon.prototype.unBerserk = function() {
         this._isBerserk = false;
         this._turnsBerserk = 0;
         this._berserkMoveIndex = -1;
+    }
+};
+PokemonMZ_Game_Pokemon.prototype.unRage = function() {
+    if (this.isRaging()) {
+        this._isRaging = false;
+        this._rageMoveIndex = -1;
     }
 };
 PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolution = function(evolutionMode, ext1) {
@@ -2928,7 +2957,6 @@ PokemonMZ_Game_Action.prototype.calculateMove = function() { //TODO
     // After attack, advance berserk state
     if (this._user.isBerserk()) {
         this._user.reduceBerserkTurn();
-        console.log(this._user)
     }
 
 };
@@ -3006,6 +3034,14 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
             this._moveExecutedHits++;
             this._moveRemainingHits--;
 
+            // If damage to opponent raging and not ko, rage builds
+            if (this._opponent.isRaging() && this._opponentEvolvingHp > 0) {
+                if (this._opponent._stageModifiers.patk < 6) {
+                    this._opponent._stageModifiers.patk++;
+                    this._resultSteps.push(["autotext","rageBuilding",this.oppositeSide()]);
+                    this._resultSteps.push(["autotext","attackRose",this.oppositeSide()]);
+                }
+            }
         } else if (userDamage > 0) {
 
             if (efficiency < 1) {
@@ -3348,6 +3384,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
         break;
     case "berserk":
         effectResults = this.effect_berserkUser(battleData, effect, effectResults);
+        break;
+    case "rage":
+        effectResults = this.effect_rageUser(battleData, effect, effectResults);
         break;
 
     }
@@ -4145,6 +4184,17 @@ PokemonMZ_Game_Action.prototype.effect_berserkUser = function(battleData, effect
         if (this._user.isBerserkable()) {
             effectResults.success = true;
             this._resultSteps.push(["berserkPokemon",this._user, effect.min, effect.max])
+        };
+    } else {
+        effectResults.success = true;
+    }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_rageUser = function(battleData, effect, effectResults) {
+    if (!this._user.isRaging()) {
+        if (this._user.isRageable()) {
+            effectResults.success = true;
+            this._resultSteps.push(["ragePokemon",this._user])
         };
     } else {
         effectResults.success = true;

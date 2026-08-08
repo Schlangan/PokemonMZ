@@ -3876,6 +3876,10 @@ PokemonMZ_Scene_Battle.prototype.onSelectForgetPokemonMove = function() {
             // Forgetting a berserk move while currently under this move's berserk instantly stops the berserk effect.
             pokemon.unBerserk();
         }
+        if (pokemon.isRaging() && pokemon.rageMoveIndex() == index) {
+            // Forgetting the move rage while currently under this move's effect instantly stops the rage effect.
+            pokemon.unRage();
+        }
 
         const message = "1, 2 and... Poof! " + pokemon.name() + " forgot " + forgottenMove + "! And..."
         $gameMessage.add(message)

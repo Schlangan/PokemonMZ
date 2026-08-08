@@ -1113,6 +1113,14 @@ PokemonMZ_BattleManager.startPlayerInput = function() {
         return;
     }
 
+    if (pokemon.isRaging()) {
+        // In case of rage, the player cannot select any action - 
+        // the phase immediatly switch to rage action 
+        this.setPlayerMoveIndex(pokemon.rageMoveIndex());
+        this.calculateComputerMove();
+        return;
+    }
+
     this._trainerInputWindow.open()
     this._trainerInputWindow.activate()
     this._staticMessageWindow.setText("What should " + pokemon.name() + " do?")
@@ -1979,8 +1987,15 @@ PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
     this._enemyUseItem = null;
 
     // If enemy pokemon is berserk, it only selects that move
-    if (playerPokemon.isBerserk()) {
+    if (enemyPokemon.isBerserk()) {
         this._enemyMoveIndex = enemyPokemon.berserkMoveIndex();
+        this.calculateBattleActions();
+        return;
+    }
+
+    // If enemy pokemon is using rage, it only selects that move
+    if (enemyPokemon.isRaging()) {
+        this._enemyMoveIndex = enemyPokemon.rageMoveIndex();
         this.calculateBattleActions();
         return;
     }
@@ -2359,6 +2374,10 @@ PokemonMZ_BattleManager.startMove = function(side) {
         skipMessage = true;
         skipPP = true;
     }
+    if (pokemon.isRaging()) {
+        // No PP consumption for Rage once launched. However standard message is left
+        skipPP = true;
+    }
 
 
     // Consume PP if needed
@@ -2519,6 +2538,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
             case "berserkPokemon":
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["berserk", step[1], step[2], step[3]];
+                break;
+            case "ragePokemon":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["rage", step[1]];
                 break;
             case "advanceBerserkPokemonTurn":
                 this.changeSubPhase("advanceBerserkPokemonTurn");
@@ -3043,6 +3066,7 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
     // Remove all turn phases for KO
     const status = this._subPhaseParams[0];
     const target = this._subPhaseParams[1];
+    const moveIndex = target.lastMoveIndex();
 
     switch (status) {
         case "burn":
@@ -3094,8 +3118,10 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
         case "berserk":
             const berserkMinTurns = this._subPhaseParams[2] - 1;
             const berserkMaxTurns = this._subPhaseParams[3] - 1;
-            const moveIndex = target.lastMoveIndex();
             target.berserk(berserkMinTurns, berserkMaxTurns, moveIndex, true);
+            break;
+        case "rage":
+            target.rage(moveIndex, true);
             break;
     }
     this.clearSubPhase();
@@ -3259,6 +3285,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + "'s attack continues!";
     case "missed":
         return prefix + pokemon.name() + "'s attack missed!";
+    case "attackRose":
+        return prefix + pokemon.name() + "'s attack rose!";
     case "defenseRose":
         return prefix + pokemon.name() + "'s defense rose!";
     case "evasionRose":
@@ -3363,6 +3391,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + " ran from battle!";
     case "thrashing":
         return prefix + pokemon.name() + "'s thrashing about!"
+    case "rageBuilding":
+        return prefix + pokemon.name() + "'s rage is building!"
     }
     return ""
 };
