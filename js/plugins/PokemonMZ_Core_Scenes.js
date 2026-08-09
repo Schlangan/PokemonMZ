@@ -3799,7 +3799,7 @@ PokemonMZ_Scene_Battle.prototype.commandNo = function() {
         this._yesNoWindow.setMode("abandonMove")
         this._yesNoWindow.activate();
         this._yesNoWindow.select(0);
-        this._yesNoWindow.show();
+        this._yesNoWindow.open();
         break;
     case "abandonMove":
         // Said no to abandon move
@@ -3909,6 +3909,7 @@ PokemonMZ_Scene_Battle.prototype.onCancelForgetPokemonMove = function() {
         this._yesNoWindow.setMode("abandonMove")
         this._yesNoWindow.select(1);
         this._yesNoWindow.activate();
+        this._yesNoWindow.open();
         this._yesNoWindow.show();
     };
 };
