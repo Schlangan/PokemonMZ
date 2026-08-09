@@ -2802,10 +2802,30 @@ PokemonMZ_BattleManager.updateAnimation = function() {
                 }
                 break;
             case "moveSpriteUp":
-                this.startAnimationMoveSprite(this._animationData.userSprite,0, -actionData.distance, actionData.duration);
+                if (this._animationData.side == "player" && actionData.target == "user") {
+                    this.startAnimationMoveSprite(this._animationData.userSprite,0, -actionData.distance, actionData.duration);
+                } else if (this._animationData.side == "player" && actionData.target == "opponent") {
+                    this.startAnimationMoveSprite(this._animationData.enemySprite, 0, -actionData.distance, actionData.duration)
+                } else if (this._animationData.side == "enemy" && actionData.target == "user") {
+                    this.startAnimationMoveSprite(this._animationData.userSprite, 0, -actionData.distance, actionData.duration)
+                } else if (this._animationData.side == "enemy" && actionData.target == "opponent") {
+                    this.startAnimationMoveSprite(this._animationData.enemySprite, 0, actionData.distance, actionData.duration)
+                } else {
+                    this._animationPhase = "nextAction";
+                }
                 break;
             case "moveSpriteDown":
-                this.startAnimationMoveSprite(this._animationData.userSprite,0, actionData.distance, actionData.duration);
+                if (this._animationData.side == "player" && actionData.target == "user") {
+                    this.startAnimationMoveSprite(this._animationData.userSprite,0, actionData.distance, actionData.duration);
+                } else if (this._animationData.side == "player" && actionData.target == "opponent") {
+                    this.startAnimationMoveSprite(this._animationData.enemySprite, 0, actionData.distance, actionData.duration)
+                } else if (this._animationData.side == "enemy" && actionData.target == "user") {
+                    this.startAnimationMoveSprite(this._animationData.userSprite, 0, actionData.distance, actionData.duration)
+                } else if (this._animationData.side == "enemy" && actionData.target == "opponent") {
+                    this.startAnimationMoveSprite(this._animationData.enemySprite, 0, actionData.distance, actionData.duration)
+                } else {
+                    this._animationPhase = "nextAction";
+                }
                 break;
             case "wait":
                 this._animationWaitFrames = actionData.frames;
