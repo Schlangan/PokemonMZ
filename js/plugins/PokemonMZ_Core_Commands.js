@@ -152,6 +152,16 @@
  * @type text
  * @text Region ID
  * @desc The region Id for the pokemon data. Ex: kanto
+ * 
+ * //////////////////////////////////////////
+ * @command AddPokedexPokemonSeen
+ * @text Add Pokemon Seen To Pokedex
+ * @desc Set as seen a Pokemon inside the pokedex
+ * 
+ * @arg pokemon
+ * @type enemy
+ * @text Pokemon
+ * @desc The pokemon to mark as seen.
 
  * //////////////////////////////////////////
  * @command CanGetPokemon
@@ -268,6 +278,15 @@ PluginManager.registerCommand(pluginName, "GiveBadge", function(args) {
 PluginManager.registerCommand(pluginName, "GivePokedex", function(args) {
     const regionId = args.region;
     $gamePlayerTrainer.givePokedex(regionId);
+});
+PluginManager.registerCommand(pluginName, "AddPokedexPokemonSeen", function(args) {
+    const pokemonId = Number(args.pokemon);
+    const dataEnemy = $dataEnemies[pokemonId];
+
+    if (dataEnemy) {
+        const id = dataEnemy.pkmz_data.id;
+        $gamePlayerTrainer.addSeenPokemon(id);
+    }
 });
 
 // Pokemon
