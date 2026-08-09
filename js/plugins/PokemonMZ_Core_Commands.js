@@ -201,6 +201,17 @@
  * @type variable
  * @text Return Variable
  * @desc Variable that gets the pokemon index in the party if correct pokemon, -1 if wrong one, or -2 if canceled.
+ * 
+ * //////////////////////////////////////////
+ * @command PlayPokemonCry
+ * @text Play Pokemon Cry
+ * @desc Play a specific Pokemon's cry
+ * 
+ * @arg pokemon
+ * @type enemy
+ * @text Pokemon
+ * @desc The pokemon whose cry to play
+ * 
 */
 const pluginName = 'PokemonMZ_Core_Commands';
 
@@ -285,6 +296,11 @@ PluginManager.registerCommand(pluginName, "GivePokemon", function(args) {
         const message = "There's no more room for Pokémon!\nThe Pokémon Box is full and can't accept any more! Change\nthe Box at a Pokémon Center!"
         $gameMessage.add(message);
     }
+});
+PluginManager.registerCommand(pluginName, "PlayPokemonCry", function(args) {
+    const pokemonId = Number(args.pokemon);
+    const tempPokemon = new PokemonMZ_Game_Pokemon(pokemonId, 1);
+    tempPokemon.playCry();
 });
 
 // User interface
