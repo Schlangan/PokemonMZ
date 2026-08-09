@@ -3594,15 +3594,22 @@ PokemonMZ_Game_Action.prototype.moveDamage = function(critical) {
     const debugLogging = {}
 
     if (this._moveData.fixedDamage) { 
-        // Case of fixed damage moves such as dragon rage
+        // Case of fixed damage moves such as dragon rage or seismic toss
+
+        let fixedDamage = this._moveData.fixedDamage;
+        if (fixedDamage == -1) {
+            // -1 value means to set damage to the user level
+            fixedDamage = this._user.level();
+        }
+
         if (PokemonMZ.debugLog) {
-            debugLogging.damage = this._moveData.fixedDamage
+            debugLogging.damage = fixedDamage;
             console.log({"PokemonMZ_Game_Action.moveDamage > ":debugLogging})
         }
         if (this._moveData.target == "opponent") {
-            return {"user":0, "opponent":this._moveData.fixedDamage, "efficiency":1.0};
+            return {"user":0, "opponent":fixedDamage, "efficiency":1.0};
         } else if (this._moveData.target == "user") {
-            return {"user":this._moveData.fixedDamage, "opponent":0, "efficiency":1.0};
+            return {"user":fixedDamage, "opponent":0, "efficiency":1.0};
         }
     }
 
