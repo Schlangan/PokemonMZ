@@ -1443,7 +1443,11 @@ PokemonMZ_Game_Pokemon.prototype.hp = function() {
     return this._hp;
 };
 PokemonMZ_Game_Pokemon.prototype.setHp = function(newHp) {
-    this._hp = newHp;
+    if (newHp > 0) {
+        this._hp = newHp;
+    } else {
+        this._hp = 0;
+    }
 };
 PokemonMZ_Game_Pokemon.prototype.canRecoverHp = function() {
     return this._hp < this.mhp();
