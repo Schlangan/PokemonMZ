@@ -49,7 +49,7 @@ animationActionData
     - target, **string** : The target sprite of the animation. Either **user** or **opponent**.
     - distance, **int** : The number of pixels the sprite will move (x and y will be set to equal)
     - duration, **int** : The number of frames for the move.
-- type = **waitFrames** : Wait a given number of frames.
+- type = **wait** : Wait a given number of frames.
     - frames, **int** : Number of frames to wait.
 - type = **hideSprite** : Hide the battler sprite.
     - target, **string** : The target sprite of the animation. Either **user** or **opponent**.
