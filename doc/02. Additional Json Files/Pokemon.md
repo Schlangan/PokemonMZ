@@ -25,14 +25,8 @@ pokemonData
 - expCurve, **string** : The experience curve of the pokemon. Possible values are **erratic**, **fast**, **mediumFast**, **mediumSlow**, **slow**, **fluctuating**
 - catchRate, **int** : The catch rate of the pokemon. Max value is **255** for the easiest, while lower values made them harder to catch.
 - xpYield, **int** : The base amount of experience given when defeated
-- ev : The ev provided when being defeated. This value isn't used yet, as it only applies starting from generation III.
-    - hp, *optional*, **int** : Provided EV for HP
-    - patk, *optional*,**int** : Provided EV for Attack
-    - pdef, *optional*,**int** : Provided EV for Defense
-    - satk, *optional*,**int** : Provided EV for Special Attack
-    - sdef, *optional*,**int** : Provided EV for Special Defense
-    - spd, *optional*,**int** : Provided EV for Speed
-- evolution, **Array:evolutionData** : An array of all possible evolutions of the pokemon.
+- ev : **Array:evData**, *optional* : The ev provided when being defeated. This value isn't used yet, as it only applies starting from generation III.
+- evolutions, **Array:evolutionData** : An array of all possible evolutions of the pokemon.
 - learnedMoves, **Array:moveLearnedData** : An array of moved learned while leveling up. Moves at level 1 are learned again after evolution.
 - hmMoves, **Array:string** : An array of the HMs the pokemon can learn (move identifier from RPG Maker Skill note id). Not implemented yet.
 - tmMoves, **Array:string** : An array of the TMs the pokemon can learn (move identifier from RPG Maker Skill note id). Not implemented yet.
@@ -42,6 +36,16 @@ pokemonData
 pokedexData
 - region, **string** : The pokedex region, same id as used inside the Give Pokedex plugin command.
 - number, **int** : The number of the pokemon inside that pokedex
+
+---
+
+evData
+- hp, *optional*, **int** : Provided EV for HP
+- patk, *optional*,**int** : Provided EV for Attack
+- pdef, *optional*,**int** : Provided EV for Defense
+- satk, *optional*,**int** : Provided EV for Special Attack
+- sdef, *optional*,**int** : Provided EV for Special Defense
+- spd, *optional*,**int** : Provided EV for Speed
 
 ---
 
@@ -55,6 +59,7 @@ Depending on the mode, additional parameters are required.
     - level,**int** : Level minimum to reach to evolve.
 - mode = **useItem** : Evolution by using an item of the pokemon
     - item,**string** : Item identifier (from the RPG Maker Item Database note id)
+- mode = **trade** : Evolution by trading the pokemon
 
 ---
 
