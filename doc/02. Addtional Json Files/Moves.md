@@ -8,12 +8,13 @@ The main structure is an array of **moveData**. The first element is null, mimic
 
 moveData
 - id, **string** : Identifier of the move. Used inside the notetag of Skills inside RPG Maker MZ Database.
+- category, **string**, *optional* : If specified, specific move category. Only **status** available. 
 - type, **string** : The type of the move, from the PokemonMZ_Types.json file
 - target, **string** : The target of the move, either **user** or **opponent**
 - pp, **int** : The base max PP of the move.
 - power, **int**, *optional* : The damage power of the move. Parameter isn't needed for status moves.
-- accuracy, **int** : The accuracy out of 100 for the move
-- priority, **int** : The priority of the move (ex: 1 for quickAttack)
+- accuracy, **int**: The accuracy out of 100 for the move
+- priority, **int**, *optional* : The priority of the move (ex: 1 for quickAttack)
 - targetDefenseDivider, **float**, *optional* : The division of the target defense during attack. (ex 2.0 for self-destruct)
 
 - noCritical, **bool**, *optional* : If set to **true**, the move will never do critical damage.
@@ -34,7 +35,7 @@ moveData
 
 moveEffect
 - type, **string** : Type of effect. All other parameters depend on the type.
-- except,  **Array:exceptedData** : Array of **exceptionData**, exceptions preventing the effect to apply
+- except,  **Array:exceptedData**, *optional* : Array of **exceptionData**, exceptions preventing the effect to apply
 
 List of implemented effects and their additional parameters:
 
@@ -52,7 +53,7 @@ List of implemented effects and their additional parameters:
     - percentChance, **int** : Chance out of 100 of the paralysis to happen
 - type = **poisonTarget** : Poison the target 
     - percentChance, **int** : Chance out of 100 of the poison to happen
-    - multiHitEffect, **string** : Force multihit skills (Twineedle), indicates if **all** hits try to poison, or if only the **last** hit calculates poison.
+    - multiHitEffect, **string**, *optional* : For multihit skills (Twineedle), indicates if **all** hits try to poison, or if only the **last** hit calculates poison.
 - type = **sleepTarget** : Put the target to sleep
     - percentChance, **int** : Chance out of 100 of the sleep to happen
 - type = **confuseTarget** : Put confusion to the target 
@@ -105,10 +106,17 @@ List of implemented effects and their additional parameters:
     - stage, **int** : Number of dropped down stages
     - percentChance, **int** : Chance out of 100 of the drop down to happen
 
-- type = **minimize** : Add minimize effect to the pokemon, dividing the pokemon sprite scale by 2 the first time it is used. That state will be used in later generations for increased damage due to stomp
+- type = **berserk** : The pokemon will automatically attack a few turns and get confused at the end. No confusion message in first generation.
+    - min, **int** : Minimum amount of turns for auto-attacks
+    - max, **int** : Maximum amount of turns for auto-attacks
+
+- type = **minimizeUser** : Add minimize effect to the user, dividing the pokemon sprite scale by 2 the first time it is used. That state will be used in later generations for increased damage due to stomp
+
+- type = **faintUser** : Puts the user K.O. after using the move. For example, self-destruct.
 
 - type = **splash** : Useless move that makes no damage and simply displays 'No effect!' when used.
 - type = **teleport** : Teleport the pokemon - ends wild battle with a given success chance. Always fail in trainer battles.
+- type = **rage** : Triggers the rage effect - The pokemon will automatically attack every turn and gain physical attack stages when hit
 - type = **mirrorMove** : Reproduce the last move the opponent launched. The move will fail in the following cases :
     - The user hasn't seen the opponent send a move yet
     - The opponent used Mirror Move
