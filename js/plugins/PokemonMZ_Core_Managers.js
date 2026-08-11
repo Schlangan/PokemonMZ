@@ -149,6 +149,1125 @@ DataManager.makeSavefileInfo = function() {
     return info;
 };
 
+DataManager.verifyDatabase = function() {
+    // This function will check the contents of the database and give
+    // warnings for anomalies found within the data
+
+    // First, identify declared items in the database
+    let index;
+    DataManager.declared = {};
+    DataManager.getDeclaredAnimations();
+    DataManager.getDeclaredRMZAnimations();
+    DataManager.getDeclaredTrainers();
+    DataManager.getDeclaredTypes();
+    DataManager.getDeclaredEncounters();
+    DataManager.getDeclaredPokemons();
+    DataManager.getDeclaredItems();
+    DataManager.getDeclaredMoves();
+
+    // Check all data structures
+    DataManager.verifyAnimations();
+    DataManager.verifyEncounters();
+    DataManager.verifyItems();
+    DataManager.verifyMoves();
+    DataManager.verifyPokemons();
+    DataManager.verifyRegionMaps();
+    DataManager.verifyTypes();
+
+}
+
+DataManager.getDeclaredRMZAnimations = function() {
+    DataManager.declared.rmzAnimations = [];
+    for (const animationData of $dataAnimations) {
+        if (animationData && animationData.id) {
+            DataManager.declared.rmzAnimations.push(animationData.id);
+        }
+    }
+};
+DataManager.getDeclaredAnimations = function() {
+    DataManager.declared.animations = Object.keys($PokemonMZ_dataAnimations)
+};
+
+
+DataManager.getDeclaredTrainers = function() {
+    DataManager.declared.trainers = [];
+    for (const actorData of $dataActors) {
+        if (actorData && actorData.id) {
+            DataManager.declared.trainers.push(actorData.id);
+        }
+    }
+};
+DataManager.getDeclaredTypes = function() {
+    DataManager.declared.types = [];
+    let index = 0;
+    for (const typeData of $PokemonMZ_dataTypes) {
+        if (typeData) {
+            if (typeData.id) {
+                if (DataManager.declared.types.includes(typeData.id)) {
+                    console.error("PokemonMZ_Types.json - Index " + String(index) + " - Duplicate ID " + typeData.id);
+                } else {
+                    DataManager.declared.types.push(typeData.id);
+                }
+            } else {
+                console.error("PokemonMZ_Types.json - Index " + String(index) + " - Missing ID")
+            }
+        }
+        index++;
+    }
+};
+DataManager.getDeclaredEncounters = function() {
+    DataManager.declared.encounters = [];
+    let index = 0;
+    const troopIds = [];
+
+    index = 0;
+    for (const troopData of $dataTroops) {
+        if (troopData) {
+            if (troopIds.includes(troopData.name)) {
+                console.error("Troops.json - Index " + String(index) + " - Found duplicate troop name - Name : " + troopData.name);
+            } else {
+                troopIds.push(troopData.name);
+            }
+        }
+        index++;
+    }
+    index = 0;
+    for (const encounterData of $PokemonMZ_dataEncounters) {
+        if (encounterData && encounterData.id) {
+            if (DataManager.declared.encounters.includes(encounterData.id)) {
+                console.error("PokemonMZ_Encounters.json - Index " + String(index) + " - Found duplicate encounter name - ID : " + encounter.id);
+            } else {
+                DataManager.declared.encounters.push(encounterData.id);
+            }
+
+        }
+        index++;
+    }
+    for (const troopId of troopIds) {
+        if (!DataManager.declared.encounters.includes(troopId)) {
+            console.error("PokemonMZ_Encounters.json - Missing encounter data - ID : " + troopId);
+        }
+    }
+    for (const encounterId of DataManager.declared.encounters) {
+        if (!troopIds.includes(encounterId)) {
+            console.error("Troops.json - Missing troop name - ID : " + encounterId);
+        }
+    }
+};
+DataManager.getDeclaredPokemons = function() {
+    DataManager.declared.pokemons = [];
+    let index = 0;
+    const enemyIds = [];
+
+    index = 0;
+    for (const enemyData of $dataEnemies) {
+        if (enemyData && enemyData.pkmz_data && enemyData.pkmz_data.id) {
+            if (enemyIds.includes(enemyData.pkmz_data.id)) {
+                console.error("Enemies.json - Index " + String(index) + " - Found duplicate pokemon id - Id : " + enemyData.pkmz_data.id);
+            } else {
+                enemyIds.push(enemyData.pkmz_data.id);
+            }
+        } else if (enemyData && enemyData.note && enemyData.note != "") {
+            const noteData = DataManager.parsePokemonMZ_Notes(enemyData.note)
+            if (noteData && noteData.id) {
+                enemyIds.push(noteData.id);
+            }
+        }
+        index++;
+    }
+    index = 0;
+    for (const pokemonData of $PokemonMZ_dataPokemon) {
+        if (pokemonData && pokemonData.id) {
+            if (DataManager.declared.pokemons.includes(pokemonData.id)) {
+                console.error("PokemonMZ_Pokemon.json - Index " + String(index) + " - Found duplicate pokemon - ID : " + pokemonData.id);
+            } else {
+                DataManager.declared.pokemons.push(pokemonData.id);
+            }
+
+        }
+        index++;
+    }
+    for (const enemyId of enemyIds) {
+        if (!DataManager.declared.pokemons.includes(enemyId)) {
+            console.error("PokemonMZ_Pokemon.json - Missing pokemon data - ID : " + enemyId);
+        }
+    }
+    for (const enemyId of DataManager.declared.pokemons) {
+        if (!enemyIds.includes(enemyId)) {
+            console.error("Enemies.json - Missing pokemon - ID : " + enemyId);
+        }
+    }
+};
+DataManager.getDeclaredItems = function() {
+    DataManager.declared.items = [];
+    let index = 0;
+    const itemsIds = [];
+
+    index = 0;
+    for (const itemData of $dataItems) {
+        if (itemData && itemData.pkmz_data && itemData.pkmz_data.id) {
+            if (itemsIds.includes(itemData.pkmz_data.id)) {
+                console.error("Items.json - Index " + String(index) + " - Found duplicate item id - Id : " + itemData.pkmz_data.id);
+            } else {
+                itemsIds.push(itemData.pkmz_data.id);
+            }
+        } else if (itemData && itemData.note && itemData.note != "") {
+            const noteData = DataManager.parsePokemonMZ_Notes(itemData.note)
+            if (noteData && noteData.id) {
+                itemsIds.push(noteData.id);
+            }
+        }
+        index++;
+    }
+    index = 0;
+    for (const itemData of $PokemonMZ_dataItems) {
+        if (itemData && itemData.id) {
+            if (DataManager.declared.items.includes(itemData.id)) {
+                console.error("PokemonMZ_Items.json - Index " + String(index) + " - Found duplicate item - ID : " + itemData.id);
+            } else {
+                DataManager.declared.items.push(itemData.id);
+            }
+
+        }
+        index++;
+    }
+    for (const itemId of itemsIds) {
+        if (!DataManager.declared.items.includes(itemId)) {
+            console.error("PokemonMZ_Items.json - Missing item data - ID : " + itemId);
+        }
+    }
+    for (const itemId of DataManager.declared.items) {
+        if (!itemsIds.includes(itemId)) {
+            console.error("Items.json - Missing item - ID : " + itemId);
+        }
+    }
+};
+DataManager.getDeclaredMoves = function() {
+    DataManager.declared.moves = [];
+    let index = 0;
+    const skillIds = [];
+
+    index = 0;
+    for (const skillData of $dataSkills) {
+        if (skillData && skillData.pkmz_data && skillData.pkmz_data.id) {
+            if (skillIds.includes(skillData.pkmz_data.id)) {
+                console.error("Skills.json - Index " + String(index) + " - Found duplicate skill id - Id : " + skillData.pkmz_data.id);
+            } else {
+                skillIds.push(skillData.pkmz_data.id);
+            }
+        } else if (skillData && skillData.note && skillData.note != "") {
+            const noteData = DataManager.parsePokemonMZ_Notes(skillData.note)
+            if (noteData && noteData.id) {
+                skillIds.push(noteData.id);
+            }
+        }
+        index++;
+    }
+    index = 0;
+    for (const skillData of $PokemonMZ_dataMoves) {
+        if (skillData && skillData.id) {
+            if (DataManager.declared.moves.includes(skillData.id)) {
+                console.error("PokemonMZ_Moves.json - Index " + String(index) + " - Found duplicate move - ID : " + skillData.id);
+            } else {
+                DataManager.declared.moves.push(skillData.id);
+            }
+
+        }
+        index++;
+    }
+    for (const itemId of skillIds) {
+        if (!DataManager.declared.moves.includes(itemId)) {
+            console.error("PokemonMZ_Moves.json - Missing move data - ID : " + itemId);
+        }
+    }
+    for (const itemId of DataManager.declared.moves) {
+        if (!skillIds.includes(itemId)) {
+            console.error("Skills.json - Missing move - ID : " + itemId);
+        }
+    }
+};
+
+
+DataManager.verifyProperties = function(obj, errorMessagePrefix, mandatory, optional) {
+    const found = [];
+
+    for (const property of Object.keys(obj)) {
+        found.push(property)
+    };
+    for (const property of mandatory) {
+        if (!found.includes(property)) {
+            console.error(errorMessagePrefix + "Missing mandatory property: " + property);
+        }
+    }
+    for (const property of found) {
+        if (!(mandatory.includes(property) || optional.includes(property))) {
+            console.error(errorMessagePrefix + "Unknown property: " + property);
+        }
+    }
+};
+
+// Animations checks
+DataManager.verifyAnimations = function() {
+    // Check encounterData array
+    index = 0;
+
+    for (const animationId of DataManager.declared.animations) {
+        const animationData = $PokemonMZ_dataAnimations[animationId];
+        if (animationData) {
+            DataManager.verifyAnimationData(animationId, animationData)
+        }
+        index++;
+    }
+};
+DataManager.verifyAnimationData = function(id, animationData) {
+    const errorMessagePrefix = "PokemonMZ_Animations.json - Id " + id + " - ";
+    DataManager.verifyProperties(
+        animationData,
+        errorMessagePrefix,
+        ["id","sequence"],
+        [],
+    );
+
+    let index = 0;
+    if (animationData.sequence) {
+        for (const animationActionData of animationData.sequence) {
+            DataManager.verifyAnimationActionData(errorMessagePrefix, index, animationActionData)
+            index++;
+        }
+    }
+};
+DataManager.verifyAnimationActionData = function(prefix, index, animationActionData) {
+    const errorMessagePrefix = prefix + "Index " + String(index) + " - ";
+    const errorMessagePrefix2 = errorMessagePrefix + (animationActionData.type ?? "null") + " - ";
+    // Check animation data type
+    switch(animationActionData.type) {
+    case "playAnimation":
+        DataManager.verifyProperties(animationActionData, errorMessagePrefix2, ["type","target","animationId"], ["wait"]);
+        break;
+    case "playSE":
+        DataManager.verifyProperties(animationActionData, errorMessagePrefix2, ["type","name","volume","pitch","pan"], []);
+        break;
+    case "moveSpriteForward":
+    case "moveSpriteBackward":
+    case "moveSpriteLeft":
+    case "moveSpriteRight":
+    case "moveSpriteUp":
+    case "moveSpriteDown":   
+        DataManager.verifyProperties(animationActionData, errorMessagePrefix2, ["type","target","distance","duration"], []);
+        if (animationActionData.target) {
+            if (!["user","opponent"].includes(animationActionData.target)) {
+                console.error(errorMessagePrefix + "Unknown target: " + animationActionData.target)
+            }
+        }
+        break;
+    case "wait":   
+        DataManager.verifyProperties(animationActionData, errorMessagePrefix2, ["type","frames"], []);
+        break;
+    case "hideSprite":   
+        DataManager.verifyProperties(animationActionData, errorMessagePrefix2, ["type","target"], []);
+        if (animationActionData.target) {
+            if (!["user","opponent"].includes(animationActionData.target)) {
+                console.error(errorMessagePrefix + "Unknown target: " + animationActionData.target)
+            }
+        }
+        break; 
+    default:
+        console.error(errorMessagePrefix + "Unknown animation data type: " + animationActionData.type);
+    }
+};
+
+// Encounters checks
+DataManager.verifyEncounters = function() {
+    // Check encounterData array
+    index = 0;
+    for (const encounterData of $PokemonMZ_dataEncounters) {
+        if (encounterData) {
+            DataManager.verifyEncounterData(index, encounterData)
+        }
+        index++;
+    }
+};
+DataManager.verifyEncounterData = function(index, encounterData) {
+    const encounterId = encounterData.id ?? "null";
+    const errorMessagePrefix = "PokemonMZ_Types.json - Index " + String(index) + " - ID " + encounterId + " - ";
+
+    // Check encounter type
+    switch(encounterData.type) {
+    case "trainer":
+        DataManager.verifyEncounterDataTrainer(index, encounterData);
+        break;
+    case "wild":
+        DataManager.verifyEncounterDataWild(index, encounterData);
+        break;
+    default:
+        console.error(errorMessagePrefix + "Unknown encounter type: " + encounterData.type);
+    }
+};
+DataManager.verifyEncounterDataWild = function(index, encounterData) {
+    const encounterId = encounterData.id ?? "null";
+    const errorMessagePrefix = "PokemonMZ_Types.json - Index " + String(index) + " - ID " + encounterId + " - Wild - ";
+
+    DataManager.verifyProperties(
+        encounterData,
+        errorMessagePrefix,
+        ["id","type","pokemons"],
+        [],
+    );
+
+    let indexWildPokemonData = 0;
+    if (encounterData.pokemons) {
+        for (const wildPokemonData of encounterData.pokemons) {
+            DataManager.verifyWildPokemonData(errorMessagePrefix, indexWildPokemonData, wildPokemonData);
+            indexWildPokemonData++;
+        }
+    }
+};
+DataManager.verifyWildPokemonData = function(prefix, index, wildPokemonData) {
+    const errorMessagePrefix = prefix + "Index " + String(index) + " - ";
+    
+    DataManager.verifyProperties(
+        wildPokemonData,
+        errorMessagePrefix,
+        ["id","levelMin","levelMax","rate"],
+        [],
+    );
+    if (!DataManager.declared.pokemons.includes(wildPokemonData.id)) {
+        console.error(errorMessagePrefix + "Unknown pokemon ID: " + wildPokemonData.id)
+    }
+};
+DataManager.verifyEncounterDataTrainer = function(index, encounterData) {
+    const encounterId = encounterData.id ?? "null";
+    const errorMessagePrefix = "PokemonMZ_Types.json - Index " + String(index) + " - ID " + encounterId + " - Trainer - ";
+
+    DataManager.verifyProperties(
+        encounterData,
+        errorMessagePrefix,
+        ["id","type","trainerActor","ia","pokemons","defeatText","money"],
+        ["iaModifiers","victoryText"],
+    );
+
+    if (encounterData.trainerActor) {
+        if (!DataManager.declared.trainers.includes(encounterData.trainerActor)) {
+            console.error(errorMessagePrefix + "Unknown trainer actor ID: " + encounterData.trainerActor)
+        }
+    }
+    if (encounterData.ia) {
+        if (!["random","basic"].includes(encounterData.ia)) {
+            console.error(errorMessagePrefix + "Unknown trainer AI type: " + encounterData.ia)
+        }
+    }
+
+    let indexTrainerPokemonData = 0;
+    if (encounterData.pokemons) {
+        for (const trainerPokemonData of encounterData.pokemons) {
+            DataManager.verifyTrainerPokemonData(errorMessagePrefix, indexTrainerPokemonData, trainerPokemonData);
+            indexTrainerPokemonData++;
+        }
+    }
+    if (encounterData.iaModifiers) {
+        DataManager.verifyIaModifierData(errorMessagePrefix, index, encounterData.iaModifiers);
+    }
+};
+DataManager.verifyTrainerPokemonData = function(prefix, index, trainerPokemonData) {
+    const errorMessagePrefix = prefix + "Index " + String(index) + " - ";
+    
+    DataManager.verifyProperties(
+        trainerPokemonData,
+        errorMessagePrefix,
+        ["id","level","moveset","dv","ev"],
+        ["addMoves"],
+    );
+    if (trainerPokemonData.id) {
+        if (!DataManager.declared.pokemons.includes(trainerPokemonData.id)) {
+            console.error(errorMessagePrefix + "Unknown pokemon ID: " + trainerPokemonData.id)
+        }
+    }
+    if (trainerPokemonData.moveset) {
+        if (!["default","add"].includes(trainerPokemonData.moveset)) {
+            console.error(errorMessagePrefix + "Unknown pokemon Moveset type: " + trainerPokemonData.moveset)
+        }
+        if (trainerPokemonData.moveset == "default") {
+            if (trainerPokemonData.addMoves) { console.error(errorMessagePrefix + "AddMoves property ignored with 'default' moveset.") }
+        } else if (trainerPokemonData.moveset == "addMoves") {
+            if (!trainerPokemonData.addMoves) {  console.error(errorMessagePrefix + "AddMoves property missing with 'addMoves' moveset.") }
+        }
+    }
+    if (trainerPokemonData.addMoves) {
+        for (const moveId of trainerPokemonData.addMoves) {
+            if (!DataManager.declared.moves.includes(moveId)) {
+                console.error(errorMessagePrefix + "Unknown added move id : " + moveId) 
+            }
+        }
+    }
+    if (trainerPokemonData.dv) {
+        if (!["default"].includes(trainerPokemonData.dv)) {
+            console.error(errorMessagePrefix + "Unknown pokemon DV type: " + trainerPokemonData.dv)
+        }
+    }
+    if (trainerPokemonData.ev) {
+        if (!["default"].includes(trainerPokemonData.dv)) {
+            console.error(errorMessagePrefix + "Unknown pokemon DV type: " + trainerPokemonData.ev)
+        }
+    }
+
+};
+DataManager.verifyIaModifierData = function(prefix, index, iaModifierData) {
+    const errorMessagePrefix = prefix + "Ia Modifier - ";
+    DataManager.verifyProperties(
+        iaModifierData,
+        errorMessagePrefix,
+        [],
+        ["item"],
+    );
+
+    if (iaModifierData.item) {
+        DataManager.verifyIaModifierDataItem(prefix, index, iaModifierData.item)
+    }
+};
+DataManager.verifyIaModifierDataItem = function(prefix, index, iaModifierDataItem) {
+    const errorMessagePrefix = prefix + "Item - ";
+    DataManager.verifyProperties(
+        iaModifierDataItem,
+        errorMessagePrefix,
+        ["id","condition","chance","maxPerPokemon"],
+        [""],
+    );
+
+    if (iaModifierDataItem.id) {
+        if (!DataManager.declared.items.includes(iaModifierDataItem.id)) {
+            console.error(errorMessagePrefix + "Unknown item ID: " + iaModifierDataItem.id)
+        }
+    }
+    if (iaModifierDataItem.condition) {
+        if (!["hasStatus"].includes(iaModifierDataItem.condition)) {
+            console.error(errorMessagePrefix + "Unknown condition: " + iaModifierDataItem.condition)
+        }
+    }
+};
+
+// Items checks
+DataManager.verifyItems = function() {
+    // Check itemData array
+    index = 0;
+    for (const itemData of $PokemonMZ_dataItems) {
+        if (itemData) {
+            DataManager.verifyItemData(index, itemData)
+        }
+        index++;
+    }
+};
+DataManager.verifyItemData = function(index, itemData) {
+    const itemId = itemData.id ?? "null";
+    const errorMessagePrefix = "PokemonMZ_Items.json - Index " + String(index) + " - ID " + itemId + " - ";
+
+    let mandatoryProperties = ["id","user","category","battle","price","effect"]
+    let optionalProperties = ["target"]
+
+    if (itemData.user) {
+        if (!["trainer"].includes(itemData.user)) {
+            console.error(errorMessagePrefix + "Unknown item user: " + itemData.user);
+        }
+    }
+    if (itemData.category) {
+        if (!["regular","key","badge"].includes(itemData.category)) {
+            console.error(errorMessagePrefix + "Unknown item category: " + itemData.user);
+        }        
+    }
+
+    if (itemData.category == "badge") {
+        mandatoryProperties = ["id","category","effect"]
+    } else if (itemData.category == "key") {
+        mandatoryProperties = ["id","user","category","battle","effect"]
+        optionalProperties = ["target","price"]
+    }
+
+    // Check item effect
+    switch(itemData.effect) {
+    case "ball":
+        DataManager.verifyProperties(
+            itemData, 
+            errorMessagePrefix, 
+            mandatoryProperties.concat(["gen1rate","gen1hpFactor"]),
+            optionalProperties);
+        break;
+    case "cureStatus":
+        DataManager.verifyProperties(
+            itemData, 
+            errorMessagePrefix, 
+            mandatoryProperties.concat(["status"]),
+            optionalProperties);
+        if (itemData.status) {
+            if (!["poison","paralysis","burn","sleep","all"].includes(itemData.status)) {
+                console.error(errorMessagePrefix + "Unknown cure status item status: " + itemData.status);
+            }
+        }
+        break;
+    case "lockedItem":
+        DataManager.verifyProperties(
+            itemData, 
+            errorMessagePrefix, 
+            mandatoryProperties.concat(["useMessage"]),
+            optionalProperties);
+        break;
+    case "recover_hp_fixed":
+        DataManager.verifyProperties(
+            itemData, 
+            errorMessagePrefix, 
+            mandatoryProperties.concat(["value"]),
+            optionalProperties);
+        break;
+    case "restorePp":
+        DataManager.verifyProperties(
+            itemData, 
+            errorMessagePrefix, 
+            mandatoryProperties.concat(["range","value"]),
+            optionalProperties);
+        if (itemData.range) {
+            if (!["single","all"].includes(itemData.range)) {
+                console.error(errorMessagePrefix + "Unknown restorePp item range: " + itemData.range);
+            }
+        }
+        break;
+    case "increaseEv":
+        DataManager.verifyProperties(
+            itemData, 
+            errorMessagePrefix, 
+            mandatoryProperties.concat(["stat","value","maxValue"]),
+            optionalProperties);
+        if (itemData.stat) {
+            if (!["hp","patk","pdef","satk","sdef","spd"].includes(itemData.stat)) {
+                console.error(errorMessagePrefix + "Unknown increaseEv item stat: " + itemData.stat);
+            }
+        }
+        break;
+    case "repel":
+        DataManager.verifyProperties(
+            itemData, 
+            errorMessagePrefix, 
+            mandatoryProperties.concat(["steps"]),
+            optionalProperties);
+        break;
+    case "tm":
+        DataManager.verifyProperties(
+            itemData, 
+            errorMessagePrefix, 
+            mandatoryProperties.concat(["move"]),
+            optionalProperties);
+        if (itemData.move) {
+            if (!DataManager.declared.moves.includes(itemData.move)) {
+                console.error(errorMessagePrefix + "Unknown tm item move: " + itemData.move);
+            }
+        }
+        break;
+    case "passivePatkBoost":
+    case "passivePdefBoost":
+    case "passiveSpcBoost":
+    case "passiveSpdBoost":
+        DataManager.verifyProperties(
+            itemData, 
+            errorMessagePrefix, 
+            mandatoryProperties.concat(["boostPercent"]),
+            optionalProperties);
+        break;
+    case "increaseLevel":
+    case "evolutionItem":
+    case "townMap": 
+    case "escapeRope":
+    case "bicycle":
+        DataManager.verifyProperties(
+            itemData, 
+            errorMessagePrefix, 
+            mandatoryProperties,
+            optionalProperties);
+        break;
+    default:
+        console.error(errorMessagePrefix + "Unknown item effect: " + itemData.effect);
+    }
+};
+
+// Moves checks
+DataManager.verifyMoves = function() {
+    // Check moveData array
+    index = 0;
+    for (const moveData of $PokemonMZ_dataMoves) {
+        if (moveData) {
+            DataManager.verifyMoveData(index, moveData)
+        }
+        index++;
+    }
+};
+DataManager.verifyMoveData = function(index, moveData) {
+    const moveId = moveData.id ?? "null";
+    const errorMessagePrefix = "PokemonMZ_Moves.json - Index " + String(index) + " - ID " + moveId + " - ";
+
+    let mandatoryProperties = [
+        "id","type","target","pp","accuracy","effects"
+    ]
+    if (moveData.noAccuracy) {
+        mandatoryProperties.splice(mandatoryProperties.indexOf("accuracy"),1);
+    }
+
+    DataManager.verifyProperties(
+        moveData,
+        errorMessagePrefix,
+        mandatoryProperties,
+        [
+            "power","targetDefenseDivider","noCritical","noAccuracy","noVariance",
+            "cpuHigherEffectFailure","fixedDamage","forbidMirrorMove","alwaysEffects",
+            "mapEffect","animationAlways","animationHit","priority","category"
+        ],
+    );
+    if (moveData.target) {
+        if (!["user","opponent"].includes(moveData.target)) {
+            console.error(errorMessagePrefix + "Unknown move target: " + moveData.target);
+        }
+    }
+
+    if (moveData.category) {
+        if (!["status"].includes(moveData.category)) {
+            console.error(errorMessagePrefix + "Unknown move category: " + moveData.category);
+        }
+    }
+    if (moveData.animationAlways) {
+        if (!DataManager.declared.animations.includes(moveData.animationAlways)) {
+            console.error(errorMessagePrefix + "Unknown AnimationAlways id: " + moveData.animationAlways);
+        }
+    }
+    if (moveData.animationHit) {
+        if (!DataManager.declared.animations.includes(moveData.animationHit)) {
+            console.error(errorMessagePrefix + "Unknown AnimationHit id: " + moveData.animationHit);
+        }
+    }
+
+    let index2 = 0;
+    if (moveData.effects) {
+        for (const moveEffect of moveData.effects) {
+            DataManager.verifyMoveEffect(errorMessagePrefix, index2, moveEffect)
+            index2++;
+        }
+    }
+};
+DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
+    const errorMessagePrefix = prefix + "Effect index " + String(index) + " - ";
+
+    const mandatoryProperties = ["type"]
+    const optionalProperties = ["except"]
+
+    switch(moveEffect.type) {
+    case "bide":
+        DataManager.verifyProperties(
+            moveEffect,
+            errorMessagePrefix,
+            mandatoryProperties.concat("unleashAnimationId"),
+            optionalProperties
+        );
+        if (moveEffect.unleashAnimationId) {
+            if (!DataManager.declared.animations.includes(moveEffect.unleashAnimationId)) {
+                console.error(errorMessagePrefix + "Unknown AnimationHit id: " + moveEffect.unleashAnimationId);
+            }
+        }
+        break;
+    case "bindTarget":
+        DataManager.verifyProperties(
+            moveEffect,
+            errorMessagePrefix,
+            mandatoryProperties.concat(["min","max","percentChances"]),
+            optionalProperties
+        );
+        break;
+    case "burnTarget":
+    case "paralyzeTarget":
+    case "sleepTarget":
+    case "confuseTarget":
+    case "flinchTarget":
+    case "seedTarget":
+        DataManager.verifyProperties(
+            moveEffect,
+            errorMessagePrefix,
+            mandatoryProperties.concat(["percentChance"]),
+            optionalProperties
+        );
+        break;
+    case "poisonTarget":
+        DataManager.verifyProperties(
+            moveEffect,
+            errorMessagePrefix,
+            mandatoryProperties.concat(["percentChance"]),
+            optionalProperties.concat(["multiHitEffect"])
+        );
+        if (moveEffect.multiHitEffect) {
+            if (!["all","last"].includes(moveEffect.multiHitEffect)) {
+                console.error(errorMessagePrefix + "Unknown Multi Hit Effect: " + moveEffect.multiHitEffect);
+            }
+        }
+        break;
+    case "disableTargetMove":
+        DataManager.verifyProperties(
+            moveEffect,
+            errorMessagePrefix,
+            mandatoryProperties.concat(["minTurn","maxTurn","select"]),
+            optionalProperties
+        );
+        if (moveEffect.select) {
+            if (!["random"].includes(moveEffect.select)) {
+                console.error(errorMessagePrefix + "Unknown Disable Target Move Select: " + moveEffect.select);
+            }
+        }
+        break;
+    case "multiHit":
+        DataManager.verifyProperties(
+            moveEffect,
+            errorMessagePrefix,
+            mandatoryProperties.concat(["min","max","percentChances"]),
+            optionalProperties
+        );
+        break;
+    case "drainTargetHp":
+        DataManager.verifyProperties(
+            moveEffect,
+            errorMessagePrefix,
+            mandatoryProperties.concat(["percentDamageDrain","text"]),
+            optionalProperties
+        );
+        break;
+    case "recoilPercent":
+        DataManager.verifyProperties(
+            moveEffect,
+            errorMessagePrefix,
+            mandatoryProperties.concat(["value"]),
+            optionalProperties
+        );
+        break;
+    case "berserk":
+        DataManager.verifyProperties(
+            moveEffect,
+            errorMessagePrefix,
+            mandatoryProperties.concat(["min","max"]),
+            optionalProperties
+        );
+        break;
+    case "pdefUpUser":
+    case "evaUpUser":
+    case "patkDownTarget":
+    case "pdefDownTarget":
+    case "spdDownTarget":
+    case "accDownTarget":
+        DataManager.verifyProperties(
+            moveEffect,
+            errorMessagePrefix,
+            mandatoryProperties.concat(["stage","percentChance"]),
+            optionalProperties
+        );
+        break;
+    case "highCritical":
+    case "focusEnergy":
+    case "forceSwitchOut":
+    case "minimizeUser":
+    case "rage":
+    case "splash":
+    case "teleport":
+    case "faintUser":
+    case "mirrorMove":
+        DataManager.verifyProperties(
+            moveEffect,
+            errorMessagePrefix,
+            mandatoryProperties,
+            optionalProperties
+        );
+        break;
+    default:
+        console.error(errorMessagePrefix + "Unknown Move Effect type: " + moveEffect.type);
+    }
+
+    if (moveEffect.except) {
+        let index2 = 0;
+        for (const exceptionData of moveEffect.except) {
+            DataManager.verifyMoveExceptionData(errorMessagePrefix, index2, exceptionData)
+            index2++;
+        }
+    }
+};
+DataManager.verifyMoveExceptionData = function(prefix, index, exceptionData) {
+    const errorMessagePrefix = prefix + "Exception index " + String(index) + " - ";
+    DataManager.verifyProperties(
+        exceptionData,
+        errorMessagePrefix,
+        [],
+        ["type"],
+    );
+
+    if (exceptionData.type) {
+        if (!DataManager.declared.types.includes(exceptionData.type)) {
+            console.error(errorMessagePrefix + "Unknown type: " + exceptionData.type);
+        }
+    }
+};
+
+// Pokemon checks
+DataManager.verifyPokemons = function() {
+    // Check moveData array
+    index = 0;
+    for (const pokemonData of $PokemonMZ_dataPokemon) {
+        if (pokemonData) {
+            DataManager.verifyPokemonData(index, pokemonData)
+        }
+        index++;
+    }
+};
+DataManager.verifyPokemonData = function(index, pokemonData) {
+    const pokemonId = pokemonData.id ?? "null";
+    const errorMessagePrefix = "PokemonMZ_Pokemon.json - Index " + String(index) + " - ID " + pokemonId + " - ";
+    let index2;
+
+    DataManager.verifyProperties(
+        pokemonData,
+        errorMessagePrefix,
+        [
+            "id","pokedex","category","description","height","weight","types",
+            "baseStats","expCurve","catchRate","xpYield","evolutions",
+            "learnedMoves","hmMoves","tmMoves"
+        ],
+        ["ev"],
+    );
+
+    if (pokemonData.pokedexData) {
+        index2 = 0;
+        for (const pokedexData of pokemonData.pokedexData) {
+            DataManager.verifyPokemonPokedexData(errorMessagePrefix, index2, pokedexData)
+            index2++;
+        }
+    }
+
+
+    if (pokemonData.types) {
+        for (const type of pokemonData.types) {
+            if (!DataManager.declared.types.includes(type)) {
+                console.error(errorMessagePrefix + "Unknown pokemon type: " + type);
+            }
+        }
+    }
+    if (pokemonData.baseStats) {
+        DataManager.verifyProperties(
+            pokemonData.baseStats,
+            errorMessagePrefix + " Base Stats - ",
+            ["hp","patk","pdef","satk","sdef","spc","spd"],
+            [],
+        );
+    }
+    if (pokemonData.expCurve) {
+        if (!["erratic","fast","mediumFast","mediumSlow","slow","fluctuating"].includes(pokemonData.expCurve)) {
+            console.error(errorMessagePrefix + "Unknown pokemon exp curve: " + pokemonData.expCurve);
+        }
+    }
+    if (pokemonData.ev) {
+        index2 = 0;
+        for (const evData of pokemonData.ev) {
+            DataManager.verifyPokemonEvData(errorMessagePrefix, index2, evData)
+            index2++;
+        }
+    }
+    if (pokemonData.evolutions) {
+        index2 = 0;
+        for (const evolutionData of pokemonData.evolutions) {
+            DataManager.verifyPokemonEvolutionData(errorMessagePrefix, index2, evolutionData)
+            index2++;
+        }
+    }
+    if (pokemonData.learnedMoves) {
+        index2 = 0;
+        for (const moveLearnedData of pokemonData.learnedMoves) {
+            DataManager.verifyPokemonMoveLearnedData(errorMessagePrefix, index2, moveLearnedData)
+            index2++;
+        }
+    }
+
+    if (pokemonData.hmMoves) {
+        for (const move of pokemonData.hmMoves) {
+            if (!DataManager.declared.moves.includes(move)) {
+                console.error(errorMessagePrefix + "Unknown HM move id: " + move);
+            }
+        }
+    }
+    if (pokemonData.tmMoves) {
+        for (const move of pokemonData.tmMoves) {
+            if (!DataManager.declared.moves.includes(move)) {
+                console.error(errorMessagePrefix + "Unknown TM move id: " + move);
+            }
+        }
+    }
+
+};
+
+DataManager.verifyPokemonPokedexData = function(prefix, index, pokedexData) {
+    const errorMessagePrefix = prefix + "Pokedex Data index " + String(index) + " - ";
+    DataManager.verifyProperties(
+        evData,
+        errorMessagePrefix,
+        ["region","number"],
+        [],
+    );
+};
+DataManager.verifyPokemonEvData = function(prefix, index, evData) {
+    const errorMessagePrefix = prefix + "EV Index " + String(index) + " - ";
+    DataManager.verifyProperties(
+        evData,
+        errorMessagePrefix,
+        [],
+        ["hp","patk","pdef","satk","sdef","spd"],
+    );
+};
+DataManager.verifyPokemonEvolutionData = function(prefix, index, evolutionData) {
+    let errorMessagePrefix = prefix + "Evolution Data Index " + String(index) + " - ";
+    const mandatoryProperties = ["to","mode"]
+
+    if (evolutionData.to) {
+        if (!DataManager.declared.pokemons.includes(evolutionData.to)) {
+            console.error(errorMessagePrefix + "Unknown evolution pokemon : " + evolutionData.to);
+        }
+        errorMessagePrefix += evolutionData.to + " - ";
+    }
+
+    switch(evolutionData.mode) {
+    case "level":
+        DataManager.verifyProperties(
+            evolutionData,
+            errorMessagePrefix,
+            mandatoryProperties.concat(["level"]),
+            [],
+        );
+        break;
+    case "useItem":
+        DataManager.verifyProperties(
+            evolutionData,
+            errorMessagePrefix,
+            mandatoryProperties.concat(["item"]),
+            [],
+        );
+        if (evolutionData.item) {
+            if (!DataManager.declared.items.includes(evolutionData.item)) {
+                console.error(errorMessagePrefix + "Unknown evolution item : " + evolutionData.item);
+            }
+        }
+        break;
+    case "trade":
+        break;
+    default:
+        console.error(errorMessagePrefix + "Unknown evolution mode : " + evolutionData.mode);
+    }
+};
+DataManager.verifyPokemonMoveLearnedData = function(prefix, index, moveLearnedData) {
+    const errorMessagePrefix = prefix + "Learnedd Move index " + String(index) + " - ";
+
+    DataManager.verifyProperties(
+        moveLearnedData,
+        errorMessagePrefix,
+        ["lvl","move"],
+        [],
+    );
+    if (moveLearnedData.move) {
+        if (!DataManager.declared.moves.includes(moveLearnedData.move)) {
+            console.error(errorMessagePrefix + "Unknown move id: " + moveLearnedData.move);
+        }
+    }
+};
+
+// Region Maps checks
+DataManager.verifyRegionMaps = function() {
+    // Check anomalies per regionMapData
+    let index = 0;
+    for (const regionMapData of $PokemonMZ_dataRegionMaps) {
+        if (regionMapData) {
+            DataManager.verifyRegionMapData(index, regionMapData)
+        }
+        index++;
+    }
+};
+DataManager.verifyRegionMapData = function(index, regionMapData) {
+    // Check the type Data structure
+    const regionId = regionMapData.id ?? "null";
+    const errorMessagePrefix = "PokemonMZ_RegionMaps.json - Index " + String(index) + " - ID " + regionId + " - ";
+
+    DataManager.verifyProperties(
+        regionMapData,
+        errorMessagePrefix,
+        ["id","pictureName","cellSize","poi"],
+        [],
+    );
+
+    let index2 = 0;
+    if (regionMapData.poi) {
+        for (const poiData of regionMapData.poi) {
+            if (poiData) {
+                DataManager.verifyRegionMapPoiData(errorMessagePrefix, index2, poiData)
+            }
+            index2++;
+        }
+    }
+};
+DataManager.verifyRegionMapPoiData = function(prefix, index, poiData) {
+    const errorMessagePrefix = prefix + "Index " + String(index) + " - ";
+
+    DataManager.verifyProperties(
+        poiData,
+        errorMessagePrefix,
+        ["id","name","x","y","pokemons"],
+        [],
+    );
+    if (poiData.pokemons) {
+        for (const id of poiData.pokemons) {
+            if (!DataManager.declared.pokemons.includes(id)) {
+                console.error(errorMessagePrefix + "Unknown pokemon id: " + id);
+            }
+        }
+    }
+};
+
+// Types checks
+DataManager.verifyTypes = function() {
+    // Check anomalies per typeData
+    let index = 0;
+    for (const typeData of $PokemonMZ_dataTypes) {
+        if (typeData) {
+            DataManager.verifyTypeData(index, typeData)
+        }
+        index++;
+    }
+};
+DataManager.verifyTypeData = function(index, typeData) {
+    // Check the type Data structure
+    const typeId = typeData.id ?? "null";
+    const errorMessagePrefix = "PokemonMZ_Types.json - Index " + String(index) + " - ID " + typeId + " - ";
+
+    DataManager.verifyProperties(
+        typeData,
+        errorMessagePrefix,
+        ["id","name","weak","strong","immune","damage"],
+        [],
+    );
+
+    if (typeData.weak) {
+        for (const id of typeData.weak) {
+            if (!DataManager.declared.types.includes(id)) { console.error(errorMessagePrefix + "Weak property, unknown type ID : " + id);}
+        }
+    }
+    if (typeData.strong) {
+        for (const id of typeData.strong) {
+            if (!DataManager.declared.types.includes(id)) { console.error(errorMessagePrefix + "Strong property, unknown type ID : " + id);}
+        }
+    }
+    if (typeData.immune) {
+        for (const id of typeData.immune) {
+            if (!DataManager.declared.types.includes(id)) { console.error(errorMessagePrefix + "Immune property, unknown type ID : " + id);}
+        }
+    }
+    if (typeData.damage) {
+        if (!["physical","special"].includes(typeData.damage)) { 
+            console.error(errorMessagePrefix + "Damage property, unknown damage type : " + typeData.damage);
+        }
+    }
+};
+
+
 // AudioManager edits
 AudioManager.playPokemonCry = function(id, slower) {
     if (id) {

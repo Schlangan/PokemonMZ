@@ -245,6 +245,9 @@ Scene_Boot.prototype.onDatabaseLoaded = function() {
     DataManager.enhanceTypes();
     DataManager.enhanceTroops();
     DataManager.enhanceAnimations();
+    if (PokemonMZ.databaseChecker) {
+        DataManager.verifyDatabase();
+    }
 };
 
 // Scene_Title

@@ -179,6 +179,7 @@
 const PokemonMZ = {}
 const parameters = PluginManager.parameters("PokemonMZ_Core_Configuration")
 
+PokemonMZ.databaseChecker = true;
 PokemonMZ.debugLog = false;
 
 PokemonMZ.playerActorID = Number(parameters.playerActorID);
