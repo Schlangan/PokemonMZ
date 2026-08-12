@@ -2894,26 +2894,6 @@ PokemonMZ_Game_Action.prototype.isResultSuperEffective = function() {
     }
     return false;
 };
-PokemonMZ_Game_Action.prototype.typeInfo = function(typeId) {
-    if (Object.keys($PokemonMZ_dataTypesIndex).includes(typeId)) {
-        return $PokemonMZ_dataTypes[$PokemonMZ_dataTypesIndex[typeId]];
-    } else {
-        return {};
-    }
-};
-PokemonMZ_Game_Action.prototype.typeEffectiveness = function(offensiveType, defensiveType) {
-    const defensiveInfo = this.typeInfo(defensiveType);
-
-    if (defensiveInfo.immune.includes(offensiveType)) {
-        return 0.0;
-    } else if (defensiveInfo.strong.includes(offensiveType)) {
-        return 0.5;
-    } else if (defensiveInfo.weak.includes(offensiveType)) {
-        return 2.0;
-    } else {
-        return 1.0;
-    }
-};
 PokemonMZ_Game_Action.prototype.calculate = function(item) {
     if (this.isItem()) {
         this.calculateItem();
@@ -3588,7 +3568,7 @@ PokemonMZ_Game_Action.prototype.moveDamageCategory = function() {
     // Determine if move is physical or special
 
     // GEN 1 : type determines the move nature
-    return this.typeInfo(this._moveData.type).damage
+    return PokemonMZ_BattleManager.typeInfo(this._moveData.type).damage
 };
 PokemonMZ_Game_Action.prototype.moveDamage = function(critical) {
     const debugLogging = {}
@@ -3690,8 +3670,8 @@ PokemonMZ_Game_Action.prototype.moveDamage = function(critical) {
     let opponentType1 = this._opponent.type1();
     let opponentType2 = this._opponent.type2();
     
-    if (opponentType1) { efficiency *= this.typeEffectiveness(moveType, opponentType1) }
-    if (opponentType2) { efficiency *= this.typeEffectiveness(moveType, opponentType2) }
+    if (opponentType1) { efficiency *= PokemonMZ_BattleManager.typeEffectiveness(moveType, opponentType1) }
+    if (opponentType2) { efficiency *= PokemonMZ_BattleManager.typeEffectiveness(moveType, opponentType2) }
 
     debugLogging.criticalCoef = criticalCoef;
     debugLogging.stabFactor = stabFactor;

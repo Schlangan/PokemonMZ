@@ -22,6 +22,7 @@ encounterData (Trainer)
 - ia, **string** : The specific battle AI. Only **random** and **basic** are implemented for now.
     - **random** : The trainer will use random moves
     - **basic** : The trainer will use random moves, but will avoid using status-only moves if the player's pokemon has already a status.
+    - **effective** : The trainer will use effective moves if possible
 - iaModifiers: **iaModifierData**, *optional* : An iaModifierData object for specific Battle AI Behavior such as using items or switching out.
 - pokemons, **Array:trainerPokemonData** : An array of **trainerPokemonData**, defining the party of the trainer
 - victoryText, **string**, *optional* : If present, sets a text for the trainer if the player is defeated. Do not add the parameter to skip the trainer victory message scene.
@@ -57,5 +58,6 @@ iaModifierItemData
 - id, **string** : String id of the item to use.
 - condition, **string** : Condition for using the item. 
     - **hasStatus** : Require the trainer's pokemon to be inflicted by a status BRN, SLP, PSN, FRZ or PAR.
+    - **random** : Randomly use the item
 - chance, **int** : Chance out of 100 for the trainer to use the item if the conditions are fulfilled.
 - maxPerPokemon, **int** : The maximum amount of times the trainer can use an item of the same Pokemon.

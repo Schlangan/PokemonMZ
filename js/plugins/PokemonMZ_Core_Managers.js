@@ -3196,6 +3196,7 @@ PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
             break;
         case "effective": // Avoid status, use super effective attacks, avoid ineffective
             scoringTable = this.adjustScoringForBasic(scoringTable);
+            scoringTable = this.adjustScoringForEffective(scoringTable);
             break;
         }
 
@@ -3234,6 +3235,57 @@ PokemonMZ_BattleManager.adjustScoringForBasic = function(scoringTable) {
     }
     return scoringTable;
 };
+PokemonMZ_BattleManager.adjustScoringForEffective = function(scoringTable) {
+    const playerPokemon = this._playerChosenPokemon;
+    const enemyPokemon = this._enemyChosenPokemon;
+
+    for (let i=0; i<scoringTable.length; i++) {
+        let index = scoringTable[i].index;
+
+        // Check move type for offensive ones. Ignore status only moves
+        if (!(enemyPokemon.isMoveStatusOnly(index) || enemyPokemon.isMoveSeedOnly(index) || enemyPokemon.isMoveConfuseOnly(index))) {
+            let moveData = enemyPokemon.moveDataFromIndex(index);
+
+            let efficiency = 1.0;
+            let opponentType1 = playerPokemon.type1();
+            let opponentType2 = playerPokemon.type2();
+            if (opponentType1) { efficiency *= this.typeEffectiveness(moveData.type, opponentType1) }
+            if (opponentType2) { efficiency *= this.typeEffectiveness(moveData.type, opponentType2) }
+
+            if (efficiency > 1.0) {
+                scoringTable[i].score++;
+            } else if (efficiency == 0) {
+                scoringTable[i].score -= 2;
+            } else if (efficiency < 1.0) {
+                scoringTable[i].score --;
+            }
+        }
+    }
+
+    return scoringTable;
+};
+PokemonMZ_BattleManager.typeEffectiveness = function(offensiveType, defensiveType) {
+    const defensiveInfo = this.typeInfo(defensiveType);
+
+    if (defensiveInfo.immune.includes(offensiveType)) {
+        return 0.0;
+    } else if (defensiveInfo.strong.includes(offensiveType)) {
+        return 0.5;
+    } else if (defensiveInfo.weak.includes(offensiveType)) {
+        return 2.0;
+    } else {
+        return 1.0;
+    }
+};
+PokemonMZ_BattleManager.typeInfo = function(typeId) {
+    if (Object.keys($PokemonMZ_dataTypesIndex).includes(typeId)) {
+        return $PokemonMZ_dataTypes[$PokemonMZ_dataTypesIndex[typeId]];
+    } else {
+        return {};
+    }
+};
+
+
 PokemonMZ_BattleManager.calculateComputerItemUse = function(modifiers) {
     if (!modifiers.item) { return; }    // Nothing if not item modifier
     
