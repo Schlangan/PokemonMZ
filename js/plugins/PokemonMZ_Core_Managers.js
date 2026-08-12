@@ -676,6 +676,7 @@ DataManager.verifyItemData = function(index, itemData) {
 
     if (itemData.category == "badge") {
         mandatoryProperties = ["id","category","effect"]
+        optionalProperties = ["target","obedienceLevel"]
     } else if (itemData.category == "key") {
         mandatoryProperties = ["id","user","category","battle","effect"]
         optionalProperties = ["target","price"]

@@ -11,8 +11,9 @@ itemData
 - user, **string** : For now, only **trainer**. Not required for badge items.
 - category, **string** : Either **regular**, **key** or **badge** items. Key items cannot be tossed, while regular can. Badge item must not be given, and have passive effects.
 - battle, **bool** : Set the value to true if the item can be used during battle. Else, the item won't appear inside the battle screen. Not required for badge items.
-- target, *optional*,**string**: Set the value to **pokemon** if the item requires the pokemon selection screen to be used.
+- target,**string**, *optional*: Set the value to **pokemon** if the item requires the pokemon selection screen to be used.
 - price, **int** : Price of the item, when bought. Not required for badge or key items.
+- obedienceLevel, **int**, *optional* : For badges only, sets the level for which the trade pokemon stop obeying. The game will use the obtained badge will the highest obedience level.
 - effect, **string** : Chosen specific effect for the item. 
 
 
