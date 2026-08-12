@@ -866,7 +866,7 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemOk = function() {
         this._itemWindow.deactivate();
         const rect = this._itemWindow.itemRect(this._itemWindow.index());
         const newX = this._itemWindow.x + rect.x + rect.width - this._itemSelectWindow.width;
-        const newY = this._itemWindow.y + rect.y + rect.height + this._itemSelectWindow.itemPadding();
+        let newY = this._itemWindow.y + rect.y + rect.height + this._itemSelectWindow.itemPadding();
         if (newY > this._itemWindow.y + this._itemWindow.height) {
             newY = this._itemWindow.y + rect.y - this._itemSelectWindow.height - this._itemSelectWindow.itemPadding();
         }
