@@ -1962,6 +1962,15 @@ PokemonMZ_Game_Pokemon.prototype.itemEffect = function(item, ext1) {
             }
         }
         return {"effect":"restorePp", "ppRecovery":ppRecovery}
+    case "battlePdefUpUser":
+        if (this._stageModifiers.pdef < 6) {
+            this._stageModifiers.pdef += item.pkmz_data.stage;
+            if (this._stageModifiers.pdef > 6) { this._stageModifiers.pdef = 6; }
+            return {"effect":"pdefUp","animation":item.pkmz_data.battleAnimation, "success":true};
+        } else {
+           return {"effect":"pdefUp","success":false};
+        }
+        break;
     }
     return {"effect":""};
 };
@@ -2904,7 +2913,7 @@ PokemonMZ_Game_Action.prototype.calculate = function(item) {
 PokemonMZ_Game_Action.prototype.calculateResidualEffectsOnly = function() {
     this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
 };
-PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO  
+PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO 
     const item = $dataItems[$dataItemsIndex[this._item]];
     const effect = this._user.itemEffect(item);
     const mhp = this._user.mhp();
@@ -2946,6 +2955,17 @@ PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO
             break;
     }
     this._resultSteps.push(["waittext","usedItem",this.side(), item.name]);
+    switch (effect.effect) {
+        case "pdefUp":
+            if (effect.success) {
+                this._resultSteps.push(["hitAnimation", effect.animation, this.userBattleSprite(), null, this.side()])
+                this._resultSteps.push(["autotext","defenseRose",this.side()])
+            } else {
+                this._resultSteps.push(["autotext","statusNothing",this.side()])
+            }
+            
+            break;
+    }
     this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
 };
 PokemonMZ_Game_Action.prototype.calculateNumHits = function() {

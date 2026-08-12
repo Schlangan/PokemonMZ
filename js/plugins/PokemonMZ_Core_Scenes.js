@@ -897,6 +897,10 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
             this._messageWindow.setText("This isn't the time to use that!");
             this._messageWindow.startMessage();
             break;
+        case "battlePdefUpUser":
+            this._messageWindow.setText(itemDict.pkmz_data.mapMessage);
+            this._messageWindow.startMessage();
+            break;
         case "tm":
             const moveStrId = itemDict.pkmz_data.move;
             let tmName = "????"
@@ -3484,6 +3488,9 @@ PokemonMZ_Scene_Battle.prototype.onItemOk = function() {
                 $gameMessage.add("The Pokémon Box is full! Can't use that item!")
                 PokemonMZ_BattleManager.changePhase("startPlayerInput")
             }
+            break;
+        case "battlePdefUpUser":
+            this.onDirectItemUse(selectedItem);
             break;
         default:
             this._pokemonSelectMode = "useItem";

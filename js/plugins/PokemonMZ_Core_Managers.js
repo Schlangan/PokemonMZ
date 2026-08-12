@@ -639,7 +639,7 @@ DataManager.verifyIaModifierDataItem = function(prefix, index, iaModifierDataIte
         }
     }
     if (iaModifierDataItem.condition) {
-        if (!["hasStatus"].includes(iaModifierDataItem.condition)) {
+        if (!["random","hasStatus"].includes(iaModifierDataItem.condition)) {
             console.error(errorMessagePrefix + "Unknown condition: " + iaModifierDataItem.condition)
         }
     }
@@ -768,6 +768,18 @@ DataManager.verifyItemData = function(index, itemData) {
             errorMessagePrefix, 
             mandatoryProperties.concat(["boostPercent"]),
             optionalProperties);
+        break;
+    case "battlePdefUpUser":
+        DataManager.verifyProperties(
+            itemData, 
+            errorMessagePrefix, 
+            mandatoryProperties.concat(["stage","mapMessage"]),
+            optionalProperties.concat(["battleAnimation"]));
+        if (itemData.battleAnimation) {
+            if (!DataManager.declared.animations.includes(itemData.battleAnimation)) {
+                console.error(errorMessagePrefix + "Unknown battle animation ID: " + itemData.battleAnimation);
+            }
+        }
         break;
     case "increaseLevel":
     case "evolutionItem":
@@ -3304,6 +3316,12 @@ PokemonMZ_BattleManager.calculateComputerItemUse = function(modifiers) {
             // Only checks item if the pokemon has a status
             if (!enemyPokemon.hasStatus()) { return; }
             break;
+        case "random":
+            // Must be set if no other condition
+            break;
+        default:
+            // Else, no item use
+            return;
     }
 
     // Check item usage probability
@@ -3336,6 +3354,7 @@ PokemonMZ_BattleManager.calculateBattleActions = function() {
         // or if the item is direct, like a pokeball
         switch (this._playerUseItem.pkmz_data.effect) {
         case "ball":
+        case "battlePdefUpUser":
             this._battleActions.push("playerStartUsingItem");
             break;
         default:
@@ -3675,6 +3694,12 @@ PokemonMZ_BattleManager.startPlayerItem = function() {
             this._thrownBall = this._playerUseItem;
             this._playerUseItem = null;
             this.changePhase("throwBall");
+            break;
+        case "battlePdefUpUser":
+            this._currentAction = new PokemonMZ_Game_Action(this._playerChosenPokemon, "player");
+            this._currentAction.setItem(this._playerUseItem.pkmz_data.id)
+            this._currentAction.calculate();
+            this.changePhase("playerResolveActionSteps"); 
             break;
     }
 };
@@ -4568,11 +4593,16 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
     const prefix = (side == "enemy") ? "Enemy " : "";
     const pokemon = (side == "enemy") ? this._enemyChosenPokemon : this._playerChosenPokemon;
 
-    const trainerData = $PokemonMZ_gameBattle.enemy1();
-    const trainer = trainerData ? (side == "enemy") ? trainerData.name() : $gamePlayerTrainer.name() : "";
+    
+    let trainer = ""
+    if (side == "enemy") { 
+        const trainerData = $PokemonMZ_gameBattle.enemy1();
+        if (trainerData) { trainer = trainerData.name() }
+    } else {
+        trainer = $gamePlayerTrainer.name();
+    }
 
     switch(key) {
-
     case "noMovesLeft":
         return prefix + pokemon.name() + " has no moves left!";
     case "useMove":
