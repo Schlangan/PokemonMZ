@@ -552,7 +552,7 @@ DataManager.verifyEncounterDataTrainer = function(index, encounterData) {
         }
     }
     if (encounterData.ia) {
-        if (!["random","basic"].includes(encounterData.ia)) {
+        if (!["random","basic","effective"].includes(encounterData.ia)) {
             console.error(errorMessagePrefix + "Unknown trainer AI type: " + encounterData.ia)
         }
     }
