@@ -2089,7 +2089,11 @@ PokemonMZ_Game_Pokemon.prototype.satkModified = function() {
 PokemonMZ_Game_Pokemon.prototype.sdefModified = function() {
     const modifier = [0.25, 0.28, 0.33, 0.40, 0.50, 0.66, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0];
     let value = this.sdef();
-    return Math.floor(value * modifier[this._stageModifiers.sdef + 6]);
+    if (PokemonMZ.pokemonMechanicsGeneration == 1) {
+        return Math.floor(value * modifier[this._stageModifiers.satk + 6]);
+    } else {
+        return Math.floor(value * modifier[this._stageModifiers.sdef + 6]);
+    }
 };
 PokemonMZ_Game_Pokemon.prototype.spdModified = function() {
     const modifier = [0.25, 0.28, 0.33, 0.40, 0.50, 0.66, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0];
