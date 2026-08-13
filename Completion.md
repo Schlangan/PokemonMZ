@@ -25,11 +25,11 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0021. Spearow
 - 0022. Fearow
 - 0023. Ekans
-- (...)
+- 0024. Arbok
 - 0025. Pikachu
 - (...)
 - 0027. Sandshrew
-- (...)
+- 0028. Sandslash
 - 0029. Nidoran♀
 - 0030. Nidorina
 - 0031. Nidoqueen
@@ -42,10 +42,13 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0039. Jigglypuff
 - 0040. Wigglytuff
 - 0041. Zubat
-- (...)
+- 0042. Golbat
 - 0043. Oddish
+- 0044. Gloom
 - (...)
 - 0046. Paras
+- 0047. Parasect
+- 0048. Venonat
 - (...)
 - 0050. Diglett
 - (...)
@@ -53,19 +56,38 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - (...)
 - 0056. Mankey
 - (...)
+- 0063. Abra
+- 0064. Kadabra
+- (...)
+- 0066. Machop
+- (...)
 - 0069. Bellsprout
+- 0070. Weepinbell
 - (...)
 - 0074. Geodude
+- 0075. Graveler
+- (...)
+- 0079. Slowpoke
 - (...)
 - 0081. Magnemite
 - (...)
 - 0088. Grimer
 - (...)
+- 0090. Shellder
+- (...)
 - 0095. Onix
+- 0096. Drowzee
 - (...)
 - 0100. Voltorb
 - (...)
 - 0109. Koffing
+- (...)
+- 0116. Seaking
+- (...)
+- 0118. Goldeen
+- (...)
+- 0120. Staryu
+- 0121. Starmie
 - (...)
 - 0129. Magikarp
 - 0130. Gyarados
@@ -91,11 +113,19 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - Moves with high priorities
     - Quick Attack (+1)
 
+- Moves with fixed damage
+    - Dragon Rage (40)
+    - Seismic Toss (User level)
+
 - Moves hitting N times in one turn
     - Double Kick (2-2)
     - Double Slap (2-5)
     - Fury Attack (2-5)
+    - Fury Swipes (2-5)
     - Twineedle (2-2)
+
+- Moves hitting N turns consecutively and ending with confusion
+    - Thrash (3-4)
 
 - Moves draining HP
     - Absorb
@@ -105,6 +135,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Burn
         - Ember
     - Confusion
+        - Confuse Ray
         - Confusion
         - Supersonic
     - Flinch
@@ -112,6 +143,8 @@ This file details all mechanics available in the plugin, compared to RBY Generat
         - Hyper Fang
         - Low Kick
     - Paralysis
+        - Body Slam (except Normal types)
+        - Glare
         - Stun Spore
         - Thunder Shock (except Electric types)
         - Thunder Wave
@@ -123,12 +156,15 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Seed
         - Leech Seed
     - Sleep
+        - Hypnosis
         - Sing
         - Sleep Powder
 
 - Moves dropping target stats by one stage
+    - Acid (defense)
     - Bubble (speed)
     - Growl (attack)
+    - Kinesis (accuracy)
     - Leer (defense)
     - Sand Attack (accuracy)
     - String Shot (speed)
@@ -141,17 +177,26 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Defense curl (defense)
     - Double Team (evasion)
     - Harden (defense)
+    - Withdraw (defense)
 
 - Moves forcing Pokemon to switch out (no effect in trainer battles in generation I)
     - Whirlwind
 
 - Moves binding the opponent
+    - Bind
     - Wrap
+
+- Moves fainting user 
+    - Self-destruct
+
+- Moves dividing target defense during damage calculation
+    - Self-destruct (by 2)
 
 - Special moves
     - Bide (activate turn 1, wait 1-2 turns, and unleash last turn double damage taken while waiting)
     - Disable (disable a random move from the enemy)
     - Focus Energy (multiply critical chances by 4 - bug fixed compared to original RBY games which were dividing by 4 instead)
+    - Mirror Move (replicate last attack from the opponent)
     - Splash (no effect at all)
     - Struggle (launched with 0pp, recoil damage)
 
@@ -159,9 +204,11 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 
 - Badges
     - Boulder Badge
+    - Cascade Badge
 
 - Balls
     - Poke Ball
+    - Great Ball
 
 - Healing
     - Potion
@@ -176,11 +223,18 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Hp Up
     - Rare Candy
 
+- Repels
+    - Repel
+
 - Evolution
     - Moon Stone
 
+- Treasures
+    - Nugget
+
 - Key Items
     - Oak's Parcel
+    - S.S. Ticket
     - Town Map
 
 - Misc
@@ -188,6 +242,10 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 
 - TMs / HMs
     - TM01 - Mega punch
+    - TM04 - Whirlwind
+    - TM11 - Bubble beam
     - TM12 - Water gun
+    - TM19 - Seismic toss
+    - TM28 - Dig
     - TM34 - Bide
-
+    - TM45 - Thunderwave
