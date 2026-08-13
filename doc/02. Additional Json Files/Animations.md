@@ -53,3 +53,5 @@ animationActionData
     - frames, **int** : Number of frames to wait.
 - type = **hideSprite** : Hide the battler sprite.
     - target, **string** : The target sprite of the animation. Either **user** or **opponent**.
+- type = **showSprite** : Show the battler sprite.
+    - target, **string** : The target sprite of the animation. Either **user** or **opponent**.

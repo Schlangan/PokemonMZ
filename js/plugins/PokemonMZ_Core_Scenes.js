@@ -2054,6 +2054,12 @@ PokemonMZ_Scene_PokemonMenu.prototype.onUsingMapMove = function() {
         SceneManager.pop();
         SceneManager.pop();
         $gameMap.PokemonMZ_useTeleport();
+        break;
+    case "dig":
+        SceneManager.pop();
+        SceneManager.pop();
+        $gameMap.PokemonMZ_useDig();
+        break;
     }
 };
 
@@ -2150,6 +2156,9 @@ PokemonMZ_Scene_PokemonMenu.prototype.onMoveCommand = function() {
     case "teleport":
         this.useTeleportCommand();
         break;
+    case "dig":
+        this.useDigCommand();
+        break;
     default:
         this._commandWindow.close();
         this._listWindow.activate();
@@ -2172,7 +2181,25 @@ PokemonMZ_Scene_PokemonMenu.prototype.useTeleportCommand = function() {
         this._messageWindow.setText(message);
         this._messageWindow.startMessage();
     }
-}
+};
+PokemonMZ_Scene_PokemonMenu.prototype.useDigCommand = function() {
+    const pokemon = this.selectedPokemon();
+
+    if ($gameMap.PokemonMZ_isDigAllowed()) {
+        this._commandWindow.close();
+        this._listWindow.deactivate();
+        this._messageWindow.setText(pokemon.name() + " used Dig!");
+        this._messageWindow.startMessage();
+        this._usingMapMove = "dig"
+    } else {
+        // Display message indicating no dig
+        const message = "This isn't the time to use that!"
+        this._commandWindow.close();
+        this._listWindow.deactivate();
+        this._messageWindow.setText(message);
+        this._messageWindow.startMessage();
+    }
+};
 PokemonMZ_Scene_PokemonMenu.prototype.onCancelStatus = function() {
     this._statusWindow.close();
     this._listWindow.activate();

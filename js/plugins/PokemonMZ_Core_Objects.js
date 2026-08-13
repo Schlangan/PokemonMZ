@@ -307,8 +307,10 @@ Game_Map.prototype.initialize = function() {
     };
     this._isRopeEscapable = false;
     this._isTeleportAllowed = false;
+    this._isDigAllowed = false;
     this._isUsingRope = false;
     this._isUsingTeleport = false;
+    this._isUsingDig = false;
 };
 Game_Map.prototype.PokemonMZ_reinitialize = function() {
     // Used to create possible missing objects after update
@@ -344,8 +346,9 @@ Game_Map.prototype.setup = function(mapId) {
     if (noteData.ledgeUpLeftRegion) { this._ledgeRegions.upLeft = Number(noteData.ledgeUpLeftRegion) } else { this._ledgeRegions.upLeft = -1; }
     if (noteData.ledgeUpRightRegion) { this._ledgeRegions.upRight = Number(noteData.ledgeUpRightRegion) } else { this._ledgeRegions.upRight = -1; }
 
-    this._isRopeEscapable = Boolean(noteData.escapeRope)
-    this._isTeleportAllowed = Boolean(noteData.teleport)
+    this._isRopeEscapable = Boolean(noteData.escapeRope);
+    this._isTeleportAllowed = Boolean(noteData.teleport);
+    this._isDigAllowed = Boolean(noteData.escapeRope);
 };
 Game_Map.prototype.PokemonMZ_eventsAggro = function(x, y) {
     return this.events().filter(event => (event.PokemonMZ_isAgrroable() && event.PokemonMZ_posAggro(x,y)));
@@ -391,12 +394,13 @@ const PokemonMZ_Game_Map_update = Game_Map.prototype.update;
 Game_Map.prototype.update = function(sceneActive) {
     PokemonMZ_Game_Map_update.call(this, sceneActive);
 
-    // Consider player spinning for ropes/teleports
-    // For now the code is the same for both.
-    if (this._isUsingRope || this._isUsingTeleport) {
+    // Consider player spinning for ropes/teleport/dig
+    // For now the code is the same for all.
+    if (this._isUsingRope || this._isUsingTeleport || this._isUsingDig) {
         if (!$gamePlayer.PokemonMZ_isSpinning()) {
             this._isUsingRope = false;
             this._isUsingTeleport = false;
+            this._isUsingDig = false;
             AudioManager.playStandardSe(PokemonMZ.teleportSE);
             const location = $gamePlayerTrainer.respawnLocation();
             $gamePlayer.reserveTransfer(location.mapId,location.x,location.y,2,0);
@@ -500,6 +504,9 @@ Game_Map.prototype.PokemonMZ_isUsingEscapeRope = function() {
 Game_Map.prototype.PokemonMZ_isTeleportAllowed = function() {
     return this._isTeleportAllowed;
 };
+Game_Map.prototype.PokemonMZ_isDigAllowed = function() {
+    return this._isDigAllowed;
+};
 Game_Map.prototype.PokemonMZ_useTeleport = function() {
     this._isUsingTeleport = true;
     $gameSystem.disableMenu();
@@ -507,6 +514,14 @@ Game_Map.prototype.PokemonMZ_useTeleport = function() {
 };
 Game_Map.prototype.PokemonMZ_isUsingTeleport = function() {
     return this._isUsingTeleport;
+};
+Game_Map.prototype.PokemonMZ_useDig = function() {
+    this._isUsingDig = true;
+    $gameSystem.disableMenu();
+    $gamePlayer.PokemonMZ_startSpinning(3, true);
+};
+Game_Map.prototype.PokemonMZ_isUsingDig = function() {
+    return this._isUsingDig;
 };
 
 
@@ -1137,6 +1152,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._isBerserk = false;
     this._isRaging = false;
     this._isMinimized = false;
+    this._isDigging = false;
 
     this._hasMoveDisabled = false;
     this._disabledMoveIndex = -1;
@@ -1152,6 +1168,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._hasFocusEnergy = false;
     this._berserkMoveIndex = -1;
     this._rageMoveIndex = -1;
+    this._digMoveIndex = -1;
 
     this._lastSeenEnemyMove = null;
 
@@ -1611,7 +1628,6 @@ PokemonMZ_Game_Pokemon.prototype.isMoveBide = function(index) {
     }
     return false;
 };
-
 PokemonMZ_Game_Pokemon.prototype.isMoveBinding = function(index) {
     // Returns if a move only sets a status to the target
     const move = this.moveDataFromIndex(index);
@@ -1633,11 +1649,24 @@ PokemonMZ_Game_Pokemon.prototype.isMoveMirrorMove = function(index) {
     }
     return false;
 };
+PokemonMZ_Game_Pokemon.prototype.isMoveDig = function(index) {
+    // Returns if the move at index has the dig effect
+    const move = this.moveDataFromIndex(index);
+    for (const effect of move.effects) {
+        if (effect.type == "dig") { return true; }
+    }
+    return false;
+};
+
+
 PokemonMZ_Game_Pokemon.prototype.berserkMoveIndex = function() {
     return this._berserkMoveIndex;
 };
 PokemonMZ_Game_Pokemon.prototype.rageMoveIndex = function() {
     return this._rageMoveIndex;
+};
+PokemonMZ_Game_Pokemon.prototype.digMoveIndex = function() {
+    return this._digMoveIndex;
 };
 PokemonMZ_Game_Pokemon.prototype.moveNameFromIndex = function(index) {
     const move = this._moves[index];
@@ -2133,6 +2162,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.unBerserk();
     this.unRage();
     this.unMinimize();
+    this.endDigging();
 };
 PokemonMZ_Game_Pokemon.prototype.removeFinishedStatuses = function() {
     // Remove statuses that disappear at the beginning of the next turn
@@ -2185,6 +2215,9 @@ PokemonMZ_Game_Pokemon.prototype.isRaging = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.isMinimized = function() {
     return this._isMinimized;
+};
+PokemonMZ_Game_Pokemon.prototype.isDigging = function() {
+    return this._isDigging;
 };
 PokemonMZ_Game_Pokemon.prototype.nextConfusionTurn = function() {
     this._turnsConfusion--;
@@ -2397,6 +2430,10 @@ PokemonMZ_Game_Pokemon.prototype.minimize = function(force) {
         this._isMinimized = true;
     }
 };
+PokemonMZ_Game_Pokemon.prototype.startDigging = function(moveIndex) {
+    this._isDigging = true;
+    this._digMoveIndex = moveIndex;
+};
 PokemonMZ_Game_Pokemon.prototype.keepBinding = function() {
     this._turnsBound--;
 };
@@ -2508,6 +2545,10 @@ PokemonMZ_Game_Pokemon.prototype.unMinimize = function() {
     if (this.isMinimized()) {
         this._isMinimized = false;
     }
+};
+PokemonMZ_Game_Pokemon.prototype.endDigging = function() {
+    this._isDigging = false;
+    this._digMoveIndex = -1;
 };
 PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolution = function(evolutionMode, ext1) {
     switch(evolutionMode) {
@@ -2847,6 +2888,15 @@ PokemonMZ_Game_Action.prototype.isMoveEffectSwitchOut = function() {
     }
     return false;
 };
+PokemonMZ_Game_Action.prototype.isMoveDig = function() {
+    if (!this._moveData) { return false; }
+    for (const effect of this._moveData.effects) {
+        if (effect.type == "dig") {
+            return true;
+        }
+    }
+    return false;
+};
 PokemonMZ_Game_Action.prototype.opponent = function() {
     return this._opponent;
 };
@@ -3017,6 +3067,14 @@ PokemonMZ_Game_Action.prototype.calculateMove = function() { //TODO
         this.calculateMoveBide();
         return;
     }
+
+    // Specific behavior for dig turn 1
+    if (this.isMoveDig()) { 
+        if (!this._user.isDigging()) {
+            this.calculateMoveDigTurn1();
+            return;
+        }
+    };
 
     // Specific behavior for bind attacks when enemy is bound already
     if (this._opponent.isBound() && this.isMoveEffectBind()) {
@@ -3194,8 +3252,14 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
         }
     } else {
         this._moveRemainingHits = 0;
-        this._resultSteps.push(["autotext","missed",this.side()])
+        
+        // After digging, the sprite must be shown, even if missed
+        if (this._user.isDigging()) {
+            this._resultSteps.push(["showSprite", this.userBattleSprite()]);
+        }
 
+        this._resultSteps.push(["autotext","missed",this.side()])
+        
         // Usually missed move does no effect, except if effect is forced; for example self-destruct
         if (this._moveData.alwaysEffects) {
             const effectsResult = this.calculateMoveEffects({});
@@ -3345,6 +3409,26 @@ PokemonMZ_Game_Action.prototype.calculateMoveBind = function() {
     this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
 
 };
+PokemonMZ_Game_Action.prototype.calculateMoveDigTurn1 = function() { 
+    let enemyWillFaint = false;
+    let userWillFaint = false;
+
+    let animation = null;
+    for (const effect of this._moveData.effects) {
+        if (effect.type == "dig") {
+            animation = effect.animationTurn1;
+        }
+    }
+
+
+    this._resultSteps.push(["hitAnimation", animation, this._user._battleSprite, this._opponent._battleSprite, this.side()]);
+    // this._resultSteps.push(["se","normal"]);
+    // this._resultSteps.push(["damageOpponent",opponentDamage]);
+    const effectsResult = this.calculateMoveEffects({});
+    this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
+};
+
+
 PokemonMZ_Game_Action.prototype.calculateMoveEffects = function(battleData) { // TODO ADD ALL MOVE EFFECTS
     const effects = this._moveData.effects;
     if (!effects) { return {}; }
@@ -3484,6 +3568,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
     case "minimizeUser":
         effectResults = this.effect_minimizeUser(battleData, effect, effectResults);
         break;
+    case "dig":
+        effectResults = this.effect_dig(battleData, effect, effectResults);
+        break;
 
     }
     return effectResults;
@@ -3508,6 +3595,11 @@ PokemonMZ_Game_Action.prototype.moveHit = function() {
 
     switch (this._moveData.target) {
         case "opponent":
+            if (this._opponent.isDigging() && !this._moveData.hitDig) {
+                // Opponent under the ground can only be hit with specific moves with the hitDig:true flag.
+                return false;
+            }
+
             const moveAccuracy = this._moveData.accuracy ? this._moveData.accuracy : 100;
             const userAccuracy = this._user.accuracy();
             const targetEvasion = this._opponent.evasion();
@@ -4312,6 +4404,16 @@ PokemonMZ_Game_Action.prototype.effect_minimizeUser = function(battleData, effec
         };
     } else {
         effectResults.success = true;
+    }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_dig = function(battleData, effect, effectResults) {
+    if (!this._user.isDigging()) {
+        effectResults.success = true;
+        this._resultSteps.push(["startDigging",this._user])
+    } else {
+        effectResults.success = true;
+        this._resultSteps.push(["endDigging",this._user])
     }
     return effectResults;
 };

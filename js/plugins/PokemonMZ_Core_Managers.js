@@ -470,7 +470,15 @@ DataManager.verifyAnimationActionData = function(prefix, index, animationActionD
                 console.error(errorMessagePrefix + "Unknown target: " + animationActionData.target)
             }
         }
-        break; 
+        break;
+    case "showSprite":   
+        DataManager.verifyProperties(animationActionData, errorMessagePrefix2, ["type","target"], []);
+        if (animationActionData.target) {
+            if (!["user","opponent"].includes(animationActionData.target)) {
+                console.error(errorMessagePrefix + "Unknown target: " + animationActionData.target)
+            }
+        }
+        break;  
     default:
         console.error(errorMessagePrefix + "Unknown animation data type: " + animationActionData.type);
     }
@@ -675,127 +683,130 @@ DataManager.verifyItemData = function(index, itemData) {
     }
 
     if (itemData.category == "badge") {
-        mandatoryProperties = ["id","category","effect"]
-        optionalProperties = ["target","obedienceLevel"]
+        mandatoryProperties = ["id","category"]
+        optionalProperties = ["target","obedienceLevel","effect"]
     } else if (itemData.category == "key") {
         mandatoryProperties = ["id","user","category","battle","effect"]
         optionalProperties = ["target","price"]
     }
 
     // Check item effect
-    switch(itemData.effect) {
-    case "ball":
-        DataManager.verifyProperties(
-            itemData, 
-            errorMessagePrefix, 
-            mandatoryProperties.concat(["gen1rate","gen1hpFactor"]),
-            optionalProperties);
-        break;
-    case "cureStatus":
-        DataManager.verifyProperties(
-            itemData, 
-            errorMessagePrefix, 
-            mandatoryProperties.concat(["status"]),
-            optionalProperties);
-        if (itemData.status) {
-            if (!["poison","paralysis","burn","sleep","all"].includes(itemData.status)) {
-                console.error(errorMessagePrefix + "Unknown cure status item status: " + itemData.status);
+    if (itemData.effect) {
+        switch(itemData.effect) {
+        case "ball":
+            DataManager.verifyProperties(
+                itemData, 
+                errorMessagePrefix, 
+                mandatoryProperties.concat(["gen1rate","gen1hpFactor"]),
+                optionalProperties);
+            break;
+        case "cureStatus":
+            DataManager.verifyProperties(
+                itemData, 
+                errorMessagePrefix, 
+                mandatoryProperties.concat(["status"]),
+                optionalProperties);
+            if (itemData.status) {
+                if (!["poison","paralysis","burn","sleep","all"].includes(itemData.status)) {
+                    console.error(errorMessagePrefix + "Unknown cure status item status: " + itemData.status);
+                }
             }
-        }
-        break;
-    case "lockedItem":
-        DataManager.verifyProperties(
-            itemData, 
-            errorMessagePrefix, 
-            mandatoryProperties.concat(["useMessage"]),
-            optionalProperties);
-        break;
-    case "recover_hp_fixed":
-        DataManager.verifyProperties(
-            itemData, 
-            errorMessagePrefix, 
-            mandatoryProperties.concat(["value"]),
-            optionalProperties);
-        break;
-    case "restorePp":
-        DataManager.verifyProperties(
-            itemData, 
-            errorMessagePrefix, 
-            mandatoryProperties.concat(["range","value"]),
-            optionalProperties);
-        if (itemData.range) {
-            if (!["single","all"].includes(itemData.range)) {
-                console.error(errorMessagePrefix + "Unknown restorePp item range: " + itemData.range);
+            break;
+        case "lockedItem":
+            DataManager.verifyProperties(
+                itemData, 
+                errorMessagePrefix, 
+                mandatoryProperties.concat(["useMessage"]),
+                optionalProperties);
+            break;
+        case "recover_hp_fixed":
+            DataManager.verifyProperties(
+                itemData, 
+                errorMessagePrefix, 
+                mandatoryProperties.concat(["value"]),
+                optionalProperties);
+            break;
+        case "restorePp":
+            DataManager.verifyProperties(
+                itemData, 
+                errorMessagePrefix, 
+                mandatoryProperties.concat(["range","value"]),
+                optionalProperties);
+            if (itemData.range) {
+                if (!["single","all"].includes(itemData.range)) {
+                    console.error(errorMessagePrefix + "Unknown restorePp item range: " + itemData.range);
+                }
             }
-        }
-        break;
-    case "increaseEv":
-        DataManager.verifyProperties(
-            itemData, 
-            errorMessagePrefix, 
-            mandatoryProperties.concat(["stat","value","maxValue"]),
-            optionalProperties);
-        if (itemData.stat) {
-            if (!["hp","patk","pdef","satk","sdef","spd"].includes(itemData.stat)) {
-                console.error(errorMessagePrefix + "Unknown increaseEv item stat: " + itemData.stat);
+            break;
+        case "increaseEv":
+            DataManager.verifyProperties(
+                itemData, 
+                errorMessagePrefix, 
+                mandatoryProperties.concat(["stat","value","maxValue"]),
+                optionalProperties);
+            if (itemData.stat) {
+                if (!["hp","patk","pdef","satk","sdef","spd"].includes(itemData.stat)) {
+                    console.error(errorMessagePrefix + "Unknown increaseEv item stat: " + itemData.stat);
+                }
             }
-        }
-        break;
-    case "repel":
-        DataManager.verifyProperties(
-            itemData, 
-            errorMessagePrefix, 
-            mandatoryProperties.concat(["steps"]),
-            optionalProperties);
-        break;
-    case "tm":
-        DataManager.verifyProperties(
-            itemData, 
-            errorMessagePrefix, 
-            mandatoryProperties.concat(["move"]),
-            optionalProperties);
-        if (itemData.move) {
-            if (!DataManager.declared.moves.includes(itemData.move)) {
-                console.error(errorMessagePrefix + "Unknown tm item move: " + itemData.move);
+            break;
+        case "repel":
+            DataManager.verifyProperties(
+                itemData, 
+                errorMessagePrefix, 
+                mandatoryProperties.concat(["steps"]),
+                optionalProperties);
+            break;
+        case "tm":
+            DataManager.verifyProperties(
+                itemData, 
+                errorMessagePrefix, 
+                mandatoryProperties.concat(["move"]),
+                optionalProperties);
+            if (itemData.move) {
+                if (!DataManager.declared.moves.includes(itemData.move)) {
+                    console.error(errorMessagePrefix + "Unknown tm item move: " + itemData.move);
+                }
             }
-        }
-        break;
-    case "passivePatkBoost":
-    case "passivePdefBoost":
-    case "passiveSpcBoost":
-    case "passiveSpdBoost":
-        DataManager.verifyProperties(
-            itemData, 
-            errorMessagePrefix, 
-            mandatoryProperties.concat(["boostPercent"]),
-            optionalProperties);
-        break;
-    case "battlePdefUpUser":
-        DataManager.verifyProperties(
-            itemData, 
-            errorMessagePrefix, 
-            mandatoryProperties.concat(["stage","mapMessage"]),
-            optionalProperties.concat(["battleAnimation"]));
-        if (itemData.battleAnimation) {
-            if (!DataManager.declared.animations.includes(itemData.battleAnimation)) {
-                console.error(errorMessagePrefix + "Unknown battle animation ID: " + itemData.battleAnimation);
+            break;
+        case "passivePatkBoost":
+        case "passivePdefBoost":
+        case "passiveSpcBoost":
+        case "passiveSpdBoost":
+            DataManager.verifyProperties(
+                itemData, 
+                errorMessagePrefix, 
+                mandatoryProperties.concat(["boostPercent"]),
+                optionalProperties);
+            break;
+        case "battlePdefUpUser":
+            DataManager.verifyProperties(
+                itemData, 
+                errorMessagePrefix, 
+                mandatoryProperties.concat(["stage","mapMessage"]),
+                optionalProperties.concat(["battleAnimation"]));
+            if (itemData.battleAnimation) {
+                if (!DataManager.declared.animations.includes(itemData.battleAnimation)) {
+                    console.error(errorMessagePrefix + "Unknown battle animation ID: " + itemData.battleAnimation);
+                }
             }
+            break;
+        case "increaseLevel":
+        case "evolutionItem":
+        case "townMap": 
+        case "escapeRope":
+        case "bicycle":
+            DataManager.verifyProperties(
+                itemData, 
+                errorMessagePrefix, 
+                mandatoryProperties,
+                optionalProperties);
+            break;
+        default:
+            console.error(errorMessagePrefix + "Unknown item effect: " + itemData.effect);
         }
-        break;
-    case "increaseLevel":
-    case "evolutionItem":
-    case "townMap": 
-    case "escapeRope":
-    case "bicycle":
-        DataManager.verifyProperties(
-            itemData, 
-            errorMessagePrefix, 
-            mandatoryProperties,
-            optionalProperties);
-        break;
-    default:
-        console.error(errorMessagePrefix + "Unknown item effect: " + itemData.effect);
     }
+    
 };
 
 // Moves checks
@@ -827,7 +838,7 @@ DataManager.verifyMoveData = function(index, moveData) {
         [
             "power","targetDefenseDivider","noCritical","noAccuracy","noVariance",
             "cpuHigherEffectFailure","fixedDamage","forbidMirrorMove","alwaysEffects",
-            "mapEffect","animationAlways","animationHit","priority","category"
+            "mapEffect","animationAlways","animationHit","priority","category","hitDig"
         ],
     );
     if (moveData.target) {
@@ -849,6 +860,11 @@ DataManager.verifyMoveData = function(index, moveData) {
     if (moveData.animationHit) {
         if (!DataManager.declared.animations.includes(moveData.animationHit)) {
             console.error(errorMessagePrefix + "Unknown AnimationHit id: " + moveData.animationHit);
+        }
+    }
+    if (moveData.mapEffect) {
+        if (!["teleport","dig"].includes(moveData.mapEffect)) {
+            console.error(errorMessagePrefix + "Unknown Map Effect: " + moveData.mapEffect);
         }
     }
 
@@ -957,6 +973,14 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
             errorMessagePrefix,
             mandatoryProperties.concat(["min","max"]),
             optionalProperties
+        );
+        break;
+    case "dig":
+        DataManager.verifyProperties(
+            moveEffect,
+            errorMessagePrefix,
+            mandatoryProperties,
+            optionalProperties.concat(["animationTurn1"])
         );
         break;
     case "pdefUpUser":
@@ -1905,6 +1929,9 @@ PokemonMZ_BattleManager.updateSubPhase = function(timeActive) {
         case "animateUserEffect":
             this.animateUserEffect();
             break;
+        case "showSprite":
+            this.showSprite();
+            break;
         case "blowTargetAway":
             if (this._subPhaseParams[0] == "player") {
                 this.updatePlayerPokemonBlownAway();
@@ -2272,6 +2299,14 @@ PokemonMZ_BattleManager.startPlayerInput = function() {
         // In case of rage, the player cannot select any action - 
         // the phase immediatly switch to rage action 
         this.setPlayerMoveIndex(pokemon.rageMoveIndex());
+        this.calculateComputerMove();
+        return;
+    }
+
+    if (pokemon.isDigging()) {
+        // In case of dig, the player cannot select any action - 
+        // the phase immediatly switch to dig turn 2
+        this.setPlayerMoveIndex(pokemon.digMoveIndex());
         this.calculateComputerMove();
         return;
     }
@@ -3155,6 +3190,13 @@ PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
         return;
     }
 
+    // If enemy pokemon is using dig, it only selects that move
+    if (enemyPokemon.isDigging()) {
+        this._enemyMoveIndex = enemyPokemon.digMoveIndex();
+        this.calculateBattleActions();
+        return;
+    }
+
     if (trainer) {
         const modifiers = trainer.iaModifiers();
         if (modifiers) {
@@ -3301,7 +3343,7 @@ PokemonMZ_BattleManager.typeInfo = function(typeId) {
 
 PokemonMZ_BattleManager.calculateComputerItemUse = function(modifiers) {
     if (!modifiers.item) { return; }    // Nothing if not item modifier
-    
+
     const item = modifiers.item;
     const enemyPokemon = this._enemyChosenPokemon;
     
@@ -3527,6 +3569,10 @@ PokemonMZ_BattleManager.startMove = function(side) {
             if (Math.random() < 0.5) {
                 if (pokemon.isBiding()) { pokemon.endBide() };  // Confusion interrupts bide
                 if (pokemon.isBerserk()) { pokemon.unBerserk() } // Confusion hurt interrupts berserk moves
+                if (pokemon.isDigging()) { // Confusion hurt interrupts digging
+                    pokemon.endDigging() 
+                    this._currentAction.addResultSteps(["showSprite", this._currentAction.userBattleSprite()])
+                } 
 
                 this._currentAction.addResultSteps(["autotext","confusedHurt",this._currentAction.side()])
                 move = pokemon.moveSelfHurtConfusion();
@@ -3545,6 +3591,10 @@ PokemonMZ_BattleManager.startMove = function(side) {
     if (pokemon.isParalyzed() && Math.random() < 0.25) {
         if (pokemon.isBiding()) { pokemon.endBide() };  // Paralysis interrupts bide
         if (pokemon.isBerserk()) { pokemon.unBerserk() } // Paralysis interrupts berserk moves
+        if (pokemon.isDigging()) { // Paralysis interrupts digging
+            pokemon.endDigging() 
+            this._currentAction.addResultSteps(["showSprite", this._currentAction.userBattleSprite()])
+        } 
         this._currentAction.addResultSteps(["animateUserEffect", this._currentAction.userBattleSprite(), "paralyzed"])
         this._currentAction.addResultSteps(["autotext","isParalyzed",this._currentAction.side()])
         this.changePhase(nextPhase);
@@ -3565,6 +3615,10 @@ PokemonMZ_BattleManager.startMove = function(side) {
     // If move is selected despite disabled, display disabled message and end turn
     if (pokemon.isMoveDisabled(moveIndex)) {
         this._currentAction.addResultSteps(["waittext","moveDisabled",this._currentAction.side(), moveName])
+        if (pokemon.isDigging()) { // Disabling dig interrupts digging
+            pokemon.endDigging() 
+            this._currentAction.addResultSteps(["showSprite", this._currentAction.userBattleSprite()])
+        } 
         this._currentAction.calculateResidualEffectsOnly();
         this.changePhase(nextPhase);
         return;
@@ -3587,7 +3641,7 @@ PokemonMZ_BattleManager.startMove = function(side) {
     if (pokemon.isMoveMirrorMove(moveIndex)) {
         let keepPreviousMirror = false;
 
-        if (pokemon.isBiding() || oppositePokemon.isBound() || pokemon.isBerserk() || pokemon.isRaging()) {
+        if (pokemon.isBiding() || oppositePokemon.isBound() || pokemon.isBerserk() || pokemon.isRaging() || pokemon.isDigging()) {
             keepPreviousMirror = true;
         }
 
@@ -3652,6 +3706,14 @@ PokemonMZ_BattleManager.startMove = function(side) {
         skipPP = true;
     }
 
+    // If pokemon launches dig, no pp consumption, another message
+    if (pokemon.isMoveDig(moveIndex) && !pokemon.isDigging()) {
+        skipPP = true;
+    }
+    if (pokemon.isDigging() && pokemon.isMoveMirrorMove(moveIndex)) {
+        // If using dig already through mirror move, follow-up
+        move = pokemon.lastMoveUsed();
+    }
 
     // Consume PP if needed
     if (!skipPP) {
@@ -3667,17 +3729,39 @@ PokemonMZ_BattleManager.startMove = function(side) {
     };
 
     if (!skipMessage) {
+        let isMirrorDigTurn1 = false;
+        if (pokemon.isMoveMirrorMove(moveIndex) && !pokemon.isDigging()) {
+            const mirroredMove = pokemon.moveMirrored()
+            const mirroredMoveData = pokemon.moveDataFromStringId(mirroredMove.id)
+            for (const effect of mirroredMoveData.effects) {
+                if (effect.type == "dig") { isMirrorDigTurn1 = true; }
+            }
+        }
+
         if (oppositePokemon.isBound() && pokemon.isMoveBinding(moveIndex)) {
             this._currentAction.insertResultStepsAt(["autotext","attackContinues",this._currentAction.side()], battleIndex)
         } else if (oppositePokemon.isBound() && (pokemon.isMoveMirrorMove(moveIndex))) {
             this._currentAction.insertResultStepsAt(["autotext","attackContinues",this._currentAction.side()], battleIndex)
+        } else if (pokemon.isMoveDig(moveIndex) && !pokemon.isDigging()) {
+            this._currentAction.insertResultStepsAt(["autotext","dugHole",this._currentAction.side()], battleIndex)
+        } else if (isMirrorDigTurn1) {
+            this._currentAction.insertResultStepsAt(["autotext","dugHole",this._currentAction.side()], battleIndex)
         } else {
             this._currentAction.insertResultStepsAt(["autotext","useMove",this._currentAction.side(),moveName], battleIndex)
         }
     }
 
     // Sets used move here for mirror move, mimic
-    oppositePokemon.setLastSeenEnemyMove(move.id);
+    let skipSeeMove = false;
+
+    // If pokemon launches dig, no pp consumption
+    if (pokemon.isMoveDig(moveIndex) && !pokemon.isDigging()) {
+        skipSeeMove = true;
+    }
+
+    if (!skipSeeMove) {
+        oppositePokemon.setLastSeenEnemyMove(move.id);
+    }
 
     this.changePhase(nextPhase);
 };
@@ -3780,6 +3864,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("animateUserEffect");
                 this._subPhaseParams = [step[1], step[2], step[3]];
                 break;
+            case "showSprite":
+                this.changeSubPhase("showSprite");
+                this._subPhaseParams = [step[1]];
+                break;
             case "waittext":
                 this.changeSubPhase("displayWaitText");
                 this._subPhaseParams = [step[1], step[2], step[3]];
@@ -3840,6 +3928,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["minimize", step[1]];
                 break;
+            case "startDigging":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["dig", step[1]];
+                break;
             case "advanceBerserkPokemonTurn":
                 this.changeSubPhase("advanceBerserkPokemonTurn");
                 this._subPhaseParams = [step[1]];
@@ -3859,6 +3951,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
             case "poisonHeal":
                 this.changeSubPhase("removePokemonStatus");
                 this._subPhaseParams = ["poison", step[1]];
+                break;
+            case "endDigging":
+                this.changeSubPhase("removePokemonStatus");
+                this._subPhaseParams = ["dig", step[1]];
                 break;
             case "allStatusHeal":
                 this.changeSubPhase("removePokemonStatus");
@@ -4037,6 +4133,17 @@ PokemonMZ_BattleManager.updateAnimation = function() {
                     this._animationData.userSprite.visible = false;
                 } else if (this._animationData.side == "enemy" && actionData.target == "opponent") {
                     this._animationData.enemySprite.visible = false;
+                }
+                break;
+            case "showSprite":
+                if (this._animationData.side == "player" && actionData.target == "user") {
+                    this._animationData.userSprite.visible = true;
+                } else if (this._animationData.side == "player" && actionData.target == "opponent") {
+                    this._animationData.enemySprite.visible = true;
+                } else if (this._animationData.side == "enemy" && actionData.target == "user") {
+                    this._animationData.userSprite.visible = true;
+                } else if (this._animationData.side == "enemy" && actionData.target == "opponent") {
+                    this._animationData.enemySprite.visible = true;
                 }
                 break;
             }
@@ -4440,6 +4547,9 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
         case "rage":
             target.rage(moveIndex, true);
             break;
+        case "dig":
+            target.startDigging(moveIndex);
+            break;
         case "minimize":
             target.minimize();
             this._spriteset.playerPokemonSprite().setScale(this._playerChosenPokemon.battleSpriteMaxScale());
@@ -4477,6 +4587,9 @@ PokemonMZ_BattleManager.removePokemonStatus = function() {
             target.unsleep();
             this._enemyPokemonStatusWindow.refresh(true);
             this._playerPokemonStatusWindow.refresh(true);
+            break;
+        case "dig":
+            target.endDigging();
             break;
         case "all":
             // Note Gen2+ will remove confusion too
@@ -4587,6 +4700,13 @@ PokemonMZ_BattleManager.animateUserEffect = function() {
             this._spriteset.createAnimation(request);
             sprite.updateTransform();
         }
+    }
+    this.clearSubPhase();
+};
+PokemonMZ_BattleManager.showSprite = function() {
+    if (ConfigManager.battleAnimation) {
+        const sprite = this._subPhaseParams[0];
+        sprite.visible = true;
     }
     this.clearSubPhase();
 };
@@ -4722,6 +4842,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + "'s rage is building!"
     case "mirrorMoveFailed":
         return "The Mirror Move failed!"
+    case "dugHole":
+        return prefix + pokemon.name() + " dug a hole!"
     }
     return ""
 };

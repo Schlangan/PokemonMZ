@@ -18,16 +18,19 @@ moveData
 - targetDefenseDivider, **float**, *optional* : The division of the target defense during attack. (ex 2.0 for self-destruct)
 
 - noCritical, **bool**, *optional* : If set to **true**, the move will never do critical damage.
-- noAccuracy, **bool**, *optional* : If set to **true**, the move won't do any accuracy calculation and always hit.
+- noAccuracy, **bool**, *optional* : If set to **true**, the move won't do any accuracy calculation and always hit, even if the opponent is digging.
 - noVariance, **bool**, *optional* : If set to **true**, the move won't have any variance calculation and always do fixed damage.
 - cpuHigherEffectFailure, **bool**, *optional* : If set to **true**, the computer pokemon has an additional 25% chance of failing the effects of the move.
 - fixedDamage, **int**, *optional* : If the value is set and positive, the move will strictly do that amount of damage, without variance, critical or type effectiveness. If the value is equal to **-1**, the damage becomes equal to the user's level (ex: seismic toss)
 
 - forbidMirrorMove, **bool**, *optional* : If the value is set to true, the move cannot be reproduced by mirror move.
+- hitDig, **bool**, *optional* : If the value is set to true, the move will be able to hit an opponent using dig.
 
 - effects, **Array:moveEffect** : An array of the **moveEffect**, definining all secondary effects of the move.
 - alwaysEffects, **bool**, *optional* : If the value is set to true, the effects of the move will always happen, even if the move missed or did no damage due to immunity.
-- mapEffect: **string**, *optional* : Move usable on the map, with a given effect. Only **teleport** is available for now.
+- mapEffect: **string**, *optional* : Move usable on the map, with a given effect.
+    - **teleport** : Allow teleporting to the last respawn from maps where the teleport:true note is set.
+    - **dig** : Allow teleporting to the last respawn from maps where the escapeRope:true note is set.
 - animationAlways, **string**, *optional* : The animation string Id from the additional JSon file PokemonMZ_Animations.json when the move is launched, whether it hits or not.
 - animationHit, **string**, *optional* : The animation string Id from the additional JSon file PokemonMZ_Animations.json when the move hits.
 
@@ -123,6 +126,8 @@ List of implemented effects and their additional parameters:
     - The opponent is frozen or asleep
     - The opponent switched out
     - The opponent's trainer used an item
+- type = **dig** : Two turns attack. First turn the user goes underground and is impossible to hit except by move with hitDig:true. Second turn, attack the target
+    - animationTurn1, **string**, *optional* : Animation played during the first turn.
 
 ---
 
