@@ -3179,11 +3179,12 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
                 enemyWillFaint = true;
             }
             if (effectsResult.userDamage) {
+                console.log(effectsResult)
                 this._userEvolvingHp -= effectsResult.userDamage
-                if (this._userEvolvingHp <= 0) {
+                const drainDamage = effectsResult.userHeal ?? 0
+                if ((this._userEvolvingHp + drainDamage) <= 0) {
                     this._moveRemainingHits = 1;
                     userWillFaint = true;
-                    
                 }
             }
             this._moveExecutedHits++;
@@ -3223,7 +3224,8 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
                 "damageDealt":userDamage
             });
             this._userEvolvingHp -= userDamage;
-            if (this._userEvolvingHp <= 0) {
+            const drainDamage = effectsResult.userHeal ?? 0
+            if ((this._userEvolvingHp + drainDamage) <= 0) {
                 this._moveRemainingHits = 1;
                 userWillFaint = true;
             }
@@ -3247,7 +3249,8 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
                     const effectsResult = this.calculateMoveEffects({});
                     if (effectsResult.userDamage) {
                         this._userEvolvingHp -= effectsResult.userDamage
-                        if (this._userEvolvingHp <= 0) {
+                        const drainDamage = effectsResult.userHeal ?? 0
+                        if ((this._userEvolvingHp + drainDamage) <= 0) {
                             userWillFaint = true;
                         }
                     }
@@ -3269,7 +3272,8 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
             const effectsResult = this.calculateMoveEffects({});
             if (effectsResult.userDamage) {
                 this._userEvolvingHp -= effectsResult.userDamage
-                if (this._userEvolvingHp <= 0) {
+                const drainDamage = effectsResult.userHeal ?? 0
+                if ((this._userEvolvingHp + drainDamage) <= 0) {
                     userWillFaint = true;
                 }
             }
@@ -4383,6 +4387,7 @@ PokemonMZ_Game_Action.prototype.effect_drainTargetHp = function(battleData, effe
         this._resultSteps.push(["waittext", effect.text,this.oppositeSide()])
     }
     effectResults.userDamage = damageDealt;
+    effectResults.userHeal = damageDealt;
     return effectResults;
 };
 PokemonMZ_Game_Action.prototype.effect_teleport = function(battleData, effect, effectResults) {
