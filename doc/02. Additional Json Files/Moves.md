@@ -90,10 +90,13 @@ List of implemented effects and their additional parameters:
 - type = **forceSwitchOut** : In wild battles only for generation I, force the target to leave the fight, ending the battle.
 
 - type = **pdefUpUser** : Increases the physical defense of the user
-    - stage, **int** : Number of rised stages
+    - stage, **int** : Number of raised stages
+    - percentChance, **int** : Chance out of 100 of the drop down to happen
+- type = **spcUpUser** : Increases the special of the user
+    - stage, **int** : Number of raised stages
     - percentChance, **int** : Chance out of 100 of the drop down to happen
 - type = **evaUpUser** : Increases the speed of the user
-    - stage, **int** : Number of rised stages
+    - stage, **int** : Number of raised stages
     - percentChance, **int** : Chance out of 100 of the drop down to happen
 
 - type = **patkDownTarget** : Decreases the physical attack of the target

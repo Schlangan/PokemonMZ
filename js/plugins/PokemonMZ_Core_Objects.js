@@ -3526,6 +3526,11 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
             effectResults = this.effect_pdefUpUser(battleData, effect, effectResults);
         }
         break;
+    case "spcUpUser":
+        if (!this.isMoveEffectExcepted(effect, this._user)) {
+            effectResults = this.effect_spcUpUser(battleData, effect, effectResults);
+        }
+        break;
     case "evaUpUser":
         if (!this.isMoveEffectExcepted(effect, this._user)) {
             effectResults = this.effect_evaUpUser(battleData, effect, effectResults);
@@ -4060,6 +4065,32 @@ PokemonMZ_Game_Action.prototype.effect_pdefUpUser = function(battleData, effect,
             if (this._user._stageModifiers.pdef > 6) { this._user._stageModifiers.pdef = 6; }
             effectResults.success = true;
             this._resultSteps.push(["autotext","defenseRose",this.side()])
+        } else {
+            if (battleData.damageDealt == 0) {
+                // Message nothing if no damage dealt, else simply nothing happens
+                this._resultSteps.push(["autotext","statusNothing",this.side()])
+            }
+        }
+    }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_spcUpUser = function(battleData, effect, effectResults) {
+    if (this._opponent.hp() - battleData.damageDealt <= 0) {
+        // No effect if target will faint
+        return effectResults;
+    }
+    const randomNumber = Math.randomInt(100)
+    if (PokemonMZ.debugLog) {
+        console.log({"PokemonMZ_Game_Action.effect_spcUpUser > ":{
+            "chance":effect.percentChance, "randomNumber":randomNumber, "stageBefore":this._user._stageModifiers.satk}
+        })
+    }
+    if (randomNumber < effect.percentChance) {
+        if (this._user._stageModifiers.satk < 6) {
+            this._user._stageModifiers.satk += effect.stage;
+            if (this._user._stageModifiers.satk > 6) { this._user._stageModifiers.satk = 6; }
+            effectResults.success = true;
+            this._resultSteps.push(["autotext","specialRose",this.side()])
         } else {
             if (battleData.damageDealt == 0) {
                 // Message nothing if no damage dealt, else simply nothing happens

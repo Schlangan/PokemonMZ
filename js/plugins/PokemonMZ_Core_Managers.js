@@ -984,6 +984,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
         );
         break;
     case "pdefUpUser":
+    case "spcUpUser":
     case "evaUpUser":
     case "patkDownTarget":
     case "pdefDownTarget":
@@ -4736,6 +4737,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + "'s attack rose!";
     case "defenseRose":
         return prefix + pokemon.name() + "'s defense rose!";
+    case "specialRose":
+        return prefix + pokemon.name() + "'s special rose!";
     case "evasionRose":
         return prefix + pokemon.name() + "'s evade rose!";
     case "accuracyFell":
