@@ -33,6 +33,14 @@
         ]
     },
     {
+        "id":"slashTargetPhysicalFast",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":3},
+            {"type":"playAnimation", "target":"target", "animationId":6},
+            {"type":"moveSpriteBackward", "target":"user", "distance":35, "duration":3}
+        ]
+    },
+    {
         "id":"pierceTargetPhysical",
         "sequence":[
             {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":5},
@@ -65,6 +73,14 @@
         ]
     },
     {
+        "id":"bodySlamTarget",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":3},
+            {"type":"playAnimation", "target":"target", "animationId":39},
+            {"type":"moveSpriteBackward", "target":"user", "distance":35, "duration":3}
+        ]
+    },
+    {
         "id":"waterTarget1",
         "sequence":[
             {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
@@ -73,10 +89,26 @@
         ]
     },
     {
+        "id":"waterTarget2",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":82},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
         "id":"fireTarget1",
         "sequence":[
             {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
             {"type":"playAnimation", "target":"target", "animationId":66},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"darkTarget1",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":101},
             {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
         ]
     },
@@ -124,6 +156,27 @@
         "id":"rockTarget1",
         "sequence":[
             {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":86},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"digTurn1",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"user", "animationId":87},
+            {"type":"wait", "frames":30},
+            {"type":"hideSprite", "target":"user"},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"digTurn2",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"user", "animationId":87},
+            {"type":"wait", "frames":30},
+            {"type":"showSprite", "target":"user"},
             {"type":"playAnimation", "target":"target", "animationId":86},
             {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
         ]
@@ -179,6 +232,15 @@
         "sequence":[
             {"type":"playAnimation", "target":"user", "animationId":34, "wait":true},
             {"type":"playAnimation", "target":"target", "animationId":63}
+        ]
+    },
+    {
+        "id":"glareTarget",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"user", "animationId":40,"wait":true},
+            {"type":"playAnimation", "target":"target", "animationId":64},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
         ]
     },
     {
@@ -247,6 +309,50 @@
         ]
     },
     {
+        "id":"selfDestruct",
+        "sequence":[
+            {"type":"playAnimation", "target":"user", "animationId":97},
+            {"type":"wait", "frames":60},
+            {"type":"playAnimation", "target":"user", "animationId":109},
+            {"type":"wait", "frames":30},
+            {"type":"hideSprite", "target":"user"}
+        ]
+    },
+    {
+        "id":"seismicToss",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":70, "duration":5},
+            {"type":"moveSpriteUp", "target":"opponent", "distance":1000, "duration":10},
+            {"type":"moveSpriteUp", "target":"user", "distance":1000, "duration":10},
+            {"type":"moveSpriteDown", "target":"opponent", "distance":1000, "duration":5},
+            {"type":"playAnimation", "target":"target", "animationId":39},
+            {"type":"moveSpriteDown", "target":"user", "distance":1000, "duration":5},
+            {"type":"moveSpriteBackward", "target":"user", "distance":70, "duration":3}
+        ]
+    },
+    {
+        "id":"postDestruct",
+        "sequence":[
+            {"type":"playAnimation", "target":"target", "animationId":107, "wait":true}
+        ]
+    },
+    {
+        "id":"teleport",
+        "sequence":[
+            {"type":"playAnimation", "target":"user", "animationId":97},
+            {"type":"wait", "frames":30},
+            {"type":"hideSprite", "target":"user"}
+        ]
+    },
+    {
+        "id":"thrash",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":25, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":21},
+            {"type":"moveSpriteBackward", "target":"user", "distance":25, "duration":8}
+        ]
+    },
+    {
         "id":"splash",
         "sequence":[
             {"type":"playSE", "name":"Jump1", "volume":90, "pitch":100, "pan":0},
@@ -261,6 +367,14 @@
             {"type":"moveSpriteUp", "target":"user", "distance":40, "duration":8},
             {"type":"playSE", "name":"Water1", "volume":90, "pitch":100, "pan":0},
             {"type":"moveSpriteDown", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"minimize",
+        "sequence":[
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"user", "animationId":54},
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8}
         ]
     }
 ]

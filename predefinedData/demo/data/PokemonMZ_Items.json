@@ -7,6 +7,11 @@
         "boostPercent":12.5
     },
     {
+        "id":"cascadeBadge",
+        "category":"badge",
+        "obedienceLevel":30
+    },
+    {
         "id":"potion",
         "user":"trainer",
         "category":"regular",
@@ -41,6 +46,14 @@
         "useMessage":"This isn't the time to use that!"
 	},
     {
+		"id":"ssTicket",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+        "effect":"lockedItem",
+        "useMessage":"This isn't the time to use that!"
+	},
+    {
         "id":"townMap",
         "user":"trainer",
         "category":"key",
@@ -65,7 +78,7 @@
         "effect":"ball",
         "gen1rate":200,
         "gen1hpFactor":8,
-        "price":99999999
+        "price":600
     },
     {
         "id":"hyperBall",
@@ -84,6 +97,7 @@
         "battle":true,
         "effect":"ball",
         "gen1rate":-1,
+        "gen1hpFactor":0,
         "price":99999999
     },
     {
@@ -186,6 +200,26 @@
 		"price":3000
 	},
     {
+		"id":"tm04",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"whirlwind",
+		"price":1000
+	},
+    {
+        "id":"tm11",
+        "user":"trainer",
+        "category":"regular",
+        "battle":false,
+        "target":"pokemon",
+        "effect":"tm",
+        "move":"bubbleBeam",
+        "price":2000
+    },
+    {
         "id":"tm12",
         "user":"trainer",
         "category":"regular",
@@ -195,6 +229,26 @@
         "move":"waterGun",
         "price":500
     },
+    {
+		"id":"tm19",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"seismicToss",
+        "price":3000
+	},
+    {
+		"id":"tm28",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"dig",
+        "price":2000
+	},
     {
         "id":"tm34",
         "user":"trainer",
@@ -206,6 +260,16 @@
         "price":2000
     },
     {
+		"id":"tm45",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"thunderWave",
+        "price":2000
+	},
+    {
 		"id":"ether",
 		"user":"trainer",
 		"category":"regular",
@@ -213,6 +277,57 @@
 		"target":"pokemon",
 		"effect":"restorePp",
         "range":"single",
-		"value":10	
+		"value":10,
+        "price":0
+	},
+    {
+		"id":"elixir",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"restorePp",
+        "range":"all",
+		"value":10,
+        "price":0
+	},
+    {
+		"id":"repel",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"trainer",
+		"effect":"repel",
+		"steps":100,
+		"price":350
+	},
+    {
+		"id":"nugget",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"price":10000,
+        "effect":"lockedItem",
+        "useMessage":"This isn't the time to use that!"
+	},
+    {
+		"id":"bicycle",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+		"effect":"bicycle",
+        "price":1000000
+	},
+    {
+		"id":"xDefend",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"battlePdefUpUser",
+        "battleAnimation":"powerUpUser1",
+        "mapMessage":"This isn't the time to use that!",
+		"stage":1,
+		"price":550
 	}
 ]

@@ -27,7 +27,7 @@
     {
         "id":"water",
         "name":"Water",
-        "weak":["grass"],
+        "weak":["grass","electric"],
         "strong":["fire","water","ice"],
         "immune":[],
         "damage":"special"
@@ -59,7 +59,7 @@
     {
         "id":"fighting",
         "name":"Fighting",
-        "weak":["flying","pyschic"],
+        "weak":["flying","psychic"],
         "strong":["bug","rock"],
         "immune":[],
         "damage":"physical"

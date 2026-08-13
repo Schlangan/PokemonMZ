@@ -504,5 +504,334 @@
         ],
         "defeatText":"A brat beat me?",
         "money":420
+    },
+    {
+        "id":"route4_grass_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"rattata","levelMin":8, "levelMax":12, "rate":30},
+            {"id":"spearow","levelMin":8, "levelMax":12, "rate":30},
+            {"id":"ekans","levelMin":6, "levelMax":12, "rate":15},
+            {"id":"sandshrew","levelMin":6, "levelMax":12, "rate":15},
+            {"id":"mankey","levelMin":9, "levelMax":9, "rate":10}
+        ]
+    },
+    {
+        "id":"rival3_starter_bulbasaur",
+        "type":"trainer",
+        "trainerActor":2,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"pidgeotto","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"abra","level":15,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"rattata","level":15,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"charmander","level":17,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "victoryText":"Yeah! Am I great of what?",
+        "defeatText":"Hey! Take it easy! You won already!",
+        "money":595
+    },
+    {
+        "id":"rival3_starter_charmander",
+        "type":"trainer",
+        "trainerActor":2,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"pidgeotto","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"abra","level":15,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"rattata","level":15,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"squirtle","level":17,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "victoryText":"Yeah! Am I great of what?",
+        "defeatText":"Hey! Take it easy! You won already!",
+        "money":595
+    },
+    {
+        "id":"rival3_starter_squirtle",
+        "type":"trainer",
+        "trainerActor":2,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"pidgeotto","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"abra","level":15,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"rattata","level":15,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"bulbasaur","level":17,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "victoryText":"Yeah! Am I great of what?",
+        "defeatText":"Hey! Take it easy! You won already!",
+        "money":595
+    },
+    {
+        "id":"route24_bug1",
+        "type":"trainer",
+        "trainerActor":3,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"caterpie","level":14,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"weedle","level":14,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Whoo! Good stuff!",
+        "money":140
+    },
+    {
+        "id":"route24_lass1",
+        "type":"trainer",
+        "trainerActor":4,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"pidgey","level":14,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"nidoranf","level":14,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"How could I lose?",
+        "money":210
+    },
+    {
+        "id":"route24_young1",
+        "type":"trainer",
+        "trainerActor":7,
+        "ia":"random",
+        "pokemons":[
+            {"id":"rattata","level":14,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"ekans","level":14,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"zubat","level":14,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Ow! Stomped flat!",
+        "money":210
+    },
+    {
+        "id":"route24_lass2",
+        "type":"trainer",
+        "trainerActor":4,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"pidgey","level":16,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"nidoranf","level":16,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I lost too!",
+        "money":240
+    },
+    {
+        "id":"route24_jrtrainerm1",
+        "type":"trainer",
+        "trainerActor":5,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"mankey","level":18,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Whoa! Too much!",
+        "money":360
+    },
+    {
+        "id":"route24_rocket1",
+        "type":"trainer",
+        "trainerActor":10,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"ekans","level":15,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"zubat","level":15,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Arrgh! You are good!",
+        "money":450
+    },
+    {
+        "id":"route24_jrtrainerm2",
+        "type":"trainer",
+        "trainerActor":5,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"rattata","level":14,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"ekans","level":14,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I thought not!",
+        "money":280
+    },
+    {
+        "id":"route24_grass_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"pidgey","levelMin":12, "levelMax":17, "rate":14},
+            {"id":"caterpie","levelMin":7, "levelMax":7, "rate":13},
+            {"id":"weedle","levelMin":7, "levelMax":7, "rate":13},  
+            {"id":"oddish","levelMin":12, "levelMax":14, "rate":13},
+            {"id":"bellsprout","levelMin":12, "levelMax":14, "rate":13},  
+            {"id":"metapod","levelMin":8, "levelMax":8, "rate":10},
+            {"id":"kakuna","levelMin":8, "levelMax":8, "rate":10},
+            {"id":"abra","levelMin":8, "levelMax":12, "rate":9},
+            {"id":"venonat","levelMin":13, "levelMax":16, "rate":5}
+        ]
+    },
+    {
+        "id":"route25_grass_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"pidgey","levelMin":12, "levelMax":17, "rate":14},
+            {"id":"caterpie","levelMin":8, "levelMax":8, "rate":13},
+            {"id":"weedle","levelMin":8, "levelMax":8, "rate":13},  
+            {"id":"oddish","levelMin":12, "levelMax":14, "rate":13},
+            {"id":"bellsprout","levelMin":12, "levelMax":14, "rate":13},  
+            {"id":"metapod","levelMin":9, "levelMax":9, "rate":10},
+            {"id":"kakuna","levelMin":9, "levelMax":9, "rate":10},
+            {"id":"abra","levelMin":8, "levelMax":12, "rate":9},
+            {"id":"venonat","levelMin":13, "levelMax":16, "rate":5}
+        ]
+    },
+    {
+        "id":"route25_hiker1",
+        "type":"trainer",
+        "trainerActor":9,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"machop","level":15,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"geodude","level":15,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"You worked hard!",
+        "money":525
+    },
+    {
+        "id":"route25_hiker2",
+        "type":"trainer",
+        "trainerActor":9,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"onix","level":17,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"You're something.",
+        "money":595
+    },
+    {
+        "id":"route25_young1",
+        "type":"trainer",
+        "trainerActor":7,
+        "ia":"random",
+        "pokemons":[
+            {"id":"rattata","level":15,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"spearow","level":15,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"You're decent.",
+        "money":225
+    },
+    {
+        "id":"route25_young2",
+        "type":"trainer",
+        "trainerActor":7,
+        "ia":"random",
+        "pokemons":[
+            {"id":"slowpoke","level":17,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I'm not mad!",
+        "money":255
+    },
+    {
+        "id":"route25_lass1",
+        "type":"trainer",
+        "trainerActor":4,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"nidoranm","level":15,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"nidoranf","level":15,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I was in bad condition!",
+        "money":225
+    },
+    {
+        "id":"route25_hiker3",
+        "type":"trainer",
+        "trainerActor":9,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"geodude","level":13,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"geodude","level":13,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"machop","level":13,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"geodude","level":13,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"You got me.",
+        "money":455
+    },
+    {
+        "id":"route25_jrtrainerm1",
+        "type":"trainer",
+        "trainerActor":5,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"rattata","level":14,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"ekans","level":14,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Aww, darn...",
+        "money":280
+    },
+    {
+        "id":"route25_young3",
+        "type":"trainer",
+        "trainerActor":7,
+        "ia":"random",
+        "pokemons":[
+            {"id":"ekans","level":14,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"sandshrew","level":14,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I knew I'd lose too!",
+        "money":210
+    },
+    {
+        "id":"route25_lass2",
+        "type":"trainer",
+        "trainerActor":4,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"oddish","level":13,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"pidgey","level":13,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"oddish","level":13,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I'm not so jealous!",
+        "money":195
+    },
+    {
+        "id":"cerulean_swimmer1",
+        "type":"trainer",
+        "trainerActor":12,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"horsea","level":16,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"shellder","level":16,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"That can't be!",
+        "money":80
+    },
+    {
+        "id":"cerulean_jrtrainerf1",
+        "type":"trainer",
+        "trainerActor":13,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"goldeen","level":19,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"You overwhelmed me!",
+        "money":380
+    },
+    {
+        "id":"cerulean_misty",
+        "type":"trainer",
+        "trainerActor":14,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"xDefend","condition":"random","chance":25,"maxPerPokemon":1}
+        },
+        "pokemons":[
+            {"id":"staryu","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"starmie","level":21,"moveset":"add","addMoves":["bubbleBeam"],"dv":"default","ev":"default"}
+        ],
+        "defeatText":"Wow! You're too much! All right!\nYou can have the Cascade Badge to\nshow you beat me!",
+        "money":2079
+    },
+    {
+        "id":"cerulean_rocket1",
+        "type":"trainer",
+        "trainerActor":10,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"machop","level":17,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"drowzee","level":17,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Stop! I give up! I'll leave quietly!",
+        "money":510
     }
 ]
