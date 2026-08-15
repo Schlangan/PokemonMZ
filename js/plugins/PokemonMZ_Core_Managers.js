@@ -726,6 +726,18 @@ DataManager.verifyItemData = function(index, itemData) {
                 mandatoryProperties.concat(["value"]),
                 optionalProperties);
             break;
+        case "recoverHpPercentCureStatus":
+            DataManager.verifyProperties(
+                itemData, 
+                errorMessagePrefix, 
+                mandatoryProperties.concat(["value","status"]),
+                optionalProperties);
+            if (itemData.status) {
+                if (!["poison","paralysis","burn","sleep","all"].includes(itemData.status)) {
+                    console.error(errorMessagePrefix + "Unknown recover+cure status item status: " + itemData.status);
+                }
+            }
+            break;
         case "restorePp":
             DataManager.verifyProperties(
                 itemData, 

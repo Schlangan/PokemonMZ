@@ -28,6 +28,9 @@ Depending on the effet, additional parameters are required.
     - useMessage,**string** : Message shown on screen when attempting to use the item
 - effect = **recover_hp_fixed** : Recover a specific amount of hp (ex: potion)
     - value,**int** : Amount of fixed hp recovered
+- effect = **recoverHpPercentCureStatus** : Recover a % of hp and cure statuses (ex: full restore)
+    - value,**int** : Percentage of hp recovered
+    - status,**string** : The status cured. For now, only possible choice between **poison**, **paralysis**, **burn**, **sleep**, **all**
 - effect = **restorePp** : Recover PP for one or several moves (ex: ether/elixir)
     - range,**string** : The range of effect of the recovery. Either **single**, affecting one move (ether), or **all** for all moves at once (elixir)
     - value,**int** : Amount of PP recovered, either -1 for all PP, or a specific value.

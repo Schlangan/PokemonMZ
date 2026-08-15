@@ -21,6 +21,9 @@ Scene_Base.prototype.PokemonMZ_updateItemEffects = function() {
         case "cureStatus":
             this.updatePokemonCureStatus();
             break;
+        case "recoverAndCureStatus":
+            this.updatePokemonRecoverAndCureStatus();
+            break;
         case "increaseLevel":
             this.updatePokemonIncreaseLevel();
             break;
@@ -50,6 +53,17 @@ Scene_Base.prototype.PokemonMZ_createRecoveryData = function(pokemon, effect, li
             "type":"cureStatus",
             "pokemon":pokemon,
             "windowIndex":listWindow.index(),
+            "statusCured":effect.status
+        }
+        break;
+    case "recoverAndCureStatus":
+        this._pokemonRecoveringData = {
+            "type":"recoverAndCureStatus",
+            "pokemon":pokemon,
+            "windowIndex":listWindow.index(),
+            "recoverValue":effect.value,
+            "finalValue":pokemon.hp() + effect.value,
+            "valuePerFrame":1.2*effect.value / effect.percentValue,
             "statusCured":effect.status
         }
         break;
@@ -156,6 +170,91 @@ Scene_Base.prototype.PokemonMZ_updatePokemonCureStatus = function(listWindow, me
         return true;
     }
 };
+
+Scene_Base.prototype.PokemonMZ_updatePokemonRecoverAndCureStatus = function(listWindow, messageWindow) { 
+    // Pokemon is recovering in menu due to full restore
+    const pokemon = this._pokemonRecoveringData.pokemon;
+    const status = this._pokemonRecoveringData.statusCured;
+    const recoveredValue = this._pokemonRecoveringData.recoverValue;
+
+    let messageStatus = "";
+    if (pokemon) {
+        let newHp = pokemon.hp() + this._pokemonRecoveringData.valuePerFrame;
+        if (newHp >= this._pokemonRecoveringData.finalValue || recoveredValue == 0) {
+            // HP recover finished, status check
+            newHp = this._pokemonRecoveringData.finalValue;
+            pokemon.setHp(newHp);
+
+            // First cure status if any.
+            switch(status) {
+            case "poison":
+                if (pokemon.isPoisoned()) {
+                    pokemon.unpoison();
+                    messageStatus = pokemon.name() + " was cured of poison!";
+                }
+                break;
+            case "burn":
+                if (pokemon.isBurned()) {
+                    pokemon.unburn();
+                    messageStatus = pokemon.name() + "'s burn was healed!";
+                }
+                break;
+            case "paralysis":
+                if (pokemon.isParalyzed()) {
+                    pokemon.unparalyze();
+                    messageStatus = pokemon.name() + "'s rid of paralysis!";
+                }
+                break;
+            case "freeze":
+                if (pokemon.isFrozen()) {
+                    pokemon.unfreeze();
+                    messageStatus = pokemon.name() + " was defrosted!";
+                }
+                break;
+            case "sleep":
+                if (pokemon.isAsleep()) {
+                    pokemon.unsleep();
+                    messageStatus = pokemon.name() + " woke up!";
+                }
+                break;
+            case "all":
+                // Note: Gen2+ fullheal will also remove confusion
+                if (pokemon.hasStatus()) {
+                    pokemon.unpoison();
+                    pokemon.unburn();
+                    pokemon.unparalyze();
+                    pokemon.unfreeze();
+                    pokemon.unsleep();
+                    messageStatus = pokemon.name() + "'s health returned!";
+                }
+                break;
+            }
+
+            listWindow.clearItem(this._pokemonRecoveringData.windowIndex);
+            listWindow.drawItem(this._pokemonRecoveringData.windowIndex);
+            
+            
+            if (recoveredValue > 0) {
+                this._mustReturnToItemMenu = true;
+                const message = pokemon.name() + " recovered by " + String(recoveredValue) + ".";
+                messageWindow.setText(message);
+            } else {
+                messageWindow.setText(messageStatus);
+            }
+            this._pokemonRecoveringData = null;
+            listWindow.deactivate();
+            messageWindow.startMessage();
+
+            return true; // Must return to menu/battle
+        } else {
+            // Keep recovering hp
+            pokemon.setHp(newHp);
+            listWindow.drawItem(this._pokemonRecoveringData.windowIndex);
+            return false;
+        }
+    }
+};
+
 Scene_Base.prototype.PokemonMZ_updatePokemonIncreaseEv = function(listWindow, messageWindow) { 
     const pokemon = this._pokemonRecoveringData.pokemon;
     const stat = this._pokemonRecoveringData.stat;
@@ -2246,6 +2345,12 @@ PokemonMZ_Scene_PokemonMenu.prototype.updatePokemonCureStatus = function() {
          this._messageWindow
     );
 };
+PokemonMZ_Scene_PokemonMenu.prototype.updatePokemonRecoverAndCureStatus = function() { 
+    this._mustReturnToItemMenu = this.PokemonMZ_updatePokemonRecoverAndCureStatus(
+         this._listWindow, 
+         this._messageWindow
+    )
+};
 PokemonMZ_Scene_PokemonMenu.prototype.updatePokemonIncreaseLevel = function() { 
     const pokemon = this._pokemonRecoveringData.pokemon;
     if (pokemon) {
@@ -3437,6 +3542,13 @@ PokemonMZ_Scene_Battle.prototype.updatePokemonCureStatus = function() {
          this._pokemonMenuMessageWindow
     )
 };
+PokemonMZ_Scene_Battle.prototype.updatePokemonRecoverAndCureStatus = function() { 
+    this._mustReturnToBattle = this.PokemonMZ_updatePokemonRecoverAndCureStatus(
+         this._pokemonListWindow, 
+         this._pokemonMenuMessageWindow
+    )
+};
+
 PokemonMZ_Scene_Battle.prototype.updatePokemonRestorePp = function() { 
     this._mustReturnToBattle = this.PokemonMZ_updatePokemonRestorePp(
          this._pokemonListWindow,
