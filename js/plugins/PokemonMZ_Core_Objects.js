@@ -3190,7 +3190,6 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
                 enemyWillFaint = true;
             }
             if (effectsResult.userDamage) {
-                console.log(effectsResult)
                 this._userEvolvingHp -= effectsResult.userDamage
                 const drainDamage = effectsResult.userHeal ?? 0
                 if ((this._userEvolvingHp + drainDamage) <= 0) {
