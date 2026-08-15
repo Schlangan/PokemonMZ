@@ -725,6 +725,7 @@ PokemonMZ_Game_TrainerPlayer.prototype.initMembers = function(sourceActorId) {
     this.initializeItems();
     this.initializeBoxes();
     this.initializePokedex();
+    this.initializeDayCare();
 };
 PokemonMZ_Game_TrainerPlayer.prototype.initializeItems = function() {
     this._items = {};
@@ -759,6 +760,9 @@ PokemonMZ_Game_TrainerPlayer.prototype.initializePokedex = function() {
     this._pokedexRegion = "";
     this._seenPokemons = [];
     this._capturedPokemons = [];
+};
+PokemonMZ_Game_TrainerPlayer.prototype.initializeDayCare = function() {
+    this._dayCarePokemons = [];
 };
 PokemonMZ_Game_TrainerPlayer.prototype.givePokedex = function(region) {
     this._pokedexRegion = region;
@@ -1110,6 +1114,100 @@ PokemonMZ_Game_TrainerPlayer.prototype.isRepelling = function() {
 PokemonMZ_Game_TrainerPlayer.prototype.repelSteps = function() {
     return this._repelSteps ? this._repelSteps : 0;
 };
+PokemonMZ_Game_TrainerPlayer.prototype.isPokemonAtDayCare = function() {
+    if (this._dayCarePokemons) {
+        return this._dayCarePokemons.length > 0;
+    } else {
+        this.initializeDayCare();
+        return false;
+    }
+};
+PokemonMZ_Game_TrainerPlayer.prototype.addPokemonAtDayCareFromParty = function(partyIndex) {
+    if (!this._dayCarePokemons) {
+        this.initializeDayCare();
+    }
+
+    if (!this.isPokemonAtDayCare() && this.canDepositIndexAtDayCare(partyIndex)) {
+        const pokemon = this.pokemon(partyIndex);
+        if (pokemon && !pokemon.hasHmMove()) { // Cannot deposit pokemon with HM in gen 1
+            const depositedPokemon = new PokemonMZ_Game_Pokemon(pokemon.intEnemyId(), pokemon.level());
+            depositedPokemon.cloneFromPokemon(pokemon);
+            depositedPokemon.heal();
+            this._dayCarePokemons.push({
+                "pokemon":depositedPokemon,
+                "depositSteps":$gameParty.steps(),
+            });
+            $gamePlayerTrainer.removePokemonAtIndex(partyIndex);
+        }
+    }
+};
+PokemonMZ_Game_TrainerPlayer.prototype.canDepositIndexAtDayCare = function(partyIndex) {
+    // Check if after deposit at least one other pokemon in party isn't ko.
+    let viablePokemons = 0;
+    for (let i=0; i<this._pokemons.length; i++) {
+        if (i == partyIndex) { continue; }
+        if (!this._pokemons[i].isFainted()) {
+            viablePokemons++;
+        }
+    }
+    return viablePokemons > 0;
+};
+PokemonMZ_Game_TrainerPlayer.prototype.pokemonAtDayCare = function() {
+    if (this._dayCarePokemons) {
+        if (this._dayCarePokemons[0]) {
+            return this._dayCarePokemons[0].pokemon;
+        }
+    } else {
+        this.initializeDayCare();
+        return false;
+    }
+};
+PokemonMZ_Game_TrainerPlayer.prototype.pokemonAtDayCareExpEarned = function() {
+    if (this.isPokemonAtDayCare()) {
+        const pokemonData = this._dayCarePokemons[0];
+        if (pokemonData) {
+            return $gameParty.steps() - pokemonData.depositSteps;
+        } else {
+            return 0;
+        }
+    } else {
+        return 0;
+    }
+};
+PokemonMZ_Game_TrainerPlayer.prototype.pokemonAtDayCareLevelGained = function() {
+    if (this.isPokemonAtDayCare()) {
+        const expGained = this.pokemonAtDayCareExpEarned();
+        const pokemonData = this._dayCarePokemons[0];
+        if (pokemonData) {
+            const pokemon = pokemonData.pokemon;
+            const tempPokemon = new PokemonMZ_Game_Pokemon(pokemon.intEnemyId(), pokemon.level());
+            tempPokemon.cloneFromPokemon(pokemon);
+            tempPokemon.gainExp(expGained);
+            return tempPokemon.level() - pokemon.level();
+        } else {
+            return 0;
+        }
+    } else {
+        return 0;
+    }
+};
+PokemonMZ_Game_TrainerPlayer.prototype.retrievePokemonFromDayCare = function() {
+    if (this.isPokemonAtDayCare() && this.canGetPokemonInParty()) {
+        const pokemonData = this._dayCarePokemons[0];
+        if (!pokemonData) { return; }
+            const expGained = this.pokemonAtDayCareExpEarned();
+            const pokemon = pokemonData.pokemon;
+
+            const dayCarePokemon = new PokemonMZ_Game_Pokemon(pokemon.intEnemyId(), pokemon.level());
+            dayCarePokemon.cloneFromPokemon(pokemon);
+            dayCarePokemon.gainExp(expGained);
+            dayCarePokemon.heal();
+            dayCarePokemon.learnAllWaitingMoves();
+
+            $gamePlayerTrainer.addPokemonToParty(dayCarePokemon);
+            this._dayCarePokemons.splice(0,1); //Remove pokemon from daycare
+    };
+};
 
 // PokemonMZ_Pokemon
 // The class for a pokemon
@@ -1432,6 +1530,16 @@ PokemonMZ_Game_Pokemon.prototype.movesLearnWaitlist = function() {
 PokemonMZ_Game_Pokemon.prototype.getNextMoveLearned = function() {
     return this._movesLearnWaitlist.splice(0,1)[0];
 };
+PokemonMZ_Game_Pokemon.prototype.learnAllWaitingMoves = function() {
+    // Learn all moves in waitlist, for example when getting retrieved from day care
+    for (move of this._movesLearnWaitlist) {
+        this.learnMove(move);
+    }
+    this._movesLearnWaitlist = [];
+    this.removeOlderMoves(); // Keep 4 last moves
+};
+
+
 PokemonMZ_Game_Pokemon.prototype.heal = function() {
     this._hp = this.mhp();
     for (move of this._moves) {
@@ -1576,6 +1684,21 @@ PokemonMZ_Game_Pokemon.prototype.moveUseability = function(index) {
 
     return "";
 };
+PokemonMZ_Game_Pokemon.prototype.hasHmMove = function() {
+    let hasHm = false;
+    for (let i=0; i<this._moves.length; i++) {
+        if (this.isMoveHm(i)) { hasHm = true; }
+    }
+    return hasHm;
+};
+PokemonMZ_Game_Pokemon.prototype.isMoveHm = function(index) { // TODO
+    // Returns if the move at index is a HM
+    const move = this.moveDataFromIndex(index);
+    // TODO: Check HM property.
+    return false;
+};
+
+
 PokemonMZ_Game_Pokemon.prototype.hasAnyDisabledMove = function() {
     for (let i=0; i<this._moves.length; i++) {
         if (this.isMoveDisabled(i)) {

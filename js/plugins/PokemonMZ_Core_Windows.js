@@ -22,8 +22,15 @@ Window_Base.prototype.convertEscapeCharacters = function(text) {
     text = text.replace(/\x1bPK\[(\d+)\]/gi, (_, p1) =>
         this.PokemonMZ_pokemonName(parseInt(p1))
     );
+    text = text.replace(/\x1bPPK\[(\d+)\]/gi, (_, p1) =>
+        this.PokemonMZ_partyPokemonNameAtIndex(parseInt(p1))
+    );
+    text = text.replace(/\x1bPPKV\[(\d+)\]/gi, (_, p1) =>
+        this.PokemonMZ_partyPokemonNameAtVariableIndex(parseInt(p1))
+    );
     text = text.replace(/\x1bPKS/gi, $gamePlayerTrainer.numPokemonSeen());
     text = text.replace(/\x1bPKO/gi, $gamePlayerTrainer.numPokemonCaptured());
+    text = text.replace(/\x1bDCPK/gi, this.PokemonMZ_dayCarePokemonName());
 
     return text;
 };
@@ -31,6 +38,19 @@ Window_Base.prototype.PokemonMZ_pokemonName = function(n) {
     const enemy = n >= 1 ? $dataEnemies[n] : null;
     return enemy ? enemy.name : "";
 };
+Window_Base.prototype.PokemonMZ_partyPokemonNameAtIndex = function(partyIndex) {
+    const pokemon = $gamePlayerTrainer.pokemon(partyIndex)
+    return pokemon ? pokemon.name() : "";
+};
+Window_Base.prototype.PokemonMZ_partyPokemonNameAtVariableIndex = function(variableId) {
+    const partyIndex = $gameVariables.value(variableId);
+    return this.PokemonMZ_partyPokemonNameAtIndex(partyIndex);
+};
+Window_Base.prototype.PokemonMZ_dayCarePokemonName = function() {
+    const pokemon = $gamePlayerTrainer.pokemonAtDayCare();
+    return pokemon ? pokemon.name() : "";
+};
+
 Window_Base.prototype.PokemonMZ_drawPokemon = function(bitmap, x, y, width, height) {
     width = width || ImageManager.pokemonSpriteWidth;
     height = height || ImageManager.pokemonSpriteHeight;

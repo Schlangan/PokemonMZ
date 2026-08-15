@@ -1661,6 +1661,9 @@ PokemonMZ_Scene_PokemonMenu.prototype.initialize = function() {
     this._tradePokemon = null;
     this._tradeVariable = null;
 
+    this._dayCareSelecting = false;
+    this._dayCareVariable = null;
+
     this._usingMapMove = null;
 };
 PokemonMZ_Scene_PokemonMenu.prototype.prepare = function(type, data) {
@@ -1671,6 +1674,9 @@ PokemonMZ_Scene_PokemonMenu.prototype.prepare = function(type, data) {
         break;
     case "selectTrade":
         this.prepareSelectTrade(data);
+        break;
+    case "selectDayCare":
+        this.prepareSelectDayCare(data);
         break;
     }
 }
@@ -1690,7 +1696,10 @@ PokemonMZ_Scene_PokemonMenu.prototype.prepareSelectTrade = function(tradeData) {
     this._tradePokemonIntId = tradeData.pokemonIntId;
     this._tradeVariable = tradeData.returnVariable;
 };
-
+PokemonMZ_Scene_PokemonMenu.prototype.prepareSelectDayCare = function(dayCareData) {
+    this._dayCareSelecting = true;
+    this._dayCareVariable = dayCareData.returnVariable;
+};
 
 PokemonMZ_Scene_PokemonMenu.prototype.start = function() {
     Scene_MenuBase.prototype.start.call(this);
@@ -1850,6 +1859,8 @@ PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemon = function() {
     
     if (this._tradeSelecting) {
         this.onSelectPokemonTrade();
+    } else if (this._dayCareSelecting) {
+        this.onSelectPokemonDayCare();
     } else if (this._listWindow.formationMode()) {
         this.onSelectPokemonSwitch();
     } else if (this.isLearningMove()) {
@@ -1871,6 +1882,9 @@ PokemonMZ_Scene_PokemonMenu.prototype.onCancelPokemon = function() {
     } else {
         if (this._tradeSelecting) {
             $gameVariables.setValue(this._tradeVariable, -2);
+        }
+        if (this._dayCareSelecting) {
+            $gameVariables.setValue(this._dayCareVariable, -2);
         }
         this.popScene();
     }
@@ -1974,6 +1988,21 @@ PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemonTrade = function() {
     }
     this.popScene();
 };
+PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemonDayCare = function() {
+    const pokemon = this.selectedPokemon();
+    const index = this._listWindow.index();
+    if (pokemon.hasHmMove()) {
+        // Pokemon with HM moves cannot be added to daycare in generation 1
+        $gameVariables.setValue(this._dayCareVariable, -1);
+    } else if (!$gamePlayerTrainer.canDepositIndexAtDayCare(index)) {
+        // Cannot deposit because the selected pokemon is the last viable one
+        $gameVariables.setValue(this._dayCareVariable, -3);
+    } else {
+        $gameVariables.setValue(this._dayCareVariable, index);
+    }
+    this.popScene();
+};
+
 PokemonMZ_Scene_PokemonMenu.prototype.proceedLearningMove = function() {
     const pokemon = this.selectedPokemon();
     if (pokemon.moves().length < 4) {

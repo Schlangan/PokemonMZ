@@ -67,14 +67,24 @@
 
  * //////////////////////////////////////////
  * @command TakePlayerMoney
- * @text Takes Money from the Player
- * @desc Takes a given amount of money to the player.
+ * @text Take Fixed Money from the Player
+ * @desc Takes a fixed amount of money to the player.
  * 
  * @arg moneyAmount
  * @type number
  * @min 0
  * @text Amount
  * @desc The amount of money to take
+ * 
+* //////////////////////////////////////////
+ * @command TakePlayerVariableMoney
+ * @text Take Variable Money from the Player
+ * @desc Takes money from the player, with a value set in variable
+ * 
+ * @arg moneyVariable
+ * @type variable
+ * @text Money variable
+ * @desc TThe variable containing the value of the money.
 
  * //////////////////////////////////////////
  * @command GetPlayerMoney
@@ -173,6 +183,17 @@
  * @text Return switch
  * @desc A switch that will take the value ON if the player can get a pokemon or OFF if they cannot.
 
+ * //////////////////////////////////////////
+ * @command CanGetPokemonInParty
+ * @text Can Player Get a Pokemon In Party
+ * @desc Checks if the player has less than 6 Pokémon in the party.
+ * 
+ * @arg returnSwitchId
+ * @type switch
+ * @text Return switch
+ * @desc A switch that will take the value ON if the player can get a pokemon or OFF if they cannot.
+
+
 
  * //////////////////////////////////////////
  * @command GivePokemon
@@ -221,6 +242,71 @@
  * @type enemy
  * @text Pokemon
  * @desc The pokemon whose cry to play
+ * 
+ * //////////////////////////////////////////
+ * @command IsPokemonAtDayCare
+ * @text Is Pokemon At Day Care
+ * @desc Sets a switch to ON if a pokemon is currently inside the day care. Otherwise, sets it to OFF.
+ * 
+ * @arg returnSwitchId
+ * @type switch
+ * @text Return Switch
+ * @desc The switch set to ON/OFF if a pokemon is/isn't in the daycare.
+ * 
+ * //////////////////////////////////////////
+ * @command SelectPokemonDayCare
+ * @text Select Pokemon For Day Care
+ * @desc Select a Pokemon in Party for the day care and check if possible (HM forbidden)
+ * 
+ * @arg returnVariable
+ * @type variable
+ * @text Return Variable
+ * @desc Variable that gets the pokemon index in the party if correct pokemon, -1 if pokemon has HM, or -2 if canceled.
+ * 
+ * //////////////////////////////////////////
+ * @command AddPokemonAtDayCare
+ * @text Add a Pokemon To Day Care
+ * @desc Add a Pokemon to the Day Care, from an index stored inside the Select Pokemon Day Care variable.
+ * 
+ * @arg indexVariable
+ * @type variable
+ * @text Index Variable
+ * @desc Variable that contains the party index. Usually set up by using Select Pokemon For Day Care before this command.
+ * 
+ * //////////////////////////////////////////
+ * @command GetDayCareResult
+ * @text Get Day Care Results
+ * @desc Sets the number of level gained at day care and the cost of the pokemon retrieval
+ * 
+ * @arg baseCost
+ * @type number
+ * @text Base Daycare Cost
+ * @desc The cost of the day care when the pokemon didn't get any level
+ * 
+ * @arg costPerLevel
+ * @type number
+ * @text Daycare Cost Per Level
+ * @desc The additional cost of the day care per level gained.
+ * 
+ * @arg levelVariable
+ * @type variable
+ * @text Level Variable
+ * @desc Variable that receives the number of levels gained by the Pokemon.
+ * 
+ * @arg costVariable
+ * @type variable
+ * @text Cost Variable
+ * @desc Variable that receives the price to pay to get back by the Pokemon, based on the base cost and cost per level.
+ * 
+ * //////////////////////////////////////////
+ * @command PlayDayCarePokemonCry
+ * @text Play Day Care Pokemon Cry
+ * @desc Play the cry of the Pokemon at Day Care
+ * 
+ * //////////////////////////////////////////
+ * @command RetrievePokemonFromDayCare
+ * @text Retrieve Pokemon From Day Care
+ * @desc Removes the pokemon from day care and add it to the party. Does nothing if the party is full.
  * 
 */
 const pluginName = 'PokemonMZ_Core_Commands';
@@ -298,6 +384,15 @@ PluginManager.registerCommand(pluginName, "CanGetPokemon", function(args) {
         if (args.returnSwitchId) { $gameSwitches.setValue(switchId, false); }
     }
 });
+PluginManager.registerCommand(pluginName, "CanGetPokemonInParty", function(args) {
+    const switchId = Number(args.returnSwitchId)
+    if ($gamePlayerTrainer.canGetPokemonInParty()) {
+        if (args.returnSwitchId) { $gameSwitches.setValue(switchId, true); }
+    } else {
+        if (args.returnSwitchId) { $gameSwitches.setValue(switchId, false); }
+    }
+});
+
 PluginManager.registerCommand(pluginName, "GivePokemon", function(args) {
     const pokemonId = Number(args.pokemon);
     const level = Number(args.level)
@@ -321,6 +416,51 @@ PluginManager.registerCommand(pluginName, "PlayPokemonCry", function(args) {
     const tempPokemon = new PokemonMZ_Game_Pokemon(pokemonId, 1);
     tempPokemon.playCry();
 });
+
+// DayCare
+PluginManager.registerCommand(pluginName, "IsPokemonAtDayCare", function(args) {
+    const switchId = Number(args.returnSwitchId)
+    if ($gamePlayerTrainer.isPokemonAtDayCare()) {
+        if (args.returnSwitchId) { $gameSwitches.setValue(switchId, true); }
+    } else {
+        if (args.returnSwitchId) { $gameSwitches.setValue(switchId, false); }
+    }
+});
+
+PluginManager.registerCommand(pluginName, "SelectPokemonDayCare", function(args) {
+    const pokemonIntId = Number(args.searchedPokemon);
+    const returnVariable = Number(args.returnVariable);
+    SceneManager.push(PokemonMZ_Scene_PokemonMenu);
+    SceneManager.prepareNextScene("selectDayCare",{"returnVariable":returnVariable});
+});
+PluginManager.registerCommand(pluginName, "AddPokemonAtDayCare", function(args) {
+    const indexVariable = Number(args.indexVariable);
+    $gamePlayerTrainer.addPokemonAtDayCareFromParty($gameVariables.value(indexVariable));
+});
+
+PluginManager.registerCommand(pluginName, "GetDayCareResult", function(args) {
+    const baseCost = Number(args.baseCost);
+    const costPerLevel = Number(args.costPerLevel);
+    const levelVariable = Number(args.levelVariable);
+    const costVariable = Number(args.costVariable);
+
+    const levelGained = $gamePlayerTrainer.pokemonAtDayCareLevelGained();
+    const cost = baseCost + levelGained*costPerLevel;
+
+    $gameVariables.setValue(levelVariable, levelGained);
+    $gameVariables.setValue(costVariable, cost);
+});
+PluginManager.registerCommand(pluginName, "PlayDayCarePokemonCry", function(args) {
+    const pokemon = $gamePlayerTrainer.pokemonAtDayCare();
+    if (pokemon) {
+        pokemon.playCry();
+    }
+});
+PluginManager.registerCommand(pluginName, "RetrievePokemonFromDayCare", function(args) {
+    $gamePlayerTrainer.retrievePokemonFromDayCare();
+});
+
+
 
 // User interface
 PluginManager.registerCommand(pluginName, "ShowComputerPlayer", function(args) {
