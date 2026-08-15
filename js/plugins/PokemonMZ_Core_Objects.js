@@ -2644,12 +2644,14 @@ PokemonMZ_Game_Battle.prototype.initialize = function() {
     this._enemies = [];
     this._type = ""
     this._wildPokemon = null;
+    this._moneyDropped = 0;
 };
 PokemonMZ_Game_Battle.prototype.setup = function(troopId) {
     this._troopId = troopId;
     this._allies = [];
     this._enemies = [];
     this._wildPokemon = null;
+    this.clearMoneyDropped();
 
     const troopData = $dataTroops[troopId].pkmz_data;
     this._type = troopData.type;
@@ -2812,6 +2814,15 @@ PokemonMZ_Game_Battle.prototype.wildPokemon = function() {
 };
 PokemonMZ_Game_Battle.prototype.canRunAway = function() {
     return this.isWildBattle();
+};
+PokemonMZ_Game_Battle.prototype.addMoneyDropped = function(value) {
+    this._moneyDropped += value;
+};
+PokemonMZ_Game_Battle.prototype.moneyDropped = function() {
+    return this._moneyDropped;
+};
+PokemonMZ_Game_Battle.prototype.clearMoneyDropped = function() {
+    this._moneyDropped = 0;
 };
 
 
@@ -3584,7 +3595,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
     case "dig":
         effectResults = this.effect_dig(battleData, effect, effectResults);
         break;
-
+    case "moneyDrop":
+        effectResults = this.effect_moneyDrop(battleData, effect, effectResults);
+        break;
     }
     return effectResults;
 };
@@ -4293,6 +4306,7 @@ PokemonMZ_Game_Action.prototype.effect_faintUser = function(battleData, effect, 
     return effectResults;
 };
 PokemonMZ_Game_Action.prototype.effect_forceSwitchOut = function(battleData, effect, effectResults) {
+    const side = this.side();
     if ($PokemonMZ_gameBattle.isWildBattle()) {
         const levelUser = this._user.level();
         const levelTarget = this._opponent.level();
@@ -4309,7 +4323,11 @@ PokemonMZ_Game_Action.prototype.effect_forceSwitchOut = function(battleData, eff
             effectResults.success = true;
             this._resultSteps.push(["blowTargetAway",this.oppositeSide()]);
             this._resultSteps.push(["waittext","blownAway",this.oppositeSide()]);
-            this._resultSteps.push(["endBattle"]);
+            if (side == "player") {
+                this._resultSteps.push(["pickupMoneyThenEndBattle"]);
+            } else {
+                this._resultSteps.push(["endBattle"]);
+            }
         }
     } else {
         // No force switch out in trainer battles in generation I
@@ -4404,8 +4422,9 @@ PokemonMZ_Game_Action.prototype.effect_teleport = function(battleData, effect, e
             this._resultSteps.push(["waittext","statusFailed",this.side()]);
         } else {
             effectResults.success = true;
+            $PokemonMZ_gameBattle.clearMoneyDropped();
             this._resultSteps.push(["waittext","ranAway",this.side()]);
-            this._resultSteps.push(["endBattle"]);
+            this._resultSteps.push(["endBattle"]); // Generation I no money pickup
         }
     } else {
         // Teleport ineffective in trainer battles in generation I
@@ -4455,5 +4474,14 @@ PokemonMZ_Game_Action.prototype.effect_dig = function(battleData, effect, effect
         effectResults.success = true;
         this._resultSteps.push(["endDigging",this._user])
     }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_moneyDrop = function(battleData, effect, effectResults) {
+    // Depending on generation, the money dropped differs
+    if (PokemonMZ.pokemonMechanicsGeneration == 1) {
+        $PokemonMZ_gameBattle.addMoneyDropped(2*this._user.level());
+    }
+    this._resultSteps.push(["autotext","coinsScatter",this.side()]);
+    effectResults.success = true;
     return effectResults;
 };

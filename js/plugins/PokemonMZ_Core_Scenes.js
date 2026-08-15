@@ -3857,6 +3857,9 @@ PokemonMZ_Scene_Battle.prototype.finishCapture = function() {
     this._playerInputWindow.hide();
     this._staticMessageWindow.hide();
 
+    // Generation I - capturing a pokemon prevents picking up money
+    $PokemonMZ_gameBattle.clearMoneyDropped();
+
     if ($gamePlayerTrainer.canGetPokemonInParty()) {
         PokemonMZ_BattleManager.changePhase("addWildToParty");
     } else {

@@ -1006,6 +1006,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
     case "teleport":
     case "faintUser":
     case "mirrorMove":
+    case "moneyDrop":
         DataManager.verifyProperties(
             moveEffect,
             errorMessagePrefix,
@@ -1829,12 +1830,18 @@ PokemonMZ_BattleManager.updatePhase = function(timeActive) {
         case "givePlayerMoney":
             this.givePlayerMoney();
             break;
+        case "pickupMoneyThenWinBattle":
+            this.pickupMoneyThenWinBattle();
+            break;
         case "winBattle":
             this.winBattle();
             break;
         case "loseBattle":
             this.loseBattle();
             break; 
+        case "pickupMoneyThenEndPlayerEscape":
+            this.pickupMoneyThenEndPlayerEscape();
+            break;
         case "endPlayerEscape":
             this.escapeBattle();
             break;
@@ -2957,8 +2964,8 @@ PokemonMZ_BattleManager.afterEnemyFaintedPokemon = function() {
             this.changePhase("enemyTrainerLose");
         }
     } else {
-        // Wild Battle, it is over.
-        this.winBattle();
+        // Wild Battle, it is over - go to money pickup phase and then win.
+        this.pickupMoneyThenWinBattle();
     }
 
 
@@ -3073,7 +3080,7 @@ PokemonMZ_BattleManager.givePlayerMoney = function() {
 
     const message = $gamePlayerTrainer.name() + " got " + String(money) + TextManager.currencyUnit + " for winning!"
     $gameMessage.add(message);
-    this.changePhase("winBattle");
+    this.changePhase("pickupMoneyThenWinBattle");
 };
 PokemonMZ_BattleManager.gameOver = function() {
     if ($gameMessage.isBusy()) { return; }
@@ -3089,6 +3096,20 @@ PokemonMZ_BattleManager.gameOver = function() {
 };
 PokemonMZ_BattleManager.playVictoryMe = function() {
     AudioManager.playMe($gameSystem.victoryMe());
+};
+PokemonMZ_BattleManager.addPickupMoneyMessage = function() {
+    // Message to pickup money if the value is not zero
+    const money = $PokemonMZ_gameBattle.moneyDropped();
+    if (money > 0) {
+        $gamePlayerTrainer.addMoney(money);
+        const message = $gamePlayerTrainer.name() + " picked up " + String(money) + TextManager.currencyUnit + "!"
+        $gameMessage.add(message);
+    } 
+};
+PokemonMZ_BattleManager.pickupMoneyThenWinBattle = function() {
+    if ($gameMessage.isBusy()) { return; }
+    this.addPickupMoneyMessage();
+    this.changePhase("winBattle");
 };
 PokemonMZ_BattleManager.winBattle = function() {
     if ($gameMessage.isBusy()) { return; }
@@ -3109,6 +3130,10 @@ PokemonMZ_BattleManager.loseBattle = function() {
         this._eventCallback(2);
     }
     this.exitBattleScene();
+};
+PokemonMZ_BattleManager.pickupMoneyThenEndPlayerEscape = function() {
+    this.addPickupMoneyMessage();
+    this.changePhase("endPlayerEscape");
 };
 PokemonMZ_BattleManager.escapeBattle = function() {
     if ($gameMessage.isBusy()) { return; }
@@ -3135,13 +3160,13 @@ PokemonMZ_BattleManager.afterGameOver = function() {
 };
 PokemonMZ_BattleManager.addWildToParty = function() { 
     $gamePlayerTrainer.givePokemonAfterNickname(this._capturedPokemon);
-    this.changePhase("winBattle");
+    this.changePhase("pickupMoneyThenWinBattle");
 };
 PokemonMZ_BattleManager.addWildToBox = function() { 
     $gamePlayerTrainer.addPokemonToCurrentBox(this._capturedPokemon);
     const message = this._capturedPokemon.name() + " was transferred to " + $gamePlayerTrainer.currentBoxName() + "!";
     $gameMessage.add(message);
-    this.changePhase("winBattle");
+    this.changePhase("pickupMoneyThenWinBattle");
 };
 PokemonMZ_BattleManager.hasAnyMoveUseable = function(pokemon) {
     return pokemon.hasAnyMoveUseable();
@@ -3967,6 +3992,9 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 break;
             case "endBattle":
                 this.changePhase("endPlayerEscape");
+                break;
+            case "pickupMoneyThenEndBattle":
+                this.changePhase("pickupMoneyThenEndPlayerEscape");
                 break;
         }
     } else {
@@ -4847,6 +4875,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return "The Mirror Move failed!"
     case "dugHole":
         return prefix + pokemon.name() + " dug a hole!"
+    case "coinsScatter":
+        return "Coins scattered everywhere!";
     }
     return ""
 };
