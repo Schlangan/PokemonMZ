@@ -780,6 +780,7 @@ DataManager.verifyItemData = function(index, itemData) {
                 optionalProperties);
             break;
         case "battlePdefUpUser":
+        case "battleSpcUpUser":
             DataManager.verifyProperties(
                 itemData, 
                 errorMessagePrefix, 
@@ -3424,6 +3425,7 @@ PokemonMZ_BattleManager.calculateBattleActions = function() {
         switch (this._playerUseItem.pkmz_data.effect) {
         case "ball":
         case "battlePdefUpUser":
+        case "battleSpcUpUser":
             this._battleActions.push("playerStartUsingItem");
             break;
         default:
@@ -3807,6 +3809,7 @@ PokemonMZ_BattleManager.startPlayerItem = function() {
             this.changePhase("throwBall");
             break;
         case "battlePdefUpUser":
+        case "battleSpcUpUser":
             this._currentAction = new PokemonMZ_Game_Action(this._playerChosenPokemon, "player");
             this._currentAction.setItem(this._playerUseItem.pkmz_data.id)
             this._currentAction.calculate();

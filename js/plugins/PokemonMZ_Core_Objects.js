@@ -2123,6 +2123,15 @@ PokemonMZ_Game_Pokemon.prototype.itemEffect = function(item, ext1) {
            return {"effect":"pdefUp","success":false};
         }
         break;
+    case "battleSpcUpUser":
+        if (this._stageModifiers.satk < 6) {
+            this._stageModifiers.satk += item.pkmz_data.stage;
+            if (this._stageModifiers.satk > 6) { this._stageModifiers.satk = 6; }
+            return {"effect":"spcUp","animation":item.pkmz_data.battleAnimation, "success":true};
+        } else {
+           return {"effect":"spcUp","success":false};
+        }
+        break;
     }
     return {"effect":""};
 };
@@ -3151,7 +3160,14 @@ PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO
             } else {
                 this._resultSteps.push(["autotext","statusNothing",this.side()])
             }
-            
+            break;
+        case "spcUp":
+            if (effect.success) {
+                this._resultSteps.push(["hitAnimation", effect.animation, this.userBattleSprite(), null, this.side()])
+                this._resultSteps.push(["autotext","specialRose",this.side()])
+            } else {
+                this._resultSteps.push(["autotext","statusNothing",this.side()])
+            }
             break;
     }
     this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
