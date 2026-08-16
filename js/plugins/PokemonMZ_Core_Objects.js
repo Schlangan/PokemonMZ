@@ -2166,6 +2166,9 @@ PokemonMZ_Game_Pokemon.prototype.canUseItemOn = function(item, ext1) {
         case "burn":
             if (this.isBurned()) { return canUseResult; }
             break;
+        case "freeze":
+            if (this.isFrozen()) { return canUseResult; }
+            break;
         case "sleep":
             if (this.isAsleep()) { return canUseResult; }
             break;
@@ -2185,6 +2188,9 @@ PokemonMZ_Game_Pokemon.prototype.canUseItemOn = function(item, ext1) {
             break;
         case "burn":
             if (this.isBurned()) { return canUseResult; }
+            break;
+        case "freeze":
+            if (this.isFrozen()) { return canUseResult; }
             break;
         case "sleep":
             if (this.isAsleep()) { return canUseResult; }

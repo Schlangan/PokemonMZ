@@ -736,7 +736,7 @@ DataManager.verifyItemData = function(index, itemData) {
                 mandatoryProperties.concat(["status"]),
                 optionalProperties);
             if (itemData.status) {
-                if (!["poison","paralysis","burn","sleep","all"].includes(itemData.status)) {
+                if (!["poison","paralysis","burn","freeze","sleep","all"].includes(itemData.status)) {
                     console.error(errorMessagePrefix + "Unknown cure status item status: " + itemData.status);
                 }
             }
@@ -4026,6 +4026,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
             case "burnHeal":
                 this.changeSubPhase("removePokemonStatus");
                 this._subPhaseParams = ["burn", step[1]];
+                break;
+            case "freezeHeal":
+                this.changeSubPhase("removePokemonStatus");
+                this._subPhaseParams = ["freeze", step[1]];
                 break;
             case "paralyzeHeal":
                 this.changeSubPhase("removePokemonStatus");

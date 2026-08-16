@@ -23,14 +23,14 @@ Depending on the effet, additional parameters are required.
     - gen1rate,**int** : Factor of efficiency of the pokeball for generation 1 (from 255 pokeball to 150 ultraball). Set it to -1 for master ball.
     - gen1hpFactor,**int** : Factor of hp reduction on ball efficiency for generation 1 (12 for pokeball or ultraball, 8 for greatball)
 - effect = **cureStatus** : Cure a specific status ailment
-    - status,**string** : The status cured. For now, only possible choice between **poison**, **paralysis**, **burn**, **sleep**, **all**
+    - status,**string** : The status cured. For now, only possible choice between **poison**, **paralysis**, **burn**, **freeze**, **sleep**, **all**
 - effect = **lockedItem** : Item impossible to use
     - useMessage,**string** : Message shown on screen when attempting to use the item
 - effect = **recoverHpFixed** : Recover a specific amount of hp (ex: potion)
     - value,**int** : Amount of fixed hp recovered
 - effect = **recoverHpPercentCureStatus** : Recover a % of hp and cure statuses (ex: full restore)
     - value,**int** : Percentage of hp recovered
-    - status,**string** : The status cured. For now, only possible choice between **poison**, **paralysis**, **burn**, **sleep**, **all**
+    - status,**string** : The status cured. For now, only possible choice between **poison**, **paralysis**, **burn**, **freeze**, **sleep**, **all**
 - effect = **restorePp** : Recover PP for one or several moves (ex: ether/elixir)
     - range,**string** : The range of effect of the recovery. Either **single**, affecting one move (ether), or **all** for all moves at once (elixir)
     - value,**int** : Amount of PP recovered, either -1 for all PP, or a specific value.
