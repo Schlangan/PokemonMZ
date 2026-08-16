@@ -234,6 +234,26 @@
  * @desc Variable that gets the pokemon index in the party if correct pokemon, -1 if wrong one, or -2 if canceled.
  * 
  * //////////////////////////////////////////
+ * @command TradePartyPokemon
+ * @text Trade Pokemon From Party
+ * @desc Trade a Pokemon from the party with a new one
+ * 
+ * @arg partyIndexVariable
+ * @type variable
+ * @text Party Index Variable
+ * @desc The variable containing the index of the player's pokemon. Use the one from the Select Pokemon Trade command.
+ * 
+ * @arg tradedPokemon
+ * @type enemy
+ * @text Traded Pokemon
+ * @desc The species of the pokemon offered by the trade
+ * 
+ * @arg tradedPokemonNickname
+ * @type text
+ * @text Traded Pokemon Nickname
+ * @desc The nickname of the Pokemon offered by the trade
+ * 
+ * //////////////////////////////////////////
  * @command PlayPokemonCry
  * @text Play Pokemon Cry
  * @desc Play a specific Pokemon's cry
@@ -481,4 +501,34 @@ PluginManager.registerCommand(pluginName, "SelectPokemonTrade", function(args) {
     const returnVariable = Number(args.returnVariable);
     SceneManager.push(PokemonMZ_Scene_PokemonMenu);
     SceneManager.prepareNextScene("selectTrade",{"pokemonIntId":pokemonIntId, "returnVariable":returnVariable});
+});
+
+PluginManager.registerCommand(pluginName, "TradePartyPokemon", function(args) {
+    const partyIndexVariable = Number(args.partyIndexVariable);
+    const tradedPokemonId = Number(args.tradedPokemon)
+    const tradedPokemonNickname = args.tradedPokemonNickname
+
+    const partyIndex = $gameVariables.value(partyIndexVariable);
+    if (partyIndex && partyIndex >= 0 && partyIndex <= 5) {
+        const playerPokemon = $gamePlayerTrainer._pokemons[partyIndex]
+        const tradedPokemon = $gamePlayerTrainer.generateTradedPokemon(
+            tradedPokemonId,
+            playerPokemon.level(),
+            tradedPokemonNickname,
+            "Trainer" // In generation 1, always 'Trainer'
+        );
+        $gamePlayerTrainer.tradePartyPokemon(
+            partyIndex,
+            tradedPokemon
+        );
+        $gamePlayerTrainer.addSeenPokemon(tradedPokemon.id());
+        $gamePlayerTrainer.addCapturedPokemon(tradedPokemon.id());
+        tradedPokemon.playCry();
+
+        // Require checking trade evolution
+        $gameMap.askForEvolutionCheck();
+    } else {
+        console.error("Traded index is incorrect. Please check the variable used.")
+    }
+
 });

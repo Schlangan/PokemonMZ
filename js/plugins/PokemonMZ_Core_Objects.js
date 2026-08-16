@@ -571,6 +571,18 @@ Game_Map.prototype.checkEvolution = function() {
                 this._evolvingPokemons.push([pokemon, possibleEvolution]);
             }
         }
+        if (pokemon.hasBeenTraded()) {
+            // Check evolution on trade must wait end of event
+            if ($gameMap.isEventRunning()) {
+                this._checkEvolution = true;
+            } else {
+                let possibleEvolution = pokemon.firstPossibleEvolution("trade")
+                if (possibleEvolution != "") {
+                    this._evolvingPokemons.push([pokemon, possibleEvolution]);
+                }
+                pokemon.clearTradedState();
+            }
+        }
     }
     if (this._evolvingPokemons.length > 0) {
         SceneManager.push(PokemonMZ_Scene_Evolutions);
@@ -1373,6 +1385,21 @@ PokemonMZ_Game_TrainerPlayer.prototype.retrievePokemonFromDayCare = function() {
     };
 };
 
+PokemonMZ_Game_TrainerPlayer.prototype.tradePartyPokemon = function(partyIndex, tradedPokemon) {
+    this._pokemons[partyIndex] = tradedPokemon;
+};
+
+PokemonMZ_Game_TrainerPlayer.prototype.generateTradedPokemon = function(pokemonIntId, level, nickname, trainerName) {
+    const pokemon = new PokemonMZ_Game_Pokemon(pokemonIntId, level);
+    const trainerId = crypto.getRandomValues(new Uint16Array(1))[0];
+    pokemon.setTrainerInfo(trainerId, trainerName)
+    pokemon.setNickname(nickname);
+    pokemon.setAsTraded();
+
+    return pokemon
+}
+
+
 // PokemonMZ_Pokemon
 // The class for a pokemon
 function PokemonMZ_Game_Pokemon() {
@@ -1438,6 +1465,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
 
     this._hasBattled = false;
     this._hasLeveledUp = false;
+    this._hasBeenTraded = false;
 };
 PokemonMZ_Game_Pokemon.prototype.reloadData = function() {
     this._data = $dataEnemies[this._enemyId].pkmz_data;
@@ -2894,6 +2922,8 @@ PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolution = function(evolutionMode
         return this.firstPossibleEvolutionLevelUp();
     case "useItem":
         return this.firstPossibleEvolutionItem(ext1);
+    case "trade":
+        return this.firstPossibleEvolutionTrade();
     }
     return "";
 };
@@ -2908,6 +2938,14 @@ PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolutionLevelUp = function() {
 PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolutionItem = function(itemStrId) {
     for (const evolution of this._data.evolutions) {
         if (evolution.mode == "useItem" && itemStrId == evolution.item) {
+            return evolution.to;
+        }
+    }
+    return "";
+};
+PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolutionTrade = function() {
+    for (const evolution of this._data.evolutions) {
+        if (evolution.mode == "trade") {
             return evolution.to;
         }
     }
@@ -2965,8 +3003,15 @@ PokemonMZ_Game_Pokemon.prototype.mapMoves = function() {
     }
     return mapMoves;
 };
-
-
+PokemonMZ_Game_Pokemon.prototype.setAsTraded = function() {
+    this._hasBeenTraded = true;
+};
+PokemonMZ_Game_Pokemon.prototype.hasBeenTraded = function() {
+    return this._hasBeenTraded;
+};
+PokemonMZ_Game_Pokemon.prototype.clearTradedState = function() {
+    this._hasBeenTraded = false;
+}
 
 // PokemonMZ_Game_Battle
 // The class for a pokemon battle
