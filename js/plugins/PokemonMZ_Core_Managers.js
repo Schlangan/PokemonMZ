@@ -1032,6 +1032,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
             optionalProperties.concat(["animationTurn1"])
         );
         break;
+    case "patkUpUser":
     case "pdefUpUser":
     case "spcUpUser":
     case "evaUpUser":
@@ -4828,6 +4829,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + "'s attack missed!";
     case "attackRose":
         return prefix + pokemon.name() + "'s attack rose!";
+    case "attackRosePlus":
+        return prefix + pokemon.name() + "'s attack greatly rose!";
     case "defenseRose":
         return prefix + pokemon.name() + "'s defense rose!";
     case "specialRose":
