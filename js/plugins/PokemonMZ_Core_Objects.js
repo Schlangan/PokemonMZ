@@ -2152,7 +2152,7 @@ PokemonMZ_Game_Pokemon.prototype.canUseItemOn = function(item, ext1) {
     const cannotUseResult = {"success":false, "message":"It won't have any effect."}
 
     switch(item.pkmz_data.effect) {
-    case "recover_hp_fixed":
+    case "recoverHpFixed":
         if (this.canRecoverHp()) { return canUseResult; }
         break;
     case "cureStatus":
@@ -2242,7 +2242,7 @@ PokemonMZ_Game_Pokemon.prototype.itemEffect = function(item, ext1) {
 
 
     switch(item.pkmz_data.effect) {
-    case "recover_hp_fixed":
+    case "recoverHpFixed":
         currentHp = this.hp();
         mHp = this.mhp();
         nextHp = currentHp + item.pkmz_data.value;

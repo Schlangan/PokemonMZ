@@ -755,7 +755,7 @@ DataManager.verifyItemData = function(index, itemData) {
                 mandatoryProperties.concat(["badMessage","biteChance"]),
                 optionalProperties);
             break;
-        case "recover_hp_fixed":
+        case "recoverHpFixed":
             DataManager.verifyProperties(
                 itemData, 
                 errorMessagePrefix, 
