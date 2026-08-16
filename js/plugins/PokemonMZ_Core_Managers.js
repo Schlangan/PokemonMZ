@@ -533,14 +533,43 @@ DataManager.verifyEncounterDataWild = function(index, encounterData) {
 DataManager.verifyWildPokemonData = function(prefix, index, wildPokemonData) {
     const errorMessagePrefix = prefix + "Index " + String(index) + " - ";
     
-    DataManager.verifyProperties(
-        wildPokemonData,
-        errorMessagePrefix,
-        ["id","levelMin","levelMax","rate"],
-        [],
-    );
-    if (!DataManager.declared.pokemons.includes(wildPokemonData.id)) {
-        console.error(errorMessagePrefix + "Unknown pokemon ID: " + wildPokemonData.id)
+    if (wildPokemonData.condition) {
+        switch (wildPokemonData.condition) {
+        case "fishing":
+            DataManager.verifyProperties(
+                wildPokemonData,
+                errorMessagePrefix,
+                ["id","levelMin","levelMax","rate","condition","itemId"],
+                [],
+            );
+            if (wildPokemonData.itemId) {
+                if (!DataManager.declared.items.includes(wildPokemonData.itemId)) {
+                    console.error(errorMessagePrefix + "Unknown fishing item ID: " + wildPokemonData.itemId)
+                }
+            }
+            break;
+        default:
+            DataManager.verifyProperties(
+                wildPokemonData,
+                errorMessagePrefix,
+                ["id","levelMin","levelMax","rate","condition"],
+                [],
+            );
+            console.error(errorMessagePrefix + "Unknown condition type: " + wildPokemonData.condition)
+        }
+    } else {
+        DataManager.verifyProperties(
+            wildPokemonData,
+            errorMessagePrefix,
+            ["id","levelMin","levelMax","rate"],
+            [],
+        );
+    }
+
+    if (wildPokemonData.id) {
+        if (!DataManager.declared.pokemons.includes(wildPokemonData.id)) {
+            console.error(errorMessagePrefix + "Unknown pokemon ID: " + wildPokemonData.id)
+        }
     }
 };
 DataManager.verifyEncounterDataTrainer = function(index, encounterData) {
@@ -717,6 +746,13 @@ DataManager.verifyItemData = function(index, itemData) {
                 itemData, 
                 errorMessagePrefix, 
                 mandatoryProperties.concat(["useMessage"]),
+                optionalProperties);
+            break;
+        case "fishing":
+            DataManager.verifyProperties(
+                itemData, 
+                errorMessagePrefix, 
+                mandatoryProperties.concat(["badMessage","biteChance"]),
                 optionalProperties);
             break;
         case "recover_hp_fixed":
@@ -1444,6 +1480,7 @@ PokemonMZ_BattleManager.setup = function(troopId, canEscape, canLose) {
 
     // If wild battle and no valid encounter found (due to repel for ex., stop here)
     if (this.abortingWildEncounter()) {
+        $gameMap.PokemonMZ_endFishing(); // Abort fishing if needed
         return;
     }
 
@@ -2072,8 +2109,17 @@ PokemonMZ_BattleManager.displayWildPokemonMessage = function() {
     this._playerTeamStatusWindow.refresh();
     this._playerTeamStatusWindow.show();
     
-    const pokemon = this._enemyChosenPokemon;;
-    const message = "Wild " + pokemon.name() + " appeared!"
+    const pokemon = this._enemyChosenPokemon;
+
+    let message;
+    if ($gameMap.PokemonMZ_isFishing()) {
+        // Ends fishing on map to recover menu access
+        $gameMap.PokemonMZ_endFishing();
+        message = "The hooked " + pokemon.name() + " attacked!"
+    } else {
+        message = "Wild " + pokemon.name() + " appeared!"
+    }
+    
     $gameMessage.add(message);
     this.changePhase("displayWildPokemonStatus");
 };

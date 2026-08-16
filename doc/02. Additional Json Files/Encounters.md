@@ -36,6 +36,9 @@ wildPokemonData
 - levelMin, **int** : Minimum level of the pokemon
 - levelMax, **int** : Maximum level of the pokemon
 - rate, **int** : Rate of appearance. The chance to spawn is calculated from the sum of all rates of the encounter. There is no need for the sum to be exactly 100.
+- condition, **string**, *optional* : Condition for pokemon appearance. The pokemon will be ignored if the conditions do not match
+    - **fishing** : Requires the player to be fishing, using the item specified by the property itemId
+- itemId, **string**, *optional* : Used by fishing condition. Specified the fishing rod item id required for this encounter to happen.
 
 ---
 

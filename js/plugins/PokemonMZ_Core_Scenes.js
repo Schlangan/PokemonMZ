@@ -1024,6 +1024,16 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
                 this._messageWindow.startMessage();
             }
             break;
+        case "fishing":
+            if ($gameMap.PokemonMZ_canFishHere()) {
+                SceneManager.pop();
+                SceneManager.pop();
+                $gameMap.PokemonMZ_startFishing(itemDict.id);
+            } else {
+                this._messageWindow.setText(itemDict.pkmz_data.badMessage);
+                this._messageWindow.startMessage();
+            }
+            break;
         case "repel":
             $gamePlayerTrainer.gainBagItem(itemDict.id, -1);
             $gamePlayerTrainer.startRepelling(itemDict.pkmz_data.steps);

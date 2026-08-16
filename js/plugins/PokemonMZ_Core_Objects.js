@@ -57,6 +57,14 @@ Game_CharacterBase.prototype.moveStraight = function(d) {
     }
     PokemonMZ_Game_CharacterBase_moveStraight.call(this, d);
 };
+
+Game_CharacterBase.prototype.PokemonMZ_frontRegionId = function() {
+    const x2 = $gameMap.roundXWithDirection(this._x, this._direction);
+    const y2 = $gameMap.roundYWithDirection(this._y, this._direction);
+    return $gameMap.regionId(x2,y2);
+};
+
+
 Game_CharacterBase.prototype.PokemonMZ_startSpinning = function(turns, soundOn) {
     AudioManager.playStandardSe(PokemonMZ.playerBumpSE);
     this._remainingSpinData = {
@@ -283,8 +291,48 @@ Game_Player.prototype.canMove = function() {
     if ($gameMap.PokemonMZ_isUsingEscapeRope()) {
         return false;
     }
+    if ($gameMap.PokemonMZ_isFishing()) {
+        return false;
+    }
     return PokemonMZ_Game_Player_canMove.call(this);
 };
+
+Game_Player.prototype.PokemonMZ_fishingExecuteEncounter = function(regionId) {
+    const troopId = this.PokemonMZ_fishingMakeEncounterTroopId(regionId);
+    if ($dataTroops[troopId]) {
+        PokemonMZ_BattleManager.setup(troopId, true, false);
+        if (!PokemonMZ_BattleManager.abortingWildEncounter()) {
+            SceneManager.push(PokemonMZ_Scene_Battle);
+        }
+    }
+};
+Game_Player.prototype.PokemonMZ_fishingMakeEncounterTroopId = function(regionId) {
+    const encounterList = [];
+    let weightSum = 0;
+    for (const encounter of $gameMap.encounterList()) {
+        if (this.PokemonMZ_fishingMeetsEncounterConditions(encounter, regionId)) {
+            encounterList.push(encounter);
+            weightSum += encounter.weight;
+        }
+    }
+    if (weightSum > 0) {
+        let value = Math.randomInt(weightSum);
+        for (const encounter of encounterList) {
+            value -= encounter.weight;
+            if (value < 0) {
+                return encounter.troopId;
+            }
+        }
+    }
+    return 0;
+};
+Game_Player.prototype.PokemonMZ_fishingMeetsEncounterConditions = function(encounter, regionId) {
+    return (
+        encounter.regionSet.length === 0 ||
+        encounter.regionSet.includes(regionId)
+    );
+};
+
 
 // Game_Map edits
 const PokemonMZ_Game_Map_initialize = Game_Map.prototype.initialize;
@@ -292,6 +340,7 @@ Game_Map.prototype.initialize = function() {
     PokemonMZ_Game_Map_initialize.call(this);
     this._regionMapId = 0;
     this._regionMapPoiId = 0;
+    this._waterRegions = [];
     this._pokemonPoisonedFainted = 0;
     this._checkAfterFainted = false;
     this._checkEvolution = false;
@@ -311,6 +360,9 @@ Game_Map.prototype.initialize = function() {
     this._isUsingRope = false;
     this._isUsingTeleport = false;
     this._isUsingDig = false;
+    this._fishingState = 0;
+    this._fishingRod = null;
+    this._fishingRegion = 0;
 };
 Game_Map.prototype.PokemonMZ_reinitialize = function() {
     // Used to create possible missing objects after update
@@ -325,6 +377,9 @@ Game_Map.prototype.PokemonMZ_reinitialize = function() {
             "upLeft":-1,
             "upRight":-1,
         };
+    }
+    if (!this._waterRegions) {
+        this._waterRegions = [];
     }
 };
 const PokemonMZ_Game_Map_setup = Game_Map.prototype.setup;
@@ -345,6 +400,14 @@ Game_Map.prototype.setup = function(mapId) {
     if (noteData.ledgeDownRightRegion) { this._ledgeRegions.downRight = Number(noteData.ledgeDownRightRegion) } else { this._ledgeRegions.downRight = -1; }
     if (noteData.ledgeUpLeftRegion) { this._ledgeRegions.upLeft = Number(noteData.ledgeUpLeftRegion) } else { this._ledgeRegions.upLeft = -1; }
     if (noteData.ledgeUpRightRegion) { this._ledgeRegions.upRight = Number(noteData.ledgeUpRightRegion) } else { this._ledgeRegions.upRight = -1; }
+
+    this._waterRegions = [];
+    if (noteData.waterRegions) { 
+        const splitted = noteData.waterRegions.split(",")
+        for (const region of splitted) {
+            this._waterRegions.push(Number(region))
+        }
+    }
 
     this._isRopeEscapable = Boolean(noteData.escapeRope);
     this._isTeleportAllowed = Boolean(noteData.teleport);
@@ -384,12 +447,16 @@ const PokemonMZ_Game_Map_isDashDisabled = Game_Map.prototype.isDashDisabled;
 Game_Map.prototype.isDashDisabled = function() {
     return PokemonMZ_Game_Map_isDashDisabled.call(this) || !$gamePlayerTrainer.canDash();
 };
-Game_Map.prototype.regionMapId = function() { // TODO get the true region value from map attributes
+Game_Map.prototype.regionMapId = function() { 
     return this._regionMapId;
 };
-Game_Map.prototype.regionMapPoiId = function() { // TODO get the true region POI value from map attributes
+Game_Map.prototype.regionMapPoiId = function() {
     return this._regionMapPoiId;
 };
+Game_Map.prototype.waterRegions = function() {
+    return this._waterRegions;
+};
+
 const PokemonMZ_Game_Map_update = Game_Map.prototype.update;
 Game_Map.prototype.update = function(sceneActive) {
     PokemonMZ_Game_Map_update.call(this, sceneActive);
@@ -407,6 +474,11 @@ Game_Map.prototype.update = function(sceneActive) {
             $gameSystem.enableMenu();
         }
         return;
+    }
+
+    // Fishing mechanics
+    if (this.PokemonMZ_isFishing()) {
+        this.updateFishing();
     }
 
     // Add message if repel is over
@@ -460,6 +532,32 @@ Game_Map.prototype.updateRepelEnding = function() {
     $gamePlayerTrainer.endRepelling();
     $gameMessage.add("Repel's effect wore off.")
 };
+
+Game_Map.prototype.updateFishing = function() {
+    if ($gamePlayer.isBalloonPlaying() || $gameMessage.isBusy()) {
+        return;
+    }
+    switch(this._fishingState) {
+        case 1:
+            $gameTemp.requestBalloon($gamePlayer, 8)
+            this._fishingState = 2;
+            break;
+        case 2:
+            this._fishingState = 3;
+            this.PokemonMZ_calculateFishing();
+            break;
+        case 4:
+            $gameMessage.add("Oh! It's a bite!")
+            this._fishingState = 5;
+            break;
+        case 5:
+            this._fishingState = 6;
+            $gamePlayer.PokemonMZ_fishingExecuteEncounter(this._fishingRegion);
+            break;
+    }
+};
+
+
 Game_Map.prototype.askForEvolutionCheck = function() {
     this._checkEvolution = true;
 };
@@ -523,6 +621,69 @@ Game_Map.prototype.PokemonMZ_useDig = function() {
 Game_Map.prototype.PokemonMZ_isUsingDig = function() {
     return this._isUsingDig;
 };
+
+Game_Map.prototype.PokemonMZ_canFishHere = function() {
+    const frontRegion = $gamePlayer.PokemonMZ_frontRegionId();
+    return this._waterRegions?.includes(frontRegion);
+}
+
+Game_Map.prototype.PokemonMZ_isFishing = function() {
+    return this._fishingState && this._fishingState > 0;
+};
+Game_Map.prototype.PokemonMZ_fishingRodId = function() {
+    if (this._fishingRod) {
+        return this._fishingRod.pkmz_data.id ?? "";
+    } else {
+        return "";
+    }
+    return this._fishingState && this._fishingState > 0;
+};
+Game_Map.prototype.PokemonMZ_startFishing = function(itemIntId) {
+    const frontRegion = $gamePlayer.PokemonMZ_frontRegionId();
+    const itemRod = $dataItems[itemIntId];
+    if (itemRod) {
+        $gameSystem.disableMenu();
+        this._fishingRod = itemRod;
+        this._fishingState = 1;
+        this._fishingRegion = frontRegion;
+        $gameMessage.add($gamePlayerTrainer.name() + " used " + itemRod.name + "!");
+    }
+};
+Game_Map.prototype.PokemonMZ_calculateFishing = function(itemIntId) {
+    const troopId = $gamePlayer.PokemonMZ_fishingMakeEncounterTroopId(this._fishingRegion);
+
+    if (troopId && $dataTroops[troopId]) {
+        // Region found in encounters. However this doesn't mean the encounter has a fishing pokemon
+        // We try to see if a wild pokemon can be encountered
+        const troopData = $dataTroops[troopId].pkmz_data
+        const testPokemon = $PokemonMZ_gameBattle.chooseWildPokemon(troopData.pokemons)
+        if (testPokemon) {
+            // Check with bite chance if the battle will start
+            if (Math.random() < this._fishingRod.pkmz_data.biteChance / 100) {
+                // Bite, we display exclamation balloon
+                $gameTemp.requestBalloon($gamePlayer, 1)
+                this._fishingState = 4;
+            } else {
+                $gameMessage.add("Not even a nibble!");
+                this.PokemonMZ_endFishing();
+            }
+        } else {
+            // Nothing matches fishing with the chosen rod
+            $gameMessage.add("Looks like there's nothing here.");
+            this.PokemonMZ_endFishing();
+        }
+    } else {
+        // Region not found in encounters
+        $gameMessage.add("Looks like there's nothing here.");
+        this.PokemonMZ_endFishing();
+    }
+};
+Game_Map.prototype.PokemonMZ_endFishing = function() {
+    this._fishingState = 0;
+    this._fishingRod = null;
+    this._fishingRegion = 0;
+    $gameSystem.enableMenu();
+}
 
 
 
@@ -1110,6 +1271,9 @@ PokemonMZ_Game_TrainerPlayer.prototype.decreaseRepelSteps = function() {
 };
 PokemonMZ_Game_TrainerPlayer.prototype.isRepelling = function() {
     return this._isRepelling;
+};
+PokemonMZ_Game_TrainerPlayer.prototype.isFishing = function() {
+    return $gameMap.PokemonMZ_isFishing();
 };
 PokemonMZ_Game_TrainerPlayer.prototype.repelSteps = function() {
     return this._repelSteps ? this._repelSteps : 0;
@@ -2833,11 +2997,12 @@ PokemonMZ_Game_Battle.prototype.setup = function(troopId) {
 };
 PokemonMZ_Game_Battle.prototype.chooseWildPokemon = function(pokemons) {
     // Choose wild pokemon from troop
+    const isFishing = $gamePlayerTrainer.isFishing();
 
     // Identify minimum required pokemon level due to repelling
     let minimumWildLevel = 0;
 
-    if ($gamePlayerTrainer.isRepelling()) {
+    if ($gamePlayerTrainer.isRepelling() && !isFishing) {
         // Generation 1 - Repel takes the level of the first pokemon in party, fainted or not
         minimumWildLevel = $gamePlayerTrainer.firstPokemon().level();
     }
@@ -2848,6 +3013,22 @@ PokemonMZ_Game_Battle.prototype.chooseWildPokemon = function(pokemons) {
     for (let i=0; i< pokemons.length; i++) {
         // TODO : Check appearance conditions
         let pokemonEncounterData = pokemons[i];
+        if (isFishing) {
+            // In case of fishing, only take fishing encounters that match the itemId
+            const itemRodId = $gameMap.PokemonMZ_fishingRodId();
+
+            if (pokemonEncounterData.condition != "fishing") {
+                continue;
+            }
+            if (itemRodId != pokemonEncounterData.itemId) {
+                continue;
+            }
+        } else {
+            if (pokemonEncounterData.condition == "fishing") {
+                // Do not consider fishable pokemon if not fishing
+                continue;
+            };
+        }
 
         if (pokemonEncounterData.levelMax < minimumWildLevel) {
             // Max level below minimum encounterable level -> match impossible
@@ -2879,7 +3060,6 @@ PokemonMZ_Game_Battle.prototype.chooseWildPokemon = function(pokemons) {
         // If minimum level below that of first pokemon repelling, set the minimum level to that value
         minimumLevel = minimumWildLevel;
     }
-
     if (minimumLevel < chosenPokemon.levelMax) {
         const level = minimumLevel + Math.randomInt(chosenPokemon.levelMax - minimumLevel + 1)
         return this.createWildPokemon(chosenPokemon.id, level);

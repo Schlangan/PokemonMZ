@@ -52,4 +52,7 @@ Depending on the effet, additional parameters are required.
     - stage, **int** : Amount of stages up.
     - mapMessage, **string** : Message shown when trying to use the item on the map instead of battle.
     - battleAnimation, **string**, *optional* : Animation string ID played on the player's pokemon if the item succeeds
+- effect = **fishing** : Can only be used if a water tile region is in front of the player. Don't forget to set the water tiles regions in the map notetag.
+    - biteChance, **int** : Chance out of 100 of a pokemon biting. Failing bite will display the "Not even a nibble" message.
+    - badMessage, **string** : Message shown when trying to use the fishing rod in front of a tile that isn't water.
 ---
