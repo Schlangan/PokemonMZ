@@ -3276,6 +3276,9 @@ PokemonMZ_Game_Action.prototype.opponentBattleSprite = function() {
 PokemonMZ_Game_Action.prototype.oppositeSide = function() {
     return this._side == "enemy" ? "player" : "enemy";
 };
+PokemonMZ_Game_Action.prototype.setOpponent = function(opponent) {
+    this._opponent = opponent;
+};
 PokemonMZ_Game_Action.prototype.setMove = function(moveId, opponent) {
     this._move = moveId;
     if (Object.keys($dataSkillsIndex).includes(moveId)) {
@@ -3394,6 +3397,12 @@ PokemonMZ_Game_Action.prototype.calculate = function(item) {
     }
 };
 PokemonMZ_Game_Action.prototype.calculateResidualEffectsOnly = function() {
+    if (!this._userEvolvingHp) {
+        this._userEvolvingHp = this._user.hp();
+    } 
+    if (!this._opponentEvolvingHp) {
+        this._opponentEvolvingHp = this._opponent.hp();
+    }
     this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
 };
 PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO 

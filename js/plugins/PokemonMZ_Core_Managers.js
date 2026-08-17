@@ -3660,6 +3660,7 @@ PokemonMZ_BattleManager.startMove = function(side) {
 
     let moveName = pokemon.moveName(move)
     this._currentAction = new PokemonMZ_Game_Action(pokemon, side);
+    this._currentAction.setOpponent(oppositePokemon);
 
     // If bound, only burn and poison are calculated, the pokemon does nothing
     if (pokemon.isBound()) {
