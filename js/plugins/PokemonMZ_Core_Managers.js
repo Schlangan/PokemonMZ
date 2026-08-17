@@ -3587,12 +3587,57 @@ PokemonMZ_BattleManager.nextBattleAction = function() {
         this.startPlayerInput();
     }
 };
+
+PokemonMZ_BattleManager.isPokemonObedient = function(side) {
+    // Check if pokemon will obey
+    if (side == "player") {
+        pokemon = this._playerChosenPokemon;
+        oppositePokemon = this._enemyChosenPokemon;
+    } else if (side == "enemy") {
+        pokemon = this._enemyChosenPokemon;
+        oppositePokemon = this._playerChosenPokemon;
+    }
+
+    const playerObedience = $gamePlayerTrainer.badgeObedience();
+    let checkObedience = true;
+    let isObedient = true;
+
+    if (side == "enemy") {
+        // Enemy do not get obedience checks
+        return true;
+    }
+    if (!this._playerChosenPokemon.isOutsider()) {
+        // Gen I - Not outsider pokemon always obey
+        return true;
+    }
+    if (playerObedience == -1 || this._playerChosenPokemon.level() <= playerObedience) {
+        // If obedience -1 (all) or pokemon level below or equal to level, pokemon obeys.
+        return true;
+    }
+    if (pokemon.isDigging() || pokemon.isBiding() || oppositePokemon.isBound() || pokemon.isBerserk() || pokemon.isRaging()) {
+        // Several turn moves are not interrupted by obedience once started
+        return true;
+    }
+
+    const badgeLimit = $gamePlayerTrainer.badgeObedience()
+    const factor1 = pokemon.level() + badgeLimit - 1;
+    const random1 = Math.random()*(factor1+1);
+
+    if (random1 > badgeLimit) {
+        isObedient = false;
+    }
+
+    return isObedient;
+}
+
+
 PokemonMZ_BattleManager.startMove = function(side) {
     let nextPhase;
     let pokemon;
     let oppositePokemon;
     let move;
     let moveIndex;
+    let usedAnotherMove = false;
 
     if (side == "player") {
         nextPhase = "playerResolveActionSteps";
@@ -3702,6 +3747,77 @@ PokemonMZ_BattleManager.startMove = function(side) {
         this._currentAction.addResultSteps(["autotext","isFrozen",this._currentAction.side()])
         this.changePhase(nextPhase);
         return;
+    }
+
+
+    // Checking if pokemon obeys, and adapt
+    const isObedient = this.isPokemonObedient(side);
+    if (!isObedient) {
+        let foundAction = false;
+        const badgeLimit = $gamePlayerTrainer.badgeObedience()
+        const factor1 = pokemon.level() + badgeLimit - 1;
+
+        // Disobey
+        const random2 = Math.random()*(factor1+1);
+        if (random2 < badgeLimit) {
+            // Select another move if possible
+            const possibleOtherMoves = [];
+            for (let j=0; j<pokemon._moves.length; j++) {
+                if (j == moveIndex) { continue; }
+                if (!pokemon.isMoveDisabled(j) && pokemon.move(j).pp > 0) {
+                    possibleOtherMoves.push(j)
+                }
+            }
+            if (possibleOtherMoves.length > 0) {
+                const newIndex = possibleOtherMoves[Math.randomInt(possibleOtherMoves.length)];
+                foundAction = true;
+                usedAnotherMove = true;
+                move = pokemon.move(newIndex);
+                moveName = pokemon.moveName(move)
+            }
+        } else {
+            const random3 = Math.random()*256;
+            const factor2 = pokemon.level() - badgeLimit;
+            if (random3 < factor2) {
+                // Takes a nap - if not under major status
+                if (!pokemon.hasStatus()) {
+                    foundAction = true;
+                    this._currentAction.addResultSteps(["sleepPokemon",pokemon]);
+                    this._currentAction.addResultSteps(["autotext","takeNap",this._currentAction.side()])
+                    this.changePhase(nextPhase);
+                    return;
+                }
+            } else if (random3 < 2*factor2) {
+                // Hits itself in confusion
+                foundAction = true;
+                this._currentAction.addResultSteps(["waittext","wontObey",this._currentAction.side()])
+                this._currentAction.addResultSteps(["autotext","confusedHurt",this._currentAction.side()])
+                move = pokemon.moveSelfHurtConfusion();
+                this._currentAction.setMove(move.id, pokemon);
+                this._currentAction.calculate();
+                this.changePhase(nextPhase);
+                return;
+            }
+        }
+
+
+        // Do not attack if no action found
+        if (!foundAction) {
+            const random4 = Math.random()*100;
+            if (random4 < 25) {
+                this._currentAction.addResultSteps(["waittext","loafingAround",this._currentAction.side()])
+            } else if (random4 < 50) {
+                this._currentAction.addResultSteps(["waittext","wontObey",this._currentAction.side()])
+            } else if (random4 < 75) {
+                this._currentAction.addResultSteps(["waittext","turnedAway",this._currentAction.side()])
+            } else {
+                this._currentAction.addResultSteps(["waittext","ignoredOrders",this._currentAction.side()])
+            }
+            oppositePokemon.clearLastSeenEnemyMove();
+            this._currentAction.calculateResidualEffectsOnly();
+            this.changePhase(nextPhase);
+            return;
+        }
     }
 
     // If move is selected despite disabled, display disabled message and end turn
@@ -3838,6 +3954,8 @@ PokemonMZ_BattleManager.startMove = function(side) {
             this._currentAction.insertResultStepsAt(["autotext","dugHole",this._currentAction.side()], battleIndex)
         } else if (isMirrorDigTurn1) {
             this._currentAction.insertResultStepsAt(["autotext","dugHole",this._currentAction.side()], battleIndex)
+        } else if (usedAnotherMove) {
+            this._currentAction.insertResultStepsAt(["autotext","useMoveInstead",this._currentAction.side(),moveName], battleIndex)
         } else {
             this._currentAction.insertResultStepsAt(["autotext","useMove",this._currentAction.side(),moveName], battleIndex)
         }
@@ -4828,6 +4946,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + " has no moves left!";
     case "useMove":
         return prefix + pokemon.name() + " used " + ext1 + "!";
+    case "useMoveInstead":
+        return prefix + pokemon.name() + " used instead, " + ext1 + "!";
     case "attackContinues":
         return prefix + pokemon.name() + "'s attack continues!";
     case "missed":
@@ -4950,6 +5070,16 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + " dug a hole!"
     case "coinsScatter":
         return "Coins scattered everywhere!";
+    case "loafingAround":
+        return prefix + pokemon.name() + " is loafing around!"
+    case "wontObey":
+        return prefix + pokemon.name() + " won't obey!"
+    case "turnedAway":
+        return prefix + pokemon.name() + " turned away!"
+    case "ignoredOrders":
+        return prefix + pokemon.name() + " ignored orders!"
+    case "takeNap":
+        return prefix + pokemon.name() + " began to nap!"
     }
     return ""
 };

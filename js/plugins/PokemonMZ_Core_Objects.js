@@ -1079,6 +1079,26 @@ PokemonMZ_Game_TrainerPlayer.prototype.badgeBoosts = function(side, mode) {
     }
     return {"patk":patk,"pdef":pdef,"satk":satk,"sdef":sdef,"spd":spd}
 };
+
+PokemonMZ_Game_TrainerPlayer.prototype.badgeObedience = function() {
+    let obedienceLevel = 10;
+    for (const badgeIntId of this._badges) {
+        let itemData = $dataItems[badgeIntId].pkmz_data;
+        if (itemData.category != "badge") { continue; }
+
+        if (itemData.obedienceLevel) {
+            if (itemData.obedienceLevel == -1) {
+                obedienceLevel = -1;
+                break;
+            }
+            if (itemData.obedienceLevel > obedienceLevel) {
+                obedienceLevel = itemData.obedienceLevel;
+            }
+        }
+    }
+    return obedienceLevel;
+}
+
 PokemonMZ_Game_TrainerPlayer.prototype.canDash = function() {
     // Placeholder for later - running Shoes
     return false;
