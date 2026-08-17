@@ -2864,7 +2864,8 @@ PokemonMZ_BattleManager.endEnemyFaintedPokemon = function() {
     const splittedExp = Math.floor(xpGain / counter);
     for (let i=0; i<$gamePlayerTrainer._pokemons.length; i++) {
         if (this._playerXpGains[i] > 0) {
-            this._playerXpGains[i] = splittedExp;
+            const outsiderFactor = $gamePlayerTrainer.pokemon(i).isOutsider() ? 1.5 : 1.0;
+            this._playerXpGains[i] = Math.floor(splittedExp * outsiderFactor);
         }
     };
 
@@ -2888,7 +2889,11 @@ PokemonMZ_BattleManager.nextExpGains = function() {
         if (this._levelingUpPokemonExp > 0) {
             this._playerXpGains[i] = 0;
             gaveXp = true;
-            const message = this._levelingUpPokemon.name() + " gained " + String(this._levelingUpPokemonExp) + " experience points!"
+            let message = this._levelingUpPokemon.name() + " gained "
+            if (this._levelingUpPokemon.isOutsider()) {
+                message += "a boosted "
+            }
+            message += String(this._levelingUpPokemonExp) + " experience points!"
             $gameMessage.add(message);
             if (this._levelingUpPokemon.wouldLevelUpWithExp(this._levelingUpPokemonExp)) {
                 this.changePhase("playerPokemonLeveledUp")

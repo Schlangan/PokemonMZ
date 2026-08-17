@@ -1731,6 +1731,9 @@ PokemonMZ_Game_Pokemon.prototype.learnAllWaitingMoves = function() {
     this.removeOlderMoves(); // Keep 4 last moves
 };
 
+PokemonMZ_Game_Pokemon.prototype.isOutsider = function() {
+    return this._originalTrainerId != $gamePlayerTrainer.trainerId();
+};
 
 PokemonMZ_Game_Pokemon.prototype.heal = function() {
     this._hp = this.mhp();
