@@ -131,6 +131,20 @@
  * @text Quantity
  * @desc The quantity of the item to give.
  
+ * //////////////////////////////////////////
+ * @command HasItemInBag
+ * @text Has Item In Bag ?
+ * @desc Checks if the player owns a specific item
+ * 
+ * @arg item
+ * @type item
+ * @text Item
+ * @desc The item to check
+ * 
+ * @arg returnSwitchId
+ * @type switch
+ * @text Return switch
+ * @desc A switch that will take the value ON if the player has the item or else OFF.
 
  * //////////////////////////////////////////
  * @command GiveBadge
@@ -376,6 +390,16 @@ PluginManager.registerCommand(pluginName, "GiveBadge", function(args) {
         $gamePlayerTrainer.giveBadge(itemId);
     }
 });
+PluginManager.registerCommand(pluginName, "HasItemInBag", function(args) {
+    const itemId = Number(args.item);
+    const switchId = Number(args.returnSwitchId)
+    if ($gamePlayerTrainer.hasItem(itemId)) {
+        if (args.returnSwitchId) { $gameSwitches.setValue(switchId, true); }
+    } else {
+        if (args.returnSwitchId) { $gameSwitches.setValue(switchId, false); }
+    }
+});
+
 
 
 
