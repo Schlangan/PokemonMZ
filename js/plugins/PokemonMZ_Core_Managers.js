@@ -844,7 +844,7 @@ DataManager.verifyItemData = function(index, itemData) {
         case "evolutionItem":
         case "townMap": 
         case "escapeRope":
-        case "bicycle":
+        case "cycling":
             DataManager.verifyProperties(
                 itemData, 
                 errorMessagePrefix, 

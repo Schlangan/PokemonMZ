@@ -250,7 +250,12 @@ Game_Event.prototype.PokemonMZ_posAggro = function(x,y) {
 Game_Player.prototype.refresh = function() {
     const characterName = $gamePlayerTrainer.characterName();
     const characterIndex = $gamePlayerTrainer.characterIndex();
-    this.setImage(characterName, characterIndex);
+
+    if (this.PokemonMZ_isCycling()) {
+        this.setImage(PokemonMZ.bicycleCharacterSprite, 0);
+    } else {
+        this.setImage(characterName, characterIndex);
+    }
     this._followers.refresh();
 };
 Game_Player.prototype.executeEncounter = function() {
@@ -297,6 +302,17 @@ Game_Player.prototype.canMove = function() {
     return PokemonMZ_Game_Player_canMove.call(this);
 };
 
+const PokemonMZ_Game_Player_realMoveSpeed = Game_Player.prototype.realMoveSpeed;
+Game_Player.prototype.realMoveSpeed = function() {
+    const speed = PokemonMZ_Game_Player_realMoveSpeed.call(this);
+    if (this.PokemonMZ_isCycling()) {
+        // Cycling increase the move speed by 1.25
+        return speed + 1.25;
+    } else {
+        return speed;
+    }
+};
+
 Game_Player.prototype.PokemonMZ_fishingExecuteEncounter = function(regionId) {
     const troopId = this.PokemonMZ_fishingMakeEncounterTroopId(regionId);
     if ($dataTroops[troopId]) {
@@ -332,6 +348,9 @@ Game_Player.prototype.PokemonMZ_fishingMeetsEncounterConditions = function(encou
         encounter.regionSet.includes(regionId)
     );
 };
+Game_Player.prototype.PokemonMZ_isCycling = function() {
+    return $gamePlayerTrainer.isCycling();
+};
 
 
 // Game_Map edits
@@ -357,6 +376,7 @@ Game_Map.prototype.initialize = function() {
     this._isRopeEscapable = false;
     this._isTeleportAllowed = false;
     this._isDigAllowed = false;
+    this._isCyclingAllowed = false;
     this._isUsingRope = false;
     this._isUsingTeleport = false;
     this._isUsingDig = false;
@@ -412,6 +432,13 @@ Game_Map.prototype.setup = function(mapId) {
     this._isRopeEscapable = Boolean(noteData.escapeRope);
     this._isTeleportAllowed = Boolean(noteData.teleport);
     this._isDigAllowed = Boolean(noteData.escapeRope);
+    this._isCyclingAllowed = Boolean(noteData.cycling);
+
+    // If player is cycling and end up in a map where no cycling allowed, get down from the bike without message
+    if (!this._isCyclingAllowed && $gamePlayerTrainer.isCycling()) {
+        $gamePlayerTrainer.stopCycling(false);
+    }
+
 };
 Game_Map.prototype.PokemonMZ_eventsAggro = function(x, y) {
     return this.events().filter(event => (event.PokemonMZ_isAgrroable() && event.PokemonMZ_posAggro(x,y)));
@@ -617,6 +644,10 @@ Game_Map.prototype.PokemonMZ_isTeleportAllowed = function() {
 Game_Map.prototype.PokemonMZ_isDigAllowed = function() {
     return this._isDigAllowed;
 };
+Game_Map.prototype.PokemonMZ_isCyclingAllowed = function() {
+    return this._isCyclingAllowed;
+};
+
 Game_Map.prototype.PokemonMZ_useTeleport = function() {
     this._isUsingTeleport = true;
     $gameSystem.disableMenu();
@@ -695,7 +726,32 @@ Game_Map.prototype.PokemonMZ_endFishing = function() {
     this._fishingRod = null;
     this._fishingRegion = 0;
     $gameSystem.enableMenu();
+};
+Game_Map.prototype.PokemonMZ_switchCycling = function() {
+    if (!$gamePlayerTrainer.isCycling()) {
+        $gamePlayerTrainer.startCycling(true);
+    } else {
+        $gamePlayerTrainer.stopCycling(true);
+    }
 }
+
+const PokemonMZ_Game_Map_autoplay = Game_Map.prototype.autoplay;
+Game_Map.prototype.autoplay = function() {
+    if ($dataMap.autoplayBgm && $gamePlayer.PokemonMZ_isCycling()) {
+        $gameSystem.saveWalkingBgm2();
+    } else {
+        PokemonMZ_Game_Map_autoplay.call(this);
+    }
+};
+const PokemonMZ_Game_Map_encounterStep = Game_Map.prototype.encounterStep;
+Game_Map.prototype.encounterStep = function() {
+    // Increase encounter rate while cycling
+    let steps = PokemonMZ_Game_Map_encounterStep.call(this);
+    if ($gamePlayer.PokemonMZ_isCycling()) {
+        steps = Math.floor(0.75*steps);
+    }
+    return steps;
+};
 
 
 
@@ -895,6 +951,7 @@ PokemonMZ_Game_TrainerPlayer.prototype.initMembers = function(sourceActorId) {
     this._respawnLocation = {"mapId":1,"x":0,"y":0};
     this._isRepelling = false;
     this._repelSteps = 0;
+    this._isCycling = false;
     this.initializeItems();
     this.initializeBoxes();
     this.initializePokedex();
@@ -1404,11 +1461,9 @@ PokemonMZ_Game_TrainerPlayer.prototype.retrievePokemonFromDayCare = function() {
             this._dayCarePokemons.splice(0,1); //Remove pokemon from daycare
     };
 };
-
 PokemonMZ_Game_TrainerPlayer.prototype.tradePartyPokemon = function(partyIndex, tradedPokemon) {
     this._pokemons[partyIndex] = tradedPokemon;
 };
-
 PokemonMZ_Game_TrainerPlayer.prototype.generateTradedPokemon = function(pokemonIntId, level, nickname, trainerName) {
     const pokemon = new PokemonMZ_Game_Pokemon(pokemonIntId, level);
     const trainerId = crypto.getRandomValues(new Uint16Array(1))[0];
@@ -1417,7 +1472,39 @@ PokemonMZ_Game_TrainerPlayer.prototype.generateTradedPokemon = function(pokemonI
     pokemon.setAsTraded();
 
     return pokemon
+};
+PokemonMZ_Game_TrainerPlayer.prototype.isCycling = function() {
+    return this._isCycling;
 }
+PokemonMZ_Game_TrainerPlayer.prototype.startCycling = function(displayMessage) {
+    if ($gameMap.PokemonMZ_isCyclingAllowed()) {
+        this._isCycling = true;
+        $gamePlayer.refresh();
+
+        if (PokemonMZ.bicycleBGM) {
+            $gameSystem.saveWalkingBgm();
+            AudioManager.playBgm({
+                "name":PokemonMZ.bicycleBGM,
+                "pan":0,
+                "volume":100,
+                "pitch":100
+            });
+        }
+        
+        if (displayMessage) {
+            $gameMessage.add($gamePlayerTrainer.name() + " got on the Bicycle!")
+        }
+    }
+};
+PokemonMZ_Game_TrainerPlayer.prototype.stopCycling = function(displayMessage) {
+    this._isCycling = false;
+    $gamePlayer.refresh();
+    $gameSystem.replayWalkingBgm();
+    if (displayMessage) {
+        $gameMessage.add($gamePlayerTrainer.name() + " got off the Bicycle.")
+    }
+};
+
 
 
 // PokemonMZ_Pokemon

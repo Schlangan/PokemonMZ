@@ -55,4 +55,5 @@ Depending on the effet, additional parameters are required.
 - effect = **fishing** : Can only be used if a water tile region is in front of the player. Don't forget to set the water tiles regions in the map notetag.
     - biteChance, **int** : Chance out of 100 of a pokemon biting. Failing bite will display the "Not even a nibble" message.
     - badMessage, **string** : Message shown when trying to use the fishing rod in front of a tile that isn't water.
+- effect = **cycling**: Climb up/down on/from the bicycle in areas where it is possible. Add the notetag **cycling:true** to maps where cycling is allowed.
 ---

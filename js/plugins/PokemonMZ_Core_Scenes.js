@@ -1041,6 +1041,16 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
             this._messageWindow.setText($gamePlayerTrainer.name() + " used " + itemDict.name + "!");
             this._messageWindow.startMessage();
             break;
+        case "cycling":
+            if ($gameMap.PokemonMZ_isCyclingAllowed()) {
+                SceneManager.pop();
+                SceneManager.pop();
+                $gameMap.PokemonMZ_switchCycling();
+            } else {
+                this._messageWindow.setText("No cycling allowed here.");
+                this._messageWindow.startMessage();
+            }
+            break;
         default:
             // Open Pokemon menu
             SceneManager.push(PokemonMZ_Scene_PokemonMenu);
