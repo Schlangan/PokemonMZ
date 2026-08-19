@@ -1047,9 +1047,16 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
             optionalProperties
         );
         break;
+    case "forceSwitchOut":
+        DataManager.verifyProperties(
+            moveEffect,
+            errorMessagePrefix,
+            mandatoryProperties.concat(["message"]),
+            optionalProperties
+        );
+        break;
     case "highCritical":
     case "focusEnergy":
-    case "forceSwitchOut":
     case "minimizeUser":
     case "rage":
     case "splash":
@@ -5046,7 +5053,7 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
     case "bideMissed":
         return prefix + pokemon.name() + "'s attack missed!";
     case "blownAway":
-        return prefix + pokemon.name() + " was blown away!";
+        return prefix + pokemon.name() + " " + ext1;
     case "gettingPumped":
         return prefix + pokemon.name() + "'s getting pumped!";
     case "disabled":

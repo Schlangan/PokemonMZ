@@ -88,6 +88,7 @@ List of implemented effects and their additional parameters:
     - value : Percentage of the damage inflicted turning to recoil
 
 - type = **forceSwitchOut** : In wild battles only for generation I, force the target to leave the fight, ending the battle.
+    - message, **string** : Message displayed after the pokemon name. For example : "was blown away!", or "ran away scared!"
 
 - type = **pdefUpUser** : Increases the physical defense of the user
     - stage, **int** : Number of raised stages

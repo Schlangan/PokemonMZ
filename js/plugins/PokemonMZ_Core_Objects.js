@@ -4920,14 +4920,14 @@ PokemonMZ_Game_Action.prototype.effect_forceSwitchOut = function(battleData, eff
         if (levelUser < levelTarget) {
             failureChance = (levelTarget / 4)/(levelTarget + levelUser + 1);
         }
-        
+
         if (Math.random() < failureChance) {
             effectResults.success = false;
             this._resultSteps.push(["waittext","noAffect",this.oppositeSide()]);
         } else {
             effectResults.success = true;
             this._resultSteps.push(["blowTargetAway",this.oppositeSide()]);
-            this._resultSteps.push(["waittext","blownAway",this.oppositeSide()]);
+            this._resultSteps.push(["waittext","blownAway",this.oppositeSide(), effect.message]);
             if (side == "player") {
                 this._resultSteps.push(["pickupMoneyThenEndBattle"]);
             } else {
