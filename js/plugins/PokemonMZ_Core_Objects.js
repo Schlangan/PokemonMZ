@@ -125,6 +125,15 @@ Game_Event.prototype.initialize = function(mapId, eventId) {
     this._aggroRange = aggroRange ? Number(aggroRange) : 0;
     const aggroPage = notes.page;
     this._aggroPage = aggroPage ? Number(aggroPage) : 0;
+
+    const hiddenItemPage = notes.hiddenItemPage;
+    if (hiddenItemPage) {
+        this._isHiddenItem = true;
+        this._hiddenItemPage = hiddenItemPage
+    } else {
+        this._isHiddenItem = false;
+        this._hiddenItemPage = -1;
+    }
 };
 Game_Event.prototype.PokemonMZ_isAggroing = function() {
     return this._aggroSequence;
@@ -245,6 +254,10 @@ Game_Event.prototype.PokemonMZ_posAggro = function(x,y) {
 
     return false;
 };
+Game_Event.prototype.PokemonMZ_isHiddenItem = function() {
+    return this._isHiddenItem > 0 && this._pageIndex == this._hiddenItemPage - 1;
+};
+
 
 // Game_Player edits
 Game_Player.prototype.refresh = function() {
@@ -280,10 +293,19 @@ Game_Player.prototype.increaseSteps = function() {
         $gamePlayerTrainer.calculatePoisonOnMap();
     }
 };
-const PokemonMZ_Game_Player_startMapEvent = Game_Player.prototype.startMapEvent;
 Game_Player.prototype.startMapEvent = function(x, y, triggers, normal) {
-    PokemonMZ_Game_Player_startMapEvent.call(this, x, y, triggers, normal);
     if (!$gameMap.isEventRunning()) {
+        for (const event of $gameMap.eventsXy(x, y)) {
+            if (event.PokemonMZ_isHiddenItem() && event.isTriggerIn([0])) {
+                // Hidden items with action button are triggered if near them and not standing on them
+                // Event only started when not standing on the item, and using action button
+                if (triggers.includes(0) && normal === true) {
+                        event.start();
+                }
+            } else if (event.isTriggerIn(triggers) && event.isNormalPriority() === normal) {
+                event.start();
+            }
+        }
         for (const event of $gameMap.PokemonMZ_eventsAggro(x, y)) {
             if (triggers.includes(1)) {
                 event.PokemonMZ_startAggroSequence();
@@ -291,6 +313,9 @@ Game_Player.prototype.startMapEvent = function(x, y, triggers, normal) {
         }
     }
 };
+
+
+
 const PokemonMZ_Game_Player_canMove = Game_Player.prototype.canMove;
 Game_Player.prototype.canMove = function() {
     if ($gameMap.PokemonMZ_isUsingEscapeRope()) {
@@ -752,7 +777,34 @@ Game_Map.prototype.encounterStep = function() {
     }
     return steps;
 };
+Game_Map.prototype.PokemonMZ_useItemFinder = function(range, soundName) {
+    let foundItem = false;
 
+    const x = $gamePlayer.x;
+    const y = $gamePlayer.y;
+    for (const event of this.PokemonMZ_eventsAtRange(x,y,range)) {
+        if (event.PokemonMZ_isHiddenItem()) {
+            foundItem = true;
+        }
+    }
+
+    if (foundItem) {
+        AudioManager.playStandardSe(soundName);
+        $gameMessage.add("Yes! Item Finder indicates there's an item nearby.")
+    } else {
+        $gameMessage.add("Nope! Item Finder isn't responding.")
+    }
+};
+Game_Map.prototype.PokemonMZ_eventsAtRange = function(x,y,range) {
+    const foundEvents = [];
+    for (const event of this.events()) {
+        let distance = Math.sqrt(Math.pow(event.y-y,2) + Math.pow(event.x-x, 2));
+        if (distance <= range) {
+            foundEvents.push(event);
+        }
+    }
+    return foundEvents;
+};
 
 
 // Game_Interpreter edits

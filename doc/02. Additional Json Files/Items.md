@@ -56,4 +56,7 @@ Depending on the effet, additional parameters are required.
     - biteChance, **int** : Chance out of 100 of a pokemon biting. Failing bite will display the "Not even a nibble" message.
     - badMessage, **string** : Message shown when trying to use the fishing rod in front of a tile that isn't water.
 - effect = **cycling**: Climb up/down on/from the bicycle in areas where it is possible. Add the notetag **cycling:true** to maps where cycling is allowed.
+- effect = **itemFinder** : Item finder / Dowsing machine effect
+    - range, **int** : The radius around the player for which an item is detected.
+    - sound, **string** : Name of the sound file played when the item finder has detected an item.
 ---

@@ -1051,6 +1051,11 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
                 this._messageWindow.startMessage();
             }
             break;
+        case "itemFinder":
+            SceneManager.pop();
+            SceneManager.pop();
+            $gameMap.PokemonMZ_useItemFinder(itemDict.pkmz_data.range, itemDict.pkmz_data.sound);
+            break;
         default:
             // Open Pokemon menu
             SceneManager.push(PokemonMZ_Scene_PokemonMenu);

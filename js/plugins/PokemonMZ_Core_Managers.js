@@ -840,6 +840,13 @@ DataManager.verifyItemData = function(index, itemData) {
                 }
             }
             break;
+        case "itemFinder":
+            DataManager.verifyProperties(
+                itemData, 
+                errorMessagePrefix, 
+                mandatoryProperties.concat(["range","sound"]),
+                optionalProperties);
+            break;
         case "increaseLevel":
         case "evolutionItem":
         case "townMap": 
