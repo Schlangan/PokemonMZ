@@ -188,6 +188,29 @@
  * @desc The pokemon to mark as seen.
 
  * //////////////////////////////////////////
+ * @command NumberPokemonSeen
+ * @text Number of Pokemon Seen
+ * @desc Sets the number of pokemon seen inside a variable
+ * 
+ * @arg returnVariable
+ * @type variable
+ * @text Return Variable
+ * @desc Variable that gets the number of pokemon seen.
+
+ * //////////////////////////////////////////
+ * @command NumberPokemonOwned
+ * @text Number of Pokemon Owned
+ * @desc Sets the number of pokemon owned inside a variable
+ * 
+ * @arg returnVariable
+ * @type variable
+ * @text Return Variable
+ * @desc Variable that gets the number of pokemon owned.
+
+
+
+
+ * //////////////////////////////////////////
  * @command CanGetPokemon
  * @text Can Player Get a Pokemon
  * @desc Checks if the player can get a Pokemon or if their party and current box are full.
@@ -418,6 +441,16 @@ PluginManager.registerCommand(pluginName, "AddPokedexPokemonSeen", function(args
         $gamePlayerTrainer.addSeenPokemon(id);
     }
 });
+PluginManager.registerCommand(pluginName, "NumberPokemonSeen", function(args) {
+    const returnVariable = Number(args.returnVariable);
+    $gameVariables.setValue(returnVariable, $gamePlayerTrainer.numPokemonSeen());
+});
+PluginManager.registerCommand(pluginName, "NumberPokemonOwned", function(args) {
+    const returnVariable = Number(args.returnVariable);
+    $gameVariables.setValue(returnVariable, $gamePlayerTrainer.numPokemonCaptured());
+});
+
+
 
 // Pokemon
 PluginManager.registerCommand(pluginName, "CanGetPokemon", function(args) {
