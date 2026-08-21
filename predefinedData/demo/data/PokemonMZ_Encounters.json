@@ -833,5 +833,310 @@
         ],
         "defeatText":"Stop! I give up! I'll leave quietly!",
         "money":510
+    },
+    {
+        "id":"route5_grass_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"pidgey","levelMin":13, "levelMax":17, "rate":20},
+            {"id":"oddish","levelMin":13, "levelMax":16, "rate":16},
+            {"id":"bellsprout","levelMin":13, "levelMax":16, "rate":16},  
+            {"id":"rattata","levelMin":14, "levelMax":16, "rate":13},  
+            {"id":"meowth","levelMin":10, "levelMax":16, "rate":10}, 
+            {"id":"mankey","levelMin":10, "levelMax":16, "rate":10}, 
+            {"id":"abra","levelMin":7, "levelMax":7, "rate":9},
+            {"id":"jigglypuff","levelMin":3, "levelMax":7, "rate":6}
+        ]
+    },
+    {
+        "id":"route6_grass_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"pidgey","levelMin":13, "levelMax":17, "rate":20},
+            {"id":"oddish","levelMin":13, "levelMax":16, "rate":16},
+            {"id":"bellsprout","levelMin":13, "levelMax":16, "rate":16},  
+            {"id":"rattata","levelMin":14, "levelMax":16, "rate":13},  
+            {"id":"meowth","levelMin":10, "levelMax":16, "rate":10}, 
+            {"id":"mankey","levelMin":10, "levelMax":16, "rate":10}, 
+            {"id":"abra","levelMin":7, "levelMax":7, "rate":9},
+            {"id":"jigglypuff","levelMin":3, "levelMax":7, "rate":6}
+        ]
+    },
+    {
+        "id":"route6_bug1",
+        "type":"trainer",
+        "trainerActor":3,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"weedle","level":16,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"caterpie","level":16,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"weedle","level":16,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"No! You're kidding!",
+        "money":160
+    },
+    {
+        "id":"route6_jrtrainerm1",
+        "type":"trainer",
+        "trainerActor":5,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"squirtle","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"bellsprout","level":18,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I just can't win!",
+        "money":360
+    },
+    {
+        "id":"route6_jrtrainerf1",
+        "type":"trainer",
+        "trainerActor":13,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"rattata","level":16,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"pikachu","level":16,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"cubone","level":16,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Ugh! I hate losing!",
+        "money":380
+    },
+    {
+        "id":"route6_bug2",
+        "type":"trainer",
+        "trainerActor":3,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"butterfree","level":20,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"You are too good!",
+        "money":200
+    },
+    {
+        "id":"route6_jrtrainerf2",
+        "type":"trainer",
+        "trainerActor":13,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"pidgey","level":16,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"pidgey","level":16,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"pidgey","level":16,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Just didn't work!",
+        "money":320
+    },
+    {
+        "id":"route6_jrtrainerm2",
+        "type":"trainer",
+        "trainerActor":5,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"spearow","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"rattata","level":18,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I didn't start it!",
+        "money":360
+    },
+    {
+        "id":"pallet_water_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"magikarp","levelMin":5, "levelMax":5, "rate":100, "condition":"fishing","itemId":"oldRod"}
+        ]
+    },
+    {
+        "id":"viridian_water_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"magikarp","levelMin":5, "levelMax":5, "rate":100, "condition":"fishing","itemId":"oldRod"}
+        ]
+    },
+    {
+        "id":"route22_water_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"magikarp","levelMin":5, "levelMax":5, "rate":100, "condition":"fishing","itemId":"oldRod"}
+        ]
+    },
+    {
+        "id":"route4_water_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"magikarp","levelMin":5, "levelMax":5, "rate":100, "condition":"fishing","itemId":"oldRod"}
+        ]
+    },
+    {
+        "id":"cerulean_water_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"magikarp","levelMin":5, "levelMax":5, "rate":100, "condition":"fishing","itemId":"oldRod"}
+        ]
+    },
+    {
+        "id":"route24_water_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"magikarp","levelMin":5, "levelMax":5, "rate":100, "condition":"fishing","itemId":"oldRod"}
+        ]
+    },
+    {
+        "id":"route25_water_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"magikarp","levelMin":5, "levelMax":5, "rate":100, "condition":"fishing","itemId":"oldRod"}
+        ]
+    },
+    {
+        "id":"route6_water_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"magikarp","levelMin":5, "levelMax":5, "rate":100, "condition":"fishing","itemId":"oldRod"}
+        ]
+    },
+    {
+        "id":"vermilion_water_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"magikarp","levelMin":5, "levelMax":5, "rate":100, "condition":"fishing","itemId":"oldRod"}
+        ]
+    },
+    {
+        "id":"route11_grass_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"ekans","levelMin":12, "levelMax":15, "rate":18},
+            {"id":"sandshrew","levelMin":12, "levelMax":15, "rate":18},
+            {"id":"pidgey","levelMin":16, "levelMax":18, "rate":16},
+            {"id":"spearow","levelMin":13, "levelMax":17, "rate":16},
+            {"id":"rattata","levelMin":15, "levelMax":17, "rate":14},
+            {"id":"drowzee","levelMin":9, "levelMax":19, "rate":12},
+            {"id":"pidgeotto","levelMin":18, "levelMax":20, "rate":6}
+        ]
+    },
+    {
+        "id":"route11_water_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"magikarp","levelMin":5, "levelMax":5, "rate":100, "condition":"fishing","itemId":"oldRod"}
+        ]
+    },
+    {
+        "id":"route11_gambler1",
+        "type":"trainer",
+        "trainerActor":15,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"poliwag","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"horsea","level":18,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Atcha! Didn't go my way!",
+        "money":1260
+    },
+    {
+        "id":"route11_young1",
+        "type":"trainer",
+        "trainerActor":7,
+        "ia":"random",
+        "pokemons":[
+            {"id":"ekans","level":21,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Huh? That's not right!",
+        "money":315
+    },
+    {
+        "id":"route11_young2",
+        "type":"trainer",
+        "trainerActor":7,
+        "ia":"random",
+        "pokemons":[
+            {"id":"sandshrew","level":19,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"zubat","level":19,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"My Pokémon couldn't!",
+        "money":285
+    },
+    {
+        "id":"route11_young3",
+        "type":"trainer",
+        "trainerActor":7,
+        "ia":"random",
+        "pokemons":[
+            {"id":"nidoranm","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"nidorino","level":18,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Too much, too young!",
+        "money":270
+    },
+    {
+        "id":"route11_gambler2",
+        "type":"trainer",
+        "trainerActor":15,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"bellsprout","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"oddish","level":18,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I had a chance!",
+        "money":1260
+    },
+    {
+        "id":"route11_gambler3",
+        "type":"trainer",
+        "trainerActor":15,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"growlithe","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"vulpix","level":18,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I saw this coming...",
+        "money":1260
+    },
+    {
+        "id":"route11_engine1",
+        "type":"trainer",
+        "trainerActor":16,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"magnemite","level":21,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"That was electric!",
+        "money":1050
+    },
+    {
+        "id":"route11_young4",
+        "type":"trainer",
+        "trainerActor":7,
+        "ia":"random",
+        "pokemons":[
+            {"id":"rattata","level":17,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"rattata","level":17,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"rattata","level":17,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Darn! I need to make my Pokémon stronger!",
+        "money":255
+    },
+    {
+        "id":"route11_gambler4",
+        "type":"trainer",
+        "trainerActor":15,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"voltorb","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"magnemite","level":18,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"My first loss!",
+        "money":1260
+    },
+    {
+        "id":"route11_engine2",
+        "type":"trainer",
+        "trainerActor":16,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"magnemite","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"magnemite","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"magnemite","level":18,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Whoa! You spark plug!",
+        "money":900
     }
 ]

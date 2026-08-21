@@ -38,6 +38,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0034. Nidoking
 - 0035. Clefairy
 - 0036. Clefable
+- 0037. Vulpix
 - (...)
 - 0039. Jigglypuff
 - 0040. Wigglytuff
@@ -55,6 +56,10 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0052. Meowth
 - (...)
 - 0056. Mankey
+- (...)
+- 0058. Growlithe
+- (...)
+- 0060. Poliwag
 - (...)
 - 0063. Abra
 - 0064. Kadabra
@@ -79,6 +84,8 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0096. Drowzee
 - (...)
 - 0100. Voltorb
+- (...)
+- 0104. Cubone
 - (...)
 - 0109. Koffing
 - (...)
@@ -116,6 +123,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - Moves with fixed damage
     - Dragon Rage (40)
     - Seismic Toss (User level)
+    - Sonic Boom (20)
 
 - Moves hitting N times in one turn
     - Double Kick (2-2)
@@ -140,6 +148,8 @@ This file details all mechanics available in the plugin, compared to RBY Generat
         - Supersonic
     - Flinch
         - Bite
+        - Bone Club
+        - Headbutt
         - Hyper Fang
         - Low Kick
     - Paralysis
@@ -174,12 +184,16 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Screech (defense)
 
 - Moves raising user stats by one stage
-    - Defense curl (defense)
+    - Defense Curl (defense)
     - Double Team (evasion)
     - Harden (defense)
     - Withdraw (defense)
 
+- Moves raising user stats by two stages
+    - Swords Dance (attack)
+
 - Moves forcing Pokemon to switch out (no effect in trainer battles in generation I)
+    - Roar
     - Whirlwind
 
 - Moves binding the opponent
@@ -191,6 +205,9 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 
 - Moves dividing target defense during damage calculation
     - Self-destruct (by 2)
+
+- Moves dropping money
+    - Payday
 
 - Special moves
     - Bide (activate turn 1, wait 1-2 turns, and unleash last turn double damage taken while waiting)
@@ -212,12 +229,20 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 
 - Healing
     - Potion
+    - Super Potion
     - Antidote
     - Parlyz Heal
     - Burn Heal
+    - Ice Heal
     - Awakening
     - Full Heal
+    - Full Restore
     - Ether
+    - Elixir
+
+- Battle Power-up
+    - X Defend
+    - X Special
 
 - Permanent Power-up
     - Hp Up
@@ -229,10 +254,16 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - Evolution
     - Moon Stone
 
+- Fishing
+    - Old Rod
+
 - Treasures
     - Nugget
 
 - Key Items
+    - Bicycle
+    - Bike Voucher
+    - Item Finder
     - Oak's Parcel
     - S.S. Ticket
     - Town Map

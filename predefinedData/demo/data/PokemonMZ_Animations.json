@@ -57,6 +57,14 @@
         ]
     },
     {
+        "id":"pierceTargetPhysicalEffect",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":3},
+            {"type":"playAnimation", "target":"target", "animationId":12},
+            {"type":"moveSpriteBackward", "target":"user", "distance":35, "duration":3}
+        ]
+    },
+    {
         "id":"bindTargetPhysical",
         "sequence":[
             {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":3},
@@ -218,6 +226,12 @@
         "sequence":[
             {"type":"playAnimation", "target":"user", "animationId":40, "wait":true},
             {"type":"playAnimation", "target":"target", "animationId":54}
+        ]
+    },
+    {
+        "id":"roar",
+        "sequence":[
+            {"type":"playAnimation", "target":"user", "animationId":37, "wait":true}
         ]
     },
     {

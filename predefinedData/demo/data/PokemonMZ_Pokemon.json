@@ -949,6 +949,37 @@
         ]
     },
     {
+        "id": "vulpix",
+        "pokedex": [{"region":"kanto","number":37}],
+        "category": "Fox",
+        "description": "At the time of birth, it has just one tail. The tail splits from its tip as it grows older. Both its fur and its tails are beautiful. As it grows, the tails split and form more tails.",
+        "height": 0.6,
+        "weight": 9.9,
+        "types": ["fire"],
+        "baseStats": {"hp":38,"patk":41,"pdef":40,"satk":50,"sdef":65,"spd":65,"spc":65},
+        "expCurve": "mediumFast",
+        "catchRate": 190,
+        "xpYield": 63,
+        "ev": [{"spd":1}],
+        "evolutions": [
+            {"to":"ninetales","mode":"useItem","item":"fireStone"}
+        ],
+        "learnedMoves": [
+            {"lvl":1,"move":"ember"},
+            {"lvl":1,"move":"tailWhip"},
+            {"lvl":16,"move":"quickAttack"},
+            {"lvl":21,"move":"roar"},
+            {"lvl":28,"move":"confuseRay"},
+            {"lvl":35,"move":"flamethrower"},
+            {"lvl":42,"move":"fireSpin"}
+        ],
+        "hmMoves": [],
+        "tmMoves": [
+            "toxic", "bodySlam", "takeDown", "doubleEdge", "rage", "dig", "mimic", "doubleTeam", "reflect", 
+            "bide", "fireBlast", "swift", "skullBash", "rest", "substitute"
+        ]
+    },
+    {
         "id":"jigglypuff",
         "pokedex":[{"region":"kanto","number":39}],
         "category":"Balloon",
@@ -1322,6 +1353,68 @@
         ]
     },
     {
+        "id": "growlithe",
+        "pokedex": [{"region":"kanto","number":58}],
+        "category": "Puppy",
+        "description": "Very protective of its territory. It will bark and bite to repel intruders from its space. A Pokémon with a friendly nature. However, it will bark fiercely at anything invading its territory.",
+        "height": 0.7,
+        "weight": 19.0,
+        "types": ["fire"],
+        "baseStats": {"hp":55,"patk":70,"pdef":45,"satk":70,"sdef":50,"spd":60,"spc":50},
+        "expCurve": "slow",
+        "catchRate": 190,
+        "xpYield": 91,
+        "ev": [{"patk":1}],
+        "evolutions": [
+            {"to":"arcanine","mode":"useItem","item":"fireStone"}
+        ],
+        "learnedMoves": [
+            {"lvl":1,"move":"bite"},
+            {"lvl":1,"move":"roar"},
+            {"lvl":18,"move":"ember"},
+            {"lvl":23,"move":"leer"},
+            {"lvl":30,"move":"takeDown"},
+            {"lvl":39,"move":"agility"},
+            {"lvl":50,"move":"flamethrower"}
+        ],
+        "hmMoves": [],
+        "tmMoves": [
+            "toxic", "bodySlam", "takeDown", "doubleEdge", "rage", "dragonRage", "dig", "mimic", "doubleTeam", 
+            "reflect", "bide", "fireBlast", "swift", "skullBash", "rest", "substitute"
+        ]
+    },
+    {
+        "id": "poliwag",
+        "pokedex": [{"region":"kanto","number":60}],
+        "category": "Tadpole",
+        "description": "Its newly grown legs prevent it from running. It appears to prefer swimming than trying to stand. The direction of the spiral on the belly differs by area. It is more adept at swimming than walking.",
+        "height": 0.6,
+        "weight": 12.4,
+        "types": ["water"],
+        "baseStats": {"hp":40,"patk":50,"pdef":40,"satk":40,"sdef":40,"spd":90,"spc":40},
+        "expCurve": "mediumSlow",
+        "catchRate": 255,
+        "xpYield": 77,
+        "ev": [{"spd":1}],
+        "evolutions": [
+            {"to":"poliwhirl","mode":"level","level":25}
+        ],
+        "learnedMoves": [
+            {"lvl":1,"move":"bubble"},
+            {"lvl":16,"move":"hypnosis"},
+            {"lvl":19,"move":"waterGun"},
+            {"lvl":25,"move":"doubleSlap"},
+            {"lvl":31,"move":"bodySlam"},
+            {"lvl":38,"move":"amnesia"},
+            {"lvl":45,"move":"hydroPump"}
+        ],
+        "hmMoves": ["surf"],
+        "tmMoves": [
+            "toxic", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", "blizzard", 
+            "rage", "psychic", "mimic", "doubleTeam", "bide", "skullBash", "rest", "psywave", "substitute"
+        ]
+    },
+    {
         "id":"abra",
         "pokedex":[{"region":"kanto","number":63}],
         "category":"Psi",
@@ -1610,6 +1703,41 @@
         ]
     },
     {
+        "id": "farfetchd",
+        "pokedex": [{"region":"kanto","number":83}],
+        "category": "Wild Duck",
+        "description": "The sprig of green onions it holds is its weapon. It is used much like a metal sword. Lives where reedy plants grow. They are rarely seen, so it's thought their numbers are decreasing.",
+        "height": 0.8,
+        "weight": 15.0,
+        "types": ["normal", "flying"],
+        "baseStats": {"hp":52,"patk":65,"pdef":55,"satk":58,"sdef":62,"spd":60,"spc":58},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 94,
+        "ev": [{"patk":1}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"peck"},
+            {"lvl":1,"move":"sandAttack"},
+            {"lvl":7,"move":"leer"},
+            {"lvl":15,"move":"furyAttack"},
+            {"lvl":23,"move":"swordsDance"},
+            {"lvl":31,"move":"agility"},
+            {"lvl":39,"move":"slash"}
+        ],
+        "hmMoves": ["cut", "fly"],
+        "tmMoves": [
+            "razorWind","swordsDance","whirlwind","toxic","bodySlam","takeDown",
+            "doubleEdge","rage","mimic","doubleTeam","reflect","bide","swift",
+            "skullBash","rest","substitute"
+        ]
+    },
+    {
+        "id":"seel",
+        "pokedex":[{"region":"kanto","number":86}],
+        "category":"Sea Lion"
+    },
+    {
         "id":"grimer",
         "pokedex":[{"region":"kanto","number":88}],
         "category":"Sludge",
@@ -1767,6 +1895,40 @@
             "toxic","takeDown","rage","thunderbolt","thunder","teleport","mimic",
             "doubleTeam","reflect","bide","selfDestruct","swift","rest","thunderWave",
             "explosion","substitute"
+        ]
+    },
+    {
+        "id":"cubone",
+        "pokedex":[{"region":"kanto","number":104}],
+        "category":"Lonely",
+        "description":"Because it never removes its skull helmet, no one has ever seen this Pokémon's real face. Wears the skull of its deceased mother. Its cries echo inside the skull and come out as a sad melody.",
+        "height":0.4,
+        "weight":6.5,
+        "types":["ground"],
+        "baseStats":{"hp":50,"patk":50,"pdef":95,"satk":40,"sdef":50,"spd":35,"spc":40},
+        "expCurve":"mediumFast",
+        "catchRate":190,
+        "xpYield":87,
+        "ev": [{"pdef":1}],
+        "evolutions": [
+            {"to":"marowak","mode":"level","level":28}
+        ],
+        "learnedMoves": [
+            {"lvl":1,"move":"growl"},
+            {"lvl":10,"move":"boneClub"},
+            {"lvl":13,"move":"tailWhip"},
+            {"lvl":18,"move":"headbutt"},
+            {"lvl":25,"move":"leer"},
+            {"lvl":31,"move":"focusEnergy"},
+            {"lvl":38,"move":"thrash"},
+            {"lvl":43,"move":"bonemerang"},
+            {"lvl":46,"move":"rage"}
+        ],
+        "hmMoves": ["strength"],
+        "tmMoves":[
+            "megaPunch","megaKick","toxic","bodySlam","takeDown","doubleEdge","bubbleBeam","waterGun","iceBeam","blizzard",
+            "submission","counter","seismicToss","rage","earthquake","fissure","dig","mimic","doubleTeam","bide","fireBlast",
+            "skullBash","rest","substitute"
         ]
     },
     {

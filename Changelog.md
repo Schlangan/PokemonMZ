@@ -1,3 +1,59 @@
+## [0.0.6] - 2026-08-21
+
+All mechanics encountered up to the arrival in Vermilion City have been added. This includes route 11 as well. S.S. Anne and Diglett's cave are not available yet, hence Vermilion's gym cannot be accessed either. All others elements are accessible, which allows the player to fish, put a pokemon in day care, get the bicycle in Cerulean city, and get the Item Finder.
+
+
+- Bug fixes
+    - User of absorb wrongly fainting when absorbing hp above their remaining hp.
+    - Status effetcs such as burn, poison, seed were not properly effecting when the pokemon turn was skipped by flinch.
+- New map mechanics
+    - Day Care system. Pokemon with HM moves cannot be added in generation I. Includes several plugin commands (see below).
+    - Fishing system.
+    - Trade mechanics, without the trade animations. Evolution by trade is also implemented.
+    - Cycling mechanics.
+    - Hidden items can now be picked up when being in a tile adjacent to the item. You do not have to walk on them anymore, and trying to pick them up while walking on them will also fail.
+    - Item finder mechanics.
+- New battle mechanics
+    - Experience boost for traded pokemon.
+    - Disobedience for traded pokemon.
+- New skill effects
+    - Increase of special stat by one stage
+    - Increase of attack stat by one/two stages
+    - Money drop during the battle (payday)
+    - Choosing the displayed message when use force switch our moves such as Whirlwind or Roar
+- New item effects
+    - Full Restore, healing hp and status at the same time.
+    - Item to increase special during battle (X Special)
+    - Ice Heal effect
+- New predefined Pokemon data
+    - Cubone (Jr. Trainer battle on route 6)
+    - Farfetch'd (Traded in vermilion city against Spearow)
+    - Growlithe (Gambler battle on route 11)
+    - Poliwag (Gambler battle on route 11)
+    - Vulpix (Gambler battle on route 11)
+- New predefined moves data
+    - Bone Club (learned by trainer's Cubone at lvl.1+)
+    - Growth (learned by Bellsprout at lvl.1)
+    - Headbutt (learned by player's Drowzee at lvl.24)
+    - Payday (learned by player's Meowth at lvl.17)
+    - Roar (learned by trainer's Growlithe at lvl 1+)
+    - Sonic Boom (learned by gambler's Voltorb at lvl.17+)
+    - Swords Dance (learned by player's Farfetch'd at lvl.23)
+- New predefined item data
+    - Bike Voucher (Given by Fan Club Chairman)
+    - Full Restore (Hidden item Undeground NS path)
+    - Ice Heal (Bought at Vermilion's Mart)
+    - Item Finder (Route 11, if player has captured at least 30 different pokemon)
+    - Super Potion (Bought at Vermilion's Mart)
+    - X Special (Hidden item Undeground NS path)
+- New plugin commands
+    - Has Item in Bag? (check if player has an item)
+    - Number of Pokemon Seen, Number of Pokemon Owned, to get those values inside a variable
+    - Take Variable Money from the Player (remove money from a variable value)
+    - Can Player Get a Pokemon In Party (check if party is full)
+    - Is Pokemon At Day Care, Select Pokemon For Day Care, Add a Pokemon To Day Care, Get Day Care Results, Play Day Care Pokemon Cry, Retrieve Pokemon From Day Care (day care system)
+
+
 ## [0.0.5] - 2026-08-13
 
 All mechanics encountered until the completion of Cerulean City have been added, including route 4, route 24 and route 25. Pokemon max level has been increased 25, adding consequently all their learned moves and evolutions.

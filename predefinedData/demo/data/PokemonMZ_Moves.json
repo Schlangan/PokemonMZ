@@ -85,6 +85,17 @@
         "animationHit":"hitTargetPhysical"
 	},
     {
+		"id":"boneClub",
+		"type":"ground",
+		"target":"opponent",
+		"pp":20,
+		"power":65,
+		"accuracy":85,
+		"effects":[
+			{"type":"flinchTarget","percentChance":10}
+		]
+	},
+    {
         "id":"bubble",
         "type":"water",
         "target":"opponent",
@@ -292,6 +303,18 @@
         "animationHit":"growl"
     },
     {
+        "id":"growth",
+        "category":"status",
+        "type":"normal",
+        "target":"user",
+        "pp":40,
+        "accuracy":100,
+        "effects":[
+            {"type":"spcUpUser","stage":1,"percentChance":100}
+        ],
+        "animationHit":"powerUpUser1"
+    },
+    {
         "id":"gust",
         "type":"normal",
         "target":"opponent",
@@ -312,6 +335,18 @@
             {"type":"pdefUpUser","stage":1,"percentChance":100}
         ],
         "animationHit":"powerUpUser1"
+    },
+    {
+        "id":"headbutt",
+        "type":"normal",
+        "target":"opponent",
+        "pp":15,
+        "power":70,
+        "accuracy":100,
+        "effects":[
+            {"type":"flinchTarget","percentChance":30}
+        ],
+        "animationHit":"hitTargetPhysical"
     },
     {
         "id":"hornAttack",
@@ -456,6 +491,18 @@
         ]
     },
     {
+        "id":"payDay",
+        "type":"normal",
+        "target":"opponent",
+        "pp":20,
+        "power":40,
+        "accuracy":100,
+        "effects":[
+            {"type":"moneyDrop"}
+        ],
+        "animationHit":"pierceTargetPhysicalEffect"
+    },
+    {
         "id":"peck",
         "type":"flying",
         "target":"opponent",
@@ -521,6 +568,19 @@
             {"type":"rage"}
         ],
         "animationHit":"hitTargetPhysical"
+    },
+    {
+        "id":"roar",
+        "category":"status",
+        "type":"normal",
+        "target":"opponent",
+        "pp":20,
+        "accuracy":100,
+        "hitDig":true,
+        "effects":[
+            {"type":"forceSwitchOut", "message":"ran away scared!"}
+        ],
+        "animationHit":"roar"
     },
     {
         "id":"rockThrow",
@@ -652,6 +712,16 @@
         "animationHit":"powder"
     },
     {
+		"id":"sonicBoom",
+		"type":"normal",
+		"target":"opponent",
+		"pp":20,
+		"accuracy":90,
+        "fixedDamage":20,
+		"effects":[],
+        "animationHit":"windTarget2"
+	},
+    {
         "id":"splash",
         "category":"status",
         "type":"normal",
@@ -711,6 +781,18 @@
             {"type":"confuseTarget","percentChance":100}
         ],
         "animationHit":"supersonic"
+    },
+    {
+        "id":"swordsDance",
+        "category":"status",
+        "type":"normal",
+        "target":"user",
+        "pp":30,
+        "accuracy":100,
+        "effects":[
+            {"type":"patkUpUser","stage":2,"percentChance":100}
+        ],
+        "animationHit":"powerUpUser2"
     },
     {
         "id":"tackle",
@@ -826,7 +908,7 @@
         "accuracy":85,
         "hitDig":true,
         "effects":[
-            {"type":"forceSwitchOut"}
+            {"type":"forceSwitchOut", "message":"was blown away!"}
         ],
         "animationHit":"windTarget2"
     },
