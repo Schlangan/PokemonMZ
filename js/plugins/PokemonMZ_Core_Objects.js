@@ -2899,6 +2899,12 @@ PokemonMZ_Game_Pokemon.prototype.sleep = function(force) {
         this._turnsSleep = Math.randomInt(7) + 1;
     }
 };
+PokemonMZ_Game_Pokemon.prototype.sleepTurns = function(turns, force) {
+    if (this.isSleepable() || force) {
+        this._isAsleep = true;
+        this._turnsSleep = turns;
+    }
+};
 PokemonMZ_Game_Pokemon.prototype.flinch = function(force) {
     if (this.isFlinchable() || force) {
         this._isFlinched = true;
@@ -4220,6 +4226,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
     case "moneyDrop":
         effectResults = this.effect_moneyDrop(battleData, effect, effectResults);
         break;
+    case "rest":
+        effectResults = this.effect_rest(battleData, effect, effectResults);
+        break;
     }
     return effectResults;
 };
@@ -5140,5 +5149,30 @@ PokemonMZ_Game_Action.prototype.effect_moneyDrop = function(battleData, effect, 
     }
     this._resultSteps.push(["autotext","coinsScatter",this.side()]);
     effectResults.success = true;
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_rest = function(battleData, effect, effectResults) {
+    const currentHp = this._user.hp();
+    const maxHp = this._user.mhp();
+
+    if (currentHp < maxHp) {
+        effectResults.success = true;
+
+        // Remove status for no status damage calculation
+        this._userStatusRemoved.push("burn"); 
+        this._userStatusRemoved.push("poison");
+        
+        this._resultSteps.push(["autotext","startedSleeping",this.side()])
+        this._resultSteps.push(["burnHeal",this._user]);
+        this._resultSteps.push(["freezeHeal",this._user]);
+        this._resultSteps.push(["paralyzeHeal",this._user]);
+        this._resultSteps.push(["poisonHeal",this._user]);
+        this._resultSteps.push(["sleepPokemonTurns",this._user, 1])
+        this._resultSteps.push(["healUser", maxHp - currentHp]);
+        this._resultSteps.push(["waittext","regainedHealth",this.side()])
+    } else {
+        this._resultSteps.push(["waittext","statusFailed",this.side()]);
+    }
+
     return effectResults;
 };

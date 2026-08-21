@@ -1071,6 +1071,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
     case "faintUser":
     case "mirrorMove":
     case "moneyDrop":
+    case "rest":
         DataManager.verifyProperties(
             moveEffect,
             errorMessagePrefix,
@@ -4122,6 +4123,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["sleep", step[1]];
                 break;  
+            case "sleepPokemonTurns":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["sleepTurns", step[1], step[2]];
+                break;  
             case "poisonPokemon":
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["poison", step[1]];
@@ -4723,6 +4728,7 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
     // Remove all turn phases for KO
     const status = this._subPhaseParams[0];
     const target = this._subPhaseParams[1];
+    const ext1 = this._subPhaseParams[2];
     const moveIndex = target.lastMoveIndex();
 
     switch (status) {
@@ -4748,6 +4754,11 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
             break;
         case "sleep":
             target.sleep();
+            this._enemyPokemonStatusWindow.refresh(true);
+            this._playerPokemonStatusWindow.refresh(true);
+            break;
+        case "sleepTurns":
+            target.sleepTurns(ext1);
             this._enemyPokemonStatusWindow.refresh(true);
             this._playerPokemonStatusWindow.refresh(true);
             break;
@@ -5095,6 +5106,10 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + " ignored orders!"
     case "takeNap":
         return prefix + pokemon.name() + " began to nap!"
+    case "startedSleeping":
+        return prefix + pokemon.name() + " started sleeping!"
+    case "regainedHealth":
+        return prefix + pokemon.name() + " regained health!"  
     }
     return ""
 };
