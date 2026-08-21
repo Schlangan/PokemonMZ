@@ -186,6 +186,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - Moves raising user stats by one stage
     - Defense Curl (defense)
     - Double Team (evasion)
+    - Growth (special)
     - Harden (defense)
     - Withdraw (defense)
 
