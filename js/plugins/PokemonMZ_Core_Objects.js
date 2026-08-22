@@ -4747,11 +4747,20 @@ PokemonMZ_Game_Action.prototype.effect_pdefUpUser = function(battleData, effect,
         })
     }
     if (randomNumber < effect.percentChance) {
-        if (this._user._stageModifiers.pdef < 6) {
+        const initialStage = this._user._stageModifiers.pdef
+        if (initialStage < 6) {
             this._user._stageModifiers.pdef += effect.stage;
             if (this._user._stageModifiers.pdef > 6) { this._user._stageModifiers.pdef = 6; }
             effectResults.success = true;
-            this._resultSteps.push(["autotext","defenseRose",this.side()])
+            const roseStages = this._user._stageModifiers.pdef - initialStage;
+            switch (roseStages) {
+            case 1:
+                this._resultSteps.push(["autotext","defenseRose",this.side()]);
+                break;
+            case 2:
+                this._resultSteps.push(["autotext","defenseRosePlus",this.side()]);
+                break;
+            }
         } else {
             if (battleData.damageDealt == 0) {
                 // Message nothing if no damage dealt, else simply nothing happens
