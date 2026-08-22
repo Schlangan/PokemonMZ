@@ -1072,6 +1072,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
     case "mirrorMove":
     case "moneyDrop":
     case "rest":
+    case "lightScreen":
         DataManager.verifyProperties(
             moveEffect,
             errorMessagePrefix,
@@ -4205,6 +4206,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
             case "pickupMoneyThenEndBattle":
                 this.changePhase("pickupMoneyThenEndPlayerEscape");
                 break;
+            case "giveLightScreen":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["lightScreen", step[1]];
+                break;
         }
     } else {
         if (PokemonMZ.debugLog) {
@@ -4799,6 +4804,9 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
             this._spriteset.playerPokemonSprite().setScale(this._playerChosenPokemon.battleSpriteMaxScale());
             this._spriteset.enemyPokemonSprite().setScale(this._enemyChosenPokemon.battleSpriteMaxScale());
             break;
+        case "lightScreen":
+            target.giveLightScreen();
+            break;
     }
     this.clearSubPhase();
 };
@@ -5111,7 +5119,9 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
     case "startedSleeping":
         return prefix + pokemon.name() + " started sleeping!"
     case "regainedHealth":
-        return prefix + pokemon.name() + " regained health!"  
+        return prefix + pokemon.name() + " regained health!" 
+    case "protectedSpecial":
+        return prefix + pokemon.name() + "'s protected against special attacks!"
     }
     return ""
 };

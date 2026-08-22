@@ -1601,6 +1601,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._isRaging = false;
     this._isMinimized = false;
     this._isDigging = false;
+    this._hasLightScreen = false; // Generation I - Light screen only applies to the user
 
     this._hasMoveDisabled = false;
     this._disabledMoveIndex = -1;
@@ -2691,6 +2692,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.unRage();
     this.unMinimize();
     this.endDigging();
+    this.removeLightScreen(); // Generation I
 };
 PokemonMZ_Game_Pokemon.prototype.removeFinishedStatuses = function() {
     // Remove statuses that disappear at the beginning of the next turn
@@ -2746,6 +2748,9 @@ PokemonMZ_Game_Pokemon.prototype.isMinimized = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.isDigging = function() {
     return this._isDigging;
+};
+PokemonMZ_Game_Pokemon.prototype.hasLightScreen = function() {
+    return this._hasLightScreen;
 };
 PokemonMZ_Game_Pokemon.prototype.nextConfusionTurn = function() {
     this._turnsConfusion--;
@@ -2968,6 +2973,9 @@ PokemonMZ_Game_Pokemon.prototype.startDigging = function(moveIndex) {
     this._isDigging = true;
     this._digMoveIndex = moveIndex;
 };
+PokemonMZ_Game_Pokemon.prototype.giveLightScreen = function() {
+    this._hasLightScreen = true;
+};
 PokemonMZ_Game_Pokemon.prototype.keepBinding = function() {
     this._turnsBound--;
 };
@@ -3079,6 +3087,9 @@ PokemonMZ_Game_Pokemon.prototype.unMinimize = function() {
     if (this.isMinimized()) {
         this._isMinimized = false;
     }
+};
+PokemonMZ_Game_Pokemon.prototype.removeLightScreen = function() {
+    this._hasLightScreen = false;
 };
 PokemonMZ_Game_Pokemon.prototype.endDigging = function() {
     this._isDigging = false;
@@ -4229,6 +4240,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
     case "rest":
         effectResults = this.effect_rest(battleData, effect, effectResults);
         break;
+    case "lightScreen":
+        effectResults = this.effect_lightScreen(battleData, effect, effectResults);
+        break;
     }
     return effectResults;
 };
@@ -4408,13 +4422,17 @@ PokemonMZ_Game_Action.prototype.moveDamage = function(critical) {
                 defenseBaseStat = this._opponent.sdef() * playerDefBadgeBoosts.sdef;
                 defenseModifiedStats = this._opponent.sdefModified() * playerDefBadgeBoosts.sdef;
 
+                // Generation I - Light screen double special defense
+                if (this._opponent.hasLightScreen()) {
+                    barrierAmplifier *= 2;
+                }
+
             } else if (this._moveData.target == "user") {
                 debugLogging.defenseStats = {"base":this._user.sdef(), "modified":this._user.sdefModified()}
                 defenseBaseStat = this._user.sdef() * playerAtkBadgeBoosts.sdef;
                 defenseModifiedStats = this._user.sdefModified() * playerAtkBadgeBoosts.sdef;
             }
-
-            // TODO : barrierAmplifier=2 if light screen is up on opponent side and not critical
+            
             break;
     }
 
@@ -5183,5 +5201,15 @@ PokemonMZ_Game_Action.prototype.effect_rest = function(battleData, effect, effec
         this._resultSteps.push(["waittext","statusFailed",this.side()]);
     }
 
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_lightScreen = function(battleData, effect, effectResults) {
+    if (!this._user.hasLightScreen()) {
+        effectResults.success = true;
+        this._resultSteps.push(["giveLightScreen",this._user])
+        this._resultSteps.push(["waittext","protectedSpecial",this.side()]);
+    } else {
+        this._resultSteps.push(["waittext","statusFailed",this.side()]);
+    }
     return effectResults;
 };
