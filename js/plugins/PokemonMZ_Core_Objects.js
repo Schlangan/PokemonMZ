@@ -126,6 +126,12 @@ Game_Event.prototype.initialize = function(mapId, eventId) {
     const aggroPage = notes.page;
     this._aggroPage = aggroPage ? Number(aggroPage) : 0;
 
+    if (notes.cut) {
+        this._canBeCut = Boolean(notes.cut) === true;
+    }
+    // Never cut when map initializes except if player stand on the event already
+    this._hasBeenCut = this._canBeCut && ($gamePlayer._x == this._x && $gamePlayer._y == this._y);
+
     const hiddenItemPage = notes.hiddenItemPage;
     if (hiddenItemPage) {
         this._isHiddenItem = true;
@@ -256,6 +262,38 @@ Game_Event.prototype.PokemonMZ_posAggro = function(x,y) {
 };
 Game_Event.prototype.PokemonMZ_isHiddenItem = function() {
     return this._isHiddenItem > 0 && this._pageIndex == this._hiddenItemPage - 1;
+};
+Game_Event.prototype.PokemonMZ_canBeCut = function() {
+    return this._canBeCut;
+};
+Game_Event.prototype.PokemonMZ_hasBeenCut = function() {
+    return this._hasBeenCut;
+};
+Game_Event.prototype.PokemonMZ_cut = function() {
+    // Cut event
+    if (this._canBeCut) {
+        this._hasBeenCut = true;
+    }
+};
+
+const PokemonMZ_Game_Event_opacity = Game_Event.prototype.opacity;
+Game_Event.prototype.opacity = function() {
+    if (this._hasBeenCut) {
+        // Cut events become invisible
+        return 0;
+    } else {
+        return PokemonMZ_Game_Event_opacity.call(this);
+    }
+};
+
+const PokemonMZ_Game_Event_isThrough = Game_Event.prototype.isThrough;
+Game_Event.prototype.isThrough = function() {
+    if (this._hasBeenCut) {
+        // Cut events become passable
+        return true;
+    } else {
+        return PokemonMZ_Game_Event_isThrough.call(this);
+    }
 };
 
 
@@ -408,6 +446,8 @@ Game_Map.prototype.initialize = function() {
     this._fishingState = 0;
     this._fishingRod = null;
     this._fishingRegion = 0;
+    this._eventsToCut = [];
+    this._soundOfCut = null;
 };
 Game_Map.prototype.PokemonMZ_reinitialize = function() {
     // Used to create possible missing objects after update
@@ -531,6 +571,18 @@ Game_Map.prototype.update = function(sceneActive) {
     // Fishing mechanics
     if (this.PokemonMZ_isFishing()) {
         this.updateFishing();
+    }
+
+    // Cutting part 2
+    if (this.PokemonMZ_isCutting()) {
+        if (!$gameMessage.isBusy()) {
+            AudioManager.playStandardSe(this._soundOfCut);
+            for (const event of this._eventsToCut) {
+                event.PokemonMZ_cut();
+            }
+            this._eventsToCut = [];
+            this.refresh();
+        }
     }
 
     // Add message if repel is over
@@ -689,6 +741,31 @@ Game_Map.prototype.PokemonMZ_useDig = function() {
 Game_Map.prototype.PokemonMZ_isUsingDig = function() {
     return this._isUsingDig;
 };
+
+Game_Map.prototype.PokemonMZ_useCut = function(pokemon, soundEffectName) {
+    // Calculate if there is anything to cut
+    const d = $gamePlayer.direction();
+    const x2 =  $gameMap.roundXWithDirection($gamePlayer.x, d);
+    const y2 =  $gameMap.roundYWithDirection($gamePlayer.y, d);
+
+    const frontEvents = $gameMap.eventsXy(x2, y2);
+    const cutEvents = frontEvents.filter(event => event.PokemonMZ_canBeCut());
+
+    if (cutEvents.length == 0) {
+        $gameMessage.add("There isn't anything to Cut!")
+        return;
+    }
+    pokemon.playCry();
+    $gameMessage.add(pokemon.name() + " hacked away with Cut!")
+    this._eventsToCut = cutEvents;
+    this._soundOfCut = soundEffectName;
+}
+Game_Map.prototype.PokemonMZ_isCutting = function() {
+    return this._eventsToCut && this._eventsToCut.length > 0;
+};
+
+
+
 
 Game_Map.prototype.PokemonMZ_canFishHere = function() {
     const frontRegion = $gamePlayer.PokemonMZ_frontRegionId();
@@ -1150,12 +1227,12 @@ PokemonMZ_Game_TrainerPlayer.prototype.removeMoney = function(amount) {
 PokemonMZ_Game_TrainerPlayer.prototype.badgesCount = function() {
     return this._badges.length;
 };
-PokemonMZ_Game_TrainerPlayer.prototype.hasBadge = function(id) {
-    return this._badges.includes(id);
+PokemonMZ_Game_TrainerPlayer.prototype.hasBadge = function(itemIntId) {
+    return this._badges.includes(itemIntId);
 };
-PokemonMZ_Game_TrainerPlayer.prototype.giveBadge = function(id) {
-    if (!this.hasBadge(id)) {
-        this._badges.push(id);
+PokemonMZ_Game_TrainerPlayer.prototype.giveBadge = function(itemIntId) {
+    if (!this.hasBadge(itemIntId)) {
+        this._badges.push(itemIntId);
     }
 };
 PokemonMZ_Game_TrainerPlayer.prototype.badgeBoosts = function(side, mode) {
@@ -2046,13 +2123,16 @@ PokemonMZ_Game_Pokemon.prototype.hasHmMove = function() {
     }
     return hasHm;
 };
-PokemonMZ_Game_Pokemon.prototype.isMoveHm = function(index) { // TODO
+PokemonMZ_Game_Pokemon.prototype.isMoveHm = function(index) {
     // Returns if the move at index is a HM
     const move = this.moveDataFromIndex(index);
-    // TODO: Check HM property.
-    return false;
+    return move.hm === true;
 };
-
+PokemonMZ_Game_Pokemon.prototype.isMoveHmFromString = function(moveStrId) {
+    // Returns from a move string if the move is a HM
+    const move = this.moveDataFromStringId(moveStrId);
+    return move.hm === true;
+};
 
 PokemonMZ_Game_Pokemon.prototype.hasAnyDisabledMove = function() {
     for (let i=0; i<this._moves.length; i++) {
@@ -3187,6 +3267,8 @@ PokemonMZ_Game_Pokemon.prototype.mapMoves = function() {
             mapMoves.push({
                 "name":moveName,
                 "effect":moveData.mapEffect,
+                "requiredBadge":moveData.mapBadgeRequires,
+                "sound":moveData.mapSound
             })
         };
     }

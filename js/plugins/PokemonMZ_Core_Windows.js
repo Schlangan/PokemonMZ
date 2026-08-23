@@ -1465,7 +1465,7 @@ PokemonMZ_Window_MenuPokemonCommand.prototype.makeCommandList = function(pokemon
     if (!this._inBattle && pokemon) {
         const mapMoves = pokemon.mapMoves();
         for (moveData of mapMoves) {
-            this.addCommand(moveData.name, "move", true, moveData.effect);
+            this.addCommand(moveData.name, "move", true, {"effect":moveData.effect,"requiredBadge":moveData.requiredBadge,"sound":moveData.sound});
         }
     }
     const switchEnabled = this._inBattle == true || $gamePlayerTrainer.numPokemons() > 1;
@@ -1942,7 +1942,7 @@ PokemonMZ_Window_ShopSell.prototype.initialize = function(rect) {
     PokemonMZ_Window_ItemList_Gen1.prototype.initialize.call(this, rect);
 };
 PokemonMZ_Window_ShopSell.prototype.isEnabled = function(item) {
-    return item && item.pkmz_data && item.pkmz_data.category != "key";
+    return item && item.pkmz_data && !["key","hm"].includes(item.pkmz_data.category);
 };
 
 // PokemonMZ_Window_ShopStatus

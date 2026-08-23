@@ -30,7 +30,10 @@ moveData
 - alwaysEffects, **bool**, *optional* : If the value is set to true, the effects of the move will always happen, even if the move missed or did no damage due to immunity.
 - mapEffect: **string**, *optional* : Move usable on the map, with a given effect.
     - **teleport** : Allow teleporting to the last respawn from maps where the teleport:true note is set.
+    - **cut** : Allow cutting special trees
     - **dig** : Allow teleporting to the last respawn from maps where the escapeRope:true note is set.
+- mapBadgeRequires: **string**, *optional* : Specify a required badge to allow using the move. Give the badge item string id, ex. cascadeBadge
+- mapSound: **string**, *optional* : Sound effect played when the move is used. Only applies to **cut** for now.
 - animationAlways, **string**, *optional* : The animation string Id from the additional JSon file PokemonMZ_Animations.json when the move is launched, whether it hits or not.
 - animationHit, **string**, *optional* : The animation string Id from the additional JSon file PokemonMZ_Animations.json when the move hits.
 

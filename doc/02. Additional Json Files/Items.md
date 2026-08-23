@@ -9,7 +9,7 @@ main, **Array:itemData** : Array of **itemData**. The first element is null, mim
 itemData
 - id, **string** : Identifier of the item. The same identifier must be set up inside the notetag id:xxxxx of the Item object in RPG Maker's Database.
 - user, **string** : For now, only **trainer**. Not required for badge items.
-- category, **string** : Either **regular**, **key** or **badge** items. Key items cannot be tossed, while regular can. Badge item must not be given, and have passive effects.
+- category, **string** : Either **regular**, **hm**, **key** or **badge** items. Key/hm items cannot be tossed, while regular can. Badge item must not be given directly in bag, and have passive effects.
 - battle, **bool** : Set the value to true if the item can be used during battle. Else, the item won't appear inside the battle screen. Not required for badge items.
 - target,**string**, *optional*: Set the value to **pokemon** if the item requires the pokemon selection screen to be used.
 - price, **int** : Price of the item, when bought. Not required for badge or key items.
@@ -48,7 +48,7 @@ Depending on the effet, additional parameters are required.
     - boostPercent,**float**: Attack bonus percentage.
 - effect = **repel** : Repel wild pokemon below the party's first pokemon (ko or not)
     - steps, **int** : Number of steps before the repel wears off
-- effect = **tm** : Used to teach a move to a pokemon
+- effect = **tm**, **hm** : Used to teach a move to a pokemon
     - move, **string** : Id of the move to learn
 - effect = **battlePdefUpUser**, **battleSpcUpUser** : Boost by N stages the defense/special of the current pokemon in battle. Unusable outside battle.
     - stage, **int** : Amount of stages up.

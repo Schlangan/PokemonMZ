@@ -663,22 +663,47 @@ DataManager.verifyIaModifierData = function(prefix, index, iaModifierData) {
 };
 DataManager.verifyIaModifierDataItem = function(prefix, index, iaModifierDataItem) {
     const errorMessagePrefix = prefix + "Item - ";
-    DataManager.verifyProperties(
-        iaModifierDataItem,
-        errorMessagePrefix,
-        ["id","condition","chance","maxPerPokemon"],
-        [""],
-    );
-
     if (iaModifierDataItem.id) {
         if (!DataManager.declared.items.includes(iaModifierDataItem.id)) {
             console.error(errorMessagePrefix + "Unknown item ID: " + iaModifierDataItem.id)
         }
     }
     if (iaModifierDataItem.condition) {
-        if (!["random","hasStatus"].includes(iaModifierDataItem.condition)) {
+        switch(iaModifierDataItem.condition) {
+        
+        case "random":
+        case "hasStatus":
+            DataManager.verifyProperties(
+                iaModifierDataItem,
+                errorMessagePrefix,
+                ["id","condition","chance","maxPerPokemon"],
+                [""],
+            );
+            break;
+        case "hpBelowPercent":
+            DataManager.verifyProperties(
+                iaModifierDataItem,
+                errorMessagePrefix,
+                ["id","condition","chance","maxPerPokemon","hpPercent"],
+                [""],
+            );
+            break;
+        default:
+            DataManager.verifyProperties(
+                iaModifierDataItem,
+                errorMessagePrefix,
+                ["id","condition","chance","maxPerPokemon"],
+                [""],
+            );
             console.error(errorMessagePrefix + "Unknown condition: " + iaModifierDataItem.condition)
         }
+    } else {
+        DataManager.verifyProperties(
+            iaModifierDataItem,
+            errorMessagePrefix,
+            ["id","condition","chance","maxPerPokemon"],
+            [""],
+        );
     }
 };
 
@@ -714,7 +739,7 @@ DataManager.verifyItemData = function(index, itemData) {
     if (itemData.category == "badge") {
         mandatoryProperties = ["id","category"]
         optionalProperties = ["target","obedienceLevel","effect"]
-    } else if (itemData.category == "key") {
+    } else if (itemData.category == "key" || itemData.category == "hm") {
         mandatoryProperties = ["id","user","category","battle","effect"]
         optionalProperties = ["target","price"]
     }
@@ -807,6 +832,7 @@ DataManager.verifyItemData = function(index, itemData) {
                 optionalProperties);
             break;
         case "tm":
+        case "hm":
             DataManager.verifyProperties(
                 itemData, 
                 errorMessagePrefix, 
@@ -814,7 +840,7 @@ DataManager.verifyItemData = function(index, itemData) {
                 optionalProperties);
             if (itemData.move) {
                 if (!DataManager.declared.moves.includes(itemData.move)) {
-                    console.error(errorMessagePrefix + "Unknown tm item move: " + itemData.move);
+                    console.error(errorMessagePrefix + "Unknown hm item move: " + itemData.move);
                 }
             }
             break;
@@ -895,7 +921,8 @@ DataManager.verifyMoveData = function(index, moveData) {
         [
             "power","targetDefenseDivider","noCritical","noAccuracy","noVariance",
             "cpuHigherEffectFailure","fixedDamage","forbidMirrorMove","alwaysEffects",
-            "mapEffect","animationAlways","animationHit","priority","category","hitDig"
+            "mapEffect","mapBadgeRequires","animationAlways","animationHit","priority",
+            "category","hitDig","mapSound"
         ],
     );
     if (moveData.target) {
@@ -920,8 +947,13 @@ DataManager.verifyMoveData = function(index, moveData) {
         }
     }
     if (moveData.mapEffect) {
-        if (!["teleport","dig"].includes(moveData.mapEffect)) {
+        if (!["teleport","dig","cut"].includes(moveData.mapEffect)) {
             console.error(errorMessagePrefix + "Unknown Map Effect: " + moveData.mapEffect);
+        }
+    }
+    if (moveData.mapBadgeRequires) {
+        if (!DataManager.declared.items.includes(moveData.mapBadgeRequires)) {
+            console.error(errorMessagePrefix + "Unknown Required Badge id: " + moveData.mapBadgeRequires);
         }
     }
 
@@ -1570,6 +1602,7 @@ PokemonMZ_BattleManager.initMembers = function() {
     this._trainerInputWindow = null;
     this._yesNoWindow = null;
     this._trainerMovesWindow = null;
+    this._forgetPokemonMovesWindow = null;
     this._regularMessageWindow = null;
     this._staticMessageWindow = null;
     this._pokedexDataWindow = null;
@@ -1670,6 +1703,9 @@ PokemonMZ_BattleManager.setPokemonLevelUpWindow = function(window) {
 PokemonMZ_BattleManager.setPokedexDataWindow = function(window) {
     this._pokedexDataWindow = window;
 };
+PokemonMZ_BattleManager.setForgetPokemonMovesWindow = function(window) {
+    this._forgetPokemonMovesWindow = window;
+}
 PokemonMZ_BattleManager.saveBgmAndBgs = function() {
     this._mapBgm = AudioManager.saveBgm();
     this._mapBgs = AudioManager.saveBgs();
@@ -1885,6 +1921,9 @@ PokemonMZ_BattleManager.updatePhase = function(timeActive) {
             break;
         case "waitReplacingMove":
             this.waitReplacingMove();
+            break;
+        case "cannotEraseHm":
+            this.cannotEraseHm();
             break;
         case "finishReplacingMove":
             this.finishReplacingMove();
@@ -3002,6 +3041,15 @@ PokemonMZ_BattleManager.waitReplacingMove = function() {
     this._yesNoWindow.show();
     this.changePhase("playerInput");
 };
+PokemonMZ_BattleManager.cannotEraseHm = function() {
+    if ($gameMessage.isBusy() || this._regularMessageWindow.isClosing()) { return; }
+    this._staticMessageWindow.setText("Which move should be forgotten?");
+    this._staticMessageWindow.show();
+    this._forgetPokemonMovesWindow.activate();
+    this._forgetPokemonMovesWindow.select(0);
+    this.changePhase("playerInput");
+}
+
 PokemonMZ_BattleManager.finishReplacingMove = function() { 
     // Simply display learn message and play sound (move alreayd learnt in Scene)
     if ($gameMessage.isBusy() || this._regularMessageWindow.isClosing()) { return; }
@@ -3370,7 +3418,6 @@ PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
                 maxScore = move.score;
             }
         }
-        console.log(maxScore)
         const choosableMoves = scoringTable.filter(move => move.score === maxScore);
         const randomIndex = Math.randomInt(choosableMoves.length);
         this._enemyMoveIndex = choosableMoves[randomIndex].index;
@@ -3466,6 +3513,13 @@ PokemonMZ_BattleManager.calculateComputerItemUse = function(modifiers) {
         case "hasStatus":
             // Only checks item if the pokemon has a status
             if (!enemyPokemon.hasStatus()) { return; }
+            break;
+        case "hpBelowPercent":
+            // Checks if pokemon's hp is below the required percent
+            const limitHp = enemyPokemon.mhp() * item.hpPercent/100;
+            if (enemyPokemon.hp() >= limitHp ) {
+                return;
+            }
             break;
         case "random":
             // Must be set if no other condition

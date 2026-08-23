@@ -879,6 +879,7 @@ PokemonMZ_Scene_Item_Gen1.prototype.constructor = PokemonMZ_Scene_Item_Gen1;
 PokemonMZ_Scene_Item_Gen1.prototype.initialize = function() {
     Scene_ItemBase.prototype.initialize.call(this);
     this._itemSelectMode = '';
+    this._usingHm = false;
     this._usingTm = false;
 };
 PokemonMZ_Scene_Item_Gen1.prototype.create = function() {
@@ -1002,15 +1003,21 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
             this._messageWindow.startMessage();
             break;
         case "tm":
+        case "hm":
+            const machineText = itemDict.pkmz_data.effect == "hm" ? "HM" : "TM";
             const moveStrId = itemDict.pkmz_data.move;
             let tmName = "????"
             if (moveStrId) {
                 const moveIntId = $dataSkillsIndex[moveStrId];
                 tmName = $dataSkills[moveIntId].name;
             }
-            this._usingTm = true;
+            if (itemDict.pkmz_data.effect == "hm") {
+                this._usingHm = true;
+            } else {
+                this._usingTm = true;
+            }
             this._itemSelectWindow.close();
-            this._messageWindow.setText("Booted up a TM!\nIt contained " + tmName + "!\nTeach " + tmName + " to a Pokémon?");
+            this._messageWindow.setText("Booted up a " + machineText + "!\nIt contained " + tmName + "!\nTeach " + tmName + " to a Pokémon?");
             this._messageWindow.startMessage();
             break;
         case "escapeRope":
@@ -1069,19 +1076,23 @@ PokemonMZ_Scene_Item_Gen1.prototype.onMessageDisplayed = function() {
         this._yesNoWindow.setMode("useTm");
         this._yesNoWindow.open();
         this._yesNoWindow.activate();
+    } else if (this._usingHm) {
+        this._messageWindow.deactivate();
+        this._yesNoWindow.setMode("useHm");
+        this._yesNoWindow.open();
+        this._yesNoWindow.activate();
     }
 };
 PokemonMZ_Scene_Item_Gen1.prototype.onMessageTerminated = function() {
     this._itemSelectWindow.close();
     this._itemSelectWindow.deactivate();
     this._itemWindow.activate();
-
 };
 PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectToss = function() {
     const itemDict = this.item();
 
      // Protected items are not tossable
-    if (itemDict.pkmz_data.category == "key") {
+    if (itemDict.pkmz_data.category == "key" || itemDict.pkmz_data.category == "hm") {
         this._messageWindow.setText("That's too important to toss!");
         this._messageWindow.startMessage();
     } else {
@@ -1133,6 +1144,7 @@ PokemonMZ_Scene_Item_Gen1.prototype.commandYes = function() {
 };
 PokemonMZ_Scene_Item_Gen1.prototype.commandNo = function() {
     this._usingTm = false;
+    this._usingHm = false;
     this._yesNoWindow.close();
     this._yesNoWindow.deactivate();
     this._messageWindow.activate();
@@ -1767,6 +1779,7 @@ PokemonMZ_Scene_PokemonMenu.prototype.initialize = function() {
 
     this._item = null;
     this._learnedMove = null;
+    this._usingHm = false;
     this._restoringPp = false;
     
     this._hasLearnedMove = null;
@@ -1812,6 +1825,13 @@ PokemonMZ_Scene_PokemonMenu.prototype.prepareItem = function(item) {
         const moveIntId = $dataSkillsIndex[moveStrId];
         this._learnedMove = $dataSkills[moveIntId];
     }
+    if (item.pkmz_data.effect == "hm") {
+        const moveStrId = item.pkmz_data.move;
+        const moveIntId = $dataSkillsIndex[moveStrId];
+        this._learnedMove = $dataSkills[moveIntId];
+        this._usingHm = true;
+    }
+
     if (item.pkmz_data.effect == "evolutionItem") {
         this._evolutionItem = item;
     }
@@ -2127,7 +2147,6 @@ PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemonDayCare = function() {
     }
     this.popScene();
 };
-
 PokemonMZ_Scene_PokemonMenu.prototype.proceedLearningMove = function() {
     const pokemon = this.selectedPokemon();
     if (pokemon.moves().length < 4) {
@@ -2201,7 +2220,7 @@ PokemonMZ_Scene_PokemonMenu.prototype.onMessageTerminated = function() {
         this._listWindow.activate();
     }
 };
-PokemonMZ_Scene_PokemonMenu.prototype.onUsingMapMove = function() {
+PokemonMZ_Scene_PokemonMenu.prototype.onUsingMapMove = function(soundEffectName) {
     // Map Moves effect after message displayed
     switch (this._usingMapMove) {
     case "teleport":
@@ -2214,9 +2233,13 @@ PokemonMZ_Scene_PokemonMenu.prototype.onUsingMapMove = function() {
         SceneManager.pop();
         $gameMap.PokemonMZ_useDig();
         break;
+    case "cut":
+        SceneManager.pop();
+        SceneManager.pop();
+        $gameMap.PokemonMZ_useCut(this._pokemon, soundEffectName);
+        break;
     }
 };
-
 PokemonMZ_Scene_PokemonMenu.prototype.onUsingTmHm = function() {
     if (this._afterTextPhase == "forgotMove") {
         // Forgot a move
@@ -2225,6 +2248,9 @@ PokemonMZ_Scene_PokemonMenu.prototype.onUsingTmHm = function() {
     } else if (this._hasLearnedMove) {
         // Finished learning a move
         this.afterUsingItem(true);
+    } else if (this._afterTextPhase == "cannotEraseHm") {
+        // Tried to delete HM
+        this.commandForgetYes();
     } else {
         // Didn't learn a move
         this._listWindow.activate();
@@ -2235,6 +2261,9 @@ PokemonMZ_Scene_PokemonMenu.prototype.onUsingLevelUp = function() {
         // Forgot a move
         this._afterTextPhase = "";
         this.finishReplacingMove();
+    } else if (this._afterTextPhase == "cannotEraseHm") {
+        // Tried to delete HM
+        this.commandForgetYes();
     } else if (this._afterTextPhase == "levelingUp" && (this._learnedMove)) {
         // Level up has a move learned
         this._afterTextPhase = "";
@@ -2259,7 +2288,10 @@ PokemonMZ_Scene_PokemonMenu.prototype.afterUsingItem = function(forceClose) {
     this._hasUsedLearnMoveItem = null;
     this._hasLeveledUp = null;
     this._hasLearnedMove = null;
-    $gamePlayerTrainer.gainBagItem(this._usedItem.id, -1);
+    if (!this._usingHm) {
+        // HM are not consumed upon use
+        $gamePlayerTrainer.gainBagItem(this._usedItem.id, -1);
+    }
     if (this._pokemonEvolvesTo) {
         $gameTemp._menuUsedItem = this._usedItem;
         $gameTemp._menuSelectedPokemonIndex = this._listWindow._index;
@@ -2306,12 +2338,31 @@ PokemonMZ_Scene_PokemonMenu.prototype.onCancelCommand = function() {
 };
 PokemonMZ_Scene_PokemonMenu.prototype.onMoveCommand = function() {
     const mapEffect = this._commandWindow.currentExt();
-    switch(mapEffect) {
+
+    if (mapEffect.requiredBadge) {
+        // Check badge requirement
+        const badgeIndex = $dataItemsIndex[mapEffect.requiredBadge];
+        if (!(badgeIndex && $gamePlayerTrainer.hasBadge(badgeIndex))) {
+            SoundManager.playBuzzer();
+            const message = "No! A new Badge is required!"
+            this._commandWindow.close();
+            this._listWindow.deactivate();
+            this._messageWindow.setText(message);
+            this._messageWindow.startMessage();
+            return;
+        }
+    }
+
+    switch(mapEffect.effect) {
     case "teleport":
         this.useTeleportCommand();
         break;
     case "dig":
         this.useDigCommand();
+        break;
+    case "cut":
+        this._usingMapMove = "cut"
+        this.onUsingMapMove(mapEffect.sound);
         break;
     default:
         this._commandWindow.close();
@@ -2354,6 +2405,7 @@ PokemonMZ_Scene_PokemonMenu.prototype.useDigCommand = function() {
         this._messageWindow.startMessage();
     }
 };
+
 PokemonMZ_Scene_PokemonMenu.prototype.onCancelStatus = function() {
     this._statusWindow.close();
     this._listWindow.activate();
@@ -2525,19 +2577,32 @@ PokemonMZ_Scene_PokemonMenu.prototype.onSelectForgetPokemonMove = function() {
         const moveName = this._learnedMove.name;
         const moveStringId = this._learnedMove.pkmz_data.id;
 
-        this._forgetPokemonMovesWindow.close();
-        this._yesNoWindow.close();
-        AudioManager.playStandardSe(PokemonMZ.forgetMoveSE);
+        const isHm = pokemon.isMoveHm(index);
 
-        const forgottenMove = pokemon.moveNameFromIndex(index);
-        pokemon.replaceMoveAtIndexBy(index, moveStringId);
-        const message = "1, 2 and... Poof!\n" + pokemon.name() + " forgot " + forgottenMove + "!\nAnd..."
-        this._afterTextPhase = "forgotMove"
-        this._messageWindow.terminateMessage();
-        this._messageWindow.pause = false;
-        this._messageWindow.activate();
-        this._messageWindow.setText(message);
-        this._messageWindow.startMessage();
+        if (isHm) {
+            // Impossible to forget a HM
+            SoundManager.playBuzzer();
+            this._afterTextPhase = "cannotEraseHm"
+            this._messageWindow.terminateMessage();
+            this._messageWindow.pause = false;
+            this._messageWindow.activate();
+            this._messageWindow.setText("HM techniques can't be deleted!");
+            this._messageWindow.startMessage();
+        } else {
+            this._forgetPokemonMovesWindow.close();
+            this._yesNoWindow.close();
+            AudioManager.playStandardSe(PokemonMZ.forgetMoveSE);
+
+            const forgottenMove = pokemon.moveNameFromIndex(index);
+            pokemon.replaceMoveAtIndexBy(index, moveStringId);
+            const message = "1, 2 and... Poof!\n" + pokemon.name() + " forgot " + forgottenMove + "!\nAnd..."
+            this._afterTextPhase = "forgotMove"
+            this._messageWindow.terminateMessage();
+            this._messageWindow.pause = false;
+            this._messageWindow.activate();
+            this._messageWindow.setText(message);
+            this._messageWindow.startMessage();
+        }
     }
 };
 PokemonMZ_Scene_PokemonMenu.prototype.onCancelForgetPokemonMove = function() {
@@ -2678,7 +2743,7 @@ PokemonMZ_Scene_Shop.prototype.onBuyCancel = function() {
 PokemonMZ_Scene_Shop.prototype.onSellOk = function() {
     this._item = this._sellWindow.item();
     let sellable = true;
-    if (this._item.pkmz_data.category == "key") {
+    if (["key","hm"].includes(this._item.pkmz_data.category)) {
         sellable = false;
     }
     if (sellable) {
@@ -2973,6 +3038,14 @@ PokemonMZ_Scene_Evolutions.prototype.update = function() {
     case "finishReplacingMove":
         this.finishReplacingMove();
         break;
+    case "cannotEraseHm":
+        this._staticMessageWindow.setText("Which move should be forgotten?");
+        this._forgetPokemonMovesWindow.show();
+        this._forgetPokemonMovesWindow.open();
+        this._forgetPokemonMovesWindow.activate();
+        this._forgetPokemonMovesWindow.select(0);
+        this._phase = "playerInput";
+        break;
     case "exitScene":
         $gameTemp._fromEvolution = true;
         this.replayBgmAndBgs();
@@ -3082,19 +3155,30 @@ PokemonMZ_Scene_Evolutions.prototype.commandNo = function() {
     }
 };
 PokemonMZ_Scene_Evolutions.prototype.onSelectForgetPokemonMove = function() {
-    this._forgetPokemonMovesWindow.close();
-    this._yesNoWindow.close();
-    AudioManager.playStandardSe(PokemonMZ.forgetMoveSE);
-    const move = this._nextLearnedAttack;
     const pokemon = this._currentlyEvolvingPokemonData[0];
-    const moveName = pokemon.moveNameFromStringId(move);
-    const forgottenMove = pokemon.moveNameFromIndex(index);
     const index = this._forgetPokemonMovesWindow.currentSymbol();
-    pokemon.replaceMoveAtIndexBy(index, move);
-    const message = "1, 2 and... Poof!\n" + pokemon.name() + " forgot " + forgottenMove + "!\nAnd..."
-    this._staticMessageWindow.setText(message)
-    this._waitCount = 150;
-    this._phase = "finishReplacingMove";
+
+    const isHm = pokemon.isMoveHm(index);
+
+    if (isHm) {
+        SoundManager.playBuzzer();
+        this._staticMessageWindow.setText("HM techniques can't be deleted!")
+        this._waitCount = 150;
+        this._phase = "cannotEraseHm";
+    } else {
+        this._forgetPokemonMovesWindow.close();
+        this._yesNoWindow.close();
+        AudioManager.playStandardSe(PokemonMZ.forgetMoveSE);
+        const move = this._nextLearnedAttack;
+        const forgottenMove = pokemon.moveNameFromIndex(index);
+        pokemon.replaceMoveAtIndexBy(index, move);
+        const message = "1, 2 and... Poof!\n" + pokemon.name() + " forgot " + forgottenMove + "!\nAnd..."
+        this._staticMessageWindow.setText(message)
+        this._waitCount = 150;
+        this._phase = "finishReplacingMove";
+    }
+
+    
 };
 PokemonMZ_Scene_Evolutions.prototype.onCancelForgetPokemonMove = function() {
     this._forgetPokemonMovesWindow.close();
@@ -3245,6 +3329,7 @@ PokemonMZ_Scene_Battle.prototype.linkWindows = function() {
     PokemonMZ_BattleManager.setPokedexDataWindow(this._pokedexDataWindow);
     PokemonMZ_BattleManager.setYesNoWindow(this._yesNoWindow);
     PokemonMZ_BattleManager.setPokemonListWindow(this._pokemonListWindow);
+    PokemonMZ_BattleManager.setForgetPokemonMovesWindow(this._forgetPokemonMovesWindow);
 };
 PokemonMZ_Scene_Battle.prototype.helpAreaTop = function() {
     return this.buttonAreaBottom();
@@ -4072,28 +4157,39 @@ PokemonMZ_Scene_Battle.prototype.onSelectForgetPokemonMove = function() {
             this._pokemonMenuMessageWindow.startMessage();
         }
     } else {
-        this._forgetPokemonMovesWindow.close();
-        this._yesNoWindow.close();
-        this._staticMessageWindow.hide();
-        AudioManager.playStandardSe(PokemonMZ.forgetMoveSE);
-        const move = PokemonMZ_BattleManager.moveAskedFor();
-        const pokemon = PokemonMZ_BattleManager.levelingUpPokemon();
-        const moveName = pokemon.moveNameFromStringId(move);
-        const forgottenMove = pokemon.moveNameFromIndex(index);
-        pokemon.replaceMoveAtIndexBy(index, move);
+        const isHm = pokemon.isMoveHm(index);
 
-        if (pokemon.isBerserk() && pokemon.berserkMoveIndex() == index) {
-            // Forgetting a berserk move while currently under this move's berserk instantly stops the berserk effect.
-            pokemon.unBerserk();
-        }
-        if (pokemon.isRaging() && pokemon.rageMoveIndex() == index) {
-            // Forgetting the move rage while currently under this move's effect instantly stops the rage effect.
-            pokemon.unRage();
+        if (isHm) {
+            // Impossible to forget a HM
+            SoundManager.playBuzzer();
+            $gameMessage.add("HM techniques can't be deleted!")
+            this._staticMessageWindow.hide();
+            PokemonMZ_BattleManager.changePhase("cannotEraseHm");
+        } else {
+            this._forgetPokemonMovesWindow.close();
+            this._yesNoWindow.close();
+            this._staticMessageWindow.hide();
+            AudioManager.playStandardSe(PokemonMZ.forgetMoveSE);
+            const move = PokemonMZ_BattleManager.moveAskedFor();
+            const pokemon = PokemonMZ_BattleManager.levelingUpPokemon();
+            const forgottenMove = pokemon.moveNameFromIndex(index);
+            pokemon.replaceMoveAtIndexBy(index, move);
+
+            if (pokemon.isBerserk() && pokemon.berserkMoveIndex() == index) {
+                // Forgetting a berserk move while currently under this move's berserk instantly stops the berserk effect.
+                pokemon.unBerserk();
+            }
+            if (pokemon.isRaging() && pokemon.rageMoveIndex() == index) {
+                // Forgetting the move rage while currently under this move's effect instantly stops the rage effect.
+                pokemon.unRage();
+            }
+
+            const message = "1, 2 and... Poof! " + pokemon.name() + " forgot " + forgottenMove + "! And..."
+            $gameMessage.add(message)
+            PokemonMZ_BattleManager.changePhase("finishReplacingMove");
         }
 
-        const message = "1, 2 and... Poof! " + pokemon.name() + " forgot " + forgottenMove + "! And..."
-        $gameMessage.add(message)
-        PokemonMZ_BattleManager.changePhase("finishReplacingMove");
+        
     };
 };
 PokemonMZ_Scene_Battle.prototype.onCancelForgetPokemonMove = function() {
