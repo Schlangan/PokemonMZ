@@ -756,6 +756,7 @@ DataManager.verifyItemData = function(index, itemData) {
                 optionalProperties);
             break;
         case "recoverHpFixed":
+        case "recoverHpPercent":   
             DataManager.verifyProperties(
                 itemData, 
                 errorMessagePrefix, 

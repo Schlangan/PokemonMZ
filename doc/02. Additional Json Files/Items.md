@@ -28,6 +28,8 @@ Depending on the effet, additional parameters are required.
     - useMessage,**string** : Message shown on screen when attempting to use the item
 - effect = **recoverHpFixed** : Recover a specific amount of hp (ex: potion)
     - value,**int** : Amount of fixed hp recovered
+- effect = **recoverHpPercent** : Recover a % of hp (ex: max potion)
+    - value,**int** : Percentage of hp recovered
 - effect = **recoverHpPercentCureStatus** : Recover a % of hp and cure statuses (ex: full restore)
     - value,**int** : Percentage of hp recovered
     - status,**string** : The status cured. For now, only possible choice between **poison**, **paralysis**, **burn**, **freeze**, **sleep**, **all**

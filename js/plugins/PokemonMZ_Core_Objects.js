@@ -2344,6 +2344,7 @@ PokemonMZ_Game_Pokemon.prototype.canUseItemOn = function(item, ext1) {
 
     switch(item.pkmz_data.effect) {
     case "recoverHpFixed":
+    case "recoverHpPercent":
         if (this.canRecoverHp()) { return canUseResult; }
         break;
     case "cureStatus":
@@ -2449,6 +2450,15 @@ PokemonMZ_Game_Pokemon.prototype.itemEffect = function(item, ext1) {
         recovered = nextHp - currentHp;
         recoverPercent = 100 * recovered / mHp;
         return {"effect":"recoverHp","value":recovered,"percentValue":recoverPercent};
+    case "recoverHpPercent":
+        currentHp = this.hp();
+        mHp = this.mhp();
+        nextHp = Math.floor(currentHp + item.pkmz_data.value*mHp/100);
+        if (nextHp < 0) { nextHp = 0; }
+        if (nextHp > mHp) { nextHp = mHp; }
+        recovered = nextHp - currentHp;
+        recoverPercent = 100 * recovered / mHp;
+        return {"effect":"recoverHp","value":recovered, "percentValue":recoverPercent};
     case "cureStatus":
         return {"effect":"cureStatus","status":item.pkmz_data.status};
     case "recoverHpPercentCureStatus":
