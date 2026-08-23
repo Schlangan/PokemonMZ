@@ -3364,12 +3364,13 @@ PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
         }
 
         // Set up the list of wanted moves
-        let maxScore = null;
+        let maxScore = -Number.MAX_VALUE;
         for (const move of scoringTable) {
-            if (!maxScore || move.score > maxScore) {
+            if (move.score > maxScore) {
                 maxScore = move.score;
             }
         }
+        console.log(maxScore)
         const choosableMoves = scoringTable.filter(move => move.score === maxScore);
         const randomIndex = Math.randomInt(choosableMoves.length);
         this._enemyMoveIndex = choosableMoves[randomIndex].index;
@@ -3424,7 +3425,6 @@ PokemonMZ_BattleManager.adjustScoringForEffective = function(scoringTable) {
             }
         }
     }
-
     return scoringTable;
 };
 PokemonMZ_BattleManager.typeEffectiveness = function(offensiveType, defensiveType) {
