@@ -2236,7 +2236,7 @@ PokemonMZ_Scene_PokemonMenu.prototype.onUsingMapMove = function(soundEffectName)
     case "cut":
         SceneManager.pop();
         SceneManager.pop();
-        $gameMap.PokemonMZ_useCut(this._pokemon, soundEffectName);
+        $gameMap.PokemonMZ_useCut(this.selectedPokemon(), soundEffectName);
         break;
     }
 };
