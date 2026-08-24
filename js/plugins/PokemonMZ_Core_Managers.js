@@ -856,6 +856,7 @@ DataManager.verifyItemData = function(index, itemData) {
             break;
         case "battlePdefUpUser":
         case "battleSpcUpUser":
+        case "battleSpdUpUser":
             DataManager.verifyProperties(
                 itemData, 
                 errorMessagePrefix, 
@@ -3561,6 +3562,7 @@ PokemonMZ_BattleManager.calculateBattleActions = function() {
         case "ball":
         case "battlePdefUpUser":
         case "battleSpcUpUser":
+        case "battleSpdUpUser":
             this._battleActions.push("playerStartUsingItem");
             break;
         default:
@@ -4064,6 +4066,7 @@ PokemonMZ_BattleManager.startPlayerItem = function() {
             break;
         case "battlePdefUpUser":
         case "battleSpcUpUser":
+        case "battleSpdUpUser":
             this._currentAction = new PokemonMZ_Game_Action(this._playerChosenPokemon, "player");
             this._currentAction.setItem(this._playerUseItem.pkmz_data.id)
             this._currentAction.calculate();
@@ -5051,6 +5054,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + "'s defense greatly rose!";
     case "specialRose":
         return prefix + pokemon.name() + "'s special rose!";
+    case "speedRose":
+        return prefix + pokemon.name() + "'s speed rose!";
     case "evasionRose":
         return prefix + pokemon.name() + "'s evade rose!";
     case "accuracyFell":

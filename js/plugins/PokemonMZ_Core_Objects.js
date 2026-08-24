@@ -2605,7 +2605,6 @@ PokemonMZ_Game_Pokemon.prototype.itemEffect = function(item, ext1) {
         } else {
            return {"effect":"pdefUp","success":false};
         }
-        break;
     case "battleSpcUpUser":
         if (this._stageModifiers.satk < 6) {
             this._stageModifiers.satk += item.pkmz_data.stage;
@@ -2614,7 +2613,14 @@ PokemonMZ_Game_Pokemon.prototype.itemEffect = function(item, ext1) {
         } else {
            return {"effect":"spcUp","success":false};
         }
-        break;
+    case "battleSpdUpUser":
+        if (this._stageModifiers.spd < 6) {
+            this._stageModifiers.spd += item.pkmz_data.stage;
+            if (this._stageModifiers.spd > 6) { this._stageModifiers.spd = 6; }
+            return {"effect":"spdUp","animation":item.pkmz_data.battleAnimation, "success":true};
+        } else {
+           return {"effect":"spdUp","success":false};
+        }
     }
     return {"effect":""};
 };
@@ -3753,6 +3759,14 @@ PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO
             if (effect.success) {
                 this._resultSteps.push(["hitAnimation", effect.animation, this.userBattleSprite(), null, this.side()])
                 this._resultSteps.push(["autotext","specialRose",this.side()])
+            } else {
+                this._resultSteps.push(["autotext","statusNothing",this.side()])
+            }
+            break;
+        case "spdUp":
+            if (effect.success) {
+                this._resultSteps.push(["hitAnimation", effect.animation, this.userBattleSprite(), null, this.side()])
+                this._resultSteps.push(["autotext","speedRose",this.side()])
             } else {
                 this._resultSteps.push(["autotext","statusNothing",this.side()])
             }

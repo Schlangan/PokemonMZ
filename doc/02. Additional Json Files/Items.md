@@ -50,7 +50,7 @@ Depending on the effet, additional parameters are required.
     - steps, **int** : Number of steps before the repel wears off
 - effect = **tm**, **hm** : Used to teach a move to a pokemon
     - move, **string** : Id of the move to learn
-- effect = **battlePdefUpUser**, **battleSpcUpUser** : Boost by N stages the defense/special of the current pokemon in battle. Unusable outside battle.
+- effect = **battlePdefUpUser**, **battleSpcUpUser**, **battleSpdUpUser** : Boost by N stages the defense/special/speed of the current pokemon in battle. Unusable outside battle.
     - stage, **int** : Amount of stages up.
     - mapMessage, **string** : Message shown when trying to use the item on the map instead of battle.
     - battleAnimation, **string**, *optional* : Animation string ID played on the player's pokemon if the item succeeds
