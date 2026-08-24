@@ -731,8 +731,8 @@ DataManager.verifyItemData = function(index, itemData) {
         }
     }
     if (itemData.category) {
-        if (!["regular","key","badge"].includes(itemData.category)) {
-            console.error(errorMessagePrefix + "Unknown item category: " + itemData.user);
+        if (!["regular","key","badge","hm"].includes(itemData.category)) {
+            console.error(errorMessagePrefix + "Unknown item category: " + itemData.category);
         }        
     }
 
@@ -923,7 +923,7 @@ DataManager.verifyMoveData = function(index, moveData) {
             "power","targetDefenseDivider","noCritical","noAccuracy","noVariance",
             "cpuHigherEffectFailure","fixedDamage","forbidMirrorMove","alwaysEffects",
             "mapEffect","mapBadgeRequires","animationAlways","animationHit","priority",
-            "category","hitDig","mapSound"
+            "category","hitDig","mapSound","hm"
         ],
     );
     if (moveData.target) {

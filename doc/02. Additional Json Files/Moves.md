@@ -26,6 +26,8 @@ moveData
 - forbidMirrorMove, **bool**, *optional* : If the value is set to true, the move cannot be reproduced by mirror move.
 - hitDig, **bool**, *optional* : If the value is set to true, the move will be able to hit an opponent using dig.
 
+- hm, **bool**, *optional* : If the value is set to true, the move becomes a HM. It is impossible to forget, and the daycare system won't take a pokemon having such move.
+
 - effects, **Array:moveEffect** : An array of the **moveEffect**, definining all secondary effects of the move.
 - alwaysEffects, **bool**, *optional* : If the value is set to true, the effects of the move will always happen, even if the move missed or did no damage due to immunity.
 - mapEffect: **string**, *optional* : Move usable on the map, with a given effect.
