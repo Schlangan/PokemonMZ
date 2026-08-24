@@ -2239,6 +2239,11 @@ PokemonMZ_Scene_PokemonMenu.prototype.onUsingMapMove = function(soundEffectName)
         SceneManager.pop();
         $gameMap.PokemonMZ_useCut(this.selectedPokemon(), soundEffectName);
         break;
+    case "flash":
+        $gamePlayerTrainer.startUsingFlash();
+        SceneManager.pop();
+        SceneManager.pop();
+        
     }
 };
 PokemonMZ_Scene_PokemonMenu.prototype.onUsingTmHm = function() {
@@ -2365,6 +2370,9 @@ PokemonMZ_Scene_PokemonMenu.prototype.onMoveCommand = function() {
         this._usingMapMove = "cut"
         this.onUsingMapMove(mapEffect.sound);
         break;
+    case "flash":
+        this.useFlashCommand(mapEffect.sound);
+        break;
     default:
         this._commandWindow.close();
         this._listWindow.activate();
@@ -2406,6 +2414,17 @@ PokemonMZ_Scene_PokemonMenu.prototype.useDigCommand = function() {
         this._messageWindow.startMessage();
     }
 };
+PokemonMZ_Scene_PokemonMenu.prototype.useFlashCommand = function(soundName) {
+    AudioManager.playStandardSe(soundName);
+    const message = "A blinding Flash lights the area!"
+    this._commandWindow.close();
+    this._listWindow.deactivate();
+    this._messageWindow.setText(message);
+    this._messageWindow.startMessage();
+    this._usingMapMove = "flash"
+};
+
+
 
 PokemonMZ_Scene_PokemonMenu.prototype.onCancelStatus = function() {
     this._statusWindow.close();

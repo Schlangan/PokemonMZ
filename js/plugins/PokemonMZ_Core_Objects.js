@@ -9,6 +9,17 @@
 */
 
 
+// Game_Screen edits
+const PokemonMZ_Game_Screen_brightness = Game_Screen.prototype.brightness;
+Game_Screen.prototype.brightness = function() {
+    if ($gameMap && $gameMap.PokemonMZ_isDark()) {
+        return 7;
+    } else {
+        return PokemonMZ_Game_Screen_brightness.call(this);
+    }
+};
+
+
 // Game_CharacterBase edits
 const PokemonMZ_Game_CharacterBase_initMembers = Game_CharacterBase.prototype.initMembers;
 Game_CharacterBase.prototype.initMembers = function() {
@@ -498,6 +509,12 @@ Game_Map.prototype.setup = function(mapId) {
     this._isTeleportAllowed = Boolean(noteData.teleport);
     this._isDigAllowed = Boolean(noteData.escapeRope);
     this._isCyclingAllowed = Boolean(noteData.cycling);
+    this._isDark = Boolean(noteData.dark);
+
+    // If player is using flash and end up in a map not dark, the flash effect stops
+    if (!this._isDark && $gamePlayerTrainer.isUsingFlash()) {
+        $gamePlayerTrainer.stopUsingFlash();
+    }
 
     // If player is cycling and end up in a map where no cycling allowed, get down from the bike without message
     if (!this._isCyclingAllowed && $gamePlayerTrainer.isCycling()) {
@@ -883,6 +900,11 @@ Game_Map.prototype.PokemonMZ_eventsAtRange = function(x,y,range) {
     return foundEvents;
 };
 
+Game_Map.prototype.PokemonMZ_isDark = function() {
+    return this._isDark && !$gamePlayerTrainer.isUsingFlash();
+};
+
+
 
 // Game_Interpreter edits
 Game_Interpreter.prototype.command302 = function(params) {
@@ -1081,6 +1103,7 @@ PokemonMZ_Game_TrainerPlayer.prototype.initMembers = function(sourceActorId) {
     this._isRepelling = false;
     this._repelSteps = 0;
     this._isCycling = false;
+    this._isUsingFlash = false;
     this.initializeItems();
     this.initializeBoxes();
     this.initializePokedex();
@@ -1604,7 +1627,7 @@ PokemonMZ_Game_TrainerPlayer.prototype.generateTradedPokemon = function(pokemonI
 };
 PokemonMZ_Game_TrainerPlayer.prototype.isCycling = function() {
     return this._isCycling;
-}
+};
 PokemonMZ_Game_TrainerPlayer.prototype.startCycling = function(displayMessage) {
     if ($gameMap.PokemonMZ_isCyclingAllowed()) {
         this._isCycling = true;
@@ -1632,6 +1655,17 @@ PokemonMZ_Game_TrainerPlayer.prototype.stopCycling = function(displayMessage) {
     if (displayMessage) {
         $gameMessage.add($gamePlayerTrainer.name() + " got off the Bicycle.")
     }
+};
+PokemonMZ_Game_TrainerPlayer.prototype.startUsingFlash = function() {
+    if ($gameMap.PokemonMZ_isDark()) {
+        this._isUsingFlash = true;
+    }
+};
+PokemonMZ_Game_TrainerPlayer.prototype.stopUsingFlash = function() {
+    this._isUsingFlash = false;
+};
+PokemonMZ_Game_TrainerPlayer.prototype.isUsingFlash = function() {
+    return this._isUsingFlash;
 };
 
 
