@@ -521,6 +521,10 @@ Game_Map.prototype.setup = function(mapId) {
         $gamePlayerTrainer.stopCycling(false);
     }
 
+    // Add visited location if possible, as it will be used for Fly
+    if ( this._regionMapId != 0 && this._regionMapPoiId != 0) {
+        $gamePlayerTrainer.addVisitedLocation(this._regionMapId, this._regionMapPoiId);
+    }
 };
 Game_Map.prototype.PokemonMZ_eventsAggro = function(x, y) {
     return this.events().filter(event => (event.PokemonMZ_isAgrroable() && event.PokemonMZ_posAggro(x,y)));
@@ -758,7 +762,6 @@ Game_Map.prototype.PokemonMZ_useDig = function() {
 Game_Map.prototype.PokemonMZ_isUsingDig = function() {
     return this._isUsingDig;
 };
-
 Game_Map.prototype.PokemonMZ_useCut = function(pokemon, soundEffectName) {
     // Calculate if there is anything to cut
     const d = $gamePlayer.direction();
@@ -780,15 +783,10 @@ Game_Map.prototype.PokemonMZ_useCut = function(pokemon, soundEffectName) {
 Game_Map.prototype.PokemonMZ_isCutting = function() {
     return this._eventsToCut && this._eventsToCut.length > 0;
 };
-
-
-
-
 Game_Map.prototype.PokemonMZ_canFishHere = function() {
     const frontRegion = $gamePlayer.PokemonMZ_frontRegionId();
     return this._waterRegions?.includes(frontRegion);
-}
-
+};
 Game_Map.prototype.PokemonMZ_isFishing = function() {
     return this._fishingState && this._fishingState > 0;
 };
@@ -852,8 +850,7 @@ Game_Map.prototype.PokemonMZ_switchCycling = function() {
     } else {
         $gamePlayerTrainer.stopCycling(true);
     }
-}
-
+};
 const PokemonMZ_Game_Map_autoplay = Game_Map.prototype.autoplay;
 Game_Map.prototype.autoplay = function() {
     if ($dataMap.autoplayBgm && $gamePlayer.PokemonMZ_isCycling()) {
@@ -899,11 +896,9 @@ Game_Map.prototype.PokemonMZ_eventsAtRange = function(x,y,range) {
     }
     return foundEvents;
 };
-
 Game_Map.prototype.PokemonMZ_isDark = function() {
     return this._isDark && !$gamePlayerTrainer.isUsingFlash();
 };
-
 
 
 // Game_Interpreter edits
@@ -1104,6 +1099,7 @@ PokemonMZ_Game_TrainerPlayer.prototype.initMembers = function(sourceActorId) {
     this._repelSteps = 0;
     this._isCycling = false;
     this._isUsingFlash = false;
+    this._visitedLocations = {};
     this.initializeItems();
     this.initializeBoxes();
     this.initializePokedex();
@@ -1288,7 +1284,6 @@ PokemonMZ_Game_TrainerPlayer.prototype.badgeBoosts = function(side, mode) {
     }
     return {"patk":patk,"pdef":pdef,"satk":satk,"sdef":sdef,"spd":spd}
 };
-
 PokemonMZ_Game_TrainerPlayer.prototype.badgeObedience = function() {
     let obedienceLevel = 10;
     for (const badgeIntId of this._badges) {
@@ -1306,8 +1301,7 @@ PokemonMZ_Game_TrainerPlayer.prototype.badgeObedience = function() {
         }
     }
     return obedienceLevel;
-}
-
+};
 PokemonMZ_Game_TrainerPlayer.prototype.canDash = function() {
     // Placeholder for later - running Shoes
     return false;
@@ -1666,6 +1660,29 @@ PokemonMZ_Game_TrainerPlayer.prototype.stopUsingFlash = function() {
 };
 PokemonMZ_Game_TrainerPlayer.prototype.isUsingFlash = function() {
     return this._isUsingFlash;
+};
+PokemonMZ_Game_TrainerPlayer.prototype.addVisitedLocation = function(regionId, poiId) {
+    if (!this._visitedLocations) { 
+        this._visitedLocations = {}; 
+    }
+
+    if (!Object.keys(this._visitedLocations).includes(String(regionId))) {
+        this._visitedLocations[regionId] = [];
+    }
+    if (!this._visitedLocations[regionId].includes(poiId)) {
+        this._visitedLocations[regionId].push(poiId);
+    }
+};
+PokemonMZ_Game_TrainerPlayer.prototype.hasVisitedLocation = function(regionId, poiId) {
+    if (this._visitedLocations) {
+        if (this._visitedLocations[regionId]) {
+            return this._visitedLocations[regionId].includes(poiId);
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
 };
 
 
