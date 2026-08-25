@@ -4418,6 +4418,24 @@ PokemonMZ_Game_Action.prototype.calculateStatusEffects = function(userHp, oppone
         opponentRemainingHp = this.calculateSeedHealEffect(oppponentRemainingHp, userRemainingHp <= 0);
     }
 };
+
+PokemonMZ_Game_Action.prototype.targetMatchesStatus = function() {
+    switch(this._moveData.requiredTargetStatus) {
+    case "burn":
+        return this._opponent.isBurned();
+    case "freeze":
+        return this._opponent.isFrozen();
+    case "poison":
+        return this._opponent.isPoisoned();
+    case "sleep":
+        return this._opponent.isAsleep();
+    case "paralysis":
+        return this._opponent.isParalyzed();
+    default:
+        return true;            
+    }
+};
+
 PokemonMZ_Game_Action.prototype.moveHit = function() {
     if (this._moveData.noAccuracy) { return true; } // Non missable move, like hurting from confusion
 
@@ -4425,6 +4443,12 @@ PokemonMZ_Game_Action.prototype.moveHit = function() {
         case "opponent":
             if (this._opponent.isDigging() && !this._moveData.hitDig) {
                 // Opponent under the ground can only be hit with specific moves with the hitDig:true flag.
+                return false;
+            }
+
+            if (!this.targetMatchesStatus()) {
+                // Moves requiring a specific status for the target will fail if the status is not matched
+                // Ex: Dream Eater will require sleep
                 return false;
             }
 

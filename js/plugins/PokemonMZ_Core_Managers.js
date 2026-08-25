@@ -923,12 +923,17 @@ DataManager.verifyMoveData = function(index, moveData) {
             "power","targetDefenseDivider","noCritical","noAccuracy","noVariance",
             "cpuHigherEffectFailure","fixedDamage","forbidMirrorMove","alwaysEffects",
             "mapEffect","mapBadgeRequires","animationAlways","animationHit","priority",
-            "category","hitDig","mapSound","hm"
+            "category","hitDig","mapSound","hm","requiredTargetStatus"
         ],
     );
     if (moveData.target) {
         if (!["user","opponent"].includes(moveData.target)) {
             console.error(errorMessagePrefix + "Unknown move target: " + moveData.target);
+        }
+    }
+    if (moveData.requiredTargetStatus) {
+        if (!["burn","freeze","paralysis","poison","sleep"].includes(moveData.requiredTargetStatus)) {
+            console.error(errorMessagePrefix + "Unknown move required target status: " + moveData.requiredTargetStatus);
         }
     }
 
@@ -5154,6 +5159,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return "No effect!";
     case "suckedHealth":
         return "Sucked health from " + prefix + pokemon.name() + "!"
+    case "ateDream":
+        return prefix + pokemon.name() + "'s dream was eaten!"
     case "ranAway":
         return prefix + pokemon.name() + " ran from battle!";
     case "thrashing":
