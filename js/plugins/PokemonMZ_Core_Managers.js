@@ -3632,6 +3632,9 @@ PokemonMZ_BattleManager.calculateBattleActions = function() {
 PokemonMZ_BattleManager.nextBattleAction = function() {
     if ($gameMessage.isBusy() || this.isGaugeAnimationPlaying()) { return; }
 
+    this._enemyPokemonStatusWindow.refresh(true);
+    this._playerPokemonStatusWindow.refresh(true);
+
     if (this._battleActions.length > 0) {
         const action = this._battleActions.splice(0,1)[0];
         switch (action) {
