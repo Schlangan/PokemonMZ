@@ -2403,7 +2403,14 @@ PokemonMZ_BattleManager.playerPokemonAppear = function() {
                 this._playerHasShifted = false;
                 this.changePhase("startPlayerInput");
             } else {
-                this._battleActions.push("enemyMove");
+
+                // At this point either the computer has selected a move
+                // or used an item
+                if (this._enemyUseItem) {
+                    this._battleActions.push("enemyStartUsingItem");
+                } else {
+                    this._battleActions.push("enemyMove");
+                }
                 this.changePhase("nextBattleAction"); 
             }
             return;
@@ -3540,6 +3547,7 @@ PokemonMZ_BattleManager.calculateComputerItemUse = function(modifiers) {
         this._enemyUseItem = item.id;
     }
 };
+
 PokemonMZ_BattleManager.calculateBattleActions = function() {
     // Determine skill order, but also other effect like switching
 
