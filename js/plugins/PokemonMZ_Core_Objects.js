@@ -527,7 +527,12 @@ Game_Map.prototype.setup = function(mapId) {
     }
 };
 Game_Map.prototype.PokemonMZ_eventsAggro = function(x, y) {
-    return this.events().filter(event => (event.PokemonMZ_isAgrroable() && event.PokemonMZ_posAggro(x,y)));
+    if ($gamePlayer._x == x && $gamePlayer._y == y) {
+        return this.events().filter(event => (event.PokemonMZ_isAgrroable() && event.PokemonMZ_posAggro(x,y)));
+    } else {
+        return [];
+    }
+    
 };
 Game_Map.prototype.PokemonMZ_isLedge = function(x,y,d) {
     // Check if character has reached a ledge and is in the propre direction
