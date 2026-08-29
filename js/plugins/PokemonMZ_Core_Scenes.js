@@ -21,6 +21,9 @@ Scene_Base.prototype.PokemonMZ_updateItemEffects = function() {
         case "cureStatus":
             this.updatePokemonCureStatus();
             break;
+        case "revive":
+            this.updatePokemonRevive();
+            break;
         case "recoverAndCureStatus":
             this.updatePokemonRecoverAndCureStatus();
             break;
@@ -65,6 +68,16 @@ Scene_Base.prototype.PokemonMZ_createRecoveryData = function(pokemon, effect, li
             "finalValue":pokemon.hp() + effect.value,
             "valuePerFrame":1.2*effect.value / effect.percentValue,
             "statusCured":effect.status
+        }
+        break;
+    case "revive":
+        this._pokemonRecoveringData = {
+            "type":"revive",
+            "pokemon":pokemon,
+            "windowIndex":listWindow.index(),
+            "recoverValue":effect.value,
+            "finalValue":pokemon.hp() + effect.value,
+            "valuePerFrame":1.2*effect.value / effect.percentValue
         }
         break;
     case "increaseLevel":
@@ -170,7 +183,6 @@ Scene_Base.prototype.PokemonMZ_updatePokemonCureStatus = function(listWindow, me
         return true;
     }
 };
-
 Scene_Base.prototype.PokemonMZ_updatePokemonRecoverAndCureStatus = function(listWindow, messageWindow) { 
     // Pokemon is recovering in menu due to full restore
     const pokemon = this._pokemonRecoveringData.pokemon;
@@ -254,6 +266,34 @@ Scene_Base.prototype.PokemonMZ_updatePokemonRecoverAndCureStatus = function(list
         }
     }
 };
+Scene_Base.prototype.PokemonMZ_updatePokemonRevive = function(listWindow, messageWindow) {
+    // Pokemon is recovering in menu
+    const pokemon = this._pokemonRecoveringData.pokemon;
+    if (pokemon) {
+        const recoveredValue = this._pokemonRecoveringData.recoverValue;
+        
+        let newHp = pokemon.hp() + this._pokemonRecoveringData.valuePerFrame;
+        if (newHp >= this._pokemonRecoveringData.finalValue) {
+            newHp = this._pokemonRecoveringData.finalValue;
+            pokemon.setHp(newHp);
+            listWindow.clearItem(this._pokemonRecoveringData.windowIndex);
+            listWindow.drawItem(this._pokemonRecoveringData.windowIndex);
+            this._mustReturnToItemMenu = true;
+            this._pokemonRecoveringData = null;
+
+            const message = pokemon.name() + " is revitalized!";
+            listWindow.deactivate();
+            messageWindow.setText(message);
+            messageWindow.startMessage();
+
+            return true; // Must return to menu/battle
+        } else {
+            pokemon.setHp(newHp);
+            listWindow.drawItem(this._pokemonRecoveringData.windowIndex);
+            return false;
+        }
+    }
+}
 
 Scene_Base.prototype.PokemonMZ_updatePokemonIncreaseEv = function(listWindow, messageWindow) { 
     const pokemon = this._pokemonRecoveringData.pokemon;
@@ -2448,6 +2488,12 @@ PokemonMZ_Scene_PokemonMenu.prototype.updatePokemonRecoverAndCureStatus = functi
          this._messageWindow
     )
 };
+PokemonMZ_Scene_PokemonMenu.prototype.updatePokemonRevive = function() { 
+    this._mustReturnToItemMenu = this.PokemonMZ_updatePokemonRevive(
+         this._listWindow, 
+         this._messageWindow
+    );
+};
 PokemonMZ_Scene_PokemonMenu.prototype.updatePokemonIncreaseLevel = function() { 
     const pokemon = this._pokemonRecoveringData.pokemon;
     if (pokemon) {
@@ -3678,7 +3724,12 @@ PokemonMZ_Scene_Battle.prototype.updatePokemonRecoverAndCureStatus = function() 
          this._pokemonMenuMessageWindow
     )
 };
-
+PokemonMZ_Scene_Battle.prototype.updatePokemonRevive = function() { 
+    this._mustReturnToBattle = this.PokemonMZ_updatePokemonRevive(
+         this._pokemonListWindow, 
+         this._pokemonMenuMessageWindow
+    )
+};
 PokemonMZ_Scene_Battle.prototype.updatePokemonRestorePp = function() { 
     this._mustReturnToBattle = this.PokemonMZ_updatePokemonRestorePp(
          this._pokemonListWindow,

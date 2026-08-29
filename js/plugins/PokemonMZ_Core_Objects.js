@@ -2528,6 +2528,9 @@ PokemonMZ_Game_Pokemon.prototype.canUseItemOn = function(item, ext1) {
             break;
         }
         break;
+    case "revive":
+        if (this.isFainted()) { return canUseResult; }
+        break;
     case "increaseLevel":
         if (this.canLevelUp()) { return canUseResult; }
         break;
@@ -2597,6 +2600,14 @@ PokemonMZ_Game_Pokemon.prototype.itemEffect = function(item, ext1) {
         return {"effect":"recoverHp","value":recovered, "percentValue":recoverPercent};
     case "cureStatus":
         return {"effect":"cureStatus","status":item.pkmz_data.status};
+    case "revive":
+        mHp = this.mhp();
+        nextHp = Math.floor(item.pkmz_data.hpPercent*mHp/100);
+        if (nextHp < 0) { nextHp = 0; }
+        if (nextHp > mHp) { nextHp = mHp; }
+        recovered = nextHp;
+        recoverPercent = 100 * recovered / mHp;
+        return {"effect":"revive","value":recovered, "percentValue":recoverPercent};
     case "recoverHpPercentCureStatus":
         currentHp = this.hp();
         mHp = this.mhp();
@@ -3757,49 +3768,56 @@ PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO
             break;
         case "recoverAndCureStatus":
             if (effect.value > 0) {
-                 this._resultSteps.push(["healUser", effect.value])
+                this._resultSteps.push(["healUser", effect.value])
                 this._userEvolvingHp += effect.value;
                 if (this._userEvolvingHp < 0) { this._userEvolvingHp = 0; }
                 if (this._userEvolvingHp > mhp) { this._userEvolvingHp = mhp; }
             }
             switch (effect.status) {
-                case "burn":
-                    if (this._user.isBurned()) {
-                        this._resultSteps.push(["burnHeal",this._user]);
-                        this._userStatusRemoved.push("burn");
-                    }
-                    break;
-                case "paralysis":
-                    if (this._user.isParalyzed()) {
-                        this._resultSteps.push(["paralyzeHeal",this._user]);
-                    }
-                    break;
-                case "poison":
-                    if (this._user.isPoisoned()) {
-                        this._resultSteps.push(["poisonHeal",this._user]);
-                        this._userStatusRemoved.push("poison");
-                    }
-                    break;
-                case "sleep":
-                    if (this._user.isAsleep()) {
-                        this._resultSteps.push(["sleepHeal",this._user]);
-                    }
-                    break;
-                case "freeze":
-                    if (this._user.isFrozen()) {
-                        this._resultSteps.push(["freezeHeal",this._user]);
-                    }
-                    break;
-                case "all":
-                    if (this._user.hasStatus()) {
-                        this._resultSteps.push(["allStatusHeal",this._user]);
-                        this._userStatusRemoved.push("burn");
-                        this._userStatusRemoved.push("poison");
-                    }
-                    break;
+            case "burn":
+                if (this._user.isBurned()) {
+                    this._resultSteps.push(["burnHeal",this._user]);
+                    this._userStatusRemoved.push("burn");
+                }
+                break;
+            case "paralysis":
+                if (this._user.isParalyzed()) {
+                    this._resultSteps.push(["paralyzeHeal",this._user]);
+                }
+                break;
+            case "poison":
+                if (this._user.isPoisoned()) {
+                    this._resultSteps.push(["poisonHeal",this._user]);
+                    this._userStatusRemoved.push("poison");
+                }
+                break;
+            case "sleep":
+                if (this._user.isAsleep()) {
+                    this._resultSteps.push(["sleepHeal",this._user]);
+                }
+                break;
+            case "freeze":
+                if (this._user.isFrozen()) {
+                    this._resultSteps.push(["freezeHeal",this._user]);
+                }
+                break;
+            case "all":
+                if (this._user.hasStatus()) {
+                    this._resultSteps.push(["allStatusHeal",this._user]);
+                    this._userStatusRemoved.push("burn");
+                    this._userStatusRemoved.push("poison");
+                }
+                break;
             }
             break;
-
+        case "revive":
+            if (effect.value > 0) {
+                this._resultSteps.push(["healUser", effect.value])
+                this._userEvolvingHp += effect.value;
+                if (this._userEvolvingHp < 0) { this._userEvolvingHp = 0; }
+                if (this._userEvolvingHp > mhp) { this._userEvolvingHp = mhp; }
+            }
+            break;
     }
     this._resultSteps.push(["waittext","usedItem",this.side(), item.name]);
     switch (effect.effect) {

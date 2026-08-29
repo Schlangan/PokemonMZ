@@ -812,6 +812,13 @@ DataManager.verifyItemData = function(index, itemData) {
                 }
             }
             break;
+        case "revive":
+            DataManager.verifyProperties(
+                itemData, 
+                errorMessagePrefix, 
+                mandatoryProperties.concat(["hpPercent"]),
+                optionalProperties);
+            break;
         case "increaseEv":
             DataManager.verifyProperties(
                 itemData, 
