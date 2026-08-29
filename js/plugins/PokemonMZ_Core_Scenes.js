@@ -1699,9 +1699,20 @@ PokemonMZ_Scene_PokemonNickname.prototype.constructor = PokemonMZ_Scene_PokemonN
 PokemonMZ_Scene_PokemonNickname.prototype.initialize = function() {
     Scene_MenuBase.prototype.initialize.call(this);
     this._pokemon = $gameTemp.pokemon;
-    this._nicknameText = "Do you want to give a nickname to " + this._pokemon.name() + "?";
     this._maxLength = 16;
+    this._nicknameText = "Do you want to give a nickname to " + this._pokemon.name() + "?";
+    this._isRenaming = false;
 };
+PokemonMZ_Scene_PokemonNickname.prototype.prepare = function(type, data) {
+    switch(type) {
+    case "rename":
+        this._isRenaming = true;
+        this._previousName = $gameTemp.pokemon.name();
+        this._renameResultSwitch = data.returnSwitch;
+        break;
+    }
+}
+
 PokemonMZ_Scene_PokemonNickname.prototype.createBackground = function() {
     this._backgroundSprite = new Sprite();
     this._backgroundSprite.bitmap = SceneManager.backgroundBitmap();
@@ -1710,13 +1721,20 @@ PokemonMZ_Scene_PokemonNickname.prototype.createBackground = function() {
 };
 PokemonMZ_Scene_PokemonNickname.prototype.create = function() {
     Scene_MenuBase.prototype.create.call(this);
-    this.createChoiceListWindow();
-    this.createMessageWindow();
-    this.createEditWindow();
-    this.createInputWindow();
-    this.associateWindows();
-    this._messageWindow.startMessage();
+
+    if (this._isRenaming) {
+        this.createEditWindow();
+        this.createInputWindow();
+    } else {
+        this.createChoiceListWindow();
+        this.createMessageWindow();
+        this.createEditWindow();
+        this.createInputWindow();
+        this.associateWindows();
+        this._messageWindow.startMessage();
+    }
 };
+
 PokemonMZ_Scene_PokemonNickname.prototype.associateWindows = function() {
     this._messageWindow.setChoiceListWindow(this._choiceListWindow);
     this._choiceListWindow.setMessageWindow(this._messageWindow);
@@ -1743,8 +1761,13 @@ PokemonMZ_Scene_PokemonNickname.prototype.messageWindowRect = function() {
 PokemonMZ_Scene_PokemonNickname.prototype.createEditWindow = function() {
     const rect = this.editWindowRect();
     this._editWindow = new PokemonMZ_Window_PokemonNameEdit(rect);
+    console.log(this._pokemon)
     this._editWindow.setup(this._pokemon, this._maxLength);
-    this._editWindow.openness = 0;
+    if (!this._isRenaming) {
+        this._editWindow.openness = 0;
+    } else {
+        this._editWindow.refresh();
+    }
     this._editWindow.setHandler("gave_nickname", this.hasGivenNickname.bind(this));
     this.addWindow(this._editWindow);
 };
@@ -1761,7 +1784,9 @@ PokemonMZ_Scene_PokemonNickname.prototype.createInputWindow = function() {
     const rect = this.inputWindowRect();
     this._inputWindow = new PokemonMZ_Window_NameInput(rect);
     this._inputWindow.setEditWindow(this._editWindow);
-    this._inputWindow.openness = 0;
+    if (!this._isRenaming) {
+        this._inputWindow.openness = 0;
+    }
     this._inputWindow.setHandler("gave_nickname", this.hasGivenNickname.bind(this));
     this.addWindow(this._inputWindow);
 };
@@ -1787,8 +1812,22 @@ PokemonMZ_Scene_PokemonNickname.prototype.refuseNickname = function() {
     SceneManager.pop(this);
 };
 PokemonMZ_Scene_PokemonNickname.prototype.hasGivenNickname = function() {
-    this._pokemon.setNickname(this._editWindow.name());
-    $gamePlayerTrainer.givePokemonAfterNickname(this._pokemon);
+    if (this._isRenaming) {
+        const newName = this._editWindow.name();
+        if (newName != this._previousName && newName != "") {
+            // Nickname changed
+            this._pokemon.setNickname(newName);
+            $gameSwitches.setValue(this._renameResultSwitch, true);
+        } else {
+            // Nickname didn't change
+            $gameSwitches.setValue(this._renameResultSwitch, false);
+        }
+
+    } else {
+        // Not renaming - we're nicknaming a new pokemon
+        this._pokemon.setNickname(this._editWindow.name());
+        $gamePlayerTrainer.givePokemonAfterNickname(this._pokemon);
+    }
     SceneManager.pop(this);
 };
 
@@ -1843,6 +1882,10 @@ PokemonMZ_Scene_PokemonMenu.prototype.initialize = function() {
     this._dayCareSelecting = false;
     this._dayCareVariable = null;
 
+    this._renameSelecting = false;
+    this._renameSwitch = false;
+    this._renameVariable = false;
+
     this._usingMapMove = null;
 };
 PokemonMZ_Scene_PokemonMenu.prototype.prepare = function(type, data) {
@@ -1856,6 +1899,9 @@ PokemonMZ_Scene_PokemonMenu.prototype.prepare = function(type, data) {
         break;
     case "selectDayCare":
         this.prepareSelectDayCare(data);
+        break;
+    case "selectRename":
+        this.prepareSelectRename(data);
         break;
     }
 }
@@ -1886,6 +1932,12 @@ PokemonMZ_Scene_PokemonMenu.prototype.prepareSelectDayCare = function(dayCareDat
     this._dayCareSelecting = true;
     this._dayCareVariable = dayCareData.returnVariable;
 };
+PokemonMZ_Scene_PokemonMenu.prototype.prepareSelectRename = function(renameData) {
+    this._renameSelecting = true;
+    this._renameVariable = renameData.returnVariable;
+    this._renameSwitch = renameData.returnSwitch;
+};
+
 
 PokemonMZ_Scene_PokemonMenu.prototype.start = function() {
     Scene_MenuBase.prototype.start.call(this);
@@ -2047,6 +2099,8 @@ PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemon = function() {
         this.onSelectPokemonTrade();
     } else if (this._dayCareSelecting) {
         this.onSelectPokemonDayCare();
+    } else if (this._renameSelecting) {
+        this.onSelectPokemonRename();
     } else if (this._listWindow.formationMode()) {
         this.onSelectPokemonSwitch();
     } else if (this.isLearningMove()) {
@@ -2071,6 +2125,10 @@ PokemonMZ_Scene_PokemonMenu.prototype.onCancelPokemon = function() {
         }
         if (this._dayCareSelecting) {
             $gameVariables.setValue(this._dayCareVariable, -2);
+        }
+        if (this._renameSelecting) {
+            $gameSwitches.setValue(this._renameSwitch, false)
+            $gameVariables.setValue(this._renameVariable, -2);
         }
         this.popScene();
     }
@@ -2188,6 +2246,19 @@ PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemonDayCare = function() {
     }
     this.popScene();
 };
+PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemonRename = function() {
+    const pokemon = this.selectedPokemon();
+    const index = this._listWindow.index();
+
+    // Traded pokemon cannot usually be renamed. A switch is set to tell it has been traded
+    $gameSwitches.setValue(this._renameSwitch, pokemon.isOutsider())
+
+    // Set the variable with the index of the pokemon selected
+    $gameVariables.setValue(this._renameVariable, index);
+
+    this.popScene();
+};
+
 PokemonMZ_Scene_PokemonMenu.prototype.proceedLearningMove = function() {
     const pokemon = this.selectedPokemon();
     if (pokemon.moves().length < 4) {
@@ -2463,9 +2534,6 @@ PokemonMZ_Scene_PokemonMenu.prototype.useFlashCommand = function(soundName) {
     this._messageWindow.startMessage();
     this._usingMapMove = "flash"
 };
-
-
-
 PokemonMZ_Scene_PokemonMenu.prototype.onCancelStatus = function() {
     this._statusWindow.close();
     this._listWindow.activate();

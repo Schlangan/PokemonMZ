@@ -365,6 +365,35 @@
  * @text Retrieve Pokemon From Day Care
  * @desc Removes the pokemon from day care and add it to the party. Does nothing if the party is full.
  * 
+ * //////////////////////////////////////////
+ * @command SelectPokemonRename
+ * @text Select Pokemon For Renaming
+ * @desc Select a Pokemon in Party to change its nickname
+ * 
+ * @arg returnVariable
+ * @type variable
+ * @text Return Variable
+ * @desc Variable that gets the pokemon index in the party, or -2 if canceled.
+ * 
+ * @arg returnSwitch
+ * @type switch
+ * @text Return Switch
+ * @desc Switch that becomes ON if the selected pokemon is an outsider pokemon (traded)
+ * 
+ * //////////////////////////////////////////
+ * @command RenamePartyPokemon
+ * @text Open Pokemon Rename Window
+ * @desc Open the nickname window for a pokemon in party
+ * 
+ * @arg indexVariable
+ * @type variable
+ * @text Index Variable
+ * @desc Variable that contains the party index. Usually set up by using Select Pokemon For Renaming before this command.
+ * 
+ * @arg returnSwitch
+ * @type switch
+ * @text Return Switch
+ * @desc Switch that becomes ON if the pokemon has been renamed, else becomes OFF
 */
 const pluginName = 'PokemonMZ_Core_Commands';
 
@@ -588,4 +617,19 @@ PluginManager.registerCommand(pluginName, "TradePartyPokemon", function(args) {
         console.error("Traded index is incorrect. Please check the variable used.")
     }
 
+});
+
+
+PluginManager.registerCommand(pluginName, "SelectPokemonRename", function(args) {
+    const returnSwitch = Number(args.returnSwitch);
+    const returnVariable = Number(args.returnVariable);
+    SceneManager.push(PokemonMZ_Scene_PokemonMenu);
+    SceneManager.prepareNextScene("selectRename",{"returnSwitch":returnSwitch, "returnVariable":returnVariable});
+});
+PluginManager.registerCommand(pluginName, "RenamePartyPokemon", function(args) {
+    const returnSwitch = Number(args.returnSwitch);
+    const indexVariable = Number(args.indexVariable);
+    $gameTemp.pokemon = $gamePlayerTrainer.pokemon($gameVariables.value(indexVariable));
+    SceneManager.push(PokemonMZ_Scene_PokemonNickname);
+    SceneManager.prepareNextScene("rename", {"returnSwitch":returnSwitch});
 });
