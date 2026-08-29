@@ -37,6 +37,18 @@
         "animationHit":"waterTarget2"
     },
     {
+		"id":"barrier",
+		"category":"status",
+		"type":"psychic",
+		"target":"user",
+		"pp":30,
+		"accuracy":100,
+		"effects":[
+			{"type":"pdefUpUser","stage":2,"percentChance":100}
+		],
+        "animationHit":"powerUpUser2"
+	},
+    {
         "id":"bide",
         "type":"normal",
         "target":"opponent",
@@ -146,6 +158,20 @@
         "animationHit":"lightTarget2"
     },
     {
+		"id":"cut",
+		"type":"normal",
+		"target":"opponent",
+		"pp":30,
+		"power":50,
+		"accuracy":95,
+        "hm":true,
+        "mapEffect":"cut",
+        "mapBadgeRequires":"cascadeBadge",
+        "mapSound":"Slash1",
+		"effects":[],
+        "animationHit":"slashTargetPhysical"
+	},
+    {
         "id":"defenseCurl",
         "category":"status",
         "type":"normal",
@@ -230,6 +256,29 @@
         "animationHit":"bodySlamTarget"
 	},
     {
+		"id":"dreamEater",
+		"type":"psychic",
+		"target":"opponent",
+		"pp":15,
+		"power":100,
+		"accuracy":100,
+        "requiredTargetStatus":"sleep",
+		"effects":[
+			{"type":"drainTargetHp","percentDamageDrain":50,"text":"ateDream"}
+        ],
+        "animationHit":"absorb"
+	},
+    {
+		"id":"drillPeck",
+		"type":"flying",
+		"target":"opponent",
+		"pp":20,
+		"power":80,
+		"accuracy":100,
+		"effects":[],
+        "animationHit":"pierceTargetPhysical"
+	},
+    {
         "id":"ember",
         "type":"fire",
         "target":"opponent",
@@ -241,6 +290,24 @@
         ],
         "animationHit":"fireTarget1"
     },
+    {
+		"id":"flash",
+        "category":"status",
+		"type":"normal",
+		"target":"opponent",
+		"pp":20,
+		"accuracy":70,
+        "cpuHigherEffectFailure":true,
+        "hm":true,
+        "mapEffect":"flash",
+        "mapBadgeRequires":"boulderBadge",
+        "mapSound":"Saint4",
+		"effects":[
+			{"type":"accDownTarget","stage":1,"percentChance":100},
+            {"type":"mapEffectFlash"}
+		],
+        "animationHit":"flash"
+	},
     {
         "id":"focusEnergy",
         "category":"status",
@@ -444,6 +511,18 @@
         "animationHit":"leer"
     },
     {
+        "id":"lightScreen",
+        "category":"status",
+        "type":"psychic",
+        "target":"user",
+        "pp":30,
+        "accuracy":100,
+        "effects":[
+            {"type":"lightScreen"}
+        ],
+        "animationHit":"powerUpUser2"
+    },
+    {
         "id":"lowKick",
         "type":"fighting",
         "target":"opponent",
@@ -513,6 +592,30 @@
         "animationHit":"hitTargetPhysical"
     },
     {
+        "id":"pinMissile",
+        "type":"bug",
+        "target":"opponent",
+        "pp":20,
+        "power":14,
+        "accuracy":85,
+        "effects":[
+            {"type":"multiHit","min":2,"max":5,"percentChances":[38,37,13,12]}
+        ],
+        "animationHit":"pierceTargetPhysicalFast"
+    },
+    {
+        "id":"poisonGas",
+        "category":"status",
+        "type":"poison",
+        "target":"opponent",
+        "pp":40,
+        "accuracy":55,
+        "effects":[
+            {"type":"poisonTarget","percentChance":100}
+        ],
+        "animationHit":"powder"
+    },
+    {
         "id":"poisonPowder",
         "category":"status",
         "type":"poison",
@@ -547,6 +650,18 @@
         "animationHit":"hitTargetPhysical"
     },
     {
+        "id":"psybeam",
+        "type":"psychic",
+        "target":"opponent",
+        "pp":20,
+        "power":65,
+        "accuracy":100,
+        "effects":[
+            {"type":"confuseTarget","percentChance":10}
+        ],
+        "animationHit":"lightTarget2"
+    },
+    {
         "id":"quickAttack",
         "type":"normal",
         "target":"opponent",
@@ -568,6 +683,30 @@
             {"type":"rage"}
         ],
         "animationHit":"hitTargetPhysical"
+    },
+    {
+        "id":"razorLeaf",
+        "type":"grass",
+        "target":"opponent",
+        "pp":25,
+        "power":55,
+        "accuracy":95,
+        "effects":[
+            {"type":"highCritical"}
+        ],
+        "animationHit":"slashTargetPhysical"
+    },
+    {
+        "id":"rest",
+        "category":"status",
+        "type":"psychic",
+        "target":"user",
+        "pp":10,
+        "accuracy":100,
+        "effects":[
+            {"type":"rest"}
+        ],
+        "animationHit":"rest"
     },
     {
         "id":"roar",
@@ -734,6 +873,18 @@
         "animationHit":"splash"
     },
     {
+        "id":"spore",
+        "category":"status",
+        "type":"grass",
+        "target":"opponent",
+        "pp":15,
+        "accuracy":100,
+        "effects":[
+            {"type":"sleepTarget","percentChance":100}
+        ],
+        "animationHit":"powder"
+    },
+    {
         "id":"stringShot",
         "category":"status",
         "type":"bug",
@@ -781,6 +932,15 @@
             {"type":"confuseTarget","percentChance":100}
         ],
         "animationHit":"supersonic"
+    },
+    {
+        "id":"swift",
+        "type":"normal",
+        "target":"opponent",
+        "pp":20,
+        "power":60,
+        "noAccuracy":true,
+        "animationHit":"hitTargetEffect"
     },
     {
         "id":"swordsDance",
@@ -841,6 +1001,18 @@
             {"type":"berserk","min":3,"max":4}
         ],
         "animationHit":"thrash"
+    },
+    {
+        "id":"thunderbolt",
+        "type":"electric",
+        "target":"opponent",
+        "pp":15,
+        "power":95,
+        "accuracy":100,
+        "effects":[
+            {"type":"paralyzeTarget","except":[{"type":"electric"}],"percentChance":10}
+        ],
+        "animationHit":"thunderTarget1"
     },
     {
         "id":"thunderShock",
@@ -911,6 +1083,16 @@
             {"type":"forceSwitchOut", "message":"was blown away!"}
         ],
         "animationHit":"windTarget2"
+    },
+    {
+        "id":"wingAttack",
+        "type":"flying",
+        "target":"opponent",
+        "pp":35,
+        "power":35,
+        "accuracy":100,
+        "effects":[],
+        "animationHit":"hitTargetPhysicalFast"
     },
     {
         "id":"withdraw",

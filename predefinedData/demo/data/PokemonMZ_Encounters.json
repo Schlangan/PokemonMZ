@@ -788,7 +788,7 @@
         "id":"cerulean_swimmer1",
         "type":"trainer",
         "trainerActor":12,
-        "ia":"basic",
+        "ia":"effective",
         "pokemons":[
             {"id":"horsea","level":16,"moveset":"default","dv":"default","ev":"default"},
             {"id":"shellder","level":16,"moveset":"default","dv":"default","ev":"default"}
@@ -952,6 +952,13 @@
     },
     {
         "id":"route22_water_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"magikarp","levelMin":5, "levelMax":5, "rate":100, "condition":"fishing","itemId":"oldRod"}
+        ]
+    },
+    {
+        "id":"route23_water_wild",
         "type":"wild",
         "pokemons":[
             {"id":"magikarp","levelMin":5, "levelMax":5, "rate":100, "condition":"fishing","itemId":"oldRod"}
@@ -1138,5 +1145,789 @@
         ],
         "defeatText":"Whoa! You spark plug!",
         "money":900
+    },
+    {
+        "id":"diglett_cave_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"diglett","levelMin":15, "levelMax":22, "rate":95},
+            {"id":"dugtrio","levelMin":29, "levelMax":31, "rate":5}
+        ]
+    },
+    {
+        "id":"ssanne1f_lass1",
+        "type":"trainer",
+        "trainerActor":4,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"pidgey","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"nidoranf","level":18,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Oh no! I went around the world for these!",
+        "money":270
+    },
+    {
+        "id":"ssanne1f_young1",
+        "type":"trainer",
+        "trainerActor":7,
+        "ia":"random",
+        "pokemons":[
+            {"id":"nidoranm","level":21,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Wow! You're great!",
+        "money":315
+    },
+    {
+        "id":"ssanne1f_gentle1",
+        "type":"trainer",
+        "trainerActor":18,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"nidoranm","level":19,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"nidoranf","level":19,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Humph! You rude child!",
+        "money":1330
+    },
+    {
+        "id":"ssanne1f_gentle2",
+        "type":"trainer",
+        "trainerActor":18,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"growlithe","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"growlithe","level":18,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"My, my friends...",
+        "money":1260
+    },
+    {
+        "id":"ssanneb1f_sailor1",
+        "type":"trainer",
+        "trainerActor":17,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"shellder","level":21,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Right! Good fight, mate!",
+        "money":630
+    },
+    {
+        "id":"ssanneb1f_sailor2",
+        "type":"trainer",
+        "trainerActor":17,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"horsea","level":17,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"shellder","level":17,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"tentacool","level":17,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Your spirit sank me!",
+        "money":510
+    },
+    {
+        "id":"ssanneb1f_sailor3",
+        "type":"trainer",
+        "trainerActor":17,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"horsea","level":17,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"horsea","level":17,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"horsea","level":17,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Argh! Lost it!",
+        "money":510
+    },
+    {
+        "id":"ssanneb1f_sailor4",
+        "type":"trainer",
+        "trainerActor":17,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"tentacool","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"shellder","level":18,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"OK, you're not bad.",
+        "money":540
+    },
+    {
+        "id":"ssanneb1f_fisher1",
+        "type":"trainer",
+        "trainerActor":19,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"tentacool","level":17,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"staryu","level":17,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"shellder","level":17,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Darn! I let that one get away!",
+        "money":595
+    },
+    {
+        "id":"ssanneb1f_sailor5",
+        "type":"trainer",
+        "trainerActor":17,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"machop","level":20,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Argh! Beaten by a kid!",
+        "money":600
+    },
+    {
+        "id":"ssanne2f_fisher1",
+        "type":"trainer",
+        "trainerActor":19,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"goldeen","level":17,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"tentacool","level":17,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"goldeen","level":17,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I'm all out!",
+        "money":595
+    },
+    {
+        "id":"ssanne2f_gentle1",
+        "type":"trainer",
+        "trainerActor":18,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"pikachu","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"voltorb","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"magnemite","level":21,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Good fight! Ah, I feel young again!",
+        "money":1470
+    },
+    {
+        "id":"ssanne2f_gentle2",
+        "type":"trainer",
+        "trainerActor":18,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"growlithe","level":17,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"ponyta","level":17,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I must salute you!",
+        "money":1190
+    },
+    {
+        "id":"ssanne2f_lass1",
+        "type":"trainer",
+        "trainerActor":4,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"rattata","level":17,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"pikachu","level":17,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"jigglypuff","level":17,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Take it easy!",
+        "money":255
+    },
+    {
+        "id":"ssanne3f_sailor1",
+        "type":"trainer",
+        "trainerActor":17,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"machop","level":17,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"tentacool","level":17,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I was just careless!",
+        "money":510
+    },
+    {
+        "id":"ssanne3f_sailor2",
+        "type":"trainer",
+        "trainerActor":17,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"machop","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"shellder","level":18,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"You're impressive!",
+        "money":540
+    },
+     {
+        "id":"rival4_starter_bulbasaur",
+        "type":"trainer",
+        "trainerActor":2,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"potion","condition":"hpBelowPercent","hpPercent":20,"chance":15,"maxPerPokemon":1}
+        },
+        "pokemons":[
+            {"id":"pidgeotto","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"rattata","level":16,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"kadabra","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"charmeleon","level":20,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Humph! At least you're raising your Pokémon!",
+        "money":1300
+    },
+    {
+        "id":"rival4_starter_charmander",
+        "type":"trainer",
+        "trainerActor":2,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"potion","condition":"hpBelowPercent","hpPercent":20,"chance":15,"maxPerPokemon":1}
+        },
+        "pokemons":[
+            {"id":"pidgeotto","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"rattata","level":16,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"kadabra","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"wartortle","level":20,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Humph! At least you're raising your Pokémon!",
+        "money":1300
+    },
+    {
+        "id":"rival4_starter_squirtle",
+        "type":"trainer",
+        "trainerActor":2,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"potion","condition":"hpBelowPercent","hpPercent":20,"chance":15,"maxPerPokemon":1}
+        },
+        "pokemons":[
+            {"id":"pidgeotto","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"rattata","level":16,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"kadabra","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"ivysaur","level":20,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Humph! At least you're raising your Pokémon!",
+        "money":1300
+    },
+    {
+        "id":"vermilion_sailor1",
+        "type":"trainer",
+        "trainerActor":17,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"pikachu","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"pikachu","level":21,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Wow! Surprised me!",
+        "money":630
+    },
+    {
+        "id":"vermilion_rocker1",
+        "type":"trainer",
+        "trainerActor":20,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"voltorb","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"voltorb","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"voltorb","level":20,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Fried!",
+        "money":500
+    },
+    {
+        "id":"vermilion_gentle1",
+        "type":"trainer",
+        "trainerActor":18,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"voltorb","level":22,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"magnemite","level":22,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Stop! You're very good!",
+        "money":1540
+    },
+    {
+        "id":"vermilion_ltsurge",
+        "type":"trainer",
+        "trainerActor":21,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"xSpeed","condition":"random","chance":25,"maxPerPokemon":1}
+        },
+        "pokemons":[
+            {"id":"voltorb","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"pikachu","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"raichu","level":24,"moveset":"add","addMoves":["thunderbolt"],"dv":"default","ev":"default"}
+        ],
+        "defeatText":"Whoa! You're the real deal, kid!\nFine then, take the Thunder Badge!",
+        "money":2376
+    },
+    {
+        "id":"route9_grass_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"ekans","levelMin":11, "levelMax":17, "rate":20},
+            {"id":"sandshrew","levelMin":11, "levelMax":17, "rate":20},  
+            {"id":"rattata","levelMin":14, "levelMax":18, "rate":15},
+            {"id":"spearow","levelMin":13, "levelMax":17, "rate":10}, 
+            {"id":"nidoranf","levelMin":16, "levelMax":18, "rate":10},
+            {"id":"nidoranm","levelMin":16, "levelMax":18, "rate":10},
+            {"id":"raticate","levelMin":20, "levelMax":20, "rate":5},
+            {"id":"nidorina","levelMin":18, "levelMax":18, "rate":5},
+            {"id":"nidorino","levelMin":18, "levelMax":18, "rate":5}
+        ]
+    },
+    {
+        "id":"route9_jrtrainerf1",
+        "type":"trainer",
+        "trainerActor":13,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"oddish","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"bellsprout","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"oddish","level":18,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"bellsprout","level":18,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"You deceived me!",
+        "money":360
+    },
+    {
+        "id":"route9_hiker1",
+        "type":"trainer",
+        "trainerActor":9,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"machop","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"onix","level":20,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Keep it coming, eh! Oh wait. I'm out of\nPokémon!",
+        "money":700
+    },
+    {
+        "id":"route9_jrtrainerm1",
+        "type":"trainer",
+        "trainerActor":5,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"growlithe","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"charmander","level":21,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Out like a light!",
+        "money":420
+    },
+    {
+        "id":"route9_bug1",
+        "type":"trainer",
+        "trainerActor":3,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"beedrill","level":19,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"beedrill","level":19,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"WHAT? What a total waste of time!",
+        "money":190
+    },
+    {
+        "id":"route9_hiker2",
+        "type":"trainer",
+        "trainerActor":9,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"geodude","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"onix","level":21,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Hahahaha! You beat me fair!",
+        "money":735
+    },
+    {
+        "id":"route9_bug2",
+        "type":"trainer",
+        "trainerActor":3,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"caterpie","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"weedle","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"venonat","level":20,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"My bugs...",
+        "money":200
+    },
+    {
+        "id":"route9_jrtrainerm2",
+        "type":"trainer",
+        "trainerActor":5,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"rattata","level":19,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"diglett","level":19,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"ekans","level":19,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"sandshrew","level":19,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Can't measure up!",
+        "money":380
+    },
+    {
+        "id":"route9_hiker3",
+        "type":"trainer",
+        "trainerActor":9,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"geodude","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"machop","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"geodude","level":20,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"What's that?",
+        "money":700
+    },
+    {
+        "id":"route9_jrtrainerf2",
+        "type":"trainer",
+        "trainerActor":13,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"meowth","level":23,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"No! You're too much!",
+        "money":460
+    },
+    {
+        "id":"route10_grass_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"ekans","levelMin":11, "levelMax":17, "rate":15},
+            {"id":"sandshrew","levelMin":11, "levelMax":17, "rate":15},  
+            {"id":"magnemite","levelMin":16, "levelMax":22, "rate":15},
+            {"id":"voltorb","levelMin":14, "levelMax":17, "rate":15},  
+            {"id":"rattata","levelMin":18, "levelMax":20, "rate":10},
+            {"id":"spearow","levelMin":13, "levelMax":17, "rate":10}, 
+            {"id":"nidoranf","levelMin":17, "levelMax":17, "rate":5},
+            {"id":"nidoranm","levelMin":17, "levelMax":17, "rate":5},
+            {"id":"machop","levelMin":16, "levelMax":18, "rate":5},
+            {"id":"raticate","levelMin":20, "levelMax":20, "rate":5}
+        ]
+    },
+    {
+        "id":"route10_water_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"magikarp","levelMin":5, "levelMax":5, "rate":100, "condition":"fishing","itemId":"oldRod"}
+        ]
+    },
+    {
+        "id":"route10_jrtrainerf1",
+        "type":"trainer",
+        "trainerActor":13,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"pikachu","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"jigglypuff","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"clefairy","level":20,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Ohh! Blew it again!",
+        "money":400
+    },
+    {
+        "id":"rocktunnel1_cave_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"zubat","levelMin":15, "levelMax":18, "rate":50},
+            {"id":"geodude","levelMin":16, "levelMax":20, "rate":30},
+            {"id":"machop","levelMin":15, "levelMax":21, "rate":15},
+            {"id":"onix","levelMin":13, "levelMax":15, "rate":5}
+        ]
+    },
+    {
+        "id":"rocktunnel2_cave_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"zubat","levelMin":15, "levelMax":18, "rate":45},
+            {"id":"geodude","levelMin":16, "levelMax":20, "rate":25},
+            {"id":"machop","levelMin":15, "levelMax":21, "rate":20},
+            {"id":"onix","levelMin":13, "levelMax":15, "rate":10}
+        ]
+    },
+    {
+        "id":"rocktunnel1_maniac1",
+        "type":"trainer",
+        "trainerActor":22,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"cubone","level":23,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"slowpoke","level":23,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Game over!",
+        "money":1150
+    },
+    {
+        "id":"rocktunnel1_hiker1",
+        "type":"trainer",
+        "trainerActor":9,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"geodude","level":19,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"machop","level":19,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"geodude","level":19,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"geodude","level":19,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Doh! You win!",
+        "money":665
+    },
+    {
+        "id":"rocktunnel1_hiker2",
+        "type":"trainer",
+        "trainerActor":9,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"onix","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"onix","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"geodude","level":20,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Ease up! What am I doing? Which way is out?",
+        "money":700
+    },
+    {
+        "id":"rocktunnel1_hiker3",
+        "type":"trainer",
+        "trainerActor":9,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"geodude","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"geodude","level":21,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I give!",
+        "money":735
+    },
+    {
+        "id":"rocktunnel1_jrtrainerf1",
+        "type":"trainer",
+        "trainerActor":13,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"bellsprout","level":22,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"clefairy","level":22,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"It was too dark!",
+        "money":440
+    },
+    {
+        "id":"rocktunnel1_jrtrainerf2",
+        "type":"trainer",
+        "trainerActor":13,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"pidgey","level":19,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"rattata","level":19,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"rattata","level":19,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"bellsprout","level":19,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"You play hard!",
+        "money":380
+    },
+    {
+        "id":"rocktunnel1_jrtrainerf3",
+        "type":"trainer",
+        "trainerActor":13,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"meowth","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"oddish","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"pidgey","level":20,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I'm out of Pokémon!",
+        "money":400
+    },
+    {
+        "id":"rocktunnel2_maniac1",
+        "type":"trainer",
+        "trainerActor":22,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"slowpoke","level":25,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Whew! I'm exhausted!",
+        "money":1250
+    },
+    {
+        "id":"rocktunnel2_jrtrainerf1",
+        "type":"trainer",
+        "trainerActor":13,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"oddish","level":22,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"bulbasaur","level":22,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Oh! I lost!",
+        "money":440
+    },
+    {
+        "id":"rocktunnel2_maniac2",
+        "type":"trainer",
+        "trainerActor":22,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"charmander","level":22,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"cubone","level":22,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Well, that's that.",
+        "money":1100
+    },
+    {
+        "id":"rocktunnel2_hiker1",
+        "type":"trainer",
+        "trainerActor":9,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"geodude","level":25,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I give! You're a better technician!",
+        "money":875
+    },
+    {
+        "id":"rocktunnel2_hiker2",
+        "type":"trainer",
+        "trainerActor":9,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"machop","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"onix","level":20,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Fired away!",
+        "money":700
+    },
+    {
+        "id":"rocktunnel2_jrtrainerf2",
+        "type":"trainer",
+        "trainerActor":13,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"jigglypuff","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"pidgey","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"meowth","level":21,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Ohhh! I did my best!",
+        "money":420
+    },
+    {
+        "id":"rocktunnel2_hiker3",
+        "type":"trainer",
+        "trainerActor":9,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"geodude","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"geodude","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"geodude","level":21,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Oops! Out-muscled!",
+        "money":735
+    },
+    {
+        "id":"rocktunnel2_maniac3",
+        "type":"trainer",
+        "trainerActor":22,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"slowpoke","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"slowpoke","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"slowpoke","level":20,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Shoot! I'm so jealous!",
+        "money":1000
+    },
+    {
+        "id":"route10_jrtrainerf2",
+        "type":"trainer",
+        "trainerActor":13,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"pidgey","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"pidgeotto","level":21,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I'm not up to it!",
+        "money":420
+    },
+    {
+        "id":"route10_hiker1",
+        "type":"trainer",
+        "trainerActor":9,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"geodude","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"onix","level":21,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Ha-haha! Not laughing! Ha-hay fever!\nHaha-ha-choo!",
+        "money":735
+    },
+    {
+        "id":"route10_hiker2",
+        "type":"trainer",
+        "trainerActor":9,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"onix","level":19,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"geodude","level":19,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"That cleared my head!",
+        "money":665
+    },
+    {
+        "id":"route10_maniac1",
+        "type":"trainer",
+        "trainerActor":22,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"cubone","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"slowpoke","level":20,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Oh no! My Pokémon!",
+        "money":1000
+    },
+    {
+        "id":"route12_water_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"magikarp","levelMin":5, "levelMax":5, "rate":100, "condition":"fishing","itemId":"oldRod"}
+        ]
+    },
+    {
+        "id":"route12_fisher1",
+        "type":"trainer",
+        "trainerActor":19,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"goldeen","level":22,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"poliwag","level":22,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"goldeen","level":22,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Tch! Just a small fry!",
+        "money":770
+    },
+    {
+        "id":"route12_fisher2",
+        "type":"trainer",
+        "trainerActor":19,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"tentacool","level":24,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"goldeen","level":24,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"That one got away!",
+        "money":840
+    },
+    {
+        "id":"route12_fisher3",
+        "type":"trainer",
+        "trainerActor":19,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"goldeen","level":27,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Too much!",
+        "money":945
+    },
+    {
+        "id":"route12_fisher4",
+        "type":"trainer",
+        "trainerActor":19,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"poliwag","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"shellder","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"goldeen","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"horsea","level":21,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"It's not easy...",
+        "money":735
     }
+
 ]

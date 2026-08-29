@@ -215,6 +215,15 @@
         ]
     },
     {
+        "id":"flash",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"user", "animationId":97, "wait":true},
+            {"type":"playAnimation", "target":"target", "animationId":54},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
         "id":"growl",
         "sequence":[
             {"type":"playAnimation", "target":"user", "animationId":37, "wait":true},
@@ -271,6 +280,12 @@
             {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
             {"type":"playAnimation", "target":"target", "animationId":36},
             {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"rest",
+        "sequence":[
+            {"type":"playAnimation", "target":"target", "animationId":62}
         ]
     },
     {

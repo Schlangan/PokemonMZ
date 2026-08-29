@@ -27,7 +27,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0023. Ekans
 - 0024. Arbok
 - 0025. Pikachu
-- (...)
+- 0026. Raichu
 - 0027. Sandshrew
 - 0028. Sandslash
 - 0029. Nidoran♀
@@ -52,11 +52,12 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0048. Venonat
 - (...)
 - 0050. Diglett
-- (...)
+- 0051. Dugtrio
 - 0052. Meowth
+- 0053. Persian
 - (...)
 - 0056. Mankey
-- (...)
+- 0057. Primeape
 - 0058. Growlithe
 - (...)
 - 0060. Poliwag
@@ -65,16 +66,23 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0064. Kadabra
 - (...)
 - 0066. Machop
+- 0067. Machoke
 - (...)
 - 0069. Bellsprout
 - 0070. Weepinbell
 - (...)
+- 0072. Tentacool
+- (...)
 - 0074. Geodude
 - 0075. Graveler
+- (...)
+- 0077. Ponyta
 - (...)
 - 0079. Slowpoke
 - (...)
 - 0081. Magnemite
+- 0082. Magneton
+- 0083. Farfetch'd
 - (...)
 - 0088. Grimer
 - (...)
@@ -84,6 +92,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0096. Drowzee
 - (...)
 - 0100. Voltorb
+- 0101. Electrode
 - (...)
 - 0104. Cubone
 - (...)
@@ -95,6 +104,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - (...)
 - 0120. Staryu
 - 0121. Starmie
+- 0122. Mr.Mime
 - (...)
 - 0129. Magikarp
 - 0130. Gyarados
@@ -102,6 +112,8 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 ## Moves
 
 - Moves without secondary effect
+    - Cut
+    - Drill Peck
     - Gust
     - Horn Attack
     - Peck
@@ -112,9 +124,11 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Tackle
     - Vine Whip
     - Water Gun
+    - Wing Attack
 
 - Moves with high critical
     - Karate Chop
+    - Razor Leaf
     - Slash
 
 - Moves with high priorities
@@ -130,6 +144,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Double Slap (2-5)
     - Fury Attack (2-5)
     - Fury Swipes (2-5)
+    - Pin Missile (2-5)
     - Twineedle (2-2)
 
 - Moves hitting N turns consecutively and ending with confusion
@@ -145,6 +160,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Confusion
         - Confuse Ray
         - Confusion
+        - Psybeam
         - Supersonic
     - Flinch
         - Bite
@@ -156,9 +172,11 @@ This file details all mechanics available in the plugin, compared to RBY Generat
         - Body Slam (except Normal types)
         - Glare
         - Stun Spore
+        - Thunderbolt  (except Electric types)
         - Thunder Shock (except Electric types)
         - Thunder Wave
     - Poison
+        - Poison Gas
         - Poison Powder
         - Poison Sting
         - Smog
@@ -191,6 +209,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Withdraw (defense)
 
 - Moves raising user stats by two stages
+    - Barrier (defense)
     - Swords Dance (attack)
 
 - Moves forcing Pokemon to switch out (no effect in trainer battles in generation I)
@@ -210,6 +229,12 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - Moves dropping money
     - Payday
 
+- Moves with effects on the map
+    - Cut
+    - Dig
+    - Flash
+    - Teleport
+
 - Special moves
     - Bide (activate turn 1, wait 1-2 turns, and unleash last turn double damage taken while waiting)
     - Disable (disable a random move from the enemy)
@@ -217,12 +242,14 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Mirror Move (replicate last attack from the opponent)
     - Splash (no effect at all)
     - Struggle (launched with 0pp, recoil damage)
+    - Swift (no accuracy check at all)
 
 ## Items
 
 - Badges
     - Boulder Badge
     - Cascade Badge
+    - Thunder Badge
 
 - Balls
     - Poke Ball
@@ -231,6 +258,8 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - Healing
     - Potion
     - Super Potion
+    - Hyper Potion
+    - Max Potion
     - Antidote
     - Parlyz Heal
     - Burn Heal
@@ -239,11 +268,13 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Full Heal
     - Full Restore
     - Ether
+    - Max Ether
     - Elixir
 
 - Battle Power-up
     - X Defend
     - X Special
+    - X Speed
 
 - Permanent Power-up
     - Hp Up
@@ -274,10 +305,31 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 
 - TMs / HMs
     - TM01 - Mega punch
+    - (...)
     - TM04 - Whirlwind
+    - (...)
+    - TM08 - Body slam
+    - (...)
     - TM11 - Bubble beam
     - TM12 - Water gun
+    - (...)
     - TM19 - Seismic toss
+    - (...)
+    - TM24 - Thunderbolt
+    - (...)
     - TM28 - Dig
+    - (...)
+    - TM30 - Teleport
+    - (...)
     - TM34 - Bide
+    - (...)
+    - TM39 - Swift
+    - (...)
+    - TM42 - Dream Eater
+    - (...)
+    - TM44 - Rest
     - TM45 - Thunderwave
+    - (...)
+    - HM01 - Cut
+    - (...)
+    - HM05 - Flash

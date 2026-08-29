@@ -1,3 +1,70 @@
+## [0.0.7] - 2026-08-29
+
+Pokemon can now reach level 30, and all mechanics until Lavender Town have been added. This includes cut and flash HMs. The Pokemon Tower is not yet accessible.
+
+- Bug fixes
+    - Bad move calculation for effective ai trainer types
+    - Enemy status window not refreshing when enemy pokemon waking up
+    - Pressing action button in front of a trainer sight tile incorrectly triggered the aggro effect
+    - Crash when the enemy trainer tried to use an item the turn the player was switching Pokemon
+- New map mechanics
+    - Use of HMs - unforgettable moves - requiring specific badges to be used outside of battle
+    - Cut mechanics
+    - Flash mechanics
+    - Pokemon renaming system
+- New battle mechanics
+    - Moves boosting up defense by two stages (barrier)
+    - Moves requiring the target to be under a specific status to hit (dream eater)
+    - Light screen mechanics (generation I, only applies to user and not the whole party, no turn limit)
+- New item effects
+    - Healing a percentage of hp (max potion).
+    - Item to increase speed during battle (X Speed)
+    - Revive items
+- New predefined Pokemon data
+    - Dugtrio (found wild in Diglett's cave)
+    - Electrode (evolving player's Voltorb at lvl.30)
+    - Machoke (evolving player's Machop at lvl.28)
+    - Magneton (evolving player's Magneti at lvl.30)
+    - Mr.Mime (traded against Clefairy in route 2)
+    - Persian (evolving player's Meowth at lvl.28)
+    - Ponyta (gentleman trainer battle in S.S. Anne)
+    - Primeape (evolving player's Mankey at lvl.28)
+    - Raichu (lt.surge trainer battle in Vermilion Gym)
+    - Tentacool (sailor trainer battle in S.S. Anne)
+- New predefined moves data
+    - Barrier (learned by player's Mr.Mime at lvl.1)
+    - Cut (learned with HM01)
+    - Dream Eater (learned with TM42)
+    - Drill Peck (learned by players's Spearow at lvl.29)
+    - Flash (learned with HM05)
+    - Light Screen (learned by player's Mr.Mime at lvl.23)
+    - Pin Missile (learned by player's Beedrill at lvl.30)
+    - Poison Gas (learned by player's Drowzee at lvl.29)
+    - Psybeam (learned by player's Kadabra at lvl.27)
+    - Razor Leaf (learned by player's Bulbasaur at lvl.27, or Ivysaur at lvl.30)
+    - Rest (learned by player's Jigglypuff at lvl.29)
+    - Spore (learned by player's Paras at lvl.27, or Parasect at lvl.30)
+    - Swift (learned with TM39)
+    - Thunderbolt (learned by player's Pikachu at lvl.26)
+    - Wing Attack (learned by player's Pidgey at lvl.28)
+- New predefined item data
+    - Hyper Potion (found in S.S. Anne)
+    - Max Ether (found in S.S. Anne / route 10)
+    - Max Potion (found in S.S Anne)
+    - HM01 - Cut (obtained in S.S Anne)
+    - HM05 - Flash (obtained in Route 2 if at least caught 10 pokemon)
+    - Revive (bought in Lavender mart)
+    - Super Repel (bought in Lavender mart)
+    - Thunder Badge (obtained by defeating Lt.Surge)
+    - TM08 - Body slam (found in S.S Anne)
+    - TM24 - Thunderbolt (given by Lt.Surge)
+    - TM30 - Teleport (found on route 9)
+    - TM39 - Swift (given by NPC at route 12 gate upper floor)
+    - TM42 - Dream Eater (given by NPC in Viridian City behind cuttable tree)
+    - TM44 - Rest (found in S.S Anne)
+    - X Special (Used by Lt.Surge in battle)
+
+
 ## [0.0.6] - 2026-08-21
 
 All mechanics encountered up to the arrival in Vermilion City have been added. This includes route 11 as well. S.S. Anne and Diglett's cave are not available yet, hence Vermilion's gym cannot be accessed either. All others elements are accessible, which allows the player to fish, put a pokemon in day care, get the bicycle in Cerulean city, and get the Item Finder.

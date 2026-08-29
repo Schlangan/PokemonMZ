@@ -636,6 +636,32 @@
         ]
     },
     {
+        "id": "raichu",
+        "pokedex": [{"region":"kanto","number":26}],
+        "category": "Mouse",
+        "description": "Its long tail serves as a ground to protect itself from its own high voltage power. When electricity builds up inside its body, it becomes feisty. It also glows in the dark.",
+        "height": 0.8,
+        "weight": 30.0,
+        "types": ["electric"],
+        "baseStats": {"hp":60,"patk":90,"pdef":55,"satk":90,"sdef":80,"spd":100,"spc":90},
+        "expCurve": "mediumFast",
+        "catchRate": 75,
+        "xpYield": 122,
+        "ev": [{"spd":3}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"thunderShock"},
+            {"lvl":1,"move":"growl"},
+            {"lvl":1,"move":"thunderWave"}
+        ],
+        "hmMoves": ["flash"],
+        "tmMoves": [
+            "megaPunch", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "payDay", "submission", 
+            "seismicToss", "rage", "thunderbolt", "thunder", "mimic", "doubleTeam", "reflect", "bide", "swift", "skullBash", 
+            "rest", "thunderWave", "substitute"
+        ]
+    },
+    {
         "id":"sandshrew",
         "pokedex":[{"region":"kanto","number":27}],
         "category":"Mouse",
@@ -1288,6 +1314,36 @@
         ]
     },
     {
+        "id": "dugtrio",
+        "pokedex": [{"region":"kanto","number":51}],
+        "category": "Mole",
+        "description": "A team of Diglett triplets. It triggers huge earthquakes by burrowing 60 miles underground. A team of triplets that can burrow over 100 km/h. Due to this, some people think it's an earthquake.",
+        "height": 0.7,
+        "weight": 33.3,
+        "types": ["ground"],
+        "baseStats": {"hp":35,"patk":80,"pdef":50,"satk":50,"sdef":70,"spd":120,"spc":70},
+        "expCurve": "mediumFast",
+        "catchRate": 50,
+        "xpYield": 153,
+        "ev": [{"spd":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"scratch"},
+            {"lvl":1,"move":"growl"},
+            {"lvl":1,"move":"dig"},
+            {"lvl":15,"move":"growl"},
+            {"lvl":19,"move":"dig"},
+            {"lvl":24,"move":"sandAttack"},
+            {"lvl":35,"move":"slash"},
+            {"lvl":47,"move":"earthquake"}
+        ],
+        "hmMoves": ["cut"],
+        "tmMoves": [
+            "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "rage", "earthquake", 
+            "fissure", "dig", "mimic", "doubleTeam", "bide", "rest", "rockSlide", "substitute"
+        ]
+    },
+    {
         "id":"meowth",
         "pokedex":[{"region":"kanto","number":52}],
         "category":"Scratch Cat",
@@ -1317,6 +1373,42 @@
             "toxic","bodySlam","takeDown","doubleEdge","bubbleBeam","waterGun","payDay","rage","thunderbolt","thunder",
             "mimic","doubleTeam","bide","swift","skullBash","rest","substitute"
         ]
+    },
+    {
+        "id": "persian",
+        "pokedex": [{"region":"kanto","number":53}],
+        "category": "Classy Cat",
+        "description": "Although its fur has many admirers, it is tough to raise as a pet because of its fickle meanness. The gem in its forehead glows on its own! It walks with all the grace and elegance of a proud queen.",
+        "height": 1.0,
+        "weight": 32.0,
+        "types": ["normal"],
+        "baseStats": {"hp":65,"patk":70,"pdef":60,"satk":65,"sdef":65,"spd":115,"spc":65},
+        "expCurve": "mediumFast",
+        "catchRate": 90,
+        "xpYield": 148,
+        "ev": [{"spd":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"scratch"},
+            {"lvl":1,"move":"growl"},
+            {"lvl":1,"move":"bite"},
+            {"lvl":1,"move":"screech"},
+            {"lvl":12,"move":"bite"},
+            {"lvl":17,"move":"payDay"},
+            {"lvl":24,"move":"screech"},
+            {"lvl":37,"move":"furySwipes"},
+            {"lvl":51,"move":"slash"}
+        ],
+        "hmMoves": [],
+        "tmMoves": [
+            "toxic", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "hyperBeam", "payDay", "rage", 
+            "thunderbolt", "thunder", "mimic", "doubleTeam", "bide", "swift", "skullBash", "rest", "substitute"
+        ]
+    },
+    {
+        "id": "psyduck",
+        "pokedex": [{"region":"kanto","number":54}],
+        "category": "Duck"
     },
     {
         "id":"mankey",
@@ -1350,6 +1442,41 @@
             "megaPunch","megaKick","toxic","bodySlam","takeDown","doubleEdge","payDay","submission","counter", 
             "seismicToss","rage","thunderbolt","thunder","dig","mimic","doubleTeam","bide","metronome","swift",
             "skullBash","rest","rockSlide","substitute"
+        ]
+    },
+    {
+        "id": "primeape",
+        "pokedex": [{"region":"kanto","number":57}],
+        "category": "Pig Monkey",
+        "description": "Always furious and tenacious to boot. It will not abandon chasing its quarry until it is caught. It stops being angry only when nobody else is around. To view this moment is very difficult.",
+        "height": 1.0,
+        "weight": 32.0,
+        "types": ["fighting"],
+        "baseStats": {"hp":65,"patk":105,"pdef":60,"satk":60,"sdef":70,"spd":95,"spc":60},
+        "expCurve": "mediumFast",
+        "catchRate": 75,
+        "xpYield": 149,
+        "ev": [{"patk":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"scratch"},
+            {"lvl":1,"move":"leer"},
+            {"lvl":1,"move":"lowKick"},
+            {"lvl":1,"move":"karateChop"},
+            {"lvl":9,"move":"lowKick"},
+            {"lvl":15,"move":"karateChop"},
+            {"lvl":21,"move":"furySwipes"},
+            {"lvl":27,"move":"focusEnergy"},
+            {"lvl":28,"move":"rage"},
+            {"lvl":37,"move":"seismicToss"},
+            {"lvl":45,"move":"screech"},
+            {"lvl":46,"move":"thrash"}
+        ],
+        "hmMoves": ["strength"],
+        "tmMoves": [
+            "megaPunch", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "payDay", "submission", 
+            "counter", "seismicToss", "rage", "thunderbolt", "thunder", "dig", "mimic", "doubleTeam", "bide", "metronome", 
+            "swift", "skullBash", "rest", "rockSlide", "substitute"
         ]
     },
     {
@@ -1505,6 +1632,39 @@
         ]
     },
     {
+        "id": "machoke",
+        "pokedex": [{"region":"kanto","number":67}],
+        "category": "Superpower",
+        "description": "Its muscular body is so powerful, it must wear a power save belt to be able to regulate its motions. The belt around its waist holds back its energy. Without it, this POKéMON would be unstoppable.",
+        "height": 1.5,
+        "weight": 70.5,
+        "types": ["fighting"],
+        "baseStats": {"hp":80,"patk":100,"pdef":70,"satk":50,"sdef":60,"spd":45,"spc":50},
+        "expCurve": "mediumSlow",
+        "catchRate": 90,
+        "xpYield": 146,
+        "ev": [{"patk":2}],
+        "evolutions": [
+            {"to":"machamp","mode":"trade"}
+        ],
+        "learnedMoves": [
+            {"lvl":1,"move":"karateChop"},
+            {"lvl":1,"move":"lowKick"},
+            {"lvl":1,"move":"leer"},
+            {"lvl":20,"move":"lowKick"},
+            {"lvl":25,"move":"leer"},
+            {"lvl":36,"move":"focusEnergy"},
+            {"lvl":44,"move":"seismicToss"},
+            {"lvl":52,"move":"submission"}
+        ],
+        "hmMoves": ["strength"],
+        "tmMoves": [
+            "megaPunch", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "submission", "counter", "seismicToss", 
+            "rage", "earthquake", "fissure", "dig", "mimic", "doubleTeam", "bide", "metronome", "fireBlast", "skullBash", 
+            "rest", "rockSlide", "substitute"
+        ]
+    },
+    {
         "id":"bellsprout",
         "pokedex":[{"region":"kanto","number":69}],
         "category":"Flower",
@@ -1569,6 +1729,39 @@
         "tmMoves":[
             "swordsDance","toxic","takeDown","doubleEdge","rage","megaDrain","solarBeam",
             "mimic","doubleTeam","reflect","bide","rest","substitute"
+        ]
+    },
+    {
+        "id": "tentacool",
+        "pokedex": [{"region":"kanto","number":72}],
+        "category": "Jellyfish",
+        "description": "Drifts in shallow seas. Anglers who hook them by accident are often punished by its stinging acid. It can sometimes be found all dry and shriveled up on a beach. Toss it back into the sea to revive it.",
+        "height": 0.9,
+        "weight": 45.5,
+        "types": ["water", "poison"],
+        "baseStats": {"hp":40,"patk":40,"pdef":35,"satk":50,"sdef":100,"spd":70,"spc":100},
+        "expCurve": "slow",
+        "catchRate": 190,
+        "xpYield": 105,
+        "ev": [{"sdef":1}],
+        "evolutions": [
+            {"to":"tentacruel","mode":"level","level":30}
+        ],
+        "learnedMoves": [
+            {"lvl":1,"move":"acid"},
+            {"lvl":7,"move":"supersonic"},
+            {"lvl":13,"move":"wrap"},
+            {"lvl":18,"move":"poisonSting"},
+            {"lvl":22,"move":"waterGun"},
+            {"lvl":27,"move":"constrict"},
+            {"lvl":33,"move":"barrier"},
+            {"lvl":40,"move":"screech"},
+            {"lvl":48,"move":"hydroPump"}
+        ],
+        "hmMoves": ["cut", "surf"],
+        "tmMoves": [
+            "swordsDance", "toxic", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", "blizzard", "rage", 
+            "megaDrain", "mimic", "doubleTeam", "reflect", "bide", "skullBash", "rest", "substitute"
         ]
     },
     {
@@ -1639,6 +1832,37 @@
         ]
     },
     {
+        "id": "ponyta",
+        "pokedex": [{"region":"kanto","number":77}],
+        "category": "Fire Horse",
+        "description": "Its hooves are 10 times harder than diamonds. It can trample anything completely flat in little time. Capable of jumping incredibly high. Its hooves and sturdy legs absorb the impact of a hard landing.",
+        "height": 1.0,
+        "weight": 30.0,
+        "types": ["fire"],
+        "baseStats": {"hp":50,"patk":85,"pdef":55,"satk":65,"sdef":65,"spd":90,"spc":65},
+        "expCurve": "mediumFast",
+        "catchRate": 190,
+        "xpYield": 152,
+        "ev": [{"spd":1}],
+        "evolutions": [
+            {"to":"rapidash","mode":"level","level":40}
+        ],
+        "learnedMoves": [
+            {"lvl":1,"move":"ember"},
+            {"lvl":30,"move":"tailWhip"},
+            {"lvl":32,"move":"stomp"},
+            {"lvl":35,"move":"growl"},
+            {"lvl":39,"move":"fireSpin"},
+            {"lvl":43,"move":"takeDown"},
+            {"lvl":48,"move":"agility"}
+        ],
+        "hmMoves": [],
+        "tmMoves": [
+            "toxic", "hornDrill", "bodySlam", "takeDown", "doubleEdge", "rage", "mimic", "doubleTeam", 
+            "reflect", "bide", "fireBlast", "swift", "skullBash", "rest", "substitute"
+        ]
+    },
+    {
         "id":"slowpoke",
         "pokedex":[{"region":"kanto","number":79}],
         "category":"Dopey",
@@ -1700,6 +1924,37 @@
         "tmMoves":[
             "toxic","takeDown","doubleEdge","rage","thunderbolt","thunder", "teleport",
             "mimic","doubleTeam","reflect","bide","swift","rest","thunderWave","substitute"
+        ]
+    },
+    {
+        "id": "magneton",
+        "pokedex": [{"region":"kanto","number":82}],
+        "category": "Magnet",
+        "description": "Formed by several Magnemites linked together. They frequently appear when sunspots flare up. Generates strange radio signals. It raises the temperature by two degrees within 1 km.",
+        "height": 1.0,
+        "weight": 60.0,
+        "types": ["electric"],
+        "baseStats": {"hp":50,"patk":60,"pdef":95,"satk":120,"sdef":70,"spd":70,"spc":120},
+        "expCurve": "mediumFast",
+        "catchRate": 60,
+        "xpYield": 161,
+        "ev": [{"satk":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"tackle"},
+            {"lvl":1,"move":"sonicBoom"},
+            {"lvl":1,"move":"thunderShock"},
+            {"lvl":21,"move":"sonicBoom"},
+            {"lvl":25,"move":"thunderShock"},
+            {"lvl":29,"move":"supersonic"},
+            {"lvl":38,"move":"thunderWave"},
+            {"lvl":46,"move":"swift"},
+            {"lvl":54,"move":"screech"}
+        ],
+        "hmMoves": ["flash"],
+        "tmMoves": [
+            "toxic", "takeDown", "doubleEdge", "hyperBeam", "rage", "thunderbolt", "thunder", "teleport", 
+            "mimic", "doubleTeam", "reflect", "bide", "swift", "rest", "thunderWave", "substitute"
         ]
     },
     {
@@ -1898,6 +2153,36 @@
         ]
     },
     {
+        "id": "electrode",
+        "pokedex": [{"region":"kanto","number":101}],
+        "category": "Ball",
+        "description": "It stores electric energy under very high pressure. It often explodes with little or no provocation. Stores electrical energy inside its body. Even the slightest shock could trigger a huge explosion.",
+        "height": 1.2,
+        "weight": 66.6,
+        "types": ["electric"],
+        "baseStats": {"hp":60,"patk":50,"pdef":70,"satk":80,"sdef":80,"spd":140,"spc":80},
+        "expCurve": "mediumFast",
+        "catchRate": 60,
+        "xpYield": 150,
+        "ev": [{"spd":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"tackle"},
+            {"lvl":1,"move":"screech"},
+            {"lvl":1,"move":"sonicBoom"},
+            {"lvl":17,"move":"sonicBoom"},
+            {"lvl":22,"move":"selfDestruct"},
+            {"lvl":29,"move":"lightScreen"},
+            {"lvl":40,"move":"swift"},
+            {"lvl":50,"move":"explosion"}
+        ],
+        "hmMoves": ["flash"],
+        "tmMoves": [
+            "toxic", "takeDown", "hyperBeam", "rage", "thunderbolt", "thunder", "teleport", "mimic", "doubleTeam", 
+            "reflect", "bide", "selfDestruct", "swift", "skullBash", "rest", "thunderWave", "explosion", "substitute"
+        ]
+    },
+    {
         "id":"cubone",
         "pokedex":[{"region":"kanto","number":104}],
         "category":"Lonely",
@@ -2084,6 +2369,36 @@
         ]
     },
     {
+        "id": "mrMime",
+        "pokedex": [{"region":"kanto","number":122}],
+        "category": "Barrier",
+        "description": "If interrupted while it is miming, it will slap around the offender with its broad hands. Always practices its pantomime act. It makes enemies believe something exists that really doesn't.",
+        "height": 1.3,
+        "weight": 54.5,
+        "types": ["psychic"],
+        "baseStats": {"hp":40,"patk":45,"pdef":65,"satk":100,"sdef":120,"spd":90,"spc":100},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 136,
+        "ev": [{"sdef":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"confusion"},
+            {"lvl":1,"move":"barrier"},
+            {"lvl":15,"move":"confusion"},
+            {"lvl":23,"move":"lightScreen"},
+            {"lvl":31,"move":"doubleSlap"},
+            {"lvl":39,"move":"meditate"},
+            {"lvl":47,"move":"substitute"}
+        ],
+        "hmMoves": ["flash"],
+        "tmMoves": [
+            "megaPunch", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "submission", 
+            "counter", "seismicToss", "rage", "solarBeam", "thunderbolt", "thunder", "psychic", "teleport", "mimic", 
+            "doubleTeam", "reflect", "bide", "metronome", "skullBash", "rest", "thunderWave", "psywave", "substitute"
+        ]
+    },
+    {
         "id":"magikarp",
         "pokedex":[{"region":"kanto","number":129}],
         "category":"Fish",
@@ -2154,6 +2469,11 @@
         "id":"flareon",
         "pokedex":[{"region":"kanto","number":136}],
         "category":"Flame"
+    },
+    {
+        "id":"snorlax",
+        "pokedex":[{"region":"kanto","number":143}],
+        "category":"Sleeping"
     },
     {
         "id":"mew",
