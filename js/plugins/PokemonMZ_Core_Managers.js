@@ -1069,6 +1069,14 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
             optionalProperties
         );
         break;
+    case "healUserPercentHp":
+        DataManager.verifyProperties(
+            moveEffect,
+            errorMessagePrefix,
+            mandatoryProperties.concat(["value"]),
+            optionalProperties
+        );
+        break;
     case "berserk":
         DataManager.verifyProperties(
             moveEffect,

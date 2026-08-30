@@ -4441,6 +4441,11 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
             effectResults = this.effect_evaUpUser(battleData, effect, effectResults);
         }
         break;
+    case "healUserPercentHp":
+        if (!this.isMoveEffectExcepted(effect, this._user)) {
+            effectResults = this.effect_healUserPercentHp(battleData, effect, effectResults);
+        }
+        break;
     case "recoilPercent":
         if (!this.isMoveEffectExcepted(effect, this._user)) {
             effectResults = this.effect_recoilPercent(battleData, effect, effectResults);
@@ -5353,6 +5358,28 @@ PokemonMZ_Game_Action.prototype.effect_recoilPercent = function(battleData, effe
     effectResults.userDamage = damageDealt;
     return effectResults;
 };
+PokemonMZ_Game_Action.prototype.effect_healUserPercentHp = function(battleData, effect, effectResults) {
+    const currentHp = this._user.hp();
+    const maxHp = this._user.mhp();
+
+    if (currentHp < maxHp) {
+        effectResults.success = true;
+        let maxRegainedHp = maxHp * effect.value/100;
+        let unboundedNewHp = currentHp + maxRegainedHp;
+
+        if (unboundedNewHp <= maxHp) {
+            this._resultSteps.push(["healUser", maxRegainedHp]);
+        } else {
+            this._resultSteps.push(["healUser", maxHp - currentHp]);
+        }
+        this._resultSteps.push(["waittext","regainedHealth",this.side()])
+    } else {
+        this._resultSteps.push(["waittext","statusFailed",this.side()]);
+    }
+
+    return effectResults;
+};
+
 PokemonMZ_Game_Action.prototype.effect_faintUser = function(battleData, effect, effectResults) {
     const damageDealt = this.user().hp();
     if (PokemonMZ.debugLog) {
