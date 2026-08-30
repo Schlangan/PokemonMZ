@@ -4349,6 +4349,11 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
             effectResults = this.effect_pdefDownTarget(battleData, effect, effectResults);
         }
         break;
+    case "spcDownTarget":
+        if (!this.isMoveEffectExcepted(effect, this._opponent)) {
+            effectResults = this.effect_spcDownTarget(battleData, effect, effectResults);
+        }
+        break;
     case "spdDownTarget":
         if (!this.isMoveEffectExcepted(effect, this._opponent)) {
             effectResults = this.effect_spdDownTarget(battleData, effect, effectResults);
@@ -5177,6 +5182,37 @@ PokemonMZ_Game_Action.prototype.effect_pdefDownTarget = function(battleData, eff
                 this._resultSteps.push(["autotext","defenseFellPlus",this.oppositeSide()]);
                 break;
             }
+        } else {
+            if (battleData.damageDealt == 0) {
+                // Message nothing if no damage dealt, else simply nothing happens
+                this._resultSteps.push(["autotext","statusNothing",this.side()])
+            }
+        }
+    }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_spcDownTarget = function(battleData, effect, effectResults) {
+    if (this._opponent.hp() - battleData.damageDealt <= 0) {
+        // No effect if target will faint
+        return effectResults;
+    }
+    const randomNumber = Math.randomInt(100)
+    if (PokemonMZ.debugLog) {
+        console.log({"PokemonMZ_Game_Action.effect_spcDownTarget > ":{
+            "chance":effect.percentChance, "randomNumber":randomNumber, "stageBefore":this._opponent._stageModifiers.satk}
+        })
+    }
+
+    // In generation I, status has 25% of not happening if user is enemy
+    // Since pure status moves already passed that check, only applies to other move types
+    const additionalFailure = (this.additionalFailure() && this._moveData.category != "status") ? Math.random() < 0.25 : false;
+
+    if (randomNumber < effect.percentChance && !additionalFailure) {
+        if (this._opponent._stageModifiers.satk > -6) {
+            this._opponent._stageModifiers.satk -= effect.stage;
+            if (this._opponent._stageModifiers.satk < -6) { this._opponent._stageModifiers.satk = -6; }
+            effectResults.success = true;
+            this._resultSteps.push(["autotext","specialFell",this.oppositeSide()])
         } else {
             if (battleData.damageDealt == 0) {
                 // Message nothing if no damage dealt, else simply nothing happens

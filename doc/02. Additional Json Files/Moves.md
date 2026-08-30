@@ -118,6 +118,9 @@ List of implemented effects and their additional parameters:
 - type = **pdefDownTarget** : Decreases the physical attack of the target
     - stage, **int** : Number of dropped down stages
     - percentChance, **int** : Chance out of 100 of the drop down to happen
+- type = **spcDownTarget** : Decreases the special of the target
+    - stage, **int** : Number of dropped down stages
+    - percentChance, **int** : Chance out of 100 of the drop down to happen
 - type = **spdDownTarget** : Decreases the speed of the target
     - stage, **int** : Number of dropped down stages
     - percentChance, **int** : Chance out of 100 of the drop down to happen

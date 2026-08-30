@@ -1092,6 +1092,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
     case "evaUpUser":
     case "patkDownTarget":
     case "pdefDownTarget":
+    case "spcDownTarget":
     case "spdDownTarget":
     case "accDownTarget":
         DataManager.verifyProperties(
@@ -5092,6 +5093,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + "'s defense fell!";
     case "defenseFellPlus":
         return prefix + pokemon.name() + "'s defense greatly fell!";
+    case "specialFell":
+        return prefix + pokemon.name() + "'s special fell!";
     case "speedFell":
         return prefix + pokemon.name() + "'s speed fell!";
     case "statusFailed":
