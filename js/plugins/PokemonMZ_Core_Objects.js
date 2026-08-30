@@ -4369,6 +4369,11 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
             effectResults = this.effect_spcUpUser(battleData, effect, effectResults);
         }
         break;
+    case "spdUpUser":
+        if (!this.isMoveEffectExcepted(effect, this._user)) {
+            effectResults = this.effect_spdUpUser(battleData, effect, effectResults);
+        }
+        break;
     case "evaUpUser":
         if (!this.isMoveEffectExcepted(effect, this._user)) {
             effectResults = this.effect_evaUpUser(battleData, effect, effectResults);
@@ -5009,6 +5014,41 @@ PokemonMZ_Game_Action.prototype.effect_spcUpUser = function(battleData, effect, 
             if (this._user._stageModifiers.satk > 6) { this._user._stageModifiers.satk = 6; }
             effectResults.success = true;
             this._resultSteps.push(["autotext","specialRose",this.side()])
+        } else {
+            if (battleData.damageDealt == 0) {
+                // Message nothing if no damage dealt, else simply nothing happens
+                this._resultSteps.push(["autotext","statusNothing",this.side()])
+            }
+        }
+    }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_spdUpUser = function(battleData, effect, effectResults) {
+    if (this._opponent.hp() - battleData.damageDealt <= 0) {
+        // No effect if target will faint
+        return effectResults;
+    }
+    const randomNumber = Math.randomInt(100)
+    if (PokemonMZ.debugLog) {
+        console.log({"PokemonMZ_Game_Action.effect_effect_spdUpUser > ":{
+            "chance":effect.percentChance, "randomNumber":randomNumber, "stageBefore":this._user._stageModifiers.pdef}
+        })
+    }
+    if (randomNumber < effect.percentChance) {
+        const initialStage = this._user._stageModifiers.spd
+        if (initialStage < 6) {
+            this._user._stageModifiers.spd += effect.stage;
+            if (this._user._stageModifiers.spd > 6) { this._user._stageModifiers.spd = 6; }
+            effectResults.success = true;
+            const roseStages = this._user._stageModifiers.spd - initialStage;
+            switch (roseStages) {
+            case 1:
+                this._resultSteps.push(["autotext","speedRose",this.side()]);
+                break;
+            case 2:
+                this._resultSteps.push(["autotext","speedRosePlus",this.side()]);
+                break;
+            }
         } else {
             if (battleData.damageDealt == 0) {
                 // Message nothing if no damage dealt, else simply nothing happens

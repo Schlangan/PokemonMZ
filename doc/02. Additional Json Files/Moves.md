@@ -105,6 +105,9 @@ List of implemented effects and their additional parameters:
 - type = **spcUpUser** : Increases the special of the user
     - stage, **int** : Number of raised stages
     - percentChance, **int** : Chance out of 100 of the drop down to happen
+- type = **spdUpUser** : Increases the speed of the user
+    - stage, **int** : Number of raised stages
+    - percentChance, **int** : Chance out of 100 of the drop down to happen
 - type = **evaUpUser** : Increases the speed of the user
     - stage, **int** : Number of raised stages
     - percentChance, **int** : Chance out of 100 of the drop down to happen
