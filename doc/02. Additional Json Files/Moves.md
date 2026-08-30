@@ -147,6 +147,8 @@ List of implemented effects and their additional parameters:
     - The opponent's trainer used an item
 - type = **dig** : Two turns attack. First turn the user goes underground and is impossible to hit except by move with hitDig:true. Second turn, attack the target
     - animationTurn1, **string**, *optional* : Animation played during the first turn.
+- type = **skullBash** : Two turns attack. First turn the user lowers its head, with no additional effect in generation 1. Second turn, attack the target
+    - animationTurn1, **string**, *optional* : Animation played during the first turn.
 
 - type = **moneyDrop** : Drops money when using the attack. The effect depends on the pokemon generation. In generation I, it drops two times the level of the user.
 

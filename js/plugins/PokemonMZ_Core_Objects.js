@@ -1734,6 +1734,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._isRaging = false;
     this._isMinimized = false;
     this._isDigging = false;
+    this._isLoweringHead = false;
     this._hasLightScreen = false; // Generation I - Light screen only applies to the user
 
     this._hasMoveDisabled = false;
@@ -1751,6 +1752,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._berserkMoveIndex = -1;
     this._rageMoveIndex = -1;
     this._digMoveIndex = -1;
+    this._skullBashMoveIndex = -21;
 
     this._lastSeenEnemyMove = null;
 
@@ -2271,6 +2273,14 @@ PokemonMZ_Game_Pokemon.prototype.isMoveDig = function(index) {
     }
     return false;
 };
+PokemonMZ_Game_Pokemon.prototype.isMoveSkullBash = function(index) {
+    // Returns if the move at index has the skull bash effect
+    const move = this.moveDataFromIndex(index);
+    for (const effect of move.effects) {
+        if (effect.type == "skullBash") { return true; }
+    }
+    return false;
+};
 
 
 PokemonMZ_Game_Pokemon.prototype.berserkMoveIndex = function() {
@@ -2281,6 +2291,9 @@ PokemonMZ_Game_Pokemon.prototype.rageMoveIndex = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.digMoveIndex = function() {
     return this._digMoveIndex;
+};
+PokemonMZ_Game_Pokemon.prototype.skullBashMoveIndex = function() {
+    return this._skullBashMoveIndex;
 };
 PokemonMZ_Game_Pokemon.prototype.moveNameFromIndex = function(index) {
     const move = this._moves[index];
@@ -2855,6 +2868,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.unRage();
     this.unMinimize();
     this.endDigging();
+    this.endSkullBash();
     this.removeLightScreen(); // Generation I
 };
 PokemonMZ_Game_Pokemon.prototype.removeFinishedStatuses = function() {
@@ -2911,6 +2925,9 @@ PokemonMZ_Game_Pokemon.prototype.isMinimized = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.isDigging = function() {
     return this._isDigging;
+};
+PokemonMZ_Game_Pokemon.prototype.isLoweringHead = function() {
+    return this._isLoweringHead;
 };
 PokemonMZ_Game_Pokemon.prototype.hasLightScreen = function() {
     return this._hasLightScreen;
@@ -3136,6 +3153,10 @@ PokemonMZ_Game_Pokemon.prototype.startDigging = function(moveIndex) {
     this._isDigging = true;
     this._digMoveIndex = moveIndex;
 };
+PokemonMZ_Game_Pokemon.prototype.startSkullBash = function(moveIndex) {
+    this._isLoweringHead = true;
+    this._skullBashMoveIndex = moveIndex;
+};
 PokemonMZ_Game_Pokemon.prototype.giveLightScreen = function() {
     this._hasLightScreen = true;
 };
@@ -3257,6 +3278,10 @@ PokemonMZ_Game_Pokemon.prototype.removeLightScreen = function() {
 PokemonMZ_Game_Pokemon.prototype.endDigging = function() {
     this._isDigging = false;
     this._digMoveIndex = -1;
+};
+PokemonMZ_Game_Pokemon.prototype.endSkullBash = function() {
+    this._isLoweringHead = false;
+    this._skullBashMoveIndex = -1;
 };
 PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolution = function(evolutionMode, ext1) {
     switch(evolutionMode) {
@@ -3654,6 +3679,15 @@ PokemonMZ_Game_Action.prototype.isMoveDig = function() {
     }
     return false;
 };
+PokemonMZ_Game_Action.prototype.isMoveSkullBash = function() {
+    if (!this._moveData) { return false; }
+    for (const effect of this._moveData.effects) {
+        if (effect.type == "skullBash") {
+            return true;
+        }
+    }
+    return false;
+};
 PokemonMZ_Game_Action.prototype.opponent = function() {
     return this._opponent;
 };
@@ -3905,6 +3939,14 @@ PokemonMZ_Game_Action.prototype.calculateMove = function() { //TODO
             return;
         }
     };
+
+    // Specific behavior for skull bash turn 1
+    if (this.isMoveSkullBash()) {
+        if (!this._user.isLoweringHead()) {
+            this.calculateMoveSkullBashTurn1();
+            return;
+        }
+    }
 
     // Specific behavior for bind attacks when enemy is bound already
     if (this._opponent.isBound() && this.isMoveEffectBind()) {
@@ -4255,11 +4297,26 @@ PokemonMZ_Game_Action.prototype.calculateMoveDigTurn1 = function() {
 
 
     this._resultSteps.push(["hitAnimation", animation, this._user._battleSprite, this._opponent._battleSprite, this.side()]);
-    // this._resultSteps.push(["se","normal"]);
-    // this._resultSteps.push(["damageOpponent",opponentDamage]);
     const effectsResult = this.calculateMoveEffects({});
     this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
 };
+PokemonMZ_Game_Action.prototype.calculateMoveSkullBashTurn1 = function() { 
+    let enemyWillFaint = false;
+    let userWillFaint = false;
+
+    let animation = null;
+    for (const effect of this._moveData.effects) {
+        if (effect.type == "skullBash") {
+            animation = effect.animationTurn1;
+        }
+    }
+
+    this._resultSteps.push(["hitAnimation", animation, this._user._battleSprite, this._opponent._battleSprite, this.side()]);
+    const effectsResult = this.calculateMoveEffects({});
+    this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
+};
+
+
 
 
 PokemonMZ_Game_Action.prototype.calculateMoveEffects = function(battleData) { // TODO ADD ALL MOVE EFFECTS
@@ -4423,6 +4480,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
         break;
     case "dig":
         effectResults = this.effect_dig(battleData, effect, effectResults);
+        break;
+    case "skullBash":
+        effectResults = this.effect_skullBash(battleData, effect, effectResults);
         break;
     case "moneyDrop":
         effectResults = this.effect_moneyDrop(battleData, effect, effectResults);
@@ -5446,6 +5506,16 @@ PokemonMZ_Game_Action.prototype.effect_dig = function(battleData, effect, effect
     } else {
         effectResults.success = true;
         this._resultSteps.push(["endDigging",this._user])
+    }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_skullBash = function(battleData, effect, effectResults) {
+    if (!this._user.isLoweringHead()) {
+        effectResults.success = true;
+        this._resultSteps.push(["startSkullBash",this._user])
+    } else {
+        effectResults.success = true;
+        this._resultSteps.push(["endSkullBash",this._user])
     }
     return effectResults;
 };

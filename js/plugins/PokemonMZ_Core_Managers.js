@@ -1078,6 +1078,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
         );
         break;
     case "dig":
+    case "skullBash":
         DataManager.verifyProperties(
             moveEffect,
             errorMessagePrefix,
@@ -2457,6 +2458,14 @@ PokemonMZ_BattleManager.startPlayerInput = function() {
         return;
     }
 
+    if (pokemon.isLoweringHead()) {
+        // In case of skull bash, the player cannot select any action - 
+        // the phase immediatly switch to dig turn 2
+        this.setPlayerMoveIndex(pokemon.skullBashMoveIndex());
+        this.calculateComputerMove();
+        return;
+    }
+
     this._trainerInputWindow.open()
     this._trainerInputWindow.activate()
     this._staticMessageWindow.setText("What should " + pokemon.name() + " do?")
@@ -3375,6 +3384,13 @@ PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
         return;
     }
 
+    // If enemy pokemon is using skull bash, it only selects that move
+    if (enemyPokemon.isLoweringHead()) {
+        this._enemyMoveIndex = enemyPokemon.skullBashMoveIndex();
+        this.calculateBattleActions();
+        return;
+    }
+
     if (trainer) {
         const modifiers = trainer.iaModifiers();
         if (modifiers) {
@@ -3712,7 +3728,7 @@ PokemonMZ_BattleManager.isPokemonObedient = function(side) {
         // If obedience -1 (all) or pokemon level below or equal to level, pokemon obeys.
         return true;
     }
-    if (pokemon.isDigging() || pokemon.isBiding() || oppositePokemon.isBound() || pokemon.isBerserk() || pokemon.isRaging()) {
+    if (pokemon.isDigging() || pokemon.isBiding() || oppositePokemon.isBound() || pokemon.isBerserk() || pokemon.isRaging() || pokemon.isLoweringHead()) {
         // Several turn moves are not interrupted by obedience once started
         return true;
     }
@@ -3808,7 +3824,11 @@ PokemonMZ_BattleManager.startMove = function(side) {
                 if (pokemon.isDigging()) { // Confusion hurt interrupts digging
                     pokemon.endDigging() 
                     this._currentAction.addResultSteps(["showSprite", this._currentAction.userBattleSprite()])
+                }
+                if (pokemon.isLoweringHead()) { // Confusion hurt interrupts skull bash
+                    pokemon.endSkullBash() 
                 } 
+
 
                 this._currentAction.addResultSteps(["autotext","confusedHurt",this._currentAction.side()])
                 move = pokemon.moveSelfHurtConfusion();
@@ -3830,7 +3850,10 @@ PokemonMZ_BattleManager.startMove = function(side) {
         if (pokemon.isDigging()) { // Paralysis interrupts digging
             pokemon.endDigging() 
             this._currentAction.addResultSteps(["showSprite", this._currentAction.userBattleSprite()])
-        } 
+        }
+        if (pokemon.isLoweringHead()) { // Paralysis interrupts skull bash
+            pokemon.endSkullBash() 
+        }
         this._currentAction.addResultSteps(["animateUserEffect", this._currentAction.userBattleSprite(), "paralyzed"])
         this._currentAction.addResultSteps(["autotext","isParalyzed",this._currentAction.side()])
         this.changePhase(nextPhase);
@@ -3925,7 +3948,11 @@ PokemonMZ_BattleManager.startMove = function(side) {
         if (pokemon.isDigging()) { // Disabling dig interrupts digging
             pokemon.endDigging() 
             this._currentAction.addResultSteps(["showSprite", this._currentAction.userBattleSprite()])
-        } 
+        }
+        if (pokemon.isLoweringHead()) { // Disabling skull bash interrupts the attack
+            pokemon.endSkullBash() 
+        }
+
         this._currentAction.calculateResidualEffectsOnly();
         this.changePhase(nextPhase);
         return;
@@ -3948,7 +3975,7 @@ PokemonMZ_BattleManager.startMove = function(side) {
     if (pokemon.isMoveMirrorMove(moveIndex)) {
         let keepPreviousMirror = false;
 
-        if (pokemon.isBiding() || oppositePokemon.isBound() || pokemon.isBerserk() || pokemon.isRaging() || pokemon.isDigging()) {
+        if (pokemon.isBiding() || oppositePokemon.isBound() || pokemon.isBerserk() || pokemon.isRaging() || pokemon.isDigging() || pokemon.isLoweringHead()) {
             keepPreviousMirror = true;
         }
 
@@ -4022,6 +4049,15 @@ PokemonMZ_BattleManager.startMove = function(side) {
         move = pokemon.lastMoveUsed();
     }
 
+    // If pokemon launches skull bash, no pp consumption, another message
+    if (pokemon.isMoveSkullBash(moveIndex) && !pokemon.isLoweringHead()) {
+        skipPP = true;
+    }
+    if (pokemon.isLoweringHead() && pokemon.isMoveMirrorMove(moveIndex)) {
+        // If using dig already through mirror move, follow-up
+        move = pokemon.lastMoveUsed();
+    }
+
     // Consume PP if needed
     if (!skipPP) {
         pokemon.consumePP(moveIndex);
@@ -4045,6 +4081,15 @@ PokemonMZ_BattleManager.startMove = function(side) {
             }
         }
 
+        let isMirrorSkullBashTurn1 = false;
+        if (pokemon.isMoveMirrorMove(moveIndex) && !pokemon.isLoweringHead()) {
+            const mirroredMove = pokemon.moveMirrored()
+            const mirroredMoveData = pokemon.moveDataFromStringId(mirroredMove.id)
+            for (const effect of mirroredMoveData.effects) {
+                if (effect.type == "skullBash") { isMirrorSkullBashTurn1 = true; }
+            }
+        }
+
         if (oppositePokemon.isBound() && pokemon.isMoveBinding(moveIndex)) {
             this._currentAction.insertResultStepsAt(["autotext","attackContinues",this._currentAction.side()], battleIndex)
         } else if (oppositePokemon.isBound() && (pokemon.isMoveMirrorMove(moveIndex))) {
@@ -4053,6 +4098,10 @@ PokemonMZ_BattleManager.startMove = function(side) {
             this._currentAction.insertResultStepsAt(["autotext","dugHole",this._currentAction.side()], battleIndex)
         } else if (isMirrorDigTurn1) {
             this._currentAction.insertResultStepsAt(["autotext","dugHole",this._currentAction.side()], battleIndex)
+        } else if (pokemon.isMoveSkullBash(moveIndex) && !pokemon.isLoweringHead()) {
+            this._currentAction.insertResultStepsAt(["autotext","lowerHead",this._currentAction.side()], battleIndex)
+        } else if (isMirrorSkullBashTurn1) {
+            this._currentAction.insertResultStepsAt(["autotext","lowerHead",this._currentAction.side()], battleIndex)
         } else if (usedAnotherMove) {
             this._currentAction.insertResultStepsAt(["autotext","useMoveInstead",this._currentAction.side(),moveName], battleIndex)
         } else {
@@ -4065,6 +4114,11 @@ PokemonMZ_BattleManager.startMove = function(side) {
 
     // If pokemon launches dig, no pp consumption
     if (pokemon.isMoveDig(moveIndex) && !pokemon.isDigging()) {
+        skipSeeMove = true;
+    }
+
+    // If pokemon launches skull bash, no pp consumption
+    if (pokemon.isMoveSkullBash(moveIndex) && !pokemon.isLoweringHead()) {
         skipSeeMove = true;
     }
 
@@ -4247,6 +4301,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["dig", step[1]];
                 break;
+            case "startSkullBash":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["skullBash", step[1]];
+                break;
             case "advanceBerserkPokemonTurn":
                 this.changeSubPhase("advanceBerserkPokemonTurn");
                 this._subPhaseParams = [step[1]];
@@ -4274,6 +4332,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
             case "endDigging":
                 this.changeSubPhase("removePokemonStatus");
                 this._subPhaseParams = ["dig", step[1]];
+                break;
+            case "endSkullBash":
+                this.changeSubPhase("removePokemonStatus");
+                this._subPhaseParams = ["skullBash", step[1]];
                 break;
             case "allStatusHeal":
                 this.changeSubPhase("removePokemonStatus");
@@ -4882,6 +4944,9 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
         case "dig":
             target.startDigging(moveIndex);
             break;
+        case "skullBash":
+            target.startSkullBash(moveIndex);
+            break;
         case "minimize":
             target.minimize();
             this._spriteset.playerPokemonSprite().setScale(this._playerChosenPokemon.battleSpriteMaxScale());
@@ -4925,6 +4990,9 @@ PokemonMZ_BattleManager.removePokemonStatus = function() {
             break;
         case "dig":
             target.endDigging();
+            break;
+        case "skullBash":
+            target.endSkullBash();
             break;
         case "all":
             // Note Gen2+ will remove confusion too
@@ -5195,6 +5263,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return "The Mirror Move failed!"
     case "dugHole":
         return prefix + pokemon.name() + " dug a hole!"
+    case "lowerHead":
+        return prefix + pokemon.name() + " lowered its head!"
     case "coinsScatter":
         return "Coins scattered everywhere!";
     case "loafingAround":
