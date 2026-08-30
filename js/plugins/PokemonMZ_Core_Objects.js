@@ -2163,6 +2163,19 @@ PokemonMZ_Game_Pokemon.prototype.moveMirrored = function() {
 PokemonMZ_Game_Pokemon.prototype.moveSelfHurtConfusion = function() {
     return {"id":"selfHurtConfusion","pp":0, "ppup":0}
 };
+
+PokemonMZ_Game_Pokemon.prototype.moveFromMetronome = function() {
+    // Generate a random move
+    const possibleMoves = [];
+    for (const move of $PokemonMZ_dataMoves) {
+        if (move && !move.forbidMetronome) {
+            possibleMoves.push(move.id);
+        }
+    }
+    const randomIndex = Math.randomInt(possibleMoves.length)
+    return {"id":possibleMoves[randomIndex],"pp":1, "ppup":0}
+};
+
 PokemonMZ_Game_Pokemon.prototype.moveUseability = function(index) {
     const move = this._moves[index];
     if (this.isMoveDisabled(index)) {
@@ -2267,6 +2280,11 @@ PokemonMZ_Game_Pokemon.prototype.isMoveMirrorMove = function(index) {
 };
 PokemonMZ_Game_Pokemon.prototype.isMoveDig = function(index) {
     // Returns if the move at index has the dig effect
+    if (index == -1 ) {
+        // Struggle cannot be dig
+        return false;
+    }
+
     const move = this.moveDataFromIndex(index);
     for (const effect of move.effects) {
         if (effect.type == "dig") { return true; }
@@ -2275,13 +2293,30 @@ PokemonMZ_Game_Pokemon.prototype.isMoveDig = function(index) {
 };
 PokemonMZ_Game_Pokemon.prototype.isMoveSkullBash = function(index) {
     // Returns if the move at index has the skull bash effect
+    if (index == -1 ) {
+        // Struggle cannot be skull bash
+        return false;
+    }
+
     const move = this.moveDataFromIndex(index);
     for (const effect of move.effects) {
         if (effect.type == "skullBash") { return true; }
     }
     return false;
 };
+PokemonMZ_Game_Pokemon.prototype.isMoveMetronome = function(index) {
+    // Returns if the move at index is metronome
+    if (index == -1 ) {
+        // Struggle cannot be metronome
+        return false;
+    }
 
+    const move = this.moveDataFromIndex(index);
+    for (const effect of move.effects) {
+        if (effect.type == "metronome") { return true; }
+    }
+    return false;
+};
 
 PokemonMZ_Game_Pokemon.prototype.berserkMoveIndex = function() {
     return this._berserkMoveIndex;

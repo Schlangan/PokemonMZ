@@ -27,6 +27,8 @@ moveData
 - requiredTargetStatus, **string**, *optional* : If the value is set, the corresponding status on the target will be required to hit. Else, the move will miss. Possible statuses are **burn**,**paralysis**,**poison**,**freeze**,**sleep**.
 
 - forbidMirrorMove, **bool**, *optional* : If the value is set to true, the move cannot be reproduced by mirror move.
+- forbidMetronome, **bool**, *optional* : If the value is set to true, the move cannot be selected by metronome.
+
 - hitDig, **bool**, *optional* : If the value is set to true, the move will be able to hit an opponent using dig.
 
 - hm, **bool**, *optional* : If the value is set to true, the move becomes a HM. It is impossible to forget, and the daycare system won't take a pokemon having such move.
@@ -94,6 +96,9 @@ List of implemented effects and their additional parameters:
         - *suckedHealth*: "Sucked health from xxxxx!"
         - *ateDream*: "xxxxx's dream was eaten!"
 
+- type = **healUserPercentHp** : Recover the hp of the user by a given percentage
+    - value : Percentage of the max hp recovered
+
 - type = **recoilPercent** : Inflicts recoil damage after hitting
     - value : Percentage of the damage inflicted turning to recoil
 
@@ -146,6 +151,7 @@ List of implemented effects and their additional parameters:
     - The opponent is frozen or asleep
     - The opponent switched out
     - The opponent's trainer used an item
+- type = **metronome** : Launches a move at random, selected amongst all moves, except those with the property **forbidMetronome** set to true.
 - type = **dig** : Two turns attack. First turn the user goes underground and is impossible to hit except by move with hitDig:true. Second turn, attack the target
     - animationTurn1, **string**, *optional* : Animation played during the first turn.
 - type = **skullBash** : Two turns attack. First turn the user lowers its head, with no additional effect in generation 1. Second turn, attack the target

@@ -928,7 +928,7 @@ DataManager.verifyMoveData = function(index, moveData) {
         mandatoryProperties,
         [
             "power","targetDefenseDivider","noCritical","noAccuracy","noVariance",
-            "cpuHigherEffectFailure","fixedDamage","percentHpDamage", "forbidMirrorMove","alwaysEffects",
+            "cpuHigherEffectFailure","fixedDamage","percentHpDamage", "forbidMirrorMove","forbidMetronome","alwaysEffects",
             "mapEffect","mapBadgeRequires","animationAlways","animationHit","priority",
             "category","hitDig","mapSound","hm","requiredTargetStatus"
         ],
@@ -1126,6 +1126,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
     case "splash":
     case "teleport":
     case "faintUser":
+    case "metronome":
     case "mirrorMove":
     case "moneyDrop":
     case "rest":
@@ -4007,6 +4008,31 @@ PokemonMZ_BattleManager.startMove = function(side) {
             }
         }
     }
+
+    // Check if Metronome is used
+    if (pokemon.isMoveMetronome(moveIndex)) {
+        const metronomeAnimation = pokemon.moveDataFromIndex(moveIndex).animationHit;
+        let keepPreviousMetronome = false;
+
+        if (pokemon.isBiding() || oppositePokemon.isBound() || pokemon.isBerserk() || pokemon.isRaging() || pokemon.isDigging() || pokemon.isLoweringHead()) {
+            keepPreviousMetronome = true;
+        }
+
+        if (keepPreviousMetronome) {
+            move = pokemon.lastMoveUsed();
+            moveName = pokemon.moveName(move);
+            skipPP = true;
+        } else {
+            this._currentAction.addResultSteps(["autotext","useMove",this._currentAction.side(),moveName])
+            this._currentAction.addResultSteps(["hitAnimation", metronomeAnimation, this._currentAction.userBattleSprite(), this._currentAction.opponentBattleSprite(), this._currentAction.side()]);
+            pokemon.consumePP(moveIndex);
+            move = pokemon.moveFromMetronome();
+            pokemon.setLastMoveUsed(move);
+            moveName = pokemon.moveName(move);
+            skipPP = true;
+        }
+    }
+
 
     // Get battle result index to insert text
     let battleIndex = this._currentAction.resultStepsLength();
