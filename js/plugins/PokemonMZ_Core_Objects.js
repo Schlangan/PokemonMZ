@@ -4577,6 +4577,7 @@ PokemonMZ_Game_Action.prototype.moveHit = function() {
 PokemonMZ_Game_Action.prototype.moveCritical = function() { 
     if (this._moveData.noCritical) { return false; } // Non criticable move, like hurting from confusion
     if (this._moveData.fixedDamage) { return false; } // Fixed damage move, no critical possible
+    if (this._moveData.percentHpDamage) { return false; } // % HP damage move, no critical possible
 
     if (!this._moveData.power) { return false; }
     
@@ -4648,6 +4649,30 @@ PokemonMZ_Game_Action.prototype.moveDamage = function(critical) {
         } else if (this._moveData.target == "user") {
             return {"user":fixedDamage, "opponent":0, "efficiency":1.0};
         }
+    }
+
+    if (this._moveData.percentHpDamage) {
+        // Case of damage equal to a percentage of remaining HP
+        const damageFactor = this._moveData.percentHpDamage / 100;
+
+        let userDamage = 0;
+        let opponentDamage = 0;
+
+        if (this._moveData.target == "opponent") {
+            opponentDamage = Math.floor(damageFactor * this._opponent.hp());
+            if (opponentDamage < 1) { opponentDamage = 1; }
+        } else if (this._moveData.target == "user") {
+            userDamage = Math.floor(damageFactor * this._user.hp());
+            if (userDamage < 1) { userDamage = 1; }
+        }
+
+        if (PokemonMZ.debugLog) {
+            debugLogging.userDamage = userDamage;
+            debugLogging.opponentDamage = opponentDamage;
+            console.log({"PokemonMZ_Game_Action.moveDamage > ":debugLogging})
+        }
+
+        return {"user":userDamage, "opponent":opponentDamage, "efficiency":1.0};
     }
 
     const playerAtkBadgeBoosts = $gamePlayerTrainer.badgeBoosts(this._side, "attack");

@@ -928,7 +928,7 @@ DataManager.verifyMoveData = function(index, moveData) {
         mandatoryProperties,
         [
             "power","targetDefenseDivider","noCritical","noAccuracy","noVariance",
-            "cpuHigherEffectFailure","fixedDamage","forbidMirrorMove","alwaysEffects",
+            "cpuHigherEffectFailure","fixedDamage","percentHpDamage", "forbidMirrorMove","alwaysEffects",
             "mapEffect","mapBadgeRequires","animationAlways","animationHit","priority",
             "category","hitDig","mapSound","hm","requiredTargetStatus"
         ],
