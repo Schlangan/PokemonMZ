@@ -5379,7 +5379,13 @@ PokemonMZ_Game_Action.prototype.effect_spdDownTarget = function(battleData, effe
     return effectResults;
 };
 PokemonMZ_Game_Action.prototype.effect_recoilPercent = function(battleData, effect, effectResults) {
-    const damageDealt = Math.floor(battleData.damageDealt * effect.value/100);
+    const opponentHp = this.opponent().hp();
+    let trueDamageDealt = battleData.damageDealt;
+    if (trueDamageDealt > opponentHp) {
+        trueDamageDealt = opponentHp;
+    }
+
+    const damageDealt = Math.floor(trueDamageDealt * effect.value/100);
     if (damageDealt > 0) {
         if (PokemonMZ.debugLog) {
             console.log({"PokemonMZ_Game_Action.effect_recoilPercent > ":{
