@@ -2712,6 +2712,14 @@ PokemonMZ_Game_Pokemon.prototype.itemEffect = function(item, ext1) {
             }
         }
         return {"effect":"restorePp", "ppRecovery":ppRecovery}
+    case "battlePatkUpUser":
+        if (this._stageModifiers.patk < 6) {
+            this._stageModifiers.patk += item.pkmz_data.stage;
+            if (this._stageModifiers.patk > 6) { this._stageModifiers.patk = 6; }
+            return {"effect":"patkUp","animation":item.pkmz_data.battleAnimation, "success":true};
+        } else {
+           return {"effect":"patkUp","success":false};
+        }
     case "battlePdefUpUser":
         if (this._stageModifiers.pdef < 6) {
             this._stageModifiers.pdef += item.pkmz_data.stage;
@@ -2735,6 +2743,14 @@ PokemonMZ_Game_Pokemon.prototype.itemEffect = function(item, ext1) {
             return {"effect":"spdUp","animation":item.pkmz_data.battleAnimation, "success":true};
         } else {
            return {"effect":"spdUp","success":false};
+        }
+    case "battleAccUpUser":
+        if (this._stageModifiers.acc < 6) {
+            this._stageModifiers.acc += item.pkmz_data.stage;
+            if (this._stageModifiers.acc > 6) { this._stageModifiers.acc = 6; }
+            return {"effect":"accUp","animation":item.pkmz_data.battleAnimation, "success":true};
+        } else {
+           return {"effect":"accUp","success":false};
         }
     }
     return {"effect":""};
@@ -3890,6 +3906,14 @@ PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO
     }
     this._resultSteps.push(["waittext","usedItem",this.side(), item.name]);
     switch (effect.effect) {
+        case "patkUp":
+            if (effect.success) {
+                this._resultSteps.push(["hitAnimation", effect.animation, this.userBattleSprite(), null, this.side()])
+                this._resultSteps.push(["autotext","attackRose",this.side()])
+            } else {
+                this._resultSteps.push(["autotext","statusNothing",this.side()])
+            }
+            break;
         case "pdefUp":
             if (effect.success) {
                 this._resultSteps.push(["hitAnimation", effect.animation, this.userBattleSprite(), null, this.side()])
@@ -3910,6 +3934,14 @@ PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO
             if (effect.success) {
                 this._resultSteps.push(["hitAnimation", effect.animation, this.userBattleSprite(), null, this.side()])
                 this._resultSteps.push(["autotext","speedRose",this.side()])
+            } else {
+                this._resultSteps.push(["autotext","statusNothing",this.side()])
+            }
+            break;
+        case "accUp":
+            if (effect.success) {
+                this._resultSteps.push(["hitAnimation", effect.animation, this.userBattleSprite(), null, this.side()])
+                this._resultSteps.push(["autotext","accuracyRose",this.side()])
             } else {
                 this._resultSteps.push(["autotext","statusNothing",this.side()])
             }

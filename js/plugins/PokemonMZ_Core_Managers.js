@@ -861,9 +861,11 @@ DataManager.verifyItemData = function(index, itemData) {
                 mandatoryProperties.concat(["boostPercent"]),
                 optionalProperties);
             break;
+        case "battlePatkUpUser":
         case "battlePdefUpUser":
         case "battleSpcUpUser":
         case "battleSpdUpUser":
+        case "battleAccUpUser":
             DataManager.verifyProperties(
                 itemData, 
                 errorMessagePrefix, 
@@ -3607,9 +3609,11 @@ PokemonMZ_BattleManager.calculateBattleActions = function() {
         // or if the item is direct, like a pokeball
         switch (this._playerUseItem.pkmz_data.effect) {
         case "ball":
+        case "battlePatkUpUser":
         case "battlePdefUpUser":
         case "battleSpcUpUser":
         case "battleSpdUpUser":
+        case "battleAccUpUser":
             this._battleActions.push("playerStartUsingItem");
             break;
         default:
@@ -4177,9 +4181,11 @@ PokemonMZ_BattleManager.startPlayerItem = function() {
             this._playerUseItem = null;
             this.changePhase("throwBall");
             break;
+        case "battlePatkUpUser":
         case "battlePdefUpUser":
         case "battleSpcUpUser":
         case "battleSpdUpUser":
+        case "battleAccUpUser":
             this._currentAction = new PokemonMZ_Game_Action(this._playerChosenPokemon, "player");
             this._currentAction.setItem(this._playerUseItem.pkmz_data.id)
             this._currentAction.calculate();
@@ -5171,6 +5177,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + "'s attack continues!";
     case "missed":
         return prefix + pokemon.name() + "'s attack missed!";
+    case "accuracyRose":
+        return prefix + pokemon.name() + "'s accuracy rose!";
     case "attackRose":
         return prefix + pokemon.name() + "'s attack rose!";
     case "attackRosePlus":

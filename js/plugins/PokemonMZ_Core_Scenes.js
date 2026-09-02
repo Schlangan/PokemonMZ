@@ -1037,9 +1037,11 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
             this._messageWindow.setText("This isn't the time to use that!");
             this._messageWindow.startMessage();
             break;
+        case "battlePatkUpUser":
         case "battlePdefUpUser":
         case "battleSpcUpUser":
         case "battleSpdUpUser":
+        case "battleAccUpUser":
             this._messageWindow.setText(itemDict.pkmz_data.mapMessage);
             this._messageWindow.startMessage();
             break;
@@ -3907,9 +3909,11 @@ PokemonMZ_Scene_Battle.prototype.onItemOk = function() {
                 PokemonMZ_BattleManager.changePhase("startPlayerInput")
             }
             break;
+        case "battlePatkUpUser":
         case "battlePdefUpUser":
         case "battleSpcUpUser":
         case "battleSpdUpUser":
+        case "battleAccUpUser":
             this.onDirectItemUse(selectedItem);
             break;
         default:
