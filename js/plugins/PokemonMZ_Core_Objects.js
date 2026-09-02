@@ -1749,6 +1749,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
 
     this._damagedBide = 0;
     this._hasFocusEnergy = false;
+    this._hasGuardSpec = false;
     this._berserkMoveIndex = -1;
     this._rageMoveIndex = -1;
     this._digMoveIndex = -1;
@@ -2752,6 +2753,20 @@ PokemonMZ_Game_Pokemon.prototype.itemEffect = function(item, ext1) {
         } else {
            return {"effect":"accUp","success":false};
         }
+    case "battleDireHit":
+        if (this.canGetFocusEnergy()) {
+            this.focusEnergy();
+            return {"effect":"focusEnergy","animation":item.pkmz_data.battleAnimation, "success":true};
+        } else {
+            return {"effect":"focusEnergy","success":false};
+        }
+    case "battleGuardSpec":
+        if (this.canGetGuardSpec()) {
+            this.guardSpec();
+            return {"effect":"guardSpec","animation":item.pkmz_data.battleAnimation, "success":true};
+        } else {
+            return {"effect":"guardSpec","success":false};
+        }
     }
     return {"effect":""};
 };
@@ -2913,6 +2928,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.unconfuse();
     this.endBide();
     this.unfocusEnergy();
+    this.unguardSpec();
     this.unBind();
     this.removeDisable();
     this.unBerserk();
@@ -2991,6 +3007,9 @@ PokemonMZ_Game_Pokemon.prototype.nextConfusionTurn = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.hasFocusEnergy = function() {
     return this._hasFocusEnergy;
+};
+PokemonMZ_Game_Pokemon.prototype.hasGuardSpec = function() {
+    return this._hasGuardSpec;
 };
 PokemonMZ_Game_Pokemon.prototype.isBurnable = function() {
     // Cannot burn pokemon with PSN/SLP/FRZ/PAR/BRN/FNT
@@ -3109,6 +3128,13 @@ PokemonMZ_Game_Pokemon.prototype.canGetFocusEnergy = function() {
     }
     return true;
 };
+PokemonMZ_Game_Pokemon.prototype.canGetGuardSpec = function() {
+    // Cannot flinch FNT/GSPEC pokemon
+    if (this.isFainted() || this.hasGuardSpec()) {
+        return false;
+    }
+    return true;
+};
 PokemonMZ_Game_Pokemon.prototype.burn = function(force) {
     if (this.isBurnable() || force) {
         this._isBurned = true;
@@ -3160,6 +3186,11 @@ PokemonMZ_Game_Pokemon.prototype.confuse = function(turns, force) {
 PokemonMZ_Game_Pokemon.prototype.focusEnergy = function(force) {
     if (this.canGetFocusEnergy() || force) {
         this._hasFocusEnergy = true;
+    }
+};
+PokemonMZ_Game_Pokemon.prototype.guardSpec = function(force) {
+    if (this.canGetGuardSpec() || force) {
+        this._hasGuardSpec = true;
     }
 };
 PokemonMZ_Game_Pokemon.prototype.bind = function(minTurns, maxTurns, chances, force) {
@@ -3297,6 +3328,11 @@ PokemonMZ_Game_Pokemon.prototype.unconfuse = function() {
 PokemonMZ_Game_Pokemon.prototype.unfocusEnergy = function() {
     if (this.hasFocusEnergy()) {
         this._hasFocusEnergy = false;
+    }
+};
+PokemonMZ_Game_Pokemon.prototype.unguardSpec = function() {
+    if (this.hasGuardSpec()) {
+        this._hasGuardSpec = false;
     }
 };
 PokemonMZ_Game_Pokemon.prototype.unBind = function() {
@@ -3946,6 +3982,23 @@ PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO
                 this._resultSteps.push(["autotext","statusNothing",this.side()])
             }
             break;
+        case "focusEnergy":
+            if (effect.success) {
+                this._resultSteps.push(["hitAnimation", effect.animation, this.userBattleSprite(), null, this.side()])
+                this._resultSteps.push(["autotext","gettingPumped",this.side()])
+            } else {
+                this._resultSteps.push(["autotext","statusNothing",this.side()])
+            }
+            break;
+        case "guardSpec":
+            if (effect.success) {
+                this._resultSteps.push(["hitAnimation", effect.animation, this.userBattleSprite(), null, this.side()])
+                this._resultSteps.push(["autotext","shroudedMist",this.side()])
+            } else {
+                this._resultSteps.push(["autotext","statusNothing",this.side()])
+            }
+            break;
+
     }
     this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
 };
@@ -5258,6 +5311,12 @@ PokemonMZ_Game_Action.prototype.effect_accDownTarget = function(battleData, effe
         })
     }
 
+    // Zero damage move won't work if the target is under guard spec/mist
+    if (battleData.damageDealt == 0 && this._opponent.hasGuardSpec()) {
+        this._resultSteps.push(["autotext","statusNothing",this.side()])
+        return effectResults;
+    }
+
     // In generation I, status has 25% of not happening if user is enemy
     // Since pure status moves already passed that check, only applies to other move types
     const additionalFailure = (this.additionalFailure() && this._moveData.category != "status") ? Math.random() < 0.25 : false;
@@ -5289,6 +5348,12 @@ PokemonMZ_Game_Action.prototype.effect_patkDownTarget = function(battleData, eff
         })
     }
 
+    // Zero damage move won't work if the target is under guard spec/mist
+    if (battleData.damageDealt == 0 && this._opponent.hasGuardSpec()) {
+        this._resultSteps.push(["autotext","statusNothing",this.side()])
+        return effectResults;
+    }
+
     // In generation I, status has 25% of not happening if user is enemy
     // Since pure status moves already passed that check, only applies to other move types
     const additionalFailure = (this.additionalFailure() && this._moveData.category != "status") ? Math.random() < 0.25 : false;
@@ -5318,6 +5383,12 @@ PokemonMZ_Game_Action.prototype.effect_pdefDownTarget = function(battleData, eff
         console.log({"PokemonMZ_Game_Action.effect_pdefDownTarget > ":{
             "chance":effect.percentChance, "randomNumber":randomNumber}
         })
+    }
+
+    // Zero damage move won't work if the target is under guard spec/mist
+    if (battleData.damageDealt == 0 && this._opponent.hasGuardSpec()) {
+        this._resultSteps.push(["autotext","statusNothing",this.side()])
+        return effectResults;
     }
 
     // In generation I, status has 25% of not happening if user is enemy
@@ -5360,6 +5431,12 @@ PokemonMZ_Game_Action.prototype.effect_spcDownTarget = function(battleData, effe
         })
     }
 
+    // Zero damage move won't work if the target is under guard spec/mist
+    if (battleData.damageDealt == 0 && this._opponent.hasGuardSpec()) {
+        this._resultSteps.push(["autotext","statusNothing",this.side()])
+        return effectResults;
+    }
+
     // In generation I, status has 25% of not happening if user is enemy
     // Since pure status moves already passed that check, only applies to other move types
     const additionalFailure = (this.additionalFailure() && this._moveData.category != "status") ? Math.random() < 0.25 : false;
@@ -5389,6 +5466,12 @@ PokemonMZ_Game_Action.prototype.effect_spdDownTarget = function(battleData, effe
         console.log({"PokemonMZ_Game_Action.effect_spdDownTarget > ":{
             "chance":effect.percentChance, "randomNumber":randomNumber, "stageBefore":this._opponent._stageModifiers.spd}
         })
+    }
+
+    // Zero damage move won't work if the target is under guard spec/mist
+    if (battleData.damageDealt == 0 && this._opponent.hasGuardSpec()) {
+        this._resultSteps.push(["autotext","statusNothing",this.side()])
+        return effectResults;
     }
 
     // In generation I, status has 25% of not happening if user is enemy

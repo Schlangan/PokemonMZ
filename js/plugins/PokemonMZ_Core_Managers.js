@@ -877,6 +877,19 @@ DataManager.verifyItemData = function(index, itemData) {
                 }
             }
             break;
+        case "battleDireHit":
+        case "battleGuardSpec":
+            DataManager.verifyProperties(
+                itemData, 
+                errorMessagePrefix, 
+                mandatoryProperties,
+                optionalProperties.concat(["battleAnimation"]));
+            if (itemData.battleAnimation) {
+                if (!DataManager.declared.animations.includes(itemData.battleAnimation)) {
+                    console.error(errorMessagePrefix + "Unknown battle animation ID: " + itemData.battleAnimation);
+                }
+            }
+            break;
         case "itemFinder":
             DataManager.verifyProperties(
                 itemData, 
@@ -3614,6 +3627,8 @@ PokemonMZ_BattleManager.calculateBattleActions = function() {
         case "battleSpcUpUser":
         case "battleSpdUpUser":
         case "battleAccUpUser":
+        case "battleDireHit":
+        case "battleGuardSpec":
             this._battleActions.push("playerStartUsingItem");
             break;
         default:
@@ -4186,9 +4201,12 @@ PokemonMZ_BattleManager.startPlayerItem = function() {
         case "battleSpcUpUser":
         case "battleSpdUpUser":
         case "battleAccUpUser":
+        case "battleDireHit":
+        case "battleGuardSpec":
             this._currentAction = new PokemonMZ_Game_Action(this._playerChosenPokemon, "player");
             this._currentAction.setItem(this._playerUseItem.pkmz_data.id)
             this._currentAction.calculate();
+            this._playerUseItem = null;
             this.changePhase("playerResolveActionSteps"); 
             break;
     }
@@ -5283,6 +5301,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + " " + ext1;
     case "gettingPumped":
         return prefix + pokemon.name() + "'s getting pumped!";
+    case "shroudedMist":
+        return prefix + pokemon.name() + "'s shrouded in mist!";
     case "disabled":
         return prefix + pokemon.name() + "'s " + String(ext1) + " was disabled!";
     case "moveDisabled":

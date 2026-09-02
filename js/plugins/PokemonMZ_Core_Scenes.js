@@ -1042,6 +1042,8 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
         case "battleSpcUpUser":
         case "battleSpdUpUser":
         case "battleAccUpUser":
+        case "battleDireHit":
+        case "battleGuardSpec":    
             this._messageWindow.setText(itemDict.pkmz_data.mapMessage);
             this._messageWindow.startMessage();
             break;
@@ -3914,6 +3916,8 @@ PokemonMZ_Scene_Battle.prototype.onItemOk = function() {
         case "battleSpcUpUser":
         case "battleSpdUpUser":
         case "battleAccUpUser":
+        case "battleDireHit":
+        case "battleGuardSpec": 
             this.onDirectItemUse(selectedItem);
             break;
         default:
