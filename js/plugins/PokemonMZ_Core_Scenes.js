@@ -1034,6 +1034,7 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
             SceneManager.push(PokemonMZ_Scene_RegionMap);
             break;
         case "ball":
+        case "escapeWildBattle":
             this._messageWindow.setText("This isn't the time to use that!");
             this._messageWindow.startMessage();
             break;
@@ -3909,6 +3910,18 @@ PokemonMZ_Scene_Battle.prototype.onItemOk = function() {
                 this._staticMessageWindow.hide();
                 $gameMessage.add("The Pokémon Box is full! Can't use that item!")
                 PokemonMZ_BattleManager.changePhase("startPlayerInput")
+            }
+            break;
+        case "escapeWildBattle":
+            if ($PokemonMZ_gameBattle.isWildBattle()) {
+                this.onDirectItemUse(selectedItem);
+            } else {
+                this._itemWindow.hide();
+                this._itemWindow.deactivate();
+                this._playerInputWindow.close();
+                this._staticMessageWindow.hide();
+                $gameMessage.add("This isn't the time to use that!");
+                PokemonMZ_BattleManager.changePhase("startPlayerInput");
             }
             break;
         case "battlePatkUpUser":

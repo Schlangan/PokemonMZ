@@ -902,6 +902,7 @@ DataManager.verifyItemData = function(index, itemData) {
         case "townMap": 
         case "escapeRope":
         case "cycling":
+        case "escapeWildBattle":
             DataManager.verifyProperties(
                 itemData, 
                 errorMessagePrefix, 
@@ -1900,6 +1901,9 @@ PokemonMZ_BattleManager.updatePhase = function(timeActive) {
             break;
         case "tryRunAway":
             this.tryRunAway();
+            break;
+        case "forcePlayerWildEscape":
+            this.startPlayerEscape();
             break;
         case "throwBall":
             this.startThrowBall();
@@ -3629,6 +3633,7 @@ PokemonMZ_BattleManager.calculateBattleActions = function() {
         case "battleAccUpUser":
         case "battleDireHit":
         case "battleGuardSpec":
+        case "escapeWildBattle":
             this._battleActions.push("playerStartUsingItem");
             break;
         default:
@@ -4208,6 +4213,11 @@ PokemonMZ_BattleManager.startPlayerItem = function() {
             this._currentAction.calculate();
             this._playerUseItem = null;
             this.changePhase("playerResolveActionSteps"); 
+            break;
+        case "escapeWildBattle":
+            $gameMessage.add($gamePlayerTrainer.name() + " used " + this._playerUseItem.name + "!");
+            this._playerUseItem = null;
+            this.changePhase("forcePlayerWildEscape");
             break;
     }
 };

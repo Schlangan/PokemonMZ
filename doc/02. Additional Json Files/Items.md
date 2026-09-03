@@ -56,6 +56,7 @@ Depending on the effet, additional parameters are required.
     - stage, **int** : Amount of stages up.
     - mapMessage, **string** : Message shown when trying to use the item on the map instead of battle.
     - battleAnimation, **string**, *optional* : Animation string ID played on the player's pokemon if the item succeeds
+- effect = **escapeWildBattle** : Ends immediatly a battle against a wild pokemon. Doesn't work in trainer battles.
 - effect = **battleDireHit** : Applies the focus energy effect to the pokemon.
     - mapMessage, **string** : Message shown when trying to use the item on the map instead of battle.
     - battleAnimation, **string**, *optional* : Animation string ID played on the player's pokemon if the item succeeds
