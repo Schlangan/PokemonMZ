@@ -142,6 +142,8 @@ List of implemented effects and their additional parameters:
 
 - type = **faintUser** : Puts the user K.O. after using the move. For example, self-destruct.
 
+- type = **oneHitKO** : If the target is slower than the user, and the move hit, the target is koed.
+
 - type = **splash** : Useless move that makes no damage and simply displays 'No effect!' when used.
 - type = **teleport** : Teleport the pokemon - ends wild battle with a given success chance. Always fail in trainer battles.
 - type = **rage** : Triggers the rage effect - The pokemon will automatically attack every turn and gain physical attack stages when hit

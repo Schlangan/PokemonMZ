@@ -4169,6 +4169,11 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
     // Hit calculation is only required for the first hit
     hit = this.moveHit() || this._moveData.target == "user";
 
+    // If the move if a one hit ko, it will miss if the target speed exceed the user's
+    const isOneHitKo = this._moveData.effects.some(effect => effect.type === "oneHitKO");
+    if (isOneHitKo) {
+        hit = hit && this.userFaster();
+    }
 
     if (hit || this._moveExecutedHits > 0) {
         if (this._moveData.target == "opponent") {
@@ -4179,6 +4184,11 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
         
         crit = this.moveCritical();
         
+        if (isOneHitKo) {
+            this.calculateOneHitKoMoveAttack()
+            return;
+        }
+
         const damage = this.moveDamage(crit);
         userDamage = damage.user;
         opponentDamage = damage.opponent
@@ -4320,6 +4330,48 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
         }
 
         if (enemyWillFaint) {
+            this._resultSteps.push(["faintPokemon","opponent",this._opponent._battleSprite]);
+        }
+        if (userWillFaint) {
+            this._resultSteps.push(["faintPokemon","user",this._user._battleSprite]);
+        }
+
+        this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
+    }
+};
+PokemonMZ_Game_Action.prototype.calculateOneHitKoMoveAttack = function() { 
+    let enemyWillFaint = true;
+    let userWillFaint = false;
+
+    const damage = this.moveDamage(crit);
+    userDamage = damage.user;
+    opponentDamage = 2*this._opponent.mhp();
+    efficiency = damage.efficiency
+
+    if (efficiency == 0) {
+        // One-hit KO moves do not work on immune Pokemon
+        this._moveRemainingHits = 0;
+        this._resultSteps.push(["autotext","noeffect",this.oppositeSide()]);
+        enemyWillFaint = false;
+        opponentDamage = 0;
+    } else {
+        this._resultSteps.push(["se","normal"]);
+        this._resultSteps.push(["damageOpponent",opponentDamage]);
+        this._opponentEvolvingHp = 0;
+    }
+
+    
+    this._moveRemainingHits = 1;
+    this._moveExecutedHits++;
+    this._moveRemainingHits--;
+  
+    if (this._moveRemainingHits == 0) {
+        if (this._moveHits > 1 && this._moveExecutedHits > 0) {
+            this._resultSteps.push(["autotext","hitTimes",this.side(), this._moveExecutedHits]);
+        }
+
+        if (enemyWillFaint) {
+            this._resultSteps.push(["waittext","oneHitKo",this.side(), this._moveExecutedHits]);
             this._resultSteps.push(["faintPokemon","opponent",this._opponent._battleSprite]);
         }
         if (userWillFaint) {
@@ -4717,6 +4769,21 @@ PokemonMZ_Game_Action.prototype.targetMatchesStatus = function() {
         return true;            
     }
 };
+
+PokemonMZ_Game_Action.prototype.userFaster = function() {
+    const playerBadgeBoosts = $gamePlayerTrainer.badgeBoosts("player", "attack");
+    let userSpeed;
+    let targetSpeed;
+    if (this.side() == "player") {
+        userSpeed = this._user.spdModified() * playerBadgeBoosts.spd;
+        targetSpeed = this._opponent.spdModified();
+    } else {
+        userSpeed = this._user.spdModified();
+        targetSpeed = this._opponent.spdModified() * playerBadgeBoosts.spd;
+    }
+
+    return userSpeed >= targetSpeed;
+}
 
 PokemonMZ_Game_Action.prototype.moveHit = function() {
     if (this._moveData.noAccuracy) { return true; } // Non missable move, like hurting from confusion

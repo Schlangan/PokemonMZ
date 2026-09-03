@@ -1143,6 +1143,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
     case "splash":
     case "teleport":
     case "faintUser":
+    case "oneHitKO":
     case "metronome":
     case "mirrorMove":
     case "moneyDrop":
@@ -5425,6 +5426,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + " regained health!" 
     case "protectedSpecial":
         return prefix + pokemon.name() + "'s protected against special attacks!"
+    case "oneHitKo":
+        return "One-hit KO!"
     }
     return ""
 };
