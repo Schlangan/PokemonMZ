@@ -882,7 +882,7 @@ DataManager.verifyItemData = function(index, itemData) {
             DataManager.verifyProperties(
                 itemData, 
                 errorMessagePrefix, 
-                mandatoryProperties,
+                mandatoryProperties.concat(["mapMessage"]),
                 optionalProperties.concat(["battleAnimation"]));
             if (itemData.battleAnimation) {
                 if (!DataManager.declared.animations.includes(itemData.battleAnimation)) {
