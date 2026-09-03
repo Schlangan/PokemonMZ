@@ -1735,6 +1735,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._isMinimized = false;
     this._isDigging = false;
     this._isLoweringHead = false;
+    this._isMakingWhirlwind = false;
     this._hasLightScreen = false; // Generation I - Light screen only applies to the user
 
     this._hasMoveDisabled = false;
@@ -1753,7 +1754,8 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._berserkMoveIndex = -1;
     this._rageMoveIndex = -1;
     this._digMoveIndex = -1;
-    this._skullBashMoveIndex = -21;
+    this._skullBashMoveIndex = -1;
+    this._razorWindMoveIndex = -1;
 
     this._lastSeenEnemyMove = null;
 
@@ -2305,6 +2307,19 @@ PokemonMZ_Game_Pokemon.prototype.isMoveSkullBash = function(index) {
     }
     return false;
 };
+PokemonMZ_Game_Pokemon.prototype.isMoveRazorWind = function(index) {
+    // Returns if the move at index has the skull bash effect
+    if (index == -1 ) {
+        // Struggle cannot be skull bash
+        return false;
+    }
+
+    const move = this.moveDataFromIndex(index);
+    for (const effect of move.effects) {
+        if (effect.type == "razorWind") { return true; }
+    }
+    return false;
+};
 PokemonMZ_Game_Pokemon.prototype.isMoveMetronome = function(index) {
     // Returns if the move at index is metronome
     if (index == -1 ) {
@@ -2330,6 +2345,9 @@ PokemonMZ_Game_Pokemon.prototype.digMoveIndex = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.skullBashMoveIndex = function() {
     return this._skullBashMoveIndex;
+};
+PokemonMZ_Game_Pokemon.prototype.razorWindMoveIndex = function() {
+    return this._razorWindMoveIndex;
 };
 PokemonMZ_Game_Pokemon.prototype.moveNameFromIndex = function(index) {
     const move = this._moves[index];
@@ -2936,6 +2954,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.unMinimize();
     this.endDigging();
     this.endSkullBash();
+    this.endRazorWind();
     this.removeLightScreen(); // Generation I
 };
 PokemonMZ_Game_Pokemon.prototype.removeFinishedStatuses = function() {
@@ -2995,6 +3014,9 @@ PokemonMZ_Game_Pokemon.prototype.isDigging = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.isLoweringHead = function() {
     return this._isLoweringHead;
+};
+PokemonMZ_Game_Pokemon.prototype.isMakingWhirlwind = function() {
+    return this._isMakingWhirlwind;
 };
 PokemonMZ_Game_Pokemon.prototype.hasLightScreen = function() {
     return this._hasLightScreen;
@@ -3239,6 +3261,10 @@ PokemonMZ_Game_Pokemon.prototype.startSkullBash = function(moveIndex) {
     this._isLoweringHead = true;
     this._skullBashMoveIndex = moveIndex;
 };
+PokemonMZ_Game_Pokemon.prototype.startRazorWind = function(moveIndex) {
+    this._isMakingWhirlwind = true;
+    this._razorWindMoveIndex = moveIndex;
+};
 PokemonMZ_Game_Pokemon.prototype.giveLightScreen = function() {
     this._hasLightScreen = true;
 };
@@ -3369,6 +3395,10 @@ PokemonMZ_Game_Pokemon.prototype.endDigging = function() {
 PokemonMZ_Game_Pokemon.prototype.endSkullBash = function() {
     this._isLoweringHead = false;
     this._skullBashMoveIndex = -1;
+};
+PokemonMZ_Game_Pokemon.prototype.endRazorWind = function() {
+    this._isMakingWhirlwind = false;
+    this._razorWindMoveIndex = -1;
 };
 PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolution = function(evolutionMode, ext1) {
     switch(evolutionMode) {
@@ -3775,6 +3805,15 @@ PokemonMZ_Game_Action.prototype.isMoveSkullBash = function() {
     }
     return false;
 };
+PokemonMZ_Game_Action.prototype.isMoveRazorWind = function() {
+    if (!this._moveData) { return false; }
+    for (const effect of this._moveData.effects) {
+        if (effect.type == "razorWind") {
+            return true;
+        }
+    }
+    return false;
+};
 PokemonMZ_Game_Action.prototype.opponent = function() {
     return this._opponent;
 };
@@ -4064,6 +4103,14 @@ PokemonMZ_Game_Action.prototype.calculateMove = function() { //TODO
     if (this.isMoveSkullBash()) {
         if (!this._user.isLoweringHead()) {
             this.calculateMoveSkullBashTurn1();
+            return;
+        }
+    }
+
+    // Specific behavior for razor wind turn 1
+    if (this.isMoveRazorWind()) {
+        if (!this._user.isMakingWhirlwind()) {
+            this.calculateMoveRazorWindTurn1();
             return;
         }
     }
@@ -4435,7 +4482,21 @@ PokemonMZ_Game_Action.prototype.calculateMoveSkullBashTurn1 = function() {
     const effectsResult = this.calculateMoveEffects({});
     this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
 };
+PokemonMZ_Game_Action.prototype.calculateMoveRazorWindTurn1 = function() { 
+    let enemyWillFaint = false;
+    let userWillFaint = false;
 
+    let animation = null;
+    for (const effect of this._moveData.effects) {
+        if (effect.type == "razorWind") {
+            animation = effect.animationTurn1;
+        }
+    }
+
+    this._resultSteps.push(["hitAnimation", animation, this._user._battleSprite, this._opponent._battleSprite, this.side()]);
+    const effectsResult = this.calculateMoveEffects({});
+    this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
+};
 
 
 
@@ -4608,6 +4669,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
         break;
     case "skullBash":
         effectResults = this.effect_skullBash(battleData, effect, effectResults);
+        break;
+    case "razorWind":
+        effectResults = this.effect_razorWind(battleData, effect, effectResults);
         break;
     case "moneyDrop":
         effectResults = this.effect_moneyDrop(battleData, effect, effectResults);
@@ -5724,6 +5788,16 @@ PokemonMZ_Game_Action.prototype.effect_skullBash = function(battleData, effect, 
     } else {
         effectResults.success = true;
         this._resultSteps.push(["endSkullBash",this._user])
+    }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_razorWind = function(battleData, effect, effectResults) {
+    if (!this._user.isMakingWhirlwind()) {
+        effectResults.success = true;
+        this._resultSteps.push(["startRazorWind",this._user])
+    } else {
+        effectResults.success = true;
+        this._resultSteps.push(["endRazorWind",this._user])
     }
     return effectResults;
 };

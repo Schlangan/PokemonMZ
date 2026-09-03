@@ -1103,6 +1103,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
         break;
     case "dig":
     case "skullBash":
+    case "razorWind":
         DataManager.verifyProperties(
             moveEffect,
             errorMessagePrefix,
@@ -2488,8 +2489,16 @@ PokemonMZ_BattleManager.startPlayerInput = function() {
 
     if (pokemon.isLoweringHead()) {
         // In case of skull bash, the player cannot select any action - 
-        // the phase immediatly switch to dig turn 2
+        // the phase immediatly switch to skull bash turn 2
         this.setPlayerMoveIndex(pokemon.skullBashMoveIndex());
+        this.calculateComputerMove();
+        return;
+    }
+
+    if (pokemon.isMakingWhirlwind()) {
+        // In case of razor wind, the player cannot select any action - 
+        // the phase immediatly switch to razor wind turn 2
+        this.setPlayerMoveIndex(pokemon.razorWindMoveIndex());
         this.calculateComputerMove();
         return;
     }
@@ -3419,6 +3428,13 @@ PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
         return;
     }
 
+    // If enemy pokemon is using razor wind, it only selects that move
+    if (enemyPokemon.isMakingWhirlwind()) {
+        this._enemyMoveIndex = enemyPokemon.razorWindMoveIndex();
+        this.calculateBattleActions();
+        return;
+    }
+
     if (trainer) {
         const modifiers = trainer.iaModifiers();
         if (modifiers) {
@@ -3861,6 +3877,9 @@ PokemonMZ_BattleManager.startMove = function(side) {
                 if (pokemon.isLoweringHead()) { // Confusion hurt interrupts skull bash
                     pokemon.endSkullBash() 
                 } 
+                if (pokemon.isMakingWhirlwind()) { // Confusion hurt interrupts razor wind
+                    pokemon.endRazorWind() 
+                } 
 
 
                 this._currentAction.addResultSteps(["autotext","confusedHurt",this._currentAction.side()])
@@ -3887,6 +3906,10 @@ PokemonMZ_BattleManager.startMove = function(side) {
         if (pokemon.isLoweringHead()) { // Paralysis interrupts skull bash
             pokemon.endSkullBash() 
         }
+        if (pokemon.isMakingWhirlwind()) { // Paralysis interrupts razor wind
+            pokemon.endRazorWind() 
+        }
+
         this._currentAction.addResultSteps(["animateUserEffect", this._currentAction.userBattleSprite(), "paralyzed"])
         this._currentAction.addResultSteps(["autotext","isParalyzed",this._currentAction.side()])
         this.changePhase(nextPhase);
@@ -3984,6 +4007,9 @@ PokemonMZ_BattleManager.startMove = function(side) {
         }
         if (pokemon.isLoweringHead()) { // Disabling skull bash interrupts the attack
             pokemon.endSkullBash() 
+        }
+        if (pokemon.isMakingWhirlwind()) { // Disabling razor wind interrupts the attack
+            pokemon.endRazorWind() 
         }
 
         this._currentAction.calculateResidualEffectsOnly();
@@ -4112,7 +4138,16 @@ PokemonMZ_BattleManager.startMove = function(side) {
         skipPP = true;
     }
     if (pokemon.isLoweringHead() && pokemon.isMoveMirrorMove(moveIndex)) {
-        // If using dig already through mirror move, follow-up
+        // If using skull bash already through mirror move, follow-up
+        move = pokemon.lastMoveUsed();
+    }
+
+    // If pokemon launches razor wind, no pp consumption, another message
+    if (pokemon.isMoveRazorWind(moveIndex) && !pokemon.isMakingWhirlwind()) {
+        skipPP = true;
+    }
+    if (pokemon.isMakingWhirlwind() && pokemon.isMoveMirrorMove(moveIndex)) {
+        // If using razor wind already through mirror move, follow-up
         move = pokemon.lastMoveUsed();
     }
 
@@ -4148,6 +4183,15 @@ PokemonMZ_BattleManager.startMove = function(side) {
             }
         }
 
+        let isMirrorRazorWindTurn1 = false;
+        if (pokemon.isMoveMirrorMove(moveIndex) && !pokemon.isMakingWhirlwind()) {
+            const mirroredMove = pokemon.moveMirrored()
+            const mirroredMoveData = pokemon.moveDataFromStringId(mirroredMove.id)
+            for (const effect of mirroredMoveData.effects) {
+                if (effect.type == "razorWind") { isMirrorRazorWindTurn1 = true; }
+            }
+        }
+
         if (oppositePokemon.isBound() && pokemon.isMoveBinding(moveIndex)) {
             this._currentAction.insertResultStepsAt(["autotext","attackContinues",this._currentAction.side()], battleIndex)
         } else if (oppositePokemon.isBound() && (pokemon.isMoveMirrorMove(moveIndex))) {
@@ -4160,6 +4204,10 @@ PokemonMZ_BattleManager.startMove = function(side) {
             this._currentAction.insertResultStepsAt(["autotext","lowerHead",this._currentAction.side()], battleIndex)
         } else if (isMirrorSkullBashTurn1) {
             this._currentAction.insertResultStepsAt(["autotext","lowerHead",this._currentAction.side()], battleIndex)
+        } else if (pokemon.isMoveRazorWind(moveIndex) && !pokemon.isMakingWhirlwind()) {
+            this._currentAction.insertResultStepsAt(["autotext","makeWhirlwind",this._currentAction.side()], battleIndex-1)
+        } else if (isMirrorRazorWindTurn1) {
+            this._currentAction.insertResultStepsAt(["autotext","makeWhirlwind",this._currentAction.side()], battleIndex-1)
         } else if (usedAnotherMove) {
             this._currentAction.insertResultStepsAt(["autotext","useMoveInstead",this._currentAction.side(),moveName], battleIndex)
         } else {
@@ -4179,6 +4227,12 @@ PokemonMZ_BattleManager.startMove = function(side) {
     if (pokemon.isMoveSkullBash(moveIndex) && !pokemon.isLoweringHead()) {
         skipSeeMove = true;
     }
+
+    // If pokemon launches razor wind, no pp consumption
+    if (pokemon.isMoveRazorWind(moveIndex) && !pokemon.isMakingWhirlwind()) {
+        skipSeeMove = true;
+    }
+ 
 
     if (!skipSeeMove) {
         oppositePokemon.setLastSeenEnemyMove(move.id);
@@ -4373,6 +4427,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["skullBash", step[1]];
                 break;
+            case "startRazorWind":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["razorWind", step[1]];
+                break;
             case "advanceBerserkPokemonTurn":
                 this.changeSubPhase("advanceBerserkPokemonTurn");
                 this._subPhaseParams = [step[1]];
@@ -4404,6 +4462,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
             case "endSkullBash":
                 this.changeSubPhase("removePokemonStatus");
                 this._subPhaseParams = ["skullBash", step[1]];
+                break;
+            case "endRazorWind":
+                this.changeSubPhase("removePokemonStatus");
+                this._subPhaseParams = ["razorWind", step[1]];
                 break;
             case "allStatusHeal":
                 this.changeSubPhase("removePokemonStatus");
@@ -5015,6 +5077,9 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
         case "skullBash":
             target.startSkullBash(moveIndex);
             break;
+        case "razorWind":
+            target.startRazorWind(moveIndex);
+            break;
         case "minimize":
             target.minimize();
             this._spriteset.playerPokemonSprite().setScale(this._playerChosenPokemon.battleSpriteMaxScale());
@@ -5061,6 +5126,9 @@ PokemonMZ_BattleManager.removePokemonStatus = function() {
             break;
         case "skullBash":
             target.endSkullBash();
+            break;
+        case "razorWind":
+            target.endRazorWind();
             break;
         case "all":
             // Note Gen2+ will remove confusion too
@@ -5337,6 +5405,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + " dug a hole!"
     case "lowerHead":
         return prefix + pokemon.name() + " lowered its head!"
+    case "makeWhirlwind":
+        return prefix + pokemon.name() + " made a whirlwind!"
     case "coinsScatter":
         return "Coins scattered everywhere!";
     case "loafingAround":
