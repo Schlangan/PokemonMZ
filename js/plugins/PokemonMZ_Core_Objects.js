@@ -1737,6 +1737,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._isLoweringHead = false;
     this._isMakingWhirlwind = false;
     this._hasLightScreen = false; // Generation I - Light screen only applies to the user
+    this._hasReflect = false; // Generation I - Reflect only applies to the user
 
     this._hasMoveDisabled = false;
     this._disabledMoveIndex = -1;
@@ -2956,6 +2957,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.endSkullBash();
     this.endRazorWind();
     this.removeLightScreen(); // Generation I
+    this.removeReflect(); // Generation I
 };
 PokemonMZ_Game_Pokemon.prototype.removeFinishedStatuses = function() {
     // Remove statuses that disappear at the beginning of the next turn
@@ -3020,6 +3022,9 @@ PokemonMZ_Game_Pokemon.prototype.isMakingWhirlwind = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.hasLightScreen = function() {
     return this._hasLightScreen;
+};
+PokemonMZ_Game_Pokemon.prototype.hasReflect = function() {
+    return this._hasReflect;
 };
 PokemonMZ_Game_Pokemon.prototype.nextConfusionTurn = function() {
     this._turnsConfusion--;
@@ -3268,6 +3273,9 @@ PokemonMZ_Game_Pokemon.prototype.startRazorWind = function(moveIndex) {
 PokemonMZ_Game_Pokemon.prototype.giveLightScreen = function() {
     this._hasLightScreen = true;
 };
+PokemonMZ_Game_Pokemon.prototype.giveReflect = function() {
+    this._hasReflect = true;
+};
 PokemonMZ_Game_Pokemon.prototype.keepBinding = function() {
     this._turnsBound--;
 };
@@ -3387,6 +3395,9 @@ PokemonMZ_Game_Pokemon.prototype.unMinimize = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.removeLightScreen = function() {
     this._hasLightScreen = false;
+};
+PokemonMZ_Game_Pokemon.prototype.removeReflect = function() {
+    this._hasReflect = false;
 };
 PokemonMZ_Game_Pokemon.prototype.endDigging = function() {
     this._isDigging = false;
@@ -4580,6 +4591,11 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
             effectResults = this.effect_burnTarget(battleData, effect, effectResults);
         }
         break;
+    case "freezeTarget":
+        if (!this.isMoveEffectExcepted(effect, this._opponent)) {
+            effectResults = this.effect_freezeTarget(battleData, effect, effectResults);
+        }
+        break;
     case "confuseTarget":
         if (!this.isMoveEffectExcepted(effect, this._opponent)) {
             effectResults = this.effect_confuseTarget(battleData, effect, effectResults);
@@ -4733,6 +4749,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
         break;
     case "lightScreen":
         effectResults = this.effect_lightScreen(battleData, effect, effectResults);
+        break;
+    case "reflect":
+        effectResults = this.effect_reflect(battleData, effect, effectResults);
         break;
     }
     return effectResults;
@@ -4958,13 +4977,17 @@ PokemonMZ_Game_Action.prototype.moveDamage = function(critical) {
                 debugLogging.defenseStats = {"base":this._opponent.pdef(), "modified":this._opponent.pdefModified()}
                 defenseBaseStat = this._opponent.pdef() * playerDefBadgeBoosts.pdef;
                 defenseModifiedStats = this._opponent.pdefModified() * playerDefBadgeBoosts.pdef;
+
+                // Generation I - Reflect double defense
+                if (this._opponent.hasReflect()) {
+                    barrierAmplifier *= 2;
+                }
+
             } else if (this._moveData.target == "user") {
                 debugLogging.defenseStats = {"base":this._user.pdef(), "modified":this._user.pdefModified()}
                 defenseBaseStat = this._user.pdef() * playerAtkBadgeBoosts.pdef;
                 defenseModifiedStats = this._user.pdefModified() * playerAtkBadgeBoosts.pdef;
             }
-
-            // TODO : barrierAmplifier=2 if reflect is up on opponent side and not critical
             break;
         case "special":
             debugLogging.category = "special"
@@ -5133,6 +5156,13 @@ PokemonMZ_Game_Action.prototype.effect_burnTarget = function(battleData, effect,
         // No effect if target will faint
         return effectResults;
     }
+
+    // Burning moves remove freeze
+    if (this._opponent.isFrozen()) {
+        this._resultSteps.push(["waittext","defrosted",this.oppositeSide()])
+        this._resultSteps.push(["freezeHeal",this._opponent])   
+    }
+
     const randomNumber = Math.randomInt(100)
     if (PokemonMZ.debugLog) {
         console.log({"PokemonMZ_Game_Action.effect_burnTarget > ":{
@@ -5144,6 +5174,26 @@ PokemonMZ_Game_Action.prototype.effect_burnTarget = function(battleData, effect,
             effectResults.success = true;
             this._resultSteps.push(["waittext","burned",this.oppositeSide()])
             this._resultSteps.push(["burnPokemon",this._opponent])
+        }
+    }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_freezeTarget = function(battleData, effect, effectResults) {
+    if (this._opponent.hp() - battleData.damageDealt <= 0) { 
+        // No effect if target will faint
+        return effectResults;
+    }
+    const randomNumber = Math.randomInt(100)
+    if (PokemonMZ.debugLog) {
+        console.log({"PokemonMZ_Game_Action.effect_freezeTarget > ":{
+            "chance":effect.percentChance, "randomNumber":randomNumber}
+        })
+    }
+    if (randomNumber < effect.percentChance) {
+        if (this._opponent.isFreezable()) {
+            effectResults.success = true;
+            this._resultSteps.push(["waittext","frozen",this.oppositeSide()])
+            this._resultSteps.push(["freezePokemon",this._opponent])
         }
     }
     return effectResults;
@@ -5907,6 +5957,16 @@ PokemonMZ_Game_Action.prototype.effect_lightScreen = function(battleData, effect
         effectResults.success = true;
         this._resultSteps.push(["giveLightScreen",this._user])
         this._resultSteps.push(["waittext","protectedSpecial",this.side()]);
+    } else {
+        this._resultSteps.push(["waittext","statusFailed",this.side()]);
+    }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_reflect = function(battleData, effect, effectResults) {
+    if (!this._user.hasReflect()) {
+        effectResults.success = true;
+        this._resultSteps.push(["giveReflect",this._user])
+        this._resultSteps.push(["waittext","gainedArmor",this.side()]);
     } else {
         this._resultSteps.push(["waittext","statusFailed",this.side()]);
     }

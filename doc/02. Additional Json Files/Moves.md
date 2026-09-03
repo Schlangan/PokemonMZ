@@ -63,6 +63,8 @@ List of implemented effects and their additional parameters:
 
 - type = **burnTarget** : Burn the target 
     - percentChance, **int** : Chance out of 100 of the burn to happen
+- type = **freezeTarget** : Freeze the target
+    - percentChance, **int** : Chance out of 100 of the freeze to happen
 - type = **paralyzeTarget** : Paralyze the target 
     - percentChance, **int** : Chance out of 100 of the paralysis to happen
 - type = **poisonTarget** : Poison the target 
@@ -164,6 +166,9 @@ List of implemented effects and their additional parameters:
 - type = **moneyDrop** : Drops money when using the attack. The effect depends on the pokemon generation. In generation I, it drops two times the level of the user.
 
 - type = **rest** : Specific to the move rest. The user will recover 100% Hp and go to sleep for one more turn, erasing PAR,FRZ,BRN,PSN statuses.
+
+- type = **lightScreen** : Specific to the move Light Screen. Double the user Special when being attacked.
+- type = **reflect** : Specific to the move Reflect. Double the user's defense when being attacked.
 
 ---
 

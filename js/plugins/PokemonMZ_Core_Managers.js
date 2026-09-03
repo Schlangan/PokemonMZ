@@ -1023,6 +1023,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
         );
         break;
     case "burnTarget":
+    case "freezeTarget":
     case "paralyzeTarget":
     case "sleepTarget":
     case "confuseTarget":
@@ -1149,6 +1150,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
     case "moneyDrop":
     case "rest":
     case "lightScreen":
+    case "reflect":
         DataManager.verifyProperties(
             moveEffect,
             errorMessagePrefix,
@@ -4368,6 +4370,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["burn", step[1]];
                 break;
+            case "freezePokemon":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["freeze", step[1]];
+                break;
             case "confusePokemon":
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["confusion", step[1]];
@@ -4485,6 +4491,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
             case "giveLightScreen":
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["lightScreen", step[1]];
+                break;
+            case "giveReflect":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["reflect", step[1]];
                 break;
         }
     } else {
@@ -5089,6 +5099,9 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
         case "lightScreen":
             target.giveLightScreen();
             break;
+        case "reflect":
+            target.giveReflect();
+            break;
     }
     this.clearSubPhase();
 };
@@ -5346,7 +5359,7 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + "'s paralyzed! It may not attack!";
     case "frozen":
         return prefix + pokemon.name() + " was frozen solid!";
-    case "fireUnfrozen":
+    case "defrosted":
         return "Fire defrosted " + prefix + pokemon.name() + "!";
     case "confused":
         return prefix + pokemon.name() + " became confused!";
@@ -5426,6 +5439,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + " regained health!" 
     case "protectedSpecial":
         return prefix + pokemon.name() + "'s protected against special attacks!"
+    case "gainedArmor":
+        return prefix + pokemon.name() + " gained armor!"
     case "oneHitKo":
         return "One-hit KO!"
     }
