@@ -36,6 +36,9 @@ Scene_Base.prototype.PokemonMZ_updateItemEffects = function() {
         case "restorePp":
             this.updatePokemonRestorePp();
             break;
+        case "increasePp":
+            this.updatePokemonIncreasePp();
+            break;
         }
     }
 }
@@ -102,6 +105,15 @@ Scene_Base.prototype.PokemonMZ_createRecoveryData = function(pokemon, effect, li
             "pokemon":pokemon,
             "windowIndex":listWindow.index(),
             "ppRecovery":effect.ppRecovery,
+        }
+        break;
+    case "increasePp":
+        this._pokemonRecoveringData = {
+            "type":"increasePp",
+            "pokemon":pokemon,
+            "windowIndex":listWindow.index(),
+            "value":effect.value,
+            "moveIndex":effect.moveIndex,
         }
         break;
     }
@@ -358,6 +370,37 @@ Scene_Base.prototype.PokemonMZ_updatePokemonRestorePp = function(listWindow, mov
         messageWindow.setText("PP was restored.");
         messageWindow.startMessage();
         return true;
+    }
+};
+Scene_Base.prototype.PokemonMZ_updatePokemonIncreasePp = function(listWindow, moveWindow, messageWindow) { 
+    const pokemon = this._pokemonRecoveringData.pokemon;
+    const moveIndex = this._pokemonRecoveringData.moveIndex;
+    const gainedPpUp = this._pokemonRecoveringData.value;
+    console.log(this._pokemonRecoveringData)
+    let returnMenu = false;
+    if (pokemon) {
+        const moveName = pokemon.moveNameFromIndex(moveIndex)
+        let text = "";
+        if (gainedPpUp > 0) {
+            pokemon.increasePpAtIndex(moveIndex, gainedPpUp)
+            text = moveName + "'s PP increased."
+            returnMenu = true;
+        } else {
+            SoundManager.playBuzzer();
+            text = moveName + "'s PP is maxed out."
+        }
+        moveWindow.close();
+        moveWindow.deactivate();
+        listWindow.clearItem(this._pokemonRecoveringData.windowIndex);
+        listWindow.drawItem(this._pokemonRecoveringData.windowIndex);
+        this._pokemonRecoveringData = null;
+        listWindow.deactivate();
+        messageWindow.terminateMessage();
+        messageWindow.pause = false;
+        messageWindow.activate();
+        messageWindow.setText(text);
+        messageWindow.startMessage();
+        return returnMenu;
     }
 };
 
@@ -1866,6 +1909,7 @@ PokemonMZ_Scene_PokemonMenu.prototype.initialize = function() {
     this._learnedMove = null;
     this._usingHm = false;
     this._restoringPp = false;
+    this._increasingPp = false;
     
     this._hasLearnedMove = null;
     this._hasLeveledUp = null;
@@ -2160,6 +2204,18 @@ PokemonMZ_Scene_PokemonMenu.prototype.onSelectPokemonUse = function() {
     if (this._usedItem.pkmz_data.effect == "restorePp" && this._usedItem.pkmz_data.range == "single") {
         this._restoringPp = true;
         this._messageWindow.setText("Restore PP of which technique?")
+        this._messageWindow.startMessage();
+        this._afterTextPhase = "";
+        this._messageWindow.deactivate();
+        this._forgetPokemonMovesWindow.show();
+        this._forgetPokemonMovesWindow.open();
+        this._forgetPokemonMovesWindow.activate();
+        this._forgetPokemonMovesWindow.select(0);
+        this._forgetPokemonMovesWindow.clearCommandList();
+        this._forgetPokemonMovesWindow.setPokemon(pokemon);
+    } else if (this._usedItem.pkmz_data.effect == "increaseMovePP") {
+        this._increasingPp = true;
+        this._messageWindow.setText("Raise PP of which technique?")
         this._messageWindow.startMessage();
         this._afterTextPhase = "";
         this._messageWindow.deactivate();
@@ -2613,6 +2669,13 @@ PokemonMZ_Scene_PokemonMenu.prototype.updatePokemonRestorePp = function() {
          this._messageWindow
     );
 };
+PokemonMZ_Scene_PokemonMenu.prototype.updatePokemonIncreasePp = function() { 
+    this._mustReturnToItemMenu = this.PokemonMZ_updatePokemonIncreasePp(
+         this._listWindow,
+         this._forgetPokemonMovesWindow,
+         this._messageWindow
+    );
+};
 PokemonMZ_Scene_PokemonMenu.prototype.onMenuSwitchOk = function() {
 };
 PokemonMZ_Scene_PokemonMenu.prototype.onMenuCancelOk = function() {
@@ -2711,6 +2774,24 @@ PokemonMZ_Scene_PokemonMenu.prototype.onSelectForgetPokemonMove = function() {
             this._messageWindow.setText(useResult.message);
             this._messageWindow.startMessage();
         }
+    } else if (this._increasingPp) {
+         // Selecting move when using PP Increasing item
+        this._increasingPp = false;
+        const useResult = pokemon.canUseItemOn(this._usedItem, index);
+        if (useResult.success) {
+            const effect = pokemon.itemEffect(this._usedItem, index);
+            this._hasUsedRecoveryItem = true;
+            this.PokemonMZ_createRecoveryData(pokemon, effect, this._listWindow);
+        } else {
+            // Display message if there is one
+            this._listWindow.deactivate();
+            this._forgetPokemonMovesWindow.close();
+            this._messageWindow.terminateMessage();
+            this._messageWindow.pause = false;
+            this._messageWindow.activate();
+            this._messageWindow.setText(useResult.message);
+            this._messageWindow.startMessage();
+        }
     } else {
         // Selecting move to forget when learning skills
         const moveName = this._learnedMove.name;
@@ -2753,6 +2834,14 @@ PokemonMZ_Scene_PokemonMenu.prototype.onCancelForgetPokemonMove = function() {
         this._messageWindow.pause = false;
         this._messageWindow.activate();
         this._listWindow.activate();
+    } else if (this._increasingPp) {
+        // Cancel move select when using PP Recovery item
+        this._increasingPp = false;
+        this._forgetPokemonMovesWindow.close();
+        this._messageWindow.terminateMessage();
+        this._messageWindow.pause = false;
+        this._messageWindow.activate();
+        this._listWindow.activate(); 
     } else {
         // Cancel move select when choosing move to forget
         const moveName = this._learnedMove.name;

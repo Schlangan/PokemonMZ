@@ -2111,6 +2111,10 @@ PokemonMZ_Game_Pokemon.prototype.movePPAtIndex = function(index) {
     const moveData = this._moves[index];
     return this.movePP(moveData.id, moveData.ppup);
 };
+PokemonMZ_Game_Pokemon.prototype.movePPUpAtIndex = function(index) {
+    const moveData = this._moves[index];
+    return moveData.ppup;
+};
 PokemonMZ_Game_Pokemon.prototype.recoverPpAtIndex = function(index, ppRecovered) {
     const maxPP = this.movePPAtIndex(index);
     this._moves[index].pp += ppRecovered;
@@ -2118,6 +2122,15 @@ PokemonMZ_Game_Pokemon.prototype.recoverPpAtIndex = function(index, ppRecovered)
         this._moves[index].pp = maxPP;
     }
 };
+
+PokemonMZ_Game_Pokemon.prototype.increasePpAtIndex = function(index, gainedPpUp) {
+    console.log("gain " + String(gainedPpUp) + " for move at index " + String(index))
+    const oldPpMax = this.movePPAtIndex(index);
+    this._moves[index].ppup += gainedPpUp;
+    const newPpMax = this.movePPAtIndex(index);
+    this._moves[index].pp += newPpMax - oldPpMax;
+}
+
 PokemonMZ_Game_Pokemon.prototype.consumePP = function(index) {
     // No PP consumption for index -1 -> struggle
     if (index != -1) {
@@ -2641,6 +2654,8 @@ PokemonMZ_Game_Pokemon.prototype.canUseItemOn = function(item, ext1) {
             } 
         }
         break;
+    case "increaseMovePP":
+        return canUseResult;
     }
     return cannotUseResult;
 };
@@ -2734,6 +2749,19 @@ PokemonMZ_Game_Pokemon.prototype.itemEffect = function(item, ext1) {
             }
         }
         return {"effect":"restorePp", "ppRecovery":ppRecovery}
+    case "increaseMovePP":
+        const increasedMoveIndex = ext1;
+        let currentPpUp = this.movePPUpAtIndex(increasedMoveIndex);
+
+        if (currentPpUp < item.pkmz_data.maxValue) {
+            let increasedValue = item.pkmz_data.value;
+            if (currentPpUp + increasedValue > item.pkmz_data.maxValue) {
+                increasedValue = item.pkmz_data.maxValue - currentPpUp;
+            }
+            return {"effect":"increasePp", "moveIndex":increasedMoveIndex, "value":increasedValue}
+        } else {
+            return {"effect":"increasePp", "moveIndex":increasedMoveIndex, "value":0}
+        }
     case "battlePatkUpUser":
         if (this._stageModifiers.patk < 6) {
             this._stageModifiers.patk += item.pkmz_data.stage;

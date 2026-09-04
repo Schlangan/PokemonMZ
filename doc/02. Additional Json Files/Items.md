@@ -38,6 +38,9 @@ Depending on the effet, additional parameters are required.
 - effect = **restorePp** : Recover PP for one or several moves (ex: ether/elixir)
     - range,**string** : The range of effect of the recovery. Either **single**, affecting one move (ether), or **all** for all moves at once (elixir)
     - value,**int** : Amount of PP recovered, either -1 for all PP, or a specific value.
+- effect = **increaseMovePP** : Increase max PP for one move
+    - value,**int** : Amount of PP level increased, usually 1 for PP Up
+    - maxValue, **int**: Max level of PP reachable, usually 3 for PP Up.
 - effect = **increaseLevel** : Increase the level of the pokemon by 1 (ex: rare candy)
 - effect = **increaseEv** : Increase the EV of a stats by a specific value, up to a limit
     - stat,**string** : Stat increased, **hp**, **patk**, **pdef**, **satk**, **sdef** or **spd**. For gen 1 Special stat, use **satk**.

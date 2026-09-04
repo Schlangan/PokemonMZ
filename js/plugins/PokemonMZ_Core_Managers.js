@@ -812,6 +812,13 @@ DataManager.verifyItemData = function(index, itemData) {
                 }
             }
             break;
+        case "increaseMovePP":
+            DataManager.verifyProperties(
+                itemData, 
+                errorMessagePrefix, 
+                mandatoryProperties.concat(["value","maxValue"]),
+                optionalProperties);
+            break;
         case "revive":
             DataManager.verifyProperties(
                 itemData, 
