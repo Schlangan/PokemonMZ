@@ -3011,6 +3011,18 @@ PokemonMZ_Game_Pokemon.prototype.isRaging = function() {
 PokemonMZ_Game_Pokemon.prototype.isMinimized = function() {
     return this._isMinimized;
 };
+
+PokemonMZ_Game_Pokemon.prototype.isUsingSeveralTurnMove = function() {
+    return (
+        pokemon.isDigging() || 
+        pokemon.isBiding() || 
+        pokemon.isBerserk() || 
+        pokemon.isRaging() || 
+        pokemon.isLoweringHead() || 
+        pokemon.isMakingWhirlwind()
+    )
+}
+
 PokemonMZ_Game_Pokemon.prototype.isDigging = function() {
     return this._isDigging;
 };

@@ -3780,7 +3780,7 @@ PokemonMZ_BattleManager.isPokemonObedient = function(side) {
         // If obedience -1 (all) or pokemon level below or equal to level, pokemon obeys.
         return true;
     }
-    if (pokemon.isDigging() || pokemon.isBiding() || oppositePokemon.isBound() || pokemon.isBerserk() || pokemon.isRaging() || pokemon.isLoweringHead()) {
+    if (pokemon.isUsingSeveralTurnMove() || oppositePokemon.isBound()) {
         // Several turn moves are not interrupted by obedience once started
         return true;
     }
@@ -4037,7 +4037,7 @@ PokemonMZ_BattleManager.startMove = function(side) {
     if (pokemon.isMoveMirrorMove(moveIndex)) {
         let keepPreviousMirror = false;
 
-        if (pokemon.isBiding() || oppositePokemon.isBound() || pokemon.isBerserk() || pokemon.isRaging() || pokemon.isDigging() || pokemon.isLoweringHead()) {
+        if (pokemon.isUsingSeveralTurnMove() || oppositePokemon.isBound()) {
             keepPreviousMirror = true;
         }
 
@@ -4067,7 +4067,7 @@ PokemonMZ_BattleManager.startMove = function(side) {
         const metronomeAnimation = pokemon.moveDataFromIndex(moveIndex).animationHit;
         let keepPreviousMetronome = false;
 
-        if (pokemon.isBiding() || oppositePokemon.isBound() || pokemon.isBerserk() || pokemon.isRaging() || pokemon.isDigging() || pokemon.isLoweringHead()) {
+        if (pokemon.isUsingSeveralTurnMove() || oppositePokemon.isBound()) {
             keepPreviousMetronome = true;
         }
 
