@@ -1750,6 +1750,8 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._turnsBerserk = 0;
 
     this._damagedBide = 0;
+    this._damagedCounter = 0;
+
     this._hasFocusEnergy = false;
     this._hasGuardSpec = false;
     this._berserkMoveIndex = -1;
@@ -2958,6 +2960,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.endRazorWind();
     this.removeLightScreen(); // Generation I
     this.removeReflect(); // Generation I
+    this.resetCounterDamage();
 };
 PokemonMZ_Game_Pokemon.prototype.removeFinishedStatuses = function() {
     // Remove statuses that disappear at the beginning of the next turn
@@ -3490,6 +3493,18 @@ PokemonMZ_Game_Pokemon.prototype.endBide = function() {
     this._turnsBide = 0;
     this._damagedBide = 0;
 };
+PokemonMZ_Game_Pokemon.prototype.resetCounterDamage = function(damage) {
+    this._damagedCounter = 0;
+};
+PokemonMZ_Game_Pokemon.prototype.addToCounterDamage = function(damage) {
+    if (!this._damagedCounter) { this.resetCounterDamage(); }
+    this._damagedCounter += damage;
+};
+PokemonMZ_Game_Pokemon.prototype.damageTakenCounter = function() {
+    return this._damagedCounter;
+};
+
+
 PokemonMZ_Game_Pokemon.prototype.forceLevelUp = function() {
     const exp = this.expForNextLevel();
     this.gainExp(exp);
@@ -4198,7 +4213,16 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
         hit = hit && this.userFaster();
     }
 
+    const isCounter = this._moveData.effects.some(effect => effect.type === "counter");
+    const damageCounter = this._user.damageTakenCounter();
+    if (isCounter) {
+        hit = hit && damageCounter > 0;
+    }
+
+    this._user.resetCounterDamage();
+
     if (hit || this._moveExecutedHits > 0) {
+
         if (this._moveData.target == "opponent") {
             this._resultSteps.push(["hitAnimation", this._moveData.animationHit, this._user._battleSprite, this._opponent._battleSprite, this.side()]);
         } else if (this._moveData.target == "user") {
@@ -4212,10 +4236,20 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
             return;
         }
 
-        const damage = this.moveDamage(crit);
-        userDamage = damage.user;
-        opponentDamage = damage.opponent
-        efficiency = damage.efficiency
+        let userDamage
+        let opponentDamage
+        let efficiency
+
+        if (isCounter) {
+            userDamage = 0;
+            opponentDamage = damageCounter * 2;
+            efficiency = 1.0; // Counter hit ghosts
+        } else {
+            const damage = this.moveDamage(crit);
+            userDamage = damage.user;
+            opponentDamage = damage.opponent
+            efficiency = damage.efficiency
+        }
 
         if (opponentDamage > 0) {
             if (efficiency < 1) {
@@ -4572,8 +4606,6 @@ PokemonMZ_Game_Action.prototype.calculateMoveRazorWindTurn1 = function() {
     const effectsResult = this.calculateMoveEffects({});
     this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
 };
-
-
 
 PokemonMZ_Game_Action.prototype.calculateMoveEffects = function(battleData) { // TODO ADD ALL MOVE EFFECTS
     const effects = this._moveData.effects;
@@ -5081,6 +5113,10 @@ PokemonMZ_Game_Action.prototype.moveDamage = function(critical) {
         return {"user":damage, "opponent":0, "efficiency":efficiency};
     }
 };
+PokemonMZ_Game_Action.prototype.isCounterable = function() {
+    return this._moveData && PokemonMZ_BattleManager.typeInfo(this._moveData.type).counter;
+};
+
 
 // FROM HERE CALCULATE STATUS EFFECTS
 PokemonMZ_Game_Action.prototype.calculateBurnEffect = function(userRemainingHp) {

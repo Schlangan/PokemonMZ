@@ -15,5 +15,6 @@ typeData
 - strong: **Array:string** : An array containing all types the type is strong against. Example, type electric has electric and flying as resistance.
 - immune: **Array:string** : An array containing all types the type is immune against. Example, type normal has ghost as immunity.
 - damage: **string** : Up to gen III, the split physical/special is done through the type. Only set **physical** or **special**.
+- counter: **bool**, *optional* : For generation I, indicates if the move can be countered by Counter. Applied only to normal to and fighting at that time.
 
 ---

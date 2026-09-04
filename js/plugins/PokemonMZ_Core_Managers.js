@@ -1151,6 +1151,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
     case "rest":
     case "lightScreen":
     case "reflect":
+    case "counter":
         DataManager.verifyProperties(
             moveEffect,
             errorMessagePrefix,
@@ -1425,7 +1426,7 @@ DataManager.verifyTypeData = function(index, typeData) {
         typeData,
         errorMessagePrefix,
         ["id","name","weak","strong","immune","damage"],
-        [],
+        ["counter"],
     );
 
     if (typeData.weak) {
@@ -4773,6 +4774,15 @@ PokemonMZ_BattleManager.startDamageOpponent = function() {
             opponent.addToBideDamage(opponentHp);
         } else {
             opponent.addToBideDamage(damage);
+        }
+    }
+
+    // Sets counter damage if needed
+    if (this._currentAction.isCounterable()) {
+        if (damage > opponentHp) {
+            opponent.addToCounterDamage(opponentHp);
+        } else {
+            opponent.addToCounterDamage(damage);
         }
     }
 
