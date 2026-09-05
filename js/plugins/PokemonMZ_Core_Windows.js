@@ -923,6 +923,7 @@ PokemonMZ_Window_RegionMap.prototype.constructor = PokemonMZ_Window_RegionMap;
 PokemonMZ_Window_RegionMap.prototype.initialize = function(rect, mode) {
     Window_Selectable.prototype.initialize.call(this, rect);
     this._mode = mode;
+    this._flyableRegionDataPoi = null;
     this._regionData = null;
     this._regionBitmap = null;
     this._cursorVisible = true;
@@ -932,9 +933,15 @@ PokemonMZ_Window_RegionMap.prototype.initialize = function(rect, mode) {
     this._scaleY = 0.0
     this._pokemonStrId = null;
     this._pokemonLocations = [];
+    this._availableFlightPoi = [];
+
     this._showUnkownArea = false;
     this.setRegionMapId($gameMap.regionMapId());
     this.setPlayerPoiIndex($gameMap.regionMapPoiId());
+};
+
+PokemonMZ_Window_RegionMap.prototype.isFlyingMode = function() {
+    return this._mode == "flying";
 };
 
 PokemonMZ_Window_RegionMap.prototype.updateHelp = function() {
@@ -943,6 +950,19 @@ PokemonMZ_Window_RegionMap.prototype.updateHelp = function() {
 
 PokemonMZ_Window_RegionMap.prototype.setRegionMapId = function(regionId) {
     this._regionData = $PokemonMZ_dataRegionMaps[regionId];
+
+    if (this.isFlyingMode()) {
+        this._flyableRegionDataPoi = [];
+        const playerVisitedLocations = $gamePlayerTrainer.visitedPoiInRegion($gameMap.regionMapId());
+        const cleanedDataPoi = [];
+
+        for (const poi of this._regionData.poi) {
+            if (poi && poi.fly && playerVisitedLocations.includes(poi.id)) {
+                this._flyableRegionDataPoi.push(poi)
+            }
+        }
+    }
+
     this._regionBitmap = ImageManager.loadPicture(this._regionData.pictureName);
     this._regionBitmap.addLoadListener(
         PokemonMZ_Window_RegionMap.prototype.setupPicture.bind(this)
@@ -950,7 +970,12 @@ PokemonMZ_Window_RegionMap.prototype.setRegionMapId = function(regionId) {
 };
 PokemonMZ_Window_RegionMap.prototype.setPlayerPoiIndex = function(poiId) {
     this._playerPoiIndex = poiId;
-    this.setCursorPoiIndex(poiId);
+    if (this.isFlyingMode()) {
+        this.setCursorPoiIndex(0);
+    } else {
+        this.setCursorPoiIndex(poiId);
+    }
+    
 };
 PokemonMZ_Window_RegionMap.prototype.setCursorPoiIndex = function(poiId) {
     this._cursorPoiIndex = poiId;
@@ -958,9 +983,14 @@ PokemonMZ_Window_RegionMap.prototype.setCursorPoiIndex = function(poiId) {
     this.refresh();
 };
 PokemonMZ_Window_RegionMap.prototype.refreshHelp = function() {
-    const poiData = this._regionData.poi[this._cursorPoiIndex];
+    const isFlyingMode = this.isFlyingMode();
+    const poiData = isFlyingMode ? this._flyableRegionDataPoi[this._cursorPoiIndex] : this._regionData.poi[this._cursorPoiIndex];
     if (this._helpWindow) {
-        this._helpWindow.setText(poiData.name);
+        if (isFlyingMode) {
+            this._helpWindow.setText("To " + poiData.name);
+        } else {
+            this._helpWindow.setText(poiData.name);
+        }
     }
 };
 
@@ -1014,7 +1044,7 @@ PokemonMZ_Window_RegionMap.prototype.refresh = function() {
     if (this._regionData) {
         this.refreshBakgroundImage();
         this.refreshPlayerLocation();
-        if (this._mode == "playerMap") {
+        if (this._mode == "playerMap" || this._mode == "flying") {
             this.refreshCursorLocation();
         } else if (this._mode == "pokedexArea") {
             this.refreshPokemonLocation();
@@ -1059,7 +1089,8 @@ PokemonMZ_Window_RegionMap.prototype.drawCharacter = function(characterName, cha
     this.contents.blt(bitmap, sx, sy, pw, ph, x - pw / 2, y - ph);
 };
 PokemonMZ_Window_RegionMap.prototype.refreshCursorLocation = function() {
-    const poiData = this._regionData.poi[this._cursorPoiIndex];
+    const poiData = this.isFlyingMode() ? this._flyableRegionDataPoi[this._cursorPoiIndex] : this._regionData.poi[this._cursorPoiIndex];
+
     const cellSize = this._regionData.cellSize;
     const cursorSize = cellSize * 2 * this._scale;
 
@@ -1099,26 +1130,47 @@ PokemonMZ_Window_RegionMap.prototype.unknownAreaVisible = function() {
     return this._showUnkownArea;
 };
 PokemonMZ_Window_RegionMap.prototype.isCursorMovable = function() {
-    return this.isOpenAndActive() && this._mode == "playerMap";
+    return this.isOpenAndActive() && (this._mode == "playerMap" || this.isFlyingMode());
 };
 PokemonMZ_Window_RegionMap.prototype.isTouchOkEnabled = function() {
     return this.isOpenAndActive() && this._mode == "playerMap";
 };
 PokemonMZ_Window_RegionMap.prototype.cursorDown = function(wrap) {
+    const isFlyingMode = this.isFlyingMode();
     this.playCursorSound();
-    if (this._cursorPoiIndex > 1) {
-        this.setCursorPoiIndex(this._cursorPoiIndex - 1);
+    if (isFlyingMode) {
+        if (this._cursorPoiIndex > 0) {
+            this.setCursorPoiIndex(this._cursorPoiIndex - 1);
+        } else {
+            this.setCursorPoiIndex(this._flyableRegionDataPoi.length - 1);
+        }
     } else {
-        this.setCursorPoiIndex(this._regionData.poi.length - 1);
+        if (this._cursorPoiIndex > 1) {
+            this.setCursorPoiIndex(this._cursorPoiIndex - 1);
+        } else {
+            this.setCursorPoiIndex(this._regionData.poi.length - 1);
+        }
     }
 };
 PokemonMZ_Window_RegionMap.prototype.cursorUp = function(wrap) {
+    const isFlyingMode = this.isFlyingMode();
     this.playCursorSound();
-    if (this._cursorPoiIndex < this._regionData.poi.length - 1) {
-        this.setCursorPoiIndex(this._cursorPoiIndex + 1);
+    if (isFlyingMode) {
+        if (this._cursorPoiIndex < this._flyableRegionDataPoi.length - 1) {
+            this.setCursorPoiIndex(this._cursorPoiIndex + 1);
+        } else {
+            this.setCursorPoiIndex(0);
+        }
     } else {
-        this.setCursorPoiIndex(1);
+        if (this._cursorPoiIndex < this._regionData.poi.length - 1) {
+            this.setCursorPoiIndex(this._cursorPoiIndex + 1);
+        } else {
+            this.setCursorPoiIndex(1);
+        }
     }
+};
+PokemonMZ_Window_RegionMap.prototype.selectedPoiData = function() {
+    return this.isFlyingMode() ? this._flyableRegionDataPoi[this._cursorPoiIndex] : this._regionData.poi[this._cursorPoiIndex];
 };
 PokemonMZ_Window_RegionMap.prototype.cursorRight = function(wrap) {
 };
@@ -1136,6 +1188,7 @@ PokemonMZ_Window_RegionMap.prototype.onTouchOk = function() {
         }
     }
 };
+
 PokemonMZ_Window_RegionMap.prototype.hitTest = function(x, y) {
     if (this.innerRect.contains(x, y)) {
         const cx = this.origin.x + x - this.padding;

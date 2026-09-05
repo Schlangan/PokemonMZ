@@ -30,6 +30,7 @@ moveData
 - forbidMetronome, **bool**, *optional* : If the value is set to true, the move cannot be selected by metronome.
 
 - hitDig, **bool**, *optional* : If the value is set to true, the move will be able to hit an opponent using dig.
+- hitFly, **bool**, *optional* : If the value is set to true, the move will be able to hit an opponent using fly.
 
 - hm, **bool**, *optional* : If the value is set to true, the move becomes a HM. It is impossible to forget, and the daycare system won't take a pokemon having such move.
 
@@ -38,6 +39,7 @@ moveData
 - mapEffect: **string**, *optional* : Move usable on the map, with a given effect.
     - **cut** : Allow cutting special trees
     - **dig** : Allow teleporting to the last respawn from maps where the escapeRope:true note is set.
+    - **fly** : Allow using fly to move to another maps, from maps where the fly:true note is set.
     - **flash** : Allow illuminating dark caves
     - **teleport** : Allow teleporting to the last respawn from maps where the teleport:true note is set.
 - mapBadgeRequires: **string**, *optional* : Specify a required badge to allow using the move. Give the badge item string id, ex. cascadeBadge
@@ -156,7 +158,9 @@ List of implemented effects and their additional parameters:
     - The opponent switched out
     - The opponent's trainer used an item
 - type = **metronome** : Launches a move at random, selected amongst all moves, except those with the property **forbidMetronome** set to true.
-- type = **dig** : Two turns attack. First turn the user goes underground and is impossible to hit except by move with hitDig:true. Second turn, attack the target
+- type = **dig** : Two turns attack. First turn the user goes underground and is impossible to hit except by move with hitDig:true or noAccuracy:true. Second turn, attack the target
+    - animationTurn1, **string**, *optional* : Animation played during the first turn.
+- type = **fly** : Two turns attack. First turn the user flies up high and is impossible to hit except by move with hitFly:true or noAccuracy:true. Second turn, attack the target
     - animationTurn1, **string**, *optional* : Animation played during the first turn.
 - type = **skullBash** : Two turns attack. First turn the user lowers its head, with no additional effect in generation 1. Second turn, attack the target
     - animationTurn1, **string**, *optional* : Animation played during the first turn.

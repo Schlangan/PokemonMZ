@@ -953,7 +953,7 @@ DataManager.verifyMoveData = function(index, moveData) {
             "power","targetDefenseDivider","noCritical","noAccuracy","noVariance",
             "cpuHigherEffectFailure","fixedDamage","percentHpDamage", "forbidMirrorMove","forbidMetronome","alwaysEffects",
             "mapEffect","mapBadgeRequires","animationAlways","animationHit","priority",
-            "category","hitDig","mapSound","hm","requiredTargetStatus"
+            "category","hitDig","hitFly","mapSound","hm","requiredTargetStatus"
         ],
     );
     if (moveData.target) {
@@ -983,7 +983,7 @@ DataManager.verifyMoveData = function(index, moveData) {
         }
     }
     if (moveData.mapEffect) {
-        if (!["teleport","dig","cut","flash"].includes(moveData.mapEffect)) {
+        if (!["teleport","dig","cut","flash","fly"].includes(moveData.mapEffect)) {
             console.error(errorMessagePrefix + "Unknown Map Effect: " + moveData.mapEffect);
         }
     }
@@ -1110,6 +1110,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
         );
         break;
     case "dig":
+    case "fly":
     case "skullBash":
     case "razorWind":
         DataManager.verifyProperties(
@@ -1382,7 +1383,7 @@ DataManager.verifyRegionMapData = function(index, regionMapData) {
         regionMapData,
         errorMessagePrefix,
         ["id","pictureName","cellSize","poi"],
-        [],
+        ["fly"],
     );
 
     let index2 = 0;
@@ -1397,13 +1398,24 @@ DataManager.verifyRegionMapData = function(index, regionMapData) {
 };
 DataManager.verifyRegionMapPoiData = function(prefix, index, poiData) {
     const errorMessagePrefix = prefix + "Index " + String(index) + " - ";
+    const mandatoryProperties = ["id","name","x","y","pokemons"]
 
-    DataManager.verifyProperties(
-        poiData,
-        errorMessagePrefix,
-        ["id","name","x","y","pokemons"],
-        [],
-    );
+    if (poiData.fly) {
+        DataManager.verifyProperties(
+            poiData,
+            errorMessagePrefix,
+            mandatoryProperties.concat(["fly","flyMapId","flyMapX","flyMapY"]),
+            [],
+        );
+    } else {
+        DataManager.verifyProperties(
+            poiData,
+            errorMessagePrefix,
+            mandatoryProperties,
+            [],
+        );
+    }
+
     if (poiData.pokemons) {
         for (const id of poiData.pokemons) {
             if (!DataManager.declared.pokemons.includes(id)) {
@@ -2498,6 +2510,14 @@ PokemonMZ_BattleManager.startPlayerInput = function() {
         return;
     }
 
+    if (pokemon.isFlying()) {
+        // In case of fly, the player cannot select any action - 
+        // the phase immediatly switch to fly turn 2
+        this.setPlayerMoveIndex(pokemon.flyMoveIndex());
+        this.calculateComputerMove();
+        return;
+    }
+
     if (pokemon.isLoweringHead()) {
         // In case of skull bash, the player cannot select any action - 
         // the phase immediatly switch to skull bash turn 2
@@ -3432,6 +3452,13 @@ PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
         return;
     }
 
+    // If enemy pokemon is using fly, it only selects that move
+    if (enemyPokemon.isFlying()) {
+        this._enemyMoveIndex = enemyPokemon.flyMoveIndex();
+        this.calculateBattleActions();
+        return;
+    }
+
     // If enemy pokemon is using skull bash, it only selects that move
     if (enemyPokemon.isLoweringHead()) {
         this._enemyMoveIndex = enemyPokemon.skullBashMoveIndex();
@@ -3885,6 +3912,10 @@ PokemonMZ_BattleManager.startMove = function(side) {
                     pokemon.endDigging() 
                     this._currentAction.addResultSteps(["showSprite", this._currentAction.userBattleSprite()])
                 }
+                if (pokemon.isFlying()) { // Confusion hurt interrupts flying
+                    pokemon.endFlying() 
+                    this._currentAction.addResultSteps(["showSprite", this._currentAction.userBattleSprite()])
+                }
                 if (pokemon.isLoweringHead()) { // Confusion hurt interrupts skull bash
                     pokemon.endSkullBash() 
                 } 
@@ -3912,6 +3943,10 @@ PokemonMZ_BattleManager.startMove = function(side) {
         if (pokemon.isBerserk()) { pokemon.unBerserk() } // Paralysis interrupts berserk moves
         if (pokemon.isDigging()) { // Paralysis interrupts digging
             pokemon.endDigging() 
+            this._currentAction.addResultSteps(["showSprite", this._currentAction.userBattleSprite()])
+        }
+        if (pokemon.isFlying()) { // Paralysis interrupts flying
+            pokemon.endFlying() 
             this._currentAction.addResultSteps(["showSprite", this._currentAction.userBattleSprite()])
         }
         if (pokemon.isLoweringHead()) { // Paralysis interrupts skull bash
@@ -4014,6 +4049,10 @@ PokemonMZ_BattleManager.startMove = function(side) {
         this._currentAction.addResultSteps(["waittext","moveDisabled",this._currentAction.side(), moveName])
         if (pokemon.isDigging()) { // Disabling dig interrupts digging
             pokemon.endDigging() 
+            this._currentAction.addResultSteps(["showSprite", this._currentAction.userBattleSprite()])
+        }
+        if (pokemon.isFlying()) { // Disabling fly interrupts flying
+            pokemon.endFlying() 
             this._currentAction.addResultSteps(["showSprite", this._currentAction.userBattleSprite()])
         }
         if (pokemon.isLoweringHead()) { // Disabling skull bash interrupts the attack
@@ -4144,6 +4183,16 @@ PokemonMZ_BattleManager.startMove = function(side) {
         move = pokemon.lastMoveUsed();
     }
 
+    // If pokemon launches fly, no pp consumption, another message
+    if (pokemon.isMoveFly(moveIndex) && !pokemon.isFlying()) {
+        skipPP = true;
+    }
+    if (pokemon.isFlying() && pokemon.isMoveMirrorMove(moveIndex)) {
+        // If using fly already through mirror move, follow-up
+        move = pokemon.lastMoveUsed();
+    }
+
+
     // If pokemon launches skull bash, no pp consumption, another message
     if (pokemon.isMoveSkullBash(moveIndex) && !pokemon.isLoweringHead()) {
         skipPP = true;
@@ -4185,6 +4234,15 @@ PokemonMZ_BattleManager.startMove = function(side) {
             }
         }
 
+        let isMirrorFlyTurn1 = false;
+        if (pokemon.isMoveMirrorMove(moveIndex) && !pokemon.isFlying()) {
+            const mirroredMove = pokemon.moveMirrored()
+            const mirroredMoveData = pokemon.moveDataFromStringId(mirroredMove.id)
+            for (const effect of mirroredMoveData.effects) {
+                if (effect.type == "fly") { isMirrorFlyTurn1 = true; }
+            }
+        }
+
         let isMirrorSkullBashTurn1 = false;
         if (pokemon.isMoveMirrorMove(moveIndex) && !pokemon.isLoweringHead()) {
             const mirroredMove = pokemon.moveMirrored()
@@ -4211,6 +4269,10 @@ PokemonMZ_BattleManager.startMove = function(side) {
             this._currentAction.insertResultStepsAt(["autotext","dugHole",this._currentAction.side()], battleIndex)
         } else if (isMirrorDigTurn1) {
             this._currentAction.insertResultStepsAt(["autotext","dugHole",this._currentAction.side()], battleIndex)
+        } else if (pokemon.isMoveFly(moveIndex) && !pokemon.isFlying()) {
+            this._currentAction.insertResultStepsAt(["autotext","flewHigh",this._currentAction.side()], battleIndex)
+        } else if (isMirrorFlyTurn1) {
+            this._currentAction.insertResultStepsAt(["autotext","flewHigh",this._currentAction.side()], battleIndex)
         } else if (pokemon.isMoveSkullBash(moveIndex) && !pokemon.isLoweringHead()) {
             this._currentAction.insertResultStepsAt(["autotext","lowerHead",this._currentAction.side()], battleIndex)
         } else if (isMirrorSkullBashTurn1) {
@@ -4231,6 +4293,11 @@ PokemonMZ_BattleManager.startMove = function(side) {
 
     // If pokemon launches dig, no pp consumption
     if (pokemon.isMoveDig(moveIndex) && !pokemon.isDigging()) {
+        skipSeeMove = true;
+    }
+
+    // If pokemon launches fly, no pp consumption
+    if (pokemon.isMoveFly(moveIndex) && !pokemon.isFlying()) {
         skipSeeMove = true;
     }
 
@@ -4438,6 +4505,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["dig", step[1]];
                 break;
+            case "startFlying":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["fly", step[1]];
+                break;
             case "startSkullBash":
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["skullBash", step[1]];
@@ -4473,6 +4544,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
             case "endDigging":
                 this.changeSubPhase("removePokemonStatus");
                 this._subPhaseParams = ["dig", step[1]];
+                break;
+            case "endFlying":
+                this.changeSubPhase("removePokemonStatus");
+                this._subPhaseParams = ["fly", step[1]];
                 break;
             case "endSkullBash":
                 this.changeSubPhase("removePokemonStatus");
@@ -5102,6 +5177,9 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
         case "dig":
             target.startDigging(moveIndex);
             break;
+        case "fly":
+            target.startFlying(moveIndex);
+            break;
         case "skullBash":
             target.startSkullBash(moveIndex);
             break;
@@ -5154,6 +5232,9 @@ PokemonMZ_BattleManager.removePokemonStatus = function() {
             break;
         case "dig":
             target.endDigging();
+            break;
+        case "fly":
+            target.endFlying();
             break;
         case "skullBash":
             target.endSkullBash();
@@ -5434,6 +5515,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return "The Mirror Move failed!"
     case "dugHole":
         return prefix + pokemon.name() + " dug a hole!"
+    case "flewHigh":
+        return prefix + pokemon.name() + " flew up high!"
     case "lowerHead":
         return prefix + pokemon.name() + " lowered its head!"
     case "makeWhirlwind":

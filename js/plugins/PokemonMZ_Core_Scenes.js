@@ -376,7 +376,6 @@ Scene_Base.prototype.PokemonMZ_updatePokemonIncreasePp = function(listWindow, mo
     const pokemon = this._pokemonRecoveringData.pokemon;
     const moveIndex = this._pokemonRecoveringData.moveIndex;
     const gainedPpUp = this._pokemonRecoveringData.value;
-    console.log(this._pokemonRecoveringData)
     let returnMenu = false;
     if (pokemon) {
         const moveName = pokemon.moveNameFromIndex(moveIndex)
@@ -1715,7 +1714,18 @@ PokemonMZ_Scene_RegionMap.prototype.initialize = function() {
     Scene_MenuBase.prototype.initialize.call(this);
     this._regionData = null;
     this._regionPoiData = null;
+    this._isFlying = false;
+    this._flyingPokemon = null;
 };
+PokemonMZ_Scene_RegionMap.prototype.prepare = function(type, ext1, ext2) {
+    switch(type) {
+    case "flying":
+        this._isFlying = true;
+        this._flyingPokemon = ext1;
+        this._flyingSound = ext2;
+        break;
+    }
+}
 PokemonMZ_Scene_RegionMap.prototype.create = function() {
     Scene_MenuBase.prototype.create.call(this);
     this.createHelpWindow();
@@ -1723,7 +1733,13 @@ PokemonMZ_Scene_RegionMap.prototype.create = function() {
 };
 PokemonMZ_Scene_RegionMap.prototype.createMainWindow = function() {
     const rect = this.mainWindowRect();
-    this._mainWindow = new PokemonMZ_Window_RegionMap(rect, "playerMap");
+    if (this._isFlying) {
+        this._mainWindow = new PokemonMZ_Window_RegionMap(rect, "flying");
+        this._mainWindow.setHandler("ok", this.flyCommand.bind(this));
+    } else {
+        this._mainWindow = new PokemonMZ_Window_RegionMap(rect, "playerMap");
+        this._mainWindow.setHandler("ok", this.popScene.bind(this));
+    }
     this._mainWindow.setHandler("cancel", this.popScene.bind(this));
     this._mainWindow.setHelpWindow(this._helpWindow);
     this.addWindow(this._mainWindow);
@@ -1736,6 +1752,23 @@ PokemonMZ_Scene_RegionMap.prototype.mainWindowRect = function() {
     const wy = this.mainAreaBottom() - wh;
     return new Rectangle(wx, wy, ww, wh);
 };
+
+PokemonMZ_Scene_RegionMap.prototype.flyCommand = function() {
+    // Return to map
+    SceneManager.pop();
+    SceneManager.pop();
+    SceneManager.pop();
+
+    // Trigger fly
+    const selectedPoiData = this._mainWindow.selectedPoiData();
+    const flyData = {
+        "mapId":selectedPoiData.flyMapId,
+        "x":selectedPoiData.flyMapX,
+        "y":selectedPoiData.flyMapY,
+    }
+    $gameMap.PokemonMZ_useFly(this._flyingPokemon, this._flyingSound, flyData);
+};
+
 
 // PokemonMZ_Scene_PokemonNickname
 // The scene class to choose a Pokemon Nickname
@@ -1809,7 +1842,6 @@ PokemonMZ_Scene_PokemonNickname.prototype.messageWindowRect = function() {
 PokemonMZ_Scene_PokemonNickname.prototype.createEditWindow = function() {
     const rect = this.editWindowRect();
     this._editWindow = new PokemonMZ_Window_PokemonNameEdit(rect);
-    console.log(this._pokemon)
     this._editWindow.setup(this._pokemon, this._maxLength);
     if (!this._isRenaming) {
         this._editWindow.openness = 0;
@@ -2542,6 +2574,9 @@ PokemonMZ_Scene_PokemonMenu.prototype.onMoveCommand = function() {
         this._usingMapMove = "cut"
         this.onUsingMapMove(mapEffect.sound);
         break;
+    case "fly":
+        this.useFlyCommand(mapEffect.sound);
+        break;
     case "flash":
         this.useFlashCommand(mapEffect.sound);
         break;
@@ -2586,6 +2621,24 @@ PokemonMZ_Scene_PokemonMenu.prototype.useDigCommand = function() {
         this._messageWindow.startMessage();
     }
 };
+PokemonMZ_Scene_PokemonMenu.prototype.useFlyCommand = function(soundEffect) {
+    const pokemon = this.selectedPokemon();
+
+    if ($gameMap.PokemonMZ_isFlyAllowed()) {
+        this._commandWindow.close();
+        this._listWindow.deactivate();
+        SceneManager.push(PokemonMZ_Scene_RegionMap);
+        SceneManager.prepareNextScene("flying", pokemon, soundEffect)
+    } else {
+        // Display message indicating no fly
+        const message = pokemon.name() + " can't Fly here."
+        this._commandWindow.close();
+        this._listWindow.deactivate();
+        this._messageWindow.setText(message);
+        this._messageWindow.startMessage();
+    }
+};
+
 PokemonMZ_Scene_PokemonMenu.prototype.useFlashCommand = function(soundName) {
     AudioManager.playStandardSe(soundName);
     const message = "A blinding Flash lights the area!"

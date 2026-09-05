@@ -450,15 +450,19 @@ Game_Map.prototype.initialize = function() {
     this._isRopeEscapable = false;
     this._isTeleportAllowed = false;
     this._isDigAllowed = false;
+    this._isFlyAllowed = false;
     this._isCyclingAllowed = false;
     this._isUsingRope = false;
     this._isUsingTeleport = false;
     this._isUsingDig = false;
+    this._isUsingFly = false;
     this._fishingState = 0;
     this._fishingRod = null;
     this._fishingRegion = 0;
     this._eventsToCut = [];
     this._soundOfCut = null;
+    this._soundOfFly = null;
+    this._flyingDestination = null;
 };
 Game_Map.prototype.PokemonMZ_reinitialize = function() {
     // Used to create possible missing objects after update
@@ -508,6 +512,7 @@ Game_Map.prototype.setup = function(mapId) {
     this._isRopeEscapable = Boolean(noteData.escapeRope);
     this._isTeleportAllowed = Boolean(noteData.teleport);
     this._isDigAllowed = Boolean(noteData.escapeRope);
+    this._isFlyAllowed = Boolean(noteData.fly);
     this._isCyclingAllowed = Boolean(noteData.cycling);
     this._isDark = Boolean(noteData.dark);
 
@@ -608,6 +613,16 @@ Game_Map.prototype.update = function(sceneActive) {
             }
             this._eventsToCut = [];
             this.refresh();
+        }
+    }
+
+    // Flying part 2
+    if (this.PokemonMZ_isFlying()) {
+        if (!$gameMessage.isBusy()) {
+            this._isUsingFly = false;
+            AudioManager.playStandardSe(this._soundOfFly);
+            const location = this.PokemonMZ_flyDestination();
+            $gamePlayer.reserveTransfer(location.mapId,location.x,location.y,2,0);
         }
     }
 
@@ -747,6 +762,9 @@ Game_Map.prototype.PokemonMZ_isTeleportAllowed = function() {
 Game_Map.prototype.PokemonMZ_isDigAllowed = function() {
     return this._isDigAllowed;
 };
+Game_Map.prototype.PokemonMZ_isFlyAllowed = function() {
+    return this._isFlyAllowed;
+};
 Game_Map.prototype.PokemonMZ_isCyclingAllowed = function() {
     return this._isCyclingAllowed;
 };
@@ -785,8 +803,22 @@ Game_Map.prototype.PokemonMZ_useCut = function(pokemon, soundEffectName) {
     this._eventsToCut = cutEvents;
     this._soundOfCut = soundEffectName;
 }
+Game_Map.prototype.PokemonMZ_useFly = function(pokemon, soundEffectName, poiData) {
+    // Display fly message
+    pokemon.playCry();
+    $gameMessage.add(pokemon.name() + " used Fly!")
+    this._isUsingFly = true;
+    this._flyDestination = poiData;
+    this._soundOfFly = soundEffectName;
+}
 Game_Map.prototype.PokemonMZ_isCutting = function() {
     return this._eventsToCut && this._eventsToCut.length > 0;
+};
+Game_Map.prototype.PokemonMZ_isFlying = function() {
+    return this._isUsingFly;
+};
+Game_Map.prototype.PokemonMZ_flyDestination = function() {
+    return this._flyDestination;
 };
 Game_Map.prototype.PokemonMZ_canFishHere = function() {
     const frontRegion = $gamePlayer.PokemonMZ_frontRegionId();
@@ -1689,6 +1721,17 @@ PokemonMZ_Game_TrainerPlayer.prototype.hasVisitedLocation = function(regionId, p
         return false;
     }
 };
+PokemonMZ_Game_TrainerPlayer.prototype.visitedPoiInRegion = function(regionId) {
+    if (this._visitedLocations) {
+        if (this._visitedLocations[regionId]) {
+            return this._visitedLocations[regionId];
+        } else {
+            return [];
+        }
+    } else {
+        return [];
+    }
+}
 
 
 
@@ -1734,6 +1777,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._isRaging = false;
     this._isMinimized = false;
     this._isDigging = false;
+    this._isFlying = false;
     this._isLoweringHead = false;
     this._isMakingWhirlwind = false;
     this._hasLightScreen = false; // Generation I - Light screen only applies to the user
@@ -1757,6 +1801,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._berserkMoveIndex = -1;
     this._rageMoveIndex = -1;
     this._digMoveIndex = -1;
+    this._flyMoveIndex = -1;
     this._skullBashMoveIndex = -1;
     this._razorWindMoveIndex = -1;
 
@@ -2124,7 +2169,6 @@ PokemonMZ_Game_Pokemon.prototype.recoverPpAtIndex = function(index, ppRecovered)
 };
 
 PokemonMZ_Game_Pokemon.prototype.increasePpAtIndex = function(index, gainedPpUp) {
-    console.log("gain " + String(gainedPpUp) + " for move at index " + String(index))
     const oldPpMax = this.movePPAtIndex(index);
     this._moves[index].ppup += gainedPpUp;
     const newPpMax = this.movePPAtIndex(index);
@@ -2310,6 +2354,19 @@ PokemonMZ_Game_Pokemon.prototype.isMoveDig = function(index) {
     }
     return false;
 };
+PokemonMZ_Game_Pokemon.prototype.isMoveFly = function(index) {
+    // Returns if the move at index has the fly effect
+    if (index == -1 ) {
+        // Struggle cannot be fly
+        return false;
+    }
+
+    const move = this.moveDataFromIndex(index);
+    for (const effect of move.effects) {
+        if (effect.type == "fly") { return true; }
+    }
+    return false;
+};
 PokemonMZ_Game_Pokemon.prototype.isMoveSkullBash = function(index) {
     // Returns if the move at index has the skull bash effect
     if (index == -1 ) {
@@ -2358,6 +2415,9 @@ PokemonMZ_Game_Pokemon.prototype.rageMoveIndex = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.digMoveIndex = function() {
     return this._digMoveIndex;
+};
+PokemonMZ_Game_Pokemon.prototype.flyMoveIndex = function() {
+    return this._flyMoveIndex;
 };
 PokemonMZ_Game_Pokemon.prototype.skullBashMoveIndex = function() {
     return this._skullBashMoveIndex;
@@ -2984,6 +3044,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.unRage();
     this.unMinimize();
     this.endDigging();
+    this.endFlying();
     this.endSkullBash();
     this.endRazorWind();
     this.removeLightScreen(); // Generation I
@@ -3046,6 +3107,7 @@ PokemonMZ_Game_Pokemon.prototype.isMinimized = function() {
 PokemonMZ_Game_Pokemon.prototype.isUsingSeveralTurnMove = function() {
     return (
         pokemon.isDigging() || 
+        pokemon.isFlying() ||
         pokemon.isBiding() || 
         pokemon.isBerserk() || 
         pokemon.isRaging() || 
@@ -3056,6 +3118,9 @@ PokemonMZ_Game_Pokemon.prototype.isUsingSeveralTurnMove = function() {
 
 PokemonMZ_Game_Pokemon.prototype.isDigging = function() {
     return this._isDigging;
+};
+PokemonMZ_Game_Pokemon.prototype.isFlying = function() {
+    return this._isFlying;
 };
 PokemonMZ_Game_Pokemon.prototype.isLoweringHead = function() {
     return this._isLoweringHead;
@@ -3305,6 +3370,10 @@ PokemonMZ_Game_Pokemon.prototype.startDigging = function(moveIndex) {
     this._isDigging = true;
     this._digMoveIndex = moveIndex;
 };
+PokemonMZ_Game_Pokemon.prototype.startFlying = function(moveIndex) {
+    this._isFlying = true;
+    this._flyMoveIndex = moveIndex;
+};
 PokemonMZ_Game_Pokemon.prototype.startSkullBash = function(moveIndex) {
     this._isLoweringHead = true;
     this._skullBashMoveIndex = moveIndex;
@@ -3445,6 +3514,10 @@ PokemonMZ_Game_Pokemon.prototype.removeReflect = function() {
 PokemonMZ_Game_Pokemon.prototype.endDigging = function() {
     this._isDigging = false;
     this._digMoveIndex = -1;
+};
+PokemonMZ_Game_Pokemon.prototype.endFlying = function() {
+    this._isFlying = false;
+    this._flyMoveIndex = -1;
 };
 PokemonMZ_Game_Pokemon.prototype.endSkullBash = function() {
     this._isLoweringHead = false;
@@ -3862,6 +3935,15 @@ PokemonMZ_Game_Action.prototype.isMoveDig = function() {
     }
     return false;
 };
+PokemonMZ_Game_Action.prototype.isMoveFly = function() {
+    if (!this._moveData) { return false; }
+    for (const effect of this._moveData.effects) {
+        if (effect.type == "fly") {
+            return true;
+        }
+    }
+    return false;
+};
 PokemonMZ_Game_Action.prototype.isMoveSkullBash = function() {
     if (!this._moveData) { return false; }
     for (const effect of this._moveData.effects) {
@@ -4165,6 +4247,14 @@ PokemonMZ_Game_Action.prototype.calculateMove = function() { //TODO
         }
     };
 
+    // Specific behavior for fly turn 1
+    if (this.isMoveFly()) { 
+        if (!this._user.isFlying()) {
+            this.calculateMoveFlyTurn1();
+            return;
+        }
+    };
+
     // Specific behavior for skull bash turn 1
     if (this.isMoveSkullBash()) {
         if (!this._user.isLoweringHead()) {
@@ -4394,6 +4484,11 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
             this._resultSteps.push(["showSprite", this.userBattleSprite()]);
         }
 
+        // After flying, the sprite must be shown, even if missed
+        if (this._user.isFlying()) {
+            this._resultSteps.push(["showSprite", this.userBattleSprite()]);
+        }
+
         this._resultSteps.push(["autotext","missed",this.side()])
         
         // Usually missed move does no effect, except if effect is forced; for example self-destruct
@@ -4595,6 +4690,22 @@ PokemonMZ_Game_Action.prototype.calculateMoveDigTurn1 = function() {
     let animation = null;
     for (const effect of this._moveData.effects) {
         if (effect.type == "dig") {
+            animation = effect.animationTurn1;
+        }
+    }
+
+
+    this._resultSteps.push(["hitAnimation", animation, this._user._battleSprite, this._opponent._battleSprite, this.side()]);
+    const effectsResult = this.calculateMoveEffects({});
+    this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
+};
+PokemonMZ_Game_Action.prototype.calculateMoveFlyTurn1 = function() { 
+    let enemyWillFaint = false;
+    let userWillFaint = false;
+
+    let animation = null;
+    for (const effect of this._moveData.effects) {
+        if (effect.type == "fly") {
             animation = effect.animationTurn1;
         }
     }
@@ -4807,6 +4918,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
     case "dig":
         effectResults = this.effect_dig(battleData, effect, effectResults);
         break;
+    case "fly":
+        effectResults = this.effect_fly(battleData, effect, effectResults);
+        break;
     case "skullBash":
         effectResults = this.effect_skullBash(battleData, effect, effectResults);
         break;
@@ -4883,6 +4997,10 @@ PokemonMZ_Game_Action.prototype.moveHit = function() {
         case "opponent":
             if (this._opponent.isDigging() && !this._moveData.hitDig) {
                 // Opponent under the ground can only be hit with specific moves with the hitDig:true flag.
+                return false;
+            }
+            if (this._opponent.isFlying() && !this._moveData.hitFly) {
+                // Opponent in the air can only be hit with specific moves with the hitFly:true flag.
                 return false;
             }
 
@@ -5971,6 +6089,16 @@ PokemonMZ_Game_Action.prototype.effect_dig = function(battleData, effect, effect
     } else {
         effectResults.success = true;
         this._resultSteps.push(["endDigging",this._user])
+    }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_fly = function(battleData, effect, effectResults) {
+    if (!this._user.isFlying()) {
+        effectResults.success = true;
+        this._resultSteps.push(["startFlying",this._user])
+    } else {
+        effectResults.success = true;
+        this._resultSteps.push(["endFlying",this._user])
     }
     return effectResults;
 };

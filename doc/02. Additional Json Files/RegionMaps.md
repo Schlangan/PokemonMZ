@@ -20,3 +20,7 @@ poiData
 - x, **int** : X coordinate of the grid cell corresponding to the point of interest on the map
 - y, **int** : Y coordinate of the grid cell corresponding to the point of interest on the map
 - pokemons, **Array:string** : Array of pokemon string identifier (as set in Enemy Database window). They are used for pokemon locations inside the Pokedex.
+- fly, **bool**, *optional* : If present, the location can be selected with the move Fly
+- flyMapId, **int**, *optional* : If fly is set to true, give this property the id of the map the move will fly to
+- flyMapX, **int**, *optional* : If fly is set to true, give this property the x coordinate of the map the player will fly to
+- flyMapY, **int**, *optional* : If fly is set to true, give this property the y coordinate of the map the player will fly to
