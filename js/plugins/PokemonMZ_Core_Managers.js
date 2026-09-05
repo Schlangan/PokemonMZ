@@ -910,6 +910,7 @@ DataManager.verifyItemData = function(index, itemData) {
         case "escapeRope":
         case "cycling":
         case "escapeWildBattle":
+        case "coinCase":
             DataManager.verifyProperties(
                 itemData, 
                 errorMessagePrefix, 

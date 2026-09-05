@@ -1129,6 +1129,11 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
                 this._messageWindow.startMessage();
             }
             break;
+        case "coinCase":
+            SceneManager.pop();
+            SceneManager.pop();
+            $gameMessage.add("Coins: " + String($gamePlayerTrainer.coins()));
+            break;
         case "repel":
             $gamePlayerTrainer.gainBagItem(itemDict.id, -1);
             $gamePlayerTrainer.startRepelling(itemDict.pkmz_data.steps);

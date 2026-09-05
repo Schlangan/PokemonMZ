@@ -936,6 +936,70 @@ Game_Map.prototype.PokemonMZ_eventsAtRange = function(x,y,range) {
 Game_Map.prototype.PokemonMZ_isDark = function() {
     return this._isDark && !$gamePlayerTrainer.isUsingFlash();
 };
+Game_Map.prototype.PokemonMZ_randomizeSlotMachinePayout = function(playerBet) {
+    // Simulate the result of a game of slot machines
+    const payoutMultiplier = 5;
+    const numElements = 15;
+
+    const reels = [
+        ["berries","bar"    ,"arbok"  ,"meowth","7"     ,"berries","bar"    ,"arbok","smogo","7"      ,"berries","bar"  ,"smogo"  ,"meowth" ,"7"     ],
+        ["arbok"  ,"berries","smogo"  ,"7"     ,"meowth","berries","arbok"  ,"smogo","bar"  ,"berries","arbok"  ,"smogo","berries","bar"    ,"meowth"],
+        ["arbok"  ,"meowth" ,"berries","smogo" ,"arbok" ,"meowth" ,"berries","smogo","arbok","7"      ,"bar"    ,"arbok","meowth" ,"berries","smogo" ],
+    ]
+    const stops = [Math.randomInt(numElements),Math.randomInt(numElements),Math.randomInt(numElements)];
+    const finalTable = []
+
+    for (let i=0; i<3; i++) {
+        const reel = reels[i];
+        const stop = stops[i];
+        const prev = stop > 0 ? reel[stop-1] : reel[numElements-1];
+        const curr = reel[stop];
+        const next = stop < numElements-1 ? reel[stop+1] : reel[0];
+        finalTable.push([prev,curr,next])
+    }
+
+    let payout = 0;
+    if (playerBet >= 1) {
+        // 1 bet only allows the middle line to give money
+        payout += this.PokemonMZ_slotMachineLinePayout(finalTable[0][1] + finalTable[1][1] + finalTable[2][1])
+    }
+    if (playerBet >= 2) {
+        // 2 bet add top and bottom lines
+        payout += this.PokemonMZ_slotMachineLinePayout(finalTable[0][0] + finalTable[1][0] + finalTable[2][0])
+        payout += this.PokemonMZ_slotMachineLinePayout(finalTable[0][2] + finalTable[1][2] + finalTable[2][2])
+    }
+    if (playerBet >= 3) {
+        // 3 bet add diagonals
+        payout += this.PokemonMZ_slotMachineLinePayout(finalTable[0][0] + finalTable[1][1] + finalTable[2][2])
+        payout += this.PokemonMZ_slotMachineLinePayout(finalTable[0][2] + finalTable[1][1] + finalTable[2][0])
+    }
+
+    // Add mastery chances to allow more gains for the player
+    if (payout === 0) {
+        const masteryChance = Math.randomInt(100);
+        if (masteryChance < 20*playerBet) {
+            payout = 1;
+        }
+    }
+    
+    return payout*payoutMultiplier*playerBet;
+}
+Game_Map.prototype.PokemonMZ_slotMachineLinePayout = function(lineData) {
+    switch (lineData) {
+    case "777":
+        return 300;
+    case "barbarbar":
+        return 100;
+    case "meowthmeowthmeowth":
+    case "arbokarbokarbok":
+    case "smogosmogosmogo":   
+        return 15;
+    case "berriesberriesberries":
+        return 8;
+    }
+    return 0;
+};
+
 
 
 // Game_Interpreter edits
@@ -1279,6 +1343,15 @@ PokemonMZ_Game_TrainerPlayer.prototype.addMoney = function(amount) {
 };
 PokemonMZ_Game_TrainerPlayer.prototype.removeMoney = function(amount) {
     this._money -= amount;
+};
+PokemonMZ_Game_TrainerPlayer.prototype.coins = function() {
+    return this._coins ?? 0;
+};
+PokemonMZ_Game_TrainerPlayer.prototype.addCoins = function(amount) {
+    this._coins += amount;
+};
+PokemonMZ_Game_TrainerPlayer.prototype.removeCoins = function(amount) {
+    this._coins -= amount;
 };
 PokemonMZ_Game_TrainerPlayer.prototype.badgesCount = function() {
     return this._badges.length;

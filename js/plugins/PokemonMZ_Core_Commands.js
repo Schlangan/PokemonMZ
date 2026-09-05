@@ -84,12 +84,74 @@
  * @arg moneyVariable
  * @type variable
  * @text Money variable
- * @desc TThe variable containing the value of the money.
+ * @desc The variable containing the value of the money.
 
  * //////////////////////////////////////////
  * @command GetPlayerMoney
  * @text Get Player Money Value
  * @desc Puts the value of the player money to a variable
+ * 
+ * @arg chosenVariable
+ * @type variable
+ * @text Chosen Variable
+ * @desc The variable to save the value into.
+
+
+ * //////////////////////////////////////////
+ * @command GivePlayerCoins
+ * @text Gives Coins to Player
+ * @desc Gives a given amount of coins to the player.
+ * 
+ * @arg coinAmount
+ * @type number
+ * @min 0
+ * @text Amount
+ * @desc The amount of coins to give
+ * 
+ * //////////////////////////////////////////
+ * @command GivePlayerVariableCoins
+ * @text Gives Variable Coins to Player
+ * @desc Gives a variable value of coins to the player.
+ * 
+ * @arg chosenVariable
+ * @type variable
+ * @min 0
+ * @text Chosen Variable
+ * @desc The variable containing the amount of coins.
+ * 
+ * //////////////////////////////////////////
+ * @command TakePlayerCoins
+ * @text Take Coins from the Player
+ * @desc Takes a fixed amount of coins to the player.
+ * 
+ * @arg coinAmount
+ * @type number
+ * @min 0
+ * @text Amount
+ * @desc The amount of money to take
+ *
+ * 
+ * //////////////////////////////////////////
+ * @command RandomizeSlotMachinePayout
+ * @text Randomize Slot Machine Payout
+ * @desc Randomize the result of the slot machine and put the value in a variable.
+ * 
+ * @arg playerBet
+ * @text Player Bet
+ * @type number
+ * @min 1
+ * @max 3
+ * @desc The value bet by the player, 1 to 3. 3 increases payout chances.
+ * 
+ * @arg returnVariable
+ * @type variable
+ * @text Return Variable
+ * @desc The variable to save the value into.
+
+ * //////////////////////////////////////////
+ * @command GetPlayerCoins
+ * @text Get Player Coins Value
+ * @desc Puts the value of the player coins into a variable
  * 
  * @arg chosenVariable
  * @type variable
@@ -420,6 +482,32 @@ PluginManager.registerCommand(pluginName, "GetPlayerMoney", function(args) {
     const variable = Number(args.chosenVariable);
     $gameVariables.setValue(variable, $gamePlayerTrainer.money());
 });
+
+// Coins
+PluginManager.registerCommand(pluginName, "GivePlayerCoins", function(args) {
+    const coins = Number(args.coinAmount);
+    $gamePlayerTrainer.addCoins(coins);
+});
+PluginManager.registerCommand(pluginName, "GivePlayerVariableCoins", function(args) {
+    const chosenVariable = Number(args.chosenVariable);
+    $gamePlayerTrainer.addCoins($gameVariables.value(chosenVariable));
+});
+PluginManager.registerCommand(pluginName, "TakePlayerCoins", function(args) {
+    const coins = Number(args.coinAmount);
+    $gamePlayerTrainer.removeCoins(coins);
+});
+PluginManager.registerCommand(pluginName, "GetPlayerCoins", function(args) {
+    const variable = Number(args.chosenVariable);
+    $gameVariables.setValue(variable, $gamePlayerTrainer.coins());
+});
+
+PluginManager.registerCommand(pluginName, "RandomizeSlotMachinePayout", function(args) {
+    const variable = Number(args.returnVariable);
+    const playerBet = Number(args.playerBet);
+    $gameVariables.setValue(variable, $gameMap.PokemonMZ_randomizeSlotMachinePayout(playerBet));
+});
+
+
 
 
 PluginManager.registerCommand(pluginName, "AddItemToStorage", function(args) {
