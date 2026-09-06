@@ -261,6 +261,9 @@ PokemonMZ_Sprite_Pokemon.prototype.modifyScale = function(modifier) {
     this.scale.y += modifier;
     this.updateBottomCenterPlacement();
 };
+PokemonMZ_Sprite_Pokemon.prototype.setOpacity = function(opacity) {
+    this.opacity = opacity;
+};
 PokemonMZ_Sprite_Pokemon.prototype.getAnimationPosition = function() {
     const bounds = this.getBounds();
 

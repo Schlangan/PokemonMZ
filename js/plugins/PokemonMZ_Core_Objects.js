@@ -1857,6 +1857,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._isRecharging = false;
     this._hasLightScreen = false; // Generation I - Light screen only applies to the user
     this._hasReflect = false; // Generation I - Reflect only applies to the user
+    this._hasSubstitute = false;
 
     this._hasMoveDisabled = false;
     this._disabledMoveIndex = -1;
@@ -1864,6 +1865,8 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
 
     this._convertedType1 = null;
     this._convertedType2 = null;
+
+    this._substituteHp = 0;
 
     this._turnsSleep = 0;
     this._turnsConfusion = 0;
@@ -2186,11 +2189,21 @@ PokemonMZ_Game_Pokemon.prototype.resetStageModifiers = function() {
 PokemonMZ_Game_Pokemon.prototype.hp = function() {
     return this._hp;
 };
+PokemonMZ_Game_Pokemon.prototype.substituteHp = function() {
+    return this.hasSubstitute() ? this._substituteHp : 0;
+}
 PokemonMZ_Game_Pokemon.prototype.setHp = function(newHp) {
     if (newHp > 0) {
         this._hp = newHp;
     } else {
         this._hp = 0;
+    }
+};
+PokemonMZ_Game_Pokemon.prototype.setSubstituteHp = function(newHp) {
+    if (newHp > 0) {
+        this._substituteHp = newHp;
+    } else {
+        this._substituteHp = 0;
     }
 };
 PokemonMZ_Game_Pokemon.prototype.canRecoverHp = function() {
@@ -3137,6 +3150,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.removeLightScreen(); // Generation I
     this.removeReflect(); // Generation I
     this.unConvert()
+    this.removeSubstitute();
     this.resetCounterDamage();
 };
 PokemonMZ_Game_Pokemon.prototype.removeFinishedStatuses = function() {
@@ -3229,6 +3243,9 @@ PokemonMZ_Game_Pokemon.prototype.hasLightScreen = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.hasReflect = function() {
     return this._hasReflect;
+};
+PokemonMZ_Game_Pokemon.prototype.hasSubstitute = function() {
+    return this._hasSubstitute;
 };
 PokemonMZ_Game_Pokemon.prototype.nextConfusionTurn = function() {
     this._turnsConfusion--;
@@ -3493,6 +3510,10 @@ PokemonMZ_Game_Pokemon.prototype.giveLightScreen = function() {
 PokemonMZ_Game_Pokemon.prototype.giveReflect = function() {
     this._hasReflect = true;
 };
+PokemonMZ_Game_Pokemon.prototype.giveSubstitute = function() {
+    this._hasSubstitute = true;
+    this._substituteHp = Math.floor(this.mhp()/4)+1;
+};
 PokemonMZ_Game_Pokemon.prototype.keepBinding = function() {
     this._turnsBound--;
 };
@@ -3622,6 +3643,10 @@ PokemonMZ_Game_Pokemon.prototype.removeLightScreen = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.removeReflect = function() {
     this._hasReflect = false;
+};
+PokemonMZ_Game_Pokemon.prototype.removeSubstitute = function() {
+    this._hasSubstitute = false;
+    this._substituteHp = 0;
 };
 PokemonMZ_Game_Pokemon.prototype.endDigging = function() {
     this._isDigging = false;
@@ -4340,6 +4365,10 @@ PokemonMZ_Game_Action.prototype.calculateMove = function() { //TODO
     this._userEvolvingHp = this._user.hp();
     this._opponentEvolvingHp = this._opponent.hp();
 
+    this._userSubstituteEvolvingHp = this._user.substituteHp();
+    this._opponentSubstituteEvolvingHp = this._opponent.substituteHp();
+
+
     // If bound, only burn/poison effect are calculated
     if (this._user.isBound()) {
         this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
@@ -4426,6 +4455,15 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
     let enemyWillFaint = false;
     let userWillFaint = false;
 
+    let enemySubstituteWillBreak = false;
+    let userSubstituteWillBreak = false;
+
+    let enemySubstituteTookDamage = false;
+    let userSubstituteTookDamage = false;
+
+    const opponentHasSubstitute = this._opponent.hasSubstitute();
+
+
     // Play animations always playing whether success or not
     if (this._moveData.animationAlways) {
         if (this._moveData.target == "opponent") {
@@ -4485,20 +4523,34 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
         if (opponentDamage > 0) {
             if (efficiency < 1) {
                 this._resultSteps.push(["se","weak"]);
-                this._resultSteps.push(["damageOpponent",opponentDamage]);
-
+                if (opponentHasSubstitute) {
+                    enemySubstituteTookDamage = true;
+                    this._resultSteps.push(["damageOpponentSubstitute",opponentDamage]);
+                } else {
+                    this._resultSteps.push(["damageOpponent",opponentDamage]);
+                }
                 if (this._moveExecutedHits == 0) {
                     this._resultSteps.push(["autotext","weak",this.side()])
                 }
             } else if (efficiency > 1) {
                 this._resultSteps.push(["se","strong"]);
-                this._resultSteps.push(["damageOpponent",opponentDamage]);
+                if (opponentHasSubstitute) {
+                    enemySubstituteTookDamage = true;
+                    this._resultSteps.push(["damageOpponentSubstitute",opponentDamage]);
+                } else {
+                    this._resultSteps.push(["damageOpponent",opponentDamage]);
+                }
                 if (this._moveExecutedHits == 0) {
                     this._resultSteps.push(["autotext","strong",this.side()])
                 }
             } else {
                 this._resultSteps.push(["se","normal"]);
-                this._resultSteps.push(["damageOpponent",opponentDamage]);
+                if (opponentHasSubstitute) {
+                    enemySubstituteTookDamage = true;
+                    this._resultSteps.push(["damageOpponentSubstitute",opponentDamage]);
+                } else {
+                    this._resultSteps.push(["damageOpponent",opponentDamage]);
+                }
             }
             if (crit) {
                 this._resultSteps.push(["autotext","critical",this.side()]);
@@ -4506,12 +4558,23 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
             const effectsResult = this.calculateMoveEffects({
                 "damageDealt":opponentDamage
             });
-            this._opponentEvolvingHp -= opponentDamage;
-            if (this._opponentEvolvingHp <= 0) {
-                this._moveRemainingHits = 1;
-                enemyWillFaint = true;
+
+            if (this._opponent.hasSubstitute()) {
+                enemySubstituteTookDamage = true;
+                this._opponentSubstituteEvolvingHp -= opponentDamage;
+                if (this._opponentSubstituteEvolvingHp <= 0) {
+                    this._moveRemainingHits = 1;
+                    enemySubstituteWillBreak = true;
+                }
+            } else {
+                this._opponentEvolvingHp -= opponentDamage;
+                if (this._opponentEvolvingHp <= 0) {
+                    this._moveRemainingHits = 1;
+                    enemyWillFaint = true;
+                }
             }
-            if (effectsResult.userDamage) {
+
+            if (effectsResult.userDamage) { // User damage always apply to user, not substitute
                 this._userEvolvingHp -= effectsResult.userDamage
                 const drainDamage = effectsResult.userHeal ?? 0
                 if ((this._userEvolvingHp + drainDamage) <= 0) {
@@ -4562,11 +4625,20 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
                 userWillFaint = true;
             }
             if (effectsResult.opponentDamage) {
-                this._opponentEvolvingHp -= effectsResult.opponentDamage
-                if (this._opponentEvolvingHp <= 0) {
-                    this._moveRemainingHits = 1;
-                    enemyWillFaint = true;
-                    
+
+                if (this._opponent.hasSubstitute()) {
+                    enemySubstituteTookDamage = true;
+                    this._opponentSubstituteEvolvingHp -= opponentDamage;
+                    if (this._opponentSubstituteEvolvingHp <= 0) {
+                        this._moveRemainingHits = 1;
+                        enemySubstituteWillBreak = true;
+                    }
+                } else {
+                    this._opponentEvolvingHp -= effectsResult.opponentDamage
+                    if (this._opponentEvolvingHp <= 0) {
+                        this._moveRemainingHits = 1;
+                        enemyWillFaint = true;
+                    }
                 }
             }
             this._moveExecutedHits++;
@@ -4627,6 +4699,15 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
         }
         if (userWillFaint) {
             this._resultSteps.push(["faintPokemon","user",this._user._battleSprite]);
+        }
+
+        if (enemySubstituteWillBreak) {
+            this._resultSteps.push(["breakSubstitute","opponent",this._opponent._battleSprite]);
+        } else if (enemySubstituteTookDamage) {
+            this._resultSteps.push(["autotext","damageSubstitute", this.oppositeSide()]);
+        }
+        if (userSubstituteWillBreak) {
+            this._resultSteps.push(["breakSubstitute","user",this._user._battleSprite]);
         }
 
         this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
@@ -5058,6 +5139,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
     case "convertType":
         effectResults = this.effect_convertType(battleData, effect, effectResults);
         break;
+    case "substitute":
+        effectResults = this.effect_substitute(battleData, effect, effectResults);
+        break;
     }
     return effectResults;
 };
@@ -5470,6 +5554,14 @@ PokemonMZ_Game_Action.prototype.effect_burnTarget = function(battleData, effect,
         return effectResults;
     }
 
+    // Cannot usually burn substitutes
+    if (this._opponent.hasSubstitute() && !effect.bypassSubstitute) {
+        if (battleData.damageDealt == 0) {
+            this._resultSteps.push(["waittext","noAffect",this.oppositeSide()]);
+        };
+        return effectResults;
+    }
+
     // Burning moves remove freeze
     if (this._opponent.isFrozen()) {
         this._resultSteps.push(["waittext","defrosted",this.oppositeSide()])
@@ -5487,6 +5579,10 @@ PokemonMZ_Game_Action.prototype.effect_burnTarget = function(battleData, effect,
             effectResults.success = true;
             this._resultSteps.push(["waittext","burned",this.oppositeSide()])
             this._resultSteps.push(["burnPokemon",this._opponent])
+        } else {
+            if (battleData.damageDealt == 0) {
+                this._resultSteps.push(["waittext","noAffect",this.oppositeSide()]);
+            };
         }
     }
     return effectResults;
@@ -5496,6 +5592,15 @@ PokemonMZ_Game_Action.prototype.effect_freezeTarget = function(battleData, effec
         // No effect if target will faint
         return effectResults;
     }
+
+    // Cannot usually freeze substitutes
+    if (this._opponent.hasSubstitute() && !effect.bypassSubstitute) {
+        if (battleData.damageDealt == 0) {
+            this._resultSteps.push(["waittext","noAffect",this.oppositeSide()]);
+        };
+        return effectResults;
+    }
+
     const randomNumber = Math.randomInt(100)
     if (PokemonMZ.debugLog) {
         console.log({"PokemonMZ_Game_Action.effect_freezeTarget > ":{
@@ -5507,6 +5612,10 @@ PokemonMZ_Game_Action.prototype.effect_freezeTarget = function(battleData, effec
             effectResults.success = true;
             this._resultSteps.push(["waittext","frozen",this.oppositeSide()])
             this._resultSteps.push(["freezePokemon",this._opponent])
+        } else {
+            if (battleData.damageDealt == 0) {
+                this._resultSteps.push(["waittext","noAffect",this.oppositeSide()]);
+            };
         }
     }
     return effectResults;
@@ -5516,6 +5625,16 @@ PokemonMZ_Game_Action.prototype.effect_confuseTarget = function(battleData, effe
         // No effect if target will faint
         return effectResults;
     }
+
+    // Cannot usually confuse substitutes
+    if (this._opponent.hasSubstitute() && !effect.bypassSubstitute) {
+        if (battleData.damageDealt == 0) {
+            this._resultSteps.push(["waittext","statusFailed",this.oppositeSide()]);
+        };
+        return effectResults;
+    }
+
+
     const randomNumber = Math.randomInt(100)
     if (PokemonMZ.debugLog) {
         console.log({"PokemonMZ_Game_Action.effect_confuseTarget > ":{
@@ -5540,6 +5659,13 @@ PokemonMZ_Game_Action.prototype.effect_flinchTarget = function(battleData, effec
         // No effect if target will faint
         return effectResults;
     }
+
+    // Cannot usually flinch substitutes
+    if (this._opponent.hasSubstitute() && !effect.bypassSubstitute) {
+        return effectResults;
+    }
+
+
     const randomNumber = Math.randomInt(100)
     if (PokemonMZ.debugLog) {
         console.log({"PokemonMZ_Game_Action.effect_flinchTarget > ":{
@@ -5559,6 +5685,16 @@ PokemonMZ_Game_Action.prototype.effect_paralyzeTarget = function(battleData, eff
         // No effect if target will faint
         return effectResults;
     }
+
+    // Cannot usually paralyze substitutes
+    if (this._opponent.hasSubstitute() && !effect.bypassSubstitute) {
+        if (battleData.damageDealt == 0) {
+            this._resultSteps.push(["waittext","noAffect",this.oppositeSide()]);
+        };
+        return effectResults;
+    }
+
+
     const randomNumber = Math.randomInt(100)
     if (PokemonMZ.debugLog) {
         console.log({"PokemonMZ_Game_Action.effect_paralyzeTarget > ":{
@@ -5583,6 +5719,16 @@ PokemonMZ_Game_Action.prototype.effect_poisonTarget = function(battleData, effec
         // No effect if target will faint
         return effectResults;
     }
+
+    // Cannot usually poison substitutes
+    if (this._opponent.hasSubstitute() && !effect.bypassSubstitute) {
+        if (battleData.damageDealt == 0) {
+            this._resultSteps.push(["waittext","noAffect",this.oppositeSide()]);
+        };
+        return effectResults;
+    }
+
+
     const randomNumber = Math.randomInt(100)
     if (PokemonMZ.debugLog) {
         console.log({"PokemonMZ_Game_Action.effect_poisonTarget > ":{
@@ -5607,6 +5753,13 @@ PokemonMZ_Game_Action.prototype.effect_seedTarget = function(battleData, effect,
         // No effect if target will faint
         return effectResults;
     }
+
+    // Cannot usually seed substitutes
+    if (this._opponent.hasSubstitute() && !effect.bypassSubstitute) {
+        this._resultSteps.push(["waittext","evaded",this.oppositeSide()]);
+        return effectResults;
+    }
+
     if (this._opponent.isSeedable()) {
         effectResults.success = true;
         this._resultSteps.push(["waittext","seeded",this.oppositeSide()]);
@@ -5621,6 +5774,20 @@ PokemonMZ_Game_Action.prototype.effect_sleepTarget = function(battleData, effect
         // No effect if target will faint
         return effectResults;
     }
+
+    // Cannot usually put substitutes to sleep
+    if (this._opponent.hasSubstitute() && !effect.bypassSubstitute) {
+        if (battleData.damageDealt == 0) {
+            if (this._opponent.isAsleep()) {
+                this._resultSteps.push(["waittext","alreadySleeping",this.oppositeSide()]);
+            } else {
+                this._resultSteps.push(["waittext","noAffect",this.oppositeSide()]);
+            }
+        }
+        return effectResults;
+    }
+
+
     if (this._opponent.isSleepable()) {
         effectResults.success = true;
         this._resultSteps.push(["waittext","sleep",this.oppositeSide()]);
@@ -5798,6 +5965,15 @@ PokemonMZ_Game_Action.prototype.effect_accDownTarget = function(battleData, effe
         // No effect if target will faint
         return effectResults;
     }
+
+    // Cannot usually lower substitutes stats
+    if (this._opponent.hasSubstitute() && !effect.bypassSubstitute) {
+        if (battleData.damageDealt == 0) {
+            this._resultSteps.push(["autotext","statusNothing",this.side()])
+        }
+        return effectResults;
+    }
+
     const randomNumber = Math.randomInt(100)
     if (PokemonMZ.debugLog) {
         console.log({"PokemonMZ_Game_Action.effect_accDownTarget > ":{
@@ -5835,6 +6011,15 @@ PokemonMZ_Game_Action.prototype.effect_patkDownTarget = function(battleData, eff
         // No effect if target will faint
         return effectResults;
     }
+
+    // Cannot usually lower substitutes stats
+    if (this._opponent.hasSubstitute() && !effect.bypassSubstitute) {
+        if (battleData.damageDealt == 0) {
+            this._resultSteps.push(["autotext","statusNothing",this.side()])
+        }
+        return effectResults;
+    }
+
     const randomNumber = Math.randomInt(100)
     if (PokemonMZ.debugLog) {
         console.log({"PokemonMZ_Game_Action.effect_patkDownTarget > ":{
@@ -5872,6 +6057,15 @@ PokemonMZ_Game_Action.prototype.effect_pdefDownTarget = function(battleData, eff
         // No effect if target will faint
         return effectResults;
     }
+
+    // Cannot usually lower substitutes stats
+    if (this._opponent.hasSubstitute() && !effect.bypassSubstitute) {
+        if (battleData.damageDealt == 0) {
+            this._resultSteps.push(["autotext","statusNothing",this.side()])
+        }
+        return effectResults;
+    }
+
     const randomNumber = Math.randomInt(100)
     if (PokemonMZ.debugLog) {
         console.log({"PokemonMZ_Game_Action.effect_pdefDownTarget > ":{
@@ -5918,6 +6112,15 @@ PokemonMZ_Game_Action.prototype.effect_spcDownTarget = function(battleData, effe
         // No effect if target will faint
         return effectResults;
     }
+
+    // Cannot usually lower substitutes stats
+    if (this._opponent.hasSubstitute() && !effect.bypassSubstitute) {
+        if (battleData.damageDealt == 0) {
+            this._resultSteps.push(["autotext","statusNothing",this.side()])
+        }
+        return effectResults;
+    }
+
     const randomNumber = Math.randomInt(100)
     if (PokemonMZ.debugLog) {
         console.log({"PokemonMZ_Game_Action.effect_spcDownTarget > ":{
@@ -5955,6 +6158,15 @@ PokemonMZ_Game_Action.prototype.effect_spdDownTarget = function(battleData, effe
         // No effect if target will faint
         return effectResults;
     }
+
+    // Cannot usually lower substitutes stats
+    if (this._opponent.hasSubstitute() && !effect.bypassSubstitute) {
+        if (battleData.damageDealt == 0) {
+            this._resultSteps.push(["autotext","statusNothing",this.side()])
+        }
+        return effectResults;
+    }
+
     const randomNumber = Math.randomInt(100)
     if (PokemonMZ.debugLog) {
         console.log({"PokemonMZ_Game_Action.effect_spdDownTarget > ":{
@@ -6042,6 +6254,14 @@ PokemonMZ_Game_Action.prototype.effect_faintUser = function(battleData, effect, 
 };
 PokemonMZ_Game_Action.prototype.effect_forceSwitchOut = function(battleData, effect, effectResults) {
     const side = this.side();
+
+    // Cannot usually force switch out substitutes
+    if (this._opponent.hasSubstitute() && !effect.bypassSubstitute) {
+        effectResults.success = false;
+        this._resultSteps.push(["waittext","unaffected",this.oppositeSide()]);
+        return effectResults;
+    }
+
     if ($PokemonMZ_gameBattle.isWildBattle()) {
         const levelUser = this._user.level();
         const levelTarget = this._opponent.level();
@@ -6089,6 +6309,12 @@ PokemonMZ_Game_Action.prototype.effect_bindTarget = function(battleData, effect,
         // No effect if target will faint
         return effectResults;
     }
+
+    // Cannot usually bind substitutes
+    if (this._opponent.hasSubstitute() && !effect.bypassSubstitute) {
+        return effectResults;
+    }
+
     if (this._opponent.isBound()) {
         effectResults.success = true;
         this._resultSteps.push(["keepBindingPokemon",this._opponent])
@@ -6105,6 +6331,15 @@ PokemonMZ_Game_Action.prototype.effect_disableTargetMove = function(battleData, 
         // No effect if target will faint
         return effectResults;
     }
+
+    // Cannot usually disable substitutes
+    if (this._opponent.hasSubstitute() && !effect.bypassSubstitute) {
+        if (battleData.damageDealt == 0) {
+            this._resultSteps.push(["waittext","statusFailed",this.oppositeSide()]);
+        };
+        return effectResults;
+    }
+
     if (this._opponent.canBeDisabled()) {
         let moveIndex = 0;
         if (effect.select == "random") {
@@ -6306,5 +6541,24 @@ PokemonMZ_Game_Action.prototype.effect_convertType = function(battleData, effect
     effectResults.success = true;
     this._resultSteps.push(["convertPokemon",this._user, this._opponent])
     this._resultSteps.push(["waittext", "converted", this.oppositeSide()])
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_substitute = function(battleData, effect, effectResults) {
+    const substituteRequiredHp = Math.floor(this._user.mhp() * 0.25);
+
+    if (this._user.hasSubstitute()) {
+        this._resultSteps.push(["waittext", "hasSubstitute", this.side()]);
+        return effectResults;
+    }
+
+    if (this._user.hp() <= substituteRequiredHp) {
+        this._resultSteps.push(["waittext", "tooWeakSubstitute", this.side()]);
+        return effectResults;
+    }
+    
+    effectResults.success = true;
+    this._resultSteps.push(["createSubstitute",this._user])
+    this._resultSteps.push(["damageUser",substituteRequiredHp]);
+    this._resultSteps.push(["waittext", "createdSubstitute", this.side()])
     return effectResults;
 };

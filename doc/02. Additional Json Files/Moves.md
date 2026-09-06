@@ -52,6 +52,7 @@ moveData
 moveEffect
 - type, **string** : Type of effect. All other parameters depend on the type.
 - except,  **Array:exceptedData**, *optional* : Array of **exceptionData**, exceptions preventing the effect to apply
+- bypassSubstitute, **bool**, *optional* : If set to true, the effect will apply through a substitute.
 
 List of implemented effects and their additional parameters:
 

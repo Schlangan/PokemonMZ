@@ -1006,7 +1006,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
     const errorMessagePrefix = prefix + "Effect index " + String(index) + " - ";
 
     const mandatoryProperties = ["type"]
-    const optionalProperties = ["except"]
+    const optionalProperties = ["except","bypassSubstitute"]
 
     switch(moveEffect.type) {
     case "bide":
@@ -1163,6 +1163,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
     case "counter":
     case "rechargeUser":
     case "convertType":
+    case "substitute":
         DataManager.verifyProperties(
             moveEffect,
             errorMessagePrefix,
@@ -2073,6 +2074,9 @@ PokemonMZ_BattleManager.updateSubPhase = function(timeActive) {
         case "proceedDamageOpponent":
             this.proceedDamageOpponent();
             break;
+        case "damageOpponentSubstitute":
+            this.damageOpponentSubstitute();
+            break;
         case "startHealOpponent":
             this.startHealOpponent();
             break;
@@ -2106,6 +2110,9 @@ PokemonMZ_BattleManager.updateSubPhase = function(timeActive) {
         case "animateFaintPokemon":
             this.proceedFaintPokemon();
             break; 
+        case "breakSubstitute":
+            this.breakSubstitute();
+            break; 
         case "inflictPokemonStatus":
             this.inflictPokemonStatus();
             break;
@@ -2117,6 +2124,9 @@ PokemonMZ_BattleManager.updateSubPhase = function(timeActive) {
             break;
         case "showSprite":
             this.showSprite();
+            break;
+        case "changeSpriteOpacity":
+            this.changeSpriteOpacity();
             break;
         case "blowTargetAway":
             if (this._subPhaseParams[0] == "player") {
@@ -2343,6 +2353,7 @@ PokemonMZ_BattleManager.enemySendPokemon = function() {
     pokemonSprite.setPokemon(pokemon);
     pokemonSprite.placeBottomCenter(570,PokemonMZ_BattleManager.enemyPokemonSpriteY);
     pokemonSprite.setScale(0.1);
+    pokemonSprite.setOpacity(255); // Ensure that no substitute visual effect remains
     pokemonSprite.visible = true;
     pokemon.setBattleSprite(pokemonSprite);
     this.changePhase("enemyPokemonAppear");
@@ -2413,6 +2424,7 @@ PokemonMZ_BattleManager.playerSendPokemon = function() {
     pokemonSprite.setPokemon(pokemon);
     pokemonSprite.placeBottomCenter(130,PokemonMZ_BattleManager.playerPokemonSpriteY);
     pokemonSprite.setScale(0.1);
+    pokemonSprite.setOpacity(255); // Ensure that no substitute visual effect remains
     pokemonSprite.visible = true;
     pokemon.setBattleSprite(pokemonSprite);
     this.changePhase("playerPokemonAppear");
@@ -2447,6 +2459,7 @@ PokemonMZ_BattleManager.playerPokemonRecall = function() {
         pokemonSprite.modifyScale(-0.1);
     } else {
         pokemonSprite.scale.x = 0;
+        pokemonSprite.setOpacity(255);
         this._playerChosenPokemon = $gamePlayerTrainer.pokemon(this._playerSwitchingPokemonId);
         this._currentPlayerIndex = this._playerSwitchingPokemonId;
         this.changePhase("playerSendNextPokemon")
@@ -4441,6 +4454,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("startDamageOpponent");
                 this._subPhaseParams = [step[1]];
                 break;
+            case "damageOpponentSubstitute":
+                this.changeSubPhase("damageOpponentSubstitute");
+                this._subPhaseParams = [step[1]];
+                break;
             case "damageUser":
                 this.changeSubPhase("startDamageUser");
                 this._subPhaseParams = [step[1]];
@@ -4469,12 +4486,20 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("showSprite");
                 this._subPhaseParams = [step[1]];
                 break;
+            case "changeSpriteOpacity":
+                this.changeSubPhase("changeSpriteOpacity");
+                this._subPhaseParams = [step[1], step[2]];
+                break;
             case "waittext":
                 this.changeSubPhase("displayWaitText");
                 this._subPhaseParams = [step[1], step[2], step[3]];
                 break;
             case "faintPokemon":
                 this.changeSubPhase("faintPokemon");
+                this._subPhaseParams = [step[1], step[2]];
+                break;
+            case "breakSubstitute":
+                this.changeSubPhase("breakSubstitute");
                 this._subPhaseParams = [step[1], step[2]];
                 break;
             case "burnPokemon":
@@ -4540,6 +4565,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
             case "convertPokemon":
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["convert", step[1], step[2]];
+                break;
+            case "createSubstitute":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["substitute", step[1]];
                 break;
             case "startDigging":
                 this.changeSubPhase("inflictPokemonStatus");
@@ -4802,6 +4831,17 @@ PokemonMZ_BattleManager.updateAnimation = function() {
                     this._animationData.enemySprite.visible = true;
                 }
                 break;
+            case "changeSpriteOpacity":
+                if (this._animationData.side == "player" && actionData.target == "user") {
+                    this._animationData.userSprite.opacity = actionData.opacity;
+                } else if (this._animationData.side == "player" && actionData.target == "opponent") {
+                    this._animationData.enemySprite.opacity = actionData.opacity;
+                } else if (this._animationData.side == "enemy" && actionData.target == "user") {
+                    this._animationData.userSprite.opacity = actionData.opacity;
+                } else if (this._animationData.side == "enemy" && actionData.target == "opponent") {
+                    this._animationData.enemySprite.opacity = actionData.opacity;
+                }
+                break;
             }
         } else {
             this.clearSubPhase();
@@ -4962,6 +5002,17 @@ PokemonMZ_BattleManager.proceedDamageOpponent = function() {
         this.clearSubPhase();
     }
 };
+
+PokemonMZ_BattleManager.damageOpponentSubstitute = function() {
+    const opponent = this._currentAction.opponent();
+    const opponentHp = opponent.substituteHp();
+    const damage = this._subPhaseParams[0];
+    let newHp = opponentHp - damage;
+    if (newHp < 0) { newHp = 0; }
+    opponent.setSubstituteHp(newHp)
+    this.clearSubPhase();
+}
+
 PokemonMZ_BattleManager.startHealOpponent = function() {
     const opponent = this._currentAction.opponent();
     const opponentMHp = opponent.mhp()
@@ -5219,6 +5270,10 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
             const convertOpponent = this._subPhaseParams[2]
             target.convert(convertOpponent.type1(), convertOpponent.type2())
             break;
+        case "substitute":
+            this._spriteset.playerPokemonSprite().setOpacity(100);
+            target.giveSubstitute();
+            break;
         case "rage":
             target.rage(moveIndex, true);
             break;
@@ -5359,6 +5414,25 @@ PokemonMZ_BattleManager.proceedFaintPokemon = function() {
         }
     };
 };
+
+PokemonMZ_BattleManager.breakSubstitute = function() {
+    const targetType = this._subPhaseParams[0];
+    const targetSprite = this._subPhaseParams[1];
+    const side = (targetType == "opponent" && this._phase == "playerResolveActionSteps") ? "enemy" : "player";
+    targetSprite.setOpacity(255); // Remove substitute effect
+
+    if (side == "player") {
+        this._playerChosenPokemon.removeSubstitute();
+        const message1 = this._playerChosenPokemon.name() + "'s Substitute broke!"
+        $gameMessage.add(message1);
+    } else if (side == "enemy") {
+        this._enemyChosenPokemon.removeSubstitute();
+        const message2 = "Enemy " + this._enemyChosenPokemon.name() + "'s Substitute broke!"
+        $gameMessage.add(message2);
+    };
+    this.clearSubPhase();
+}
+
 PokemonMZ_BattleManager.animateUserEffect = function() {
     if (ConfigManager.battleAnimation) {
         const sprite = this._subPhaseParams[0];
@@ -5412,6 +5486,15 @@ PokemonMZ_BattleManager.showSprite = function() {
     }
     this.clearSubPhase();
 };
+PokemonMZ_BattleManager.changeSpriteOpacity = function() {
+    if (ConfigManager.battleAnimation) {
+        const sprite = this._subPhaseParams[0];
+        sprite.opacity = this._subPhaseParams[1];
+    }
+    this.clearSubPhase();
+};
+
+
 PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
     const prefix = (side == "enemy") ? "Enemy " : "";
     const pokemon = (side == "enemy") ? this._enemyChosenPokemon : this._playerChosenPokemon;
@@ -5597,7 +5680,15 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
     case "needRecharge":
         return prefix + pokemon.name() + " must recharge!"
     case "converted":
-        return "Converted type to " + prefix + pokemon.name() + "'s!"
+        return "Converted type to " + prefix + pokemon.name() + "'s!";
+    case "createdSubstitute":
+        return "It created a Substitute!";
+    case "hasSubstitute":
+        return prefix + pokemon.name() + " has a Substitute!";
+    case "tooWeakSubstitute":
+        return "Too weak to make a Substitute!";
+    case "damageSubstitute":
+        return "The substitute took damage for " + prefix + pokemon.name() + "!"
     }
     return ""
 };
