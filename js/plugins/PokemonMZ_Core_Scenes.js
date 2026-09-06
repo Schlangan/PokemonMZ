@@ -321,11 +321,11 @@ Scene_Base.prototype.PokemonMZ_updatePokemonIncreaseEv = function(listWindow, me
             break;
         case "patk":
             pokemon.gainEv(0,value,0,0,0,0);
-            message = pokemon.name() + "'s Attack rose.'";
+            message = pokemon.name() + "'s Attack rose.";
             break;
         case "pdef":
             pokemon.gainEv(0,0,value,0,0,0);
-            message = pokemon.name() + "'s Defense rose.'";
+            message = pokemon.name() + "'s Defense rose.";
             break;
         case "satk":
             pokemon.gainEv(0,0,0,value,0,0);
