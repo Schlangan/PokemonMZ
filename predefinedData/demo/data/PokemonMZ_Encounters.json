@@ -1349,7 +1349,7 @@
         "defeatText":"You're impressive!",
         "money":540
     },
-     {
+    {
         "id":"rival4_starter_bulbasaur",
         "type":"trainer",
         "trainerActor":2,
@@ -1928,6 +1928,343 @@
         ],
         "defeatText":"It's not easy...",
         "money":735
+    },
+    {
+        "id":"rival5_starter_bulbasaur",
+        "type":"trainer",
+        "trainerActor":2,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"potion","condition":"hpBelowPercent","hpPercent":20,"chance":15,"maxPerPokemon":1}
+        },
+        "pokemons":[
+            {"id":"pidgeotto","level":25,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"exeggcute","level":23,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"gyarados","level":22,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"kadabra","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"charmeleon","level":25,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"What? You stinker! I took it easy on you too!",
+        "money":1625
+    },
+    {
+        "id":"rival5_starter_charmander",
+        "type":"trainer",
+        "trainerActor":2,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"potion","condition":"hpBelowPercent","hpPercent":20,"chance":15,"maxPerPokemon":1}
+        },
+        "pokemons":[
+            {"id":"pidgeotto","level":25,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"growlithe","level":23,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"exeggcute","level":22,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"kadabra","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"wartortle","level":25,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"What? You stinker! I took it easy on you too!",
+        "money":1625
+    },
+    {
+        "id":"rival5_starter_squirtle",
+        "type":"trainer",
+        "trainerActor":2,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"potion","condition":"hpBelowPercent","hpPercent":20,"chance":15,"maxPerPokemon":1}
+        },
+        "pokemons":[
+            {"id":"pidgeotto","level":25,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"gyarados","level":23,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"growlithe","level":22,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"kadabra","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"ivysaur","level":25,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"What? You stinker! I took it easy on you too!",
+        "money":1625
+    },
+    {
+        "id":"route8_grass_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"pidgey","levelMin":18, "levelMax":22, "rate":35},
+            {"id":"meowth","levelMin":18, "levelMax":20, "rate":30},
+            {"id":"mankey","levelMin":18, "levelMax":20, "rate":30},
+            {"id":"ekans","levelMin":17, "levelMax":19, "rate":20},
+            {"id":"sandshrew","levelMin":17, "levelMax":19, "rate":20},
+            {"id":"vulpix","levelMin":15, "levelMax":18, "rate":20},
+            {"id":"growlithe","levelMin":15, "levelMax":18, "rate":20},
+            {"id":"abra","levelMin":15, "levelMax":19, "rate":20},
+            {"id":"rattata","levelMin":20, "levelMax":20, "rate":15},
+            {"id":"jigglypuff","levelMin":19, "levelMax":24, "rate":10},
+            {"id":"pidgeotto","levelMin":24, "levelMax":24, "rate":10},
+            {"id":"kadabra","levelMin":20, "levelMax":27, "rate":5}
+        ]
+    },
+    {
+        "id":"route8_lass1",
+        "type":"trainer",
+        "trainerActor":4,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"clefairy","level":22,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"clefairy","level":22,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Stop! Don't be so mean to my Clefairy!",
+        "money":330
+    },
+    {
+        "id":"route8_gambler1",
+        "type":"trainer",
+        "trainerActor":15,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"growlithe","level":24,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"vulpix","level":24,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Missed the big score!",
+        "money":1680
+    },
+    {
+        "id":"route8_nerd1",
+        "type":"trainer",
+        "trainerActor":8,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"grimer","level":22,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"grimer","level":22,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"grimer","level":22,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"It's not logical!",
+        "money":550
+    },
+    {
+        "id":"route8_lass2",
+        "type":"trainer",
+        "trainerActor":4,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"nidoranf","level":23,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"nidorina","level":23,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Why? Why??",
+        "money":345
+    },
+    {
+        "id":"route8_nerd2",
+        "type":"trainer",
+        "trainerActor":8,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"koffing","level":26,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I'll stay with school.",
+        "money":650
+    },
+    {
+        "id":"route8_lass3",
+        "type":"trainer",
+        "trainerActor":4,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"meowth","level":24,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"meowth","level":24,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"meowth","level":24,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Meow!",
+        "money":360
+    },
+    {
+        "id":"route8_lass4",
+        "type":"trainer",
+        "trainerActor":4,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"pidgey","level":19,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"rattata","level":19,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"nidoranf","level":19,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"meowth","level":19,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"nidoranm","level":19,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Look what you did!",
+        "money":285
+    },
+    {
+        "id":"route8_gambler2",
+        "type":"trainer",
+        "trainerActor":15,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"poliwag","level":22,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"poliwag","level":22,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"poliwag","level":22,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Drat! Came up short!",
+        "money":1540
+    },
+    {
+        "id":"route8_nerd3",
+        "type":"trainer",
+        "trainerActor":8,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"voltorb","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"koffing","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"voltorb","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"magnemite","level":20,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Ow! Meltdown!",
+        "money":500
+    },
+    {
+        "id":"route7_grass_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"pidgey","levelMin":19, "levelMax":22, "rate":35},
+            {"id":"oddish","levelMin":19, "levelMax":22, "rate":30},
+            {"id":"bellsprout","levelMin":19, "levelMax":22, "rate":30},
+            {"id":"meowth","levelMin":17, "levelMax":20, "rate":30},
+            {"id":"abra","levelMin":15, "levelMax":19, "rate":25},
+            {"id":"rattata","levelMin":20, "levelMax":20, "rate":15},
+            {"id":"vulpix","levelMin":15, "levelMax":18, "rate":20},
+            {"id":"growlithe","levelMin":15, "levelMax":18, "rate":20},
+            {"id":"jigglypuff","levelMin":19, "levelMax":24, "rate":10},
+            {"id":"pidgeotto","levelMin":24, "levelMax":24, "rate":10}
+        ]
+    },
+    {
+        "id":"celadon_lass1",
+        "type":"trainer",
+        "trainerActor":4,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"bellsprout","level":23,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"weepinbell","level":23,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"You're too rough!",
+        "money":345
+    },
+    {
+        "id":"celadon_beauty1",
+        "type":"trainer",
+        "trainerActor":23,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"oddish","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"bellsprout","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"oddish","level":21,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"bellsprout","level":21,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"My makeup!",
+        "money":1470
+    },
+    {
+        "id":"celadon_beauty2",
+        "type":"trainer",
+        "trainerActor":23,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"bellsprout","level":24,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"bellsprout","level":24,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"No!",
+        "money":1680
+    },
+    {
+        "id":"celadon_jrtrainerf1",
+        "type":"trainer",
+        "trainerActor":13,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"bulbasaur","level":24,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"ivysaur","level":24,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I'm in shock!",
+        "money":480
+    },
+    {
+        "id":"celadon_beauty3",
+        "type":"trainer",
+        "trainerActor":23,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"exeggcute","level":26,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Oh! Splendid!",
+        "money":1820
+    },
+    {
+        "id":"celadon_cooltrainerf1",
+        "type":"trainer",
+        "trainerActor":24,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"hyperPotion","condition":"hpBelowPercent","hpPercent":10,"chance":100,"maxPerPokemon":1}
+        },
+        "pokemons":[
+            {"id":"weepinbell","level":24,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"gloom","level":24,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"ivysaur","level":24,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Oh! Beaten!",
+        "money":840
+    },
+    {
+        "id":"celadon_lass2",
+        "type":"trainer",
+        "trainerActor":4,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"oddish","level":23,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"gloom","level":23,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Oh! You!",
+        "money":345
+    },
+    {
+        "id":"celadon_erika",
+        "type":"trainer",
+        "trainerActor":25,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"superPotion","condition":"hpBelowPercent","hpPercent":10,"chance":50,"maxPerPokemon":1}
+        },
+        "pokemons":[
+            {"id":"victreebel","level":29,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"tangela","level":24,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"vileplume","level":29,"moveset":"add","addMoves":["megaDrain"],"dv":"default","ev":"default"}
+        ],
+        "defeatText":"Oh! I concede defeat. You are remarkably strong.\nI must confer you the Rainbow Badge.",
+        "money":2871
+    },
+    {
+        "id":"celadon_water_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"magikarp","levelMin":5, "levelMax":5, "rate":100, "condition":"fishing","itemId":"oldRod"}
+        ]
+    },
+    {
+        "id":"route16_grass_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"rattata","levelMin":18, "levelMax":24, "rate":30},
+            {"id":"spearow","levelMin":20, "levelMax":23, "rate":30},
+            {"id":"doduo","levelMin":18, "levelMax":26, "rate":30},
+            {"id":"raticate","levelMin":23, "levelMax":26, "rate":5},
+            {"id":"fearow","levelMin":24, "levelMax":24, "rate":5}
+        ]
+    },
+    {
+        "id":"celadon_rocket1",
+        "type":"trainer",
+        "trainerActor":10,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"raticate","level":20,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"zubat","level":20,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Dang!",
+        "money":600
     }
-
 ]

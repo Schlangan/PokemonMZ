@@ -1,4 +1,132 @@
-## [0.0.7] - 2026-08-29
+## [0.08] - 2026-09-06
+
+Pokemon can now reach level 35, and all mechanics until Celadon Town have been added, apart from the Rocket hideout itself. The Pokemon Tower in Lavender only let you access to the first floors. The area with wild Pokemon will push you back, to avoid the specific generation I mechanics with ghosts.
+
+- Bug fixes
+    - Recoil damage are not calculated with the full damage anymore. They are now calculated within the limit of the opponent remaining hp.
+    - Using a power up item on the player's pokemon was looping on that item effect after use
+    - Depositing an item at the last row of the window was crashing the game due to window repositioning
+- New map mechanics
+    - Fly mechanics to return to a visited location.
+    - Coin case with coin money
+    - Simulation of slot machine result. The minigame isn't made, but the simulation offers a payout of coins to reproduce the game corner of generation I. The payout is more generous.
+- New item mechanics
+    - Added Link Cable acting as an evolution item for Pokemon evolving with trade.
+    - Dire Hit effect : gives the focus energy status to the pokemon in battle
+    - Guard Spec effect : gives the mist status to the pokemon in battle
+    - Item increasing max PP
+    - Coin Case
+- New battle mechanics
+    - Moves boosting up speed by two stages (agility)
+    - Skull Bash mechanics (lowering head turn 1)
+    - Moves removing a given percentage of remaining Hp (super fang)
+    - Moves restoring user hp (recover)
+    - Metronome mechanics - launching a random move
+    - Mist effect with Guard Spec: prevent stats reduction of pure status moves such as growl, sand attack. Does not affect secondary effects like speed decrease with Bubble.
+    - Items for escaping wild battles (poke doll)
+    - One hit KO moves, affecting slower pokemons only (horn drill/guillotine)
+    - Reflect effect (affects user only, double defense when hit by physical attacks)
+    - Freeze effect with moves (ice beam)
+    - Defrost effect with moves able to burn
+    - Counter mechanics
+    - Fly mechanics
+    - Moves requiring a recharge turn (hyper beam)
+    - Conversion mechanics
+    - Substitute mechanics
+- New predefined Pokemon data
+    - Alakazam (evolving player's Kadabra with Link Cable)
+    - Arcanine (evolving player's Growlithe with Fire Stone)
+    - Doduo (found wild in Route 16)
+    - Dodrio (evolving player's Doduo at lvl.31)
+    - Dratini (bought in Celadon Game Corner Prize Exchange)
+    - Dragonair (evolving player's Dratini at lvl.30)
+    - Eevee (found in pokeball in Celadon Mansion Roof House)
+    - Exeggcute (rival trainer battle in Pokemon Tower)
+    - Flareon (evolving player's Eevee with Fire Stone)
+    - Golem (evolving player's Graveler with Link Cable)
+    - Hypno (evolving player's Drowzee at lvl.26)
+    - Jolteon (evolving player's Eevee with Thunder Stone)
+    - Machamp (evolving player's Machoke with Link Cable)
+    - Ninetales (evolving player's Vulpix with Fire Stone)
+    - Pinsir (bought in Celadon Game Corner Prize Exchange)
+    - Porygon (bought in Celadon Game Corner Prize Exchange)
+    - Scyther (bought in Celadon Game Corner Prize Exchange)
+    - Tangela (Erika trainer battle in Celadon Gym)
+    - Vaporeon (evoling player's Eevee with Water Stone)
+    - Venomoth (evolving player's Venonat at lvl.31)
+    - Victreebel (evolving player's Weepinbell with Leaf Stone)
+    - Vileplume (evolving player's Gloom with Leaf Stone)
+- New predefined moves data
+    - Agility (learned by player's Farfetch'd at lvl.31, Pikachu at lvl.33, Beedrill at lvl.35)
+    - Barrage (used by Rival's Exeggcute in Pokemon Tower)
+    - Constrict (used by Erika's Tangela in Celadon Gym)
+    - Conversion (learned by player's Porygon at lvl.1)
+    - Counter (learned with TM18)
+    - Earthquake (learned by player's Geodude at lvl.31)
+    - Egg Bomb (learned with TM37)
+    - Flamethrower (learned by player's Vulpix at lvl.35)
+    - Fly (learned with HM02)
+    - Guillotine (learned by player's Pinsir at lvl.30)
+    - Horn Drill (learned with TM07)
+    - Hyper Beam (learned with TM15)
+    - Ice Beam (learned with TM13)
+    - Mega Drain (learned with Erika's TM21)
+    - Mega Kick (learned with TM05)
+    - Metronome (learned by player's Clefairy at lvl.31)
+    - Petal Dance (learned by player's Oddish at lvl.33)
+    - Psychic (learned by player's Drowzee at lvl.32)
+    - Razor Wind (learned with TM02)
+    - Recover (learned by player's Kadabra at lvl.31)
+    - Reflect (learned with TM33)
+    - Rock Slide (learned with TM48) - Note: that move didn't flinch in generation 1.
+    - Sharpen (learned by player's Porygon at lvl.1)
+    - Skull Bash (learned by player's Squirtle at lvl.35)
+    - Submission (learned with TM17)
+    - Substitute (learned with TM50)
+    - Super Fang (learned by player's Rattata at lvl.34)
+    - Take Down (learned by player's Growlithe at lvl.30)
+    - Tri Attack (learned with TM49)
+    - Vice Grip (learned by player's Pincir at lvl.1)
+- New predefined item data
+    - Rainbow Badge (when defeating Erika)
+    - Fresh Water (bought in Celadon Dpt. Store Rooftop)
+    - Soda Pop (bought in Celadon Dpt. Store Rooftop)
+    - Lemonade (bought in Celadon Dpt. Store Rooftop)
+    - Link Cable (bought in Celadon Dpt. Store 4F)
+    - Fire Stone (bought in Celadon Dpt. Store 4F)
+    - Leaf Stone (bought in Celadon Dpt. Store 4F)
+    - Thunder Stone (bought in Celadon Dpt. Store 4F)
+    - Water Stone (bought in Celadon Dpt. Store 4F)
+    - Poké Doll (bought in Celadon Dpt. Store 4F)
+    - X Attack (bought in Celadon Dpt. Store 5F)
+    - X Accuracy (bought in Celadon Dpt. Store 5F)
+    - Guard Spec. (bought in Celadon Dpt. Store 5F)
+    - Dire Hit (bought in Celadon Dpt. Store 5F)
+    - Protein (bought in Celadon Dpt. Store 5F)
+    - Iron (bought in Celadon Dpt. Store 5F)
+    - Carbos (bought in Celadon Dpt. Store 5F)
+    - Calcium (bought in Celadon Dpt. Store 5F)
+    - PP Up (hidden item in Celadon City)
+    - HM02 - Fly (given on route 16)
+    - TM02 - Razor Wind (bought in Celadon Dpt. Store 2F)
+    - TM05 - Mega Kick (bought in Celadon Dpt. Store 2F)
+    - TM07 - Horn Drill (bought in Celadon Dpt. Store 2F)
+    - TM09 - Take Down (bought in Celadon Dpt. Store 2F)
+    - TM13 - Ice Beam (exchanged against Fresh Water in Celadon Dpt. Store Rooftop)
+    - TM15 - Hyper Beam (bought in Celadon Game Corner Prize Exchange)
+    - TM17 - Submission (bought in Celadon Dpt. Store 2F)
+    - TM18 - Counter (given in Celadon Dtp. Store 3F)
+    - TM21 - Mega Drain (given by Erika in Celadon Gym)
+    - TM23 - Dragon Rage (bought in Celadon Game Corner Prize Exchange)
+    - TM32 - Double Team (bought in Celadon Dpt. Store 2F)
+    - TM37 - Egg Bomb (bought in Celadon Dpt. Store 2F)
+    - TM33 - Reflect (bought in Celadon Dpt. Store 2F)
+    - TM48 - Rock Slide (exchanged against Soda Pop in Celadon Dpt. Store Rooftop)
+    - TM49 - Tri Attack (exchanged against Lemonade in Celadon Dpt. Store Rooftop)
+    - TM50 - Substitute (bought in Celadon Game Corner Prize Exchange)
+
+
+## [0.07] - 2026-08-29
 
 Pokemon can now reach level 30, and all mechanics until Lavender Town have been added. This includes cut and flash HMs. The Pokemon Tower is not yet accessible.
 
@@ -65,7 +193,7 @@ Pokemon can now reach level 30, and all mechanics until Lavender Town have been 
     - X Special (Used by Lt.Surge in battle)
 
 
-## [0.0.6] - 2026-08-21
+## [0.06] - 2026-08-21
 
 All mechanics encountered up to the arrival in Vermilion City have been added. This includes route 11 as well. S.S. Anne and Diglett's cave are not available yet, hence Vermilion's gym cannot be accessed either. All others elements are accessible, which allows the player to fish, put a pokemon in day care, get the bicycle in Cerulean city, and get the Item Finder.
 
@@ -121,7 +249,7 @@ All mechanics encountered up to the arrival in Vermilion City have been added. T
     - Is Pokemon At Day Care, Select Pokemon For Day Care, Add a Pokemon To Day Care, Get Day Care Results, Play Day Care Pokemon Cry, Retrieve Pokemon From Day Care (day care system)
 
 
-## [0.0.5] - 2026-08-13
+## [0.05] - 2026-08-13
 
 All mechanics encountered until the completion of Cerulean City have been added, including route 4, route 24 and route 25. Pokemon max level has been increased 25, adding consequently all their learned moves and evolutions.
 
@@ -163,11 +291,11 @@ All mechanics encountered until the completion of Cerulean City have been added,
     - Golbat (if player evolves captured zubat)
     - Goldeen (lass battle in cerulean gym)
     - Graveler (if player evolves captured geodude)
+    - Horsea (swimmer battle in cerulean gym)
     - Kadabra (if player evolves captured abra)
     - Machop (hiker battle in route 25)
     - Parasect (if player evolves captured paras)
     - Sandslash (if player evolves captured sandshrew)
-    - Seaking (swimmer battle in cerulean gym)
     - Shellder (swimmer battle in cerulean gym)
     - Slowpoke (youngster battle in route 25)
     - Starmie (misty battle in cerulean gym)
@@ -208,7 +336,7 @@ All mechanics encountered until the completion of Cerulean City have been added,
     - TM28 (Dig, given by Rocket in Cerulean)
     - TM45 (Thunderwave, item route 24)
 
-## [0.0.4] - 2026-07-30
+## [0.04] - 2026-07-30
 
 All mechanics encountered until the end of Mt.Moon have been added.
 
@@ -251,7 +379,7 @@ All mechanics encountered until the end of Mt.Moon have been added.
     - X Defend
 
 
-## [0.0.3] - 2026-07-19
+## [0.03] - 2026-07-19
 
 Pokemon can now reach level 20, and all mechanics up to Route 3 have been added.
 
@@ -293,7 +421,7 @@ Pokemon can now reach level 20, and all mechanics up to Route 3 have been added.
     - Whirlwind
     - Wrap
 
-## [0.0.2] - 2026-07-16
+## [0.02] - 2026-07-16
 
 An update to all mechanics that can be found after Viridian Forest, up to Pewter City.
 
@@ -314,6 +442,6 @@ An update to all mechanics that can be found after Viridian Forest, up to Pewter
     - Basic trainer AI, not using status moves on player if already got one
     - Specific trainer AI using items, notably brocks 5 full heals per pokemon
 
-## [0.0.1] - Initial release
+## [0.01] - Initial release
 
 Initial release of the plugin. Pokemon RBY mechanics up to the end of Viridian Forest.

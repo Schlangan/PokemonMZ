@@ -63,7 +63,7 @@
         "hmMoves":["cut"],
         "tmMoves":[
             "swordsDance","toxic","bodySlam","takeDown","doubleEdge","rage","megaDrain",
-            "soldarBeam","mimic","doubleTeam","reflect","bide","rest","substitute"
+            "solarBeam","mimic","doubleTeam","reflect","bide","rest","substitute"
         ]
     },
     {
@@ -1006,6 +1006,35 @@
         ]
     },
     {
+        "id": "ninetales",
+        "pokedex": [{"region":"kanto","number":38}],
+        "category": "Fox",
+        "description": "Very smart and very vengeful. Grabbing one of its many tails could result in a 1000-year curse. According to an enduring legend, 9 noble saints were united and reincarnated as this Pokémon.",
+        "height": 1.1,
+        "weight": 19.9,
+        "types": ["fire"],
+        "baseStats": {"hp":73,"patk":76,"pdef":75,"satk":81,"sdef":100,"spd":100,"spc":100},
+        "expCurve": "mediumFast",
+        "catchRate": 75,
+        "xpYield": 178,
+        "ev": [
+            {"sdef":1},
+            {"spd":1}
+        ],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"ember"},
+            {"lvl":1,"move":"tailWhip"},
+            {"lvl":1,"move":"quickAttack"},
+            {"lvl":1,"move":"roar"}
+        ],
+        "hmMoves": [],
+        "tmMoves": [
+            "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "rage", "dig", "mimic", "doubleTeam", 
+            "reflect", "bide", "fireBlast", "swift", "skullBash", "rest", "substitute"
+        ]
+    },
+    {
         "id":"jigglypuff",
         "pokedex":[{"region":"kanto","number":39}],
         "category":"Balloon",
@@ -1189,6 +1218,35 @@
         ]
     },
     {
+        "id": "vileplume",
+        "pokedex": [{"region":"kanto","number":45}],
+        "category": "Flower",
+        "description": "The larger its petals, the more toxic pollen it contains. Its big head is heavy and hard to hold up. Flaps its broad flower petals to scatter its poisonous pollen. The flapping sound is very loud.",
+        "height": 1.2,
+        "weight": 18.6,
+        "types": ["grass", "poison"],
+        "baseStats": {"hp":75,"patk":80,"pdef":85,"satk":100,"sdef":90,"spd":50,"spc":100},
+        "expCurve": "mediumSlow",
+        "catchRate": 45,
+        "xpYield": 184,
+        "ev": [{"satk":3}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"stunSpore"},
+            {"lvl":1,"move":"sleepPowder"},
+            {"lvl":1,"move":"acid"},
+            {"lvl":1,"move":"petalDance"},
+            {"lvl":15,"move":"poisonPowder"},
+            {"lvl":17,"move":"stunSpore"},
+            {"lvl":19,"move":"sleepPowder"}
+        ],
+        "hmMoves": ["cut"],
+        "tmMoves": [
+            "swordsDance", "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "rage", "megaDrain", 
+            "solarBeam", "mimic", "doubleTeam", "reflect", "bide", "rest", "substitute"
+        ]
+    },
+    {
         "id":"paras",
         "pokedex":[{"region":"kanto","number":46}],
         "category":"Mushroom",
@@ -1280,6 +1338,41 @@
         "tmMoves":[
             "toxic","takeDown","doubleEdge","rage","megaDrain","solarBeam","psychic",
             "mimic","doubleTeam","reflect","bide","rest","psywave","substitute"
+        ]
+    },
+    {
+        "id": "venomoth",
+        "pokedex": [{"region":"kanto","number":49}],
+        "category": "Poison Moth",
+        "description": "The dust-like scales covering its wings are color coded to indicate the kinds of poison it has. The powdery scales on its wings are hard to remove. They also contain poison that leaks out on contact.",
+        "height": 1.5,
+        "weight": 12.5,
+        "types": ["bug", "poison"],
+        "baseStats": {"hp":70,"patk":65,"pdef":60,"satk":90,"sdef":75,"spd":90,"spc":90},
+        "expCurve": "mediumFast",
+        "catchRate": 75,
+        "xpYield": 138,
+        "ev": [{"satk":1},{"spd":1}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"tackle"},
+            {"lvl":1,"move":"disable"},
+            {"lvl":1,"move":"supersonic"},
+            {"lvl":1,"move":"confusion"},
+            {"lvl":22,"move":"poisonPowder"},
+            {"lvl":27,"move":"leechLife"},
+            {"lvl":30,"move":"stunSpore"},
+            {"lvl":38,"move":"psybeam"},
+            {"lvl":43,"move":"sleepPowder"},
+            {"lvl":50,"move":"psychic"}
+        ],
+        "hmMoves": [
+            "flash"
+        ],
+        "tmMoves": [
+            "razorWind", "whirlwind", "toxic", "takeDown", "doubleEdge", "hyperBeam", "rage", "megaDrain", 
+            "solarBeam", "psychic", "teleport", "mimic", "doubleTeam", "reflect", "bide", "swift", "rest", 
+            "psywave", "substitute"
         ]
     },
     {
@@ -1511,6 +1604,32 @@
         ]
     },
     {
+        "id": "arcanine",
+        "pokedex": [{"region":"kanto","number":59}],
+        "category": "Legendary",
+        "description": "A Pokémon that has been admired since the past for its beauty. It runs agilely as if on wings. A legendary Pokémon in China. Many people are charmed by its grace and beauty while running.",
+        "height": 1.9,
+        "weight": 155.0,
+        "types": ["fire"],
+        "baseStats": {"hp":90,"patk":110,"pdef":80,"satk":100,"sdef":80,"spd":95,"spc":80},
+        "expCurve": "slow",
+        "catchRate": 75,
+        "xpYield": 213,
+        "ev": [{"patk":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"roar"},
+            {"lvl":1,"move":"ember"},
+            {"lvl":1,"move":"leer"},
+            {"lvl":1,"move":"takeDown"}
+        ],
+        "hmMoves": [],
+        "tmMoves": [
+            "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "rage", "dragonRage", "dig", "teleport", "mimic", 
+            "doubleTeam", "reflect", "bide", "fireBlast", "swift", "skullBash", "rest", "substitute"
+        ]
+    },
+    {
         "id": "poliwag",
         "pokedex": [{"region":"kanto","number":60}],
         "category": "Tadpole",
@@ -1540,6 +1659,11 @@
             "toxic", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", "blizzard", 
             "rage", "psychic", "mimic", "doubleTeam", "bide", "skullBash", "rest", "psywave", "substitute"
         ]
+    },
+    {
+        "id": "poliwrath",
+        "pokedex": [{"region":"kanto","number":60}],
+        "category": "Tadpole"
     },
     {
         "id":"abra",
@@ -1581,7 +1705,8 @@
         "xpYield":145,
         "ev":[{"satk":2}],
         "evolutions":[
-            {"to":"alakazam","mode":"trade"}
+            {"to":"alakazam","mode":"trade"},
+            {"to":"alakazam","mode":"useItem","item":"linkCable"}
         ],
         "learnedMoves":[
             {"lvl":1, "move":"teleport"},
@@ -1598,6 +1723,37 @@
             "megaPunch","megaKick","toxic","bodySlam","takeDown","doubleEdge","submission","counter","seismicToss",
             "rage","dig","psychic","teleport","mimic","doubleTeam","reflect","bide","metronome","skullBash","rest",
             "thunderWave","psywave","triAttack","substitute"
+        ]
+    },
+    {
+        "id": "alakazam",
+        "pokedex": [{"region":"kanto","number":65}],
+        "category": "Psi",
+        "description": "Its brain can outperform a supercomputer. Its intelligence quotient is said to be 5,000. A Pokémon that can memorize anything. It never forgets what it learns-- that's why this Pokémon is smart.",
+        "height": 1.5,
+        "weight": 48.0,
+        "types": ["psychic"],
+        "baseStats": {"hp":55,"patk":50,"pdef":45,"satk":135,"sdef":85,"spd":120,"spc":135},
+        "expCurve": "mediumSlow",
+        "catchRate": 50,
+        "xpYield": 186,
+        "ev": [{"satk":3}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"teleport"},
+            {"lvl":1,"move":"kinesis"},
+            {"lvl":16,"move":"confusion"},
+            {"lvl":20,"move":"disable"},
+            {"lvl":27,"move":"psybeam"},
+            {"lvl":31,"move":"recover"},
+            {"lvl":38,"move":"psychic"},
+            {"lvl":42,"move":"reflect"}
+        ],
+        "hmMoves": ["flash"],
+        "tmMoves": [
+            "megaPunch", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "submission", "counter", 
+            "seismicToss", "rage", "dig", "psychic", "teleport", "mimic", "doubleTeam", "reflect", "bide", "metronome", 
+            "skullBash", "rest", "thunderWave", "psywave", "triAttack", "substitute"
         ]
     },
     {
@@ -1645,7 +1801,8 @@
         "xpYield": 146,
         "ev": [{"patk":2}],
         "evolutions": [
-            {"to":"machamp","mode":"trade"}
+            {"to":"machamp","mode":"trade"},
+            {"to":"machamp","mode":"useItem","item":"linkCable"}
         ],
         "learnedMoves": [
             {"lvl":1,"move":"karateChop"},
@@ -1662,6 +1819,37 @@
             "megaPunch", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "submission", "counter", "seismicToss", 
             "rage", "earthquake", "fissure", "dig", "mimic", "doubleTeam", "bide", "metronome", "fireBlast", "skullBash", 
             "rest", "rockSlide", "substitute"
+        ]
+    },
+    {
+        "id": "machamp",
+        "pokedex": [{"region":"kanto","number":68}],
+        "category": "Superpower",
+        "description": "Using its heavy muscles, it throws powerful punches that can send the victim clear over the horizon. One arm alone can move mountains. Using all four arms, this Pokémon fires off awesome punches.",
+        "height": 1.6,
+        "weight": 130.0,
+        "types": ["fighting"],
+        "baseStats": {"hp":90,"patk":130,"pdef":80,"satk":65,"sdef":85,"spd":55,"spc":65},
+        "expCurve": "mediumSlow",
+        "catchRate": 45,
+        "xpYield": 193,
+        "ev": [{"patk":3}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"karateChop"},
+            {"lvl":1,"move":"lowKick"},
+            {"lvl":1,"move":"leer"},
+            {"lvl":20,"move":"lowKick"},
+            {"lvl":25,"move":"leer"},
+            {"lvl":36,"move":"focusEnergy"},
+            {"lvl":44,"move":"seismicToss"},
+            {"lvl":52,"move":"submission"}
+        ],
+        "hmMoves": ["strength"],
+        "tmMoves": [
+            "megaPunch", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "submission", "counter", 
+            "seismicToss", "rage", "earthquake", "fissure", "dig", "mimic", "doubleTeam", "bide", "metronome", "fireBlast", 
+            "skullBash", "rest", "rockSlide", "substitute"
         ]
     },
     {
@@ -1729,6 +1917,35 @@
         "tmMoves":[
             "swordsDance","toxic","takeDown","doubleEdge","rage","megaDrain","solarBeam",
             "mimic","doubleTeam","reflect","bide","rest","substitute"
+        ]
+    },
+    {
+        "id": "victreebel",
+        "pokedex": [{"region":"kanto","number":71}],
+        "category": "Flycatcher",
+        "description": "Said to live in huge colonies deep in jungles, although no one has ever returned from there. Lures prey with the sweet aroma of honey. Swallowed whole, the prey is melted in a day, bones and all.",
+        "height": 1.7,
+        "weight": 15.5,
+        "types": ["grass", "poison"],
+        "baseStats": {"hp":80,"patk":105,"pdef":65,"satk":100,"sdef":60,"spd":70,"spc":100},
+        "expCurve": "mediumSlow",
+        "catchRate": 45,
+        "xpYield": 191,
+        "ev": [{"patk":3}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"sleepPowder"},
+            {"lvl":1,"move":"stunSpore"},
+            {"lvl":1,"move":"acid"},
+            {"lvl":1,"move":"razorLeaf"},
+            {"lvl":13,"move":"wrap"},
+            {"lvl":15,"move":"poisonPowder"},
+            {"lvl":18,"move":"sleepPowder"}
+        ],
+        "hmMoves": ["cut"],
+        "tmMoves": [
+            "swordsDance", "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "rage", 
+            "megaDrain", "solarBeam", "mimic", "doubleTeam", "reflect", "bide", "rest", "substitute"
         ]
     },
     {
@@ -1811,7 +2028,8 @@
         "xpYield":134,
         "ev":[{"pdef":2}],
         "evolutions":[
-            {"to":"golem","mode":"trade"}
+            {"to":"golem","mode":"trade"},
+            {"to":"golem","mode":"useItem","item":"linkCable"}
         ],
         "learnedMoves":[
             {"lvl":1,"move":"tackle"},
@@ -1830,6 +2048,36 @@
             "mimic","doubleTeam","bide","metronome","selfDestruct","fireBlast",
             "rest","explosion","rockSlide","substitute"
         ]
+    },
+    {
+        "id": "golem",
+        "pokedex": [{"region":"kanto","number":76}],
+        "category": "Megaton",
+        "description": "Its boulder-like body is extremely hard. It can easily withstand dynamite blasts without damage. Once it sheds its skin, its body turns tender and whitish. Its hide hardens when it's exposed to air.",
+        "height": 1.4,
+        "weight": 300.0,
+        "types": ["rock", "ground"],
+        "baseStats": {"hp":80,"patk":110,"pdef":130,"satk":55,"sdef":65,"spd":45,"spc":55},
+        "expCurve": "mediumSlow",
+        "catchRate": 45,
+        "xpYield": 177,
+        "ev": [{"pdef":3}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"tackle"},
+            {"lvl":1,"move":"defenseCurl"},
+            {"lvl":11,"move":"defenseCurl"},
+            {"lvl":16,"move":"rockThrow"},
+            {"lvl":21,"move":"selfDestruct"},
+            {"lvl":29,"move":"harden"},
+            {"lvl":36,"move":"earthquake"},
+            {"lvl":43,"move":"explosion"}
+        ],
+        "hmMoves": ["strength"],
+        "tmMoves": [
+            "megaPunch", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "submission", 
+            "counter", "seismicToss", "rage", "earthquake", "fissure", "dig", "mimic", "doubleTeam", "bide", 
+            "metronome", "selfDestruct", "fireBlast", "rest", "explosion", "rockSlide", "substitute"]
     },
     {
         "id": "ponyta",
@@ -1988,6 +2236,68 @@
         ]
     },
     {
+        "id": "doduo",
+        "pokedex": [{"region":"kanto","number":84}],
+        "category": "Twin Bird",
+        "description": "A bird that makes up for its poor flying with its fast foot speed. Leaves giant footprints. Its short wings make flying difficult. Instead, this Pokémon runs at high speed on developed legs.",
+        "height": 1.4,
+        "weight": 39.2,
+        "types": ["normal", "flying"],
+        "baseStats": {"hp":35,"patk":85,"pdef":45,"satk":35,"sdef":35,"spd":75,"spc":35},
+        "expCurve": "mediumFast",
+        "catchRate": 190,
+        "xpYield": 88,
+        "ev": [{"patk":1}],
+        "evolutions": [
+            {"to":"dodrio","mode":"level","level":31}
+        ],
+        "learnedMoves": [
+            {"lvl":1,"move":"peck"},
+            {"lvl":20,"move":"growl"},
+            {"lvl":24,"move":"furyAttack"},
+            {"lvl":30,"move":"drillPeck"},
+            {"lvl":36,"move":"rage"},
+            {"lvl":40,"move":"triAttack"},
+            {"lvl":44,"move":"agility"}
+        ],
+        "hmMoves": ["fly"],
+        "tmMoves": [
+            "whirlwind", "toxic", "bodySlam", "takeDown", "doubleEdge", "rage", "mimic", 
+            "doubleTeam", "reflect", "bide", "skullBash", "skyAttack", "rest", "triAttack", "substitute"
+        ]
+    },
+    {
+        "id": "dodrio",
+        "pokedex": [{"region":"kanto","number":85}],
+        "category": "Triple Bird",
+        "description": "Uses its three brains to execute complex plans. While two heads sleep, one head stays awake. One of Doduo's 2 heads splits to form a unique species. It runs close to 60 km/h in prairies.",
+        "height": 1.8,
+        "weight": 85.2,
+        "types": ["normal", "flying"],
+        "baseStats": {"hp":60,"patk":110,"pdef":70,"satk":60,"sdef":60,"spd":100,"spc":60},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 165,
+        "ev": [{"patk":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"furyAttack"},
+            {"lvl":1,"move":"growl"},
+            {"lvl":1,"move":"peck"},
+            {"lvl":20,"move":"growl"},
+            {"lvl":24,"move":"furyAttack"},
+            {"lvl":30,"move":"drillPeck"},
+            {"lvl":39,"move":"rage"},
+            {"lvl":45,"move":"triAttack"},
+            {"lvl":51,"move":"agility"}
+        ],
+        "hmMoves": ["fly"],
+        "tmMoves": [
+            "whirlwind", "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "rage", 
+            "mimic", "doubleTeam", "reflect", "bide", "skullBash", "skyAttack", "rest", "triAttack", "substitute"
+        ]
+    },
+    {
         "id":"seel",
         "pokedex":[{"region":"kanto","number":86}],
         "category":"Sea Lion"
@@ -2121,6 +2431,39 @@
         ]
     },
     {
+        "id": "hypno",
+        "pokedex": [{"region":"kanto","number":97}],
+        "category": "Hypnosis",
+        "description": "When it locks eyes with an enemy, it will use a mix of Psi moves such as Hypnosis and Confusion. Avoid eye contact if you come across one. It will try to put you to sleep by using its pendulum.",
+        "height": 1.6,
+        "weight": 75.6,
+        "types": ["psychic"],
+        "baseStats": {"hp":85,"patk":73,"pdef":70,"satk":73,"sdef":115,"spd":67,"spc":115},
+        "expCurve": "mediumFast",
+        "catchRate": 75,
+        "xpYield": 165,
+        "ev": [{"sdef":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"pound"},
+            {"lvl":1,"move":"hypnosis"},
+            {"lvl":1,"move":"disable"},
+            {"lvl":1,"move":"confusion"},
+            {"lvl":12,"move":"disable"},
+            {"lvl":17,"move":"confusion"},
+            {"lvl":24,"move":"headbutt"},
+            {"lvl":33,"move":"poisonGas"},
+            {"lvl":37,"move":"psychic"},
+            {"lvl":43,"move":"meditate"}
+        ],
+        "hmMoves": ["flash"],
+        "tmMoves": [
+            "megaPunch", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "submission", "counter", 
+            "seismicToss", "rage", "psychic", "teleport", "mimic", "doubleTeam", "reflect", "bide", 
+            "metronome", "skullBash", "dreamEater", "rest", "thunderWave", "psywave", "triAttack", "substitute"
+        ]
+    },
+    {
         "id":"voltorb",
         "pokedex":[{"region":"kanto","number":100}],
         "category":"Ball",
@@ -2181,6 +2524,35 @@
             "toxic", "takeDown", "hyperBeam", "rage", "thunderbolt", "thunder", "teleport", "mimic", "doubleTeam", 
             "reflect", "bide", "selfDestruct", "swift", "skullBash", "rest", "thunderWave", "explosion", "substitute"
         ]
+    },
+    {
+        "id": "exeggcute",
+        "pokedex": [{"region":"kanto","number":102}],
+        "category": "Egg",
+        "description": "Often mistaken for eggs. When disturbed, they quickly gather and attack in swarms. The heads attract each other and spin around. There must be 6 heads for it to maintain balance.",
+        "height": 0.4,
+        "weight": 2.5,
+        "types": ["grass", "psychic"],
+        "baseStats": {"hp":60,"patk":40,"pdef":80,"satk":60,"sdef":45,"spd":40,"spc":60},
+        "expCurve": "slow",
+        "catchRate": 90,
+        "xpYield": 98,
+        "ev": [{"pdef":1}],
+        "evolutions": [
+            {"to":"exeggutor","mode":"item","item":"leafStone"}
+        ],
+        "learnedMoves": [
+            {"lvl":1,"move":"barrage"},
+            {"lvl":1,"move":"hypnosis"},
+            {"lvl":25,"move":"reflect"},
+            {"lvl":28,"move":"leechSeed"},
+            {"lvl":32,"move":"stunSpore"},
+            {"lvl":37,"move":"poisonPowder"},
+            {"lvl":42,"move":"solarBeam"},
+            {"lvl":48,"move":"sleepPowder"}
+        ],
+        "hmMoves": [],
+        "tmMoves": ["toxic", "takeDown", "doubleEdge", "rage", "psychic", "teleport", "mimic", "doubleTeam", "reflect", "bide", "selfDestruct", "eggBomb", "rest", "psywave", "explosion", "substitute"]
     },
     {
         "id":"cubone",
@@ -2245,6 +2617,37 @@
         "tmMoves":[
             "toxic","rage","thunderbolt","thunder","mimic","doubleTeam",
             "bide","selfDestruct","fireBlast","rest","explosion","substitute"
+        ]
+    },
+    {
+        "id": "tangela",
+        "pokedex": [{"region":"kanto","number":114}],
+        "category": "Vine",
+        "description": "The whole body is swathed with wide vines that are similar to seaweed. Its vines shake as it walks. Its identity is obscured by masses of thick, blue vines. The vines are said to never stop growing.",
+        "height": 1.0,
+        "weight": 35.0,
+        "types": ["grass"],
+        "baseStats": {"hp":65,"patk":55,"pdef":115,"satk":100,"sdef":40,"spd":60,"spc":100},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 166,
+        "ev": [{"pdef":1}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"constrict"},
+            {"lvl":24,"move":"bind"},
+            {"lvl":27,"move":"absorb"},
+            {"lvl":29,"move":"vineWhip"},
+            {"lvl":32,"move":"poisonPowder"},
+            {"lvl":36,"move":"stunSpore"},
+            {"lvl":39,"move":"sleepPowder"},
+            {"lvl":45,"move":"slam"},
+            {"lvl":48,"move":"growth"}
+        ],
+        "hmMoves": ["cut"],
+        "tmMoves": [
+            "swordsDance", "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "rage", 
+            "megaDrain", "solarBeam", "mimic", "doubleTeam", "bide", "skullBash", "rest", "substitute"
         ]
     },
     {
@@ -2399,6 +2802,66 @@
         ]
     },
     {
+        "id": "scyther",
+        "pokedex": [{"region":"kanto","number":123}],
+        "category": "Mantis",
+        "description": "With ninja-like agility and speed, it can create the illusion that there is more than one. Leaps out of tall grass and slices prey with its scythes. The movement looks like that of a ninja.",
+        "height": 1.5,
+        "weight": 56.0,
+        "types": ["bug", "flying"],
+        "baseStats": {"hp":70,"patk":110,"pdef":80,"satk":55,"sdef":80,"spd":105,"spc":55},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 187,
+        "ev": [{"patk":1}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"quickAttack"},
+            {"lvl":17,"move":"leer"},
+            {"lvl":20,"move":"focusEnergy"},
+            {"lvl":24,"move":"doubleTeam"},
+            {"lvl":29,"move":"slash"},
+            {"lvl":35,"move":"swordsDance"},
+            {"lvl":42,"move":"agility"},
+            {"lvl":50,"move":"wingAttack"}
+        ],
+        "hmMoves": ["cut"],
+        "tmMoves": [
+            "swordsDance", "toxic", "takeDown", "doubleEdge", "hyperBeam", "rage", 
+            "mimic", "doubleTeam", "bide", "swift", "skullBash", "rest", "substitute"
+        ]
+    },
+    {
+        "id": "pinsir",
+        "pokedex": [{"region":"kanto","number":127}],
+        "category": "Stag Beetle",
+        "description": "If it fails to crush the victim in its pincers, it will swing it around and toss it hard. Grips its prey in its pincers and squeezes hard! It can't move if it's cold, so it lives in warm places.",
+        "height": 1.5,
+        "weight": 55.0,
+        "types": ["bug"],
+        "baseStats": {"hp":65,"patk":125,"pdef":100,"satk":55,"sdef":70,"spd":85,"spc":55},
+        "expCurve": "slow",
+        "catchRate": 45,
+        "xpYield": 200,
+        "ev": [{"patk":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"viceGrip"},
+            {"lvl":21,"move":"bind"},
+            {"lvl":25,"move":"seismicToss"},
+            {"lvl":30,"move":"guillotine"},
+            {"lvl":36,"move":"focusEnergy"},
+            {"lvl":43,"move":"harden"},
+            {"lvl":49,"move":"slash"},
+            {"lvl":54,"move":"swordsDance"}
+        ],
+        "hmMoves": ["cut", "strength"],
+        "tmMoves": [
+            "swordsDance", "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", 
+            "submission", "seismicToss", "rage", "mimic", "doubleTeam", "bide", "rest", "substitute"
+        ]
+    },
+    {
         "id":"magikarp",
         "pokedex":[{"region":"kanto","number":129}],
         "category":"Fish",
@@ -2451,29 +2914,241 @@
         ]
     },
     {
-        "id":"eevee",
-        "pokedex":[{"region":"kanto","number":133}],
-        "category":"Evolution"
+        "id": "eevee",
+        "pokedex": [{"region":"kanto","number":133}],
+        "category": "Evolution",
+        "description": "Its genetic code is irregular. It may mutate if it is exposed to radiation from element Stones. Its genetic code is unstable, so it could evolve in a variety of ways. There are only a few alive.",
+        "height": 0.3,
+        "weight": 6.5,
+        "types": ["normal"],
+        "baseStats": {"hp":55,"patk":55,"pdef":50,"satk":45,"sdef":65,"spd":55,"spc":65},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 92,
+        "ev": [{"sdef":1}],
+        "evolutions": [
+            {"to":"vaporeon","mode":"useItem","item":"waterStone"},
+            {"to":"jolteon","mode":"useItem","item":"thunderStone"},
+            {"to":"flareon","mode":"useItem","item":"fireStone"}
+        ],
+        "learnedMoves": [
+            {"lvl":1,"move":"tackle"},
+            {"lvl":1,"move":"tailWhip"},
+            {"lvl":8,"move":"sandAttack"},
+            {"lvl":16,"move":"growl"},
+            {"lvl":23,"move":"quickAttack"},
+            {"lvl":30,"move":"bite"},
+            {"lvl":36,"move":"focusEnergy"},
+            {"lvl":42,"move":"takeDown"}
+        ],
+        "hmMoves": [],
+        "tmMoves": [
+            "toxic", "bodySlam", "takeDown", "doubleEdge", "rage", "mimic", 
+            "doubleTeam", "reflect", "bide", "swift", "skullBash", "rest", "substitute"
+        ]
     },
     {
-        "id":"vaporeon",
-        "pokedex":[{"region":"kanto","number":134}],
-        "category":"Bubble Jet"
+        "id": "vaporeon",
+        "pokedex": [{"region":"kanto","number":134}],
+        "category": "Bubble Jet",
+        "description": "Lives close to water. Its long tail is ridged with a fin which is often mistaken for a mermaid's. Its cell structure is similar to water molecules. It will melt away and become invisible in water.",
+        "height": 1.0,
+        "weight": 29.0,
+        "types": ["water"],
+        "baseStats": {"hp":130,"patk":65,"pdef":60,"satk":110,"sdef":95,"spd":65,"spc":110},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 196,
+        "ev": [{"hp":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"tackle"},
+            {"lvl":1,"move":"tailWhip"},
+            {"lvl":1,"move":"waterGun"},
+            {"lvl":1,"move":"quickAttack"},
+            {"lvl":8,"move":"sandAttack"},
+            {"lvl":16,"move":"waterGun"},
+            {"lvl":23,"move":"quickAttack"},
+            {"lvl":30,"move":"bite"},
+            {"lvl":36,"move":"auroraBeam"},
+            {"lvl":42,"move":"mist"},
+            {"lvl":44,"move":"haze"},
+            {"lvl":47,"move":"acidArmor"},
+            {"lvl":52,"move":"hydroPump"}
+        ],
+        "hmMoves": ["surf"],
+        "tmMoves": [
+            "toxic", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", 
+            "blizzard", "hyperBeam", "rage", "mimic", "doubleTeam", "reflect", "bide", "swift", "skullBash", "rest", "substitute"
+        ]
     },
     {
-        "id":"jolteon",
-        "pokedex":[{"region":"kanto","number":135}],
-        "category":"Lightning"
+        "id": "jolteon",
+        "pokedex": [{"region":"kanto","number":135}],
+        "category": "Lightning",
+        "description": "It accumulates negative ions in the atmosphere to blast out 10000-volt lightning bolts. A sensitive Pokémon that easily becomes sad or angry. Every time its mood changes, it charges power.",
+        "height": 0.8,
+        "weight": 24.5,
+        "types": ["electric"],
+        "baseStats": {"hp":65,"patk":65,"pdef":60,"satk":110,"sdef":95,"spd":130,"spc":110},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 197,
+        "ev": [{"spd":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"tackle"},
+            {"lvl":1,"move":"tailWhip"},
+            {"lvl":1,"move":"quickAttack"},
+            {"lvl":1,"move":"thunderShock"},
+            {"lvl":8,"move":"sandAttack"},
+            {"lvl":16,"move":"thunderShock"},
+            {"lvl":23,"move":"quickAttack"},
+            {"lvl":30,"move":"doubleKick"},
+            {"lvl":36,"move":"pinMissile"},
+            {"lvl":42,"move":"thunderWave"},
+            {"lvl":47,"move":"agility"},
+            {"lvl":52,"move":"thunder"}
+        ],
+        "hmMoves": ["flash"],
+        "tmMoves": [
+            "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "rage", "thunderbolt", 
+            "thunder", "mimic", "doubleTeam", "reflect", "bide", "swift", "skullBash", "rest", "thunderWave", "substitute"
+        ]
     },
     {
-        "id":"flareon",
-        "pokedex":[{"region":"kanto","number":136}],
-        "category":"Flame"
+        "id": "flareon",
+        "pokedex": [{"region":"kanto","number":136}],
+        "category": "Flame",
+        "description": "When storing thermal energy in its body, its temperature could soar to over 750 degrees. It has a flame chamber inside its body. It inhales, then blows out fire that is over 1500 degrees.",
+        "height": 0.9,
+        "weight": 25.0,
+        "types": ["fire"],
+        "baseStats": {"hp":65,"patk":130,"pdef":60,"satk":95,"sdef":110,"spd":65,"spc":110},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 198,
+        "ev": [{"patk":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"tackle"},
+            {"lvl":1,"move":"tailWhip"},
+            {"lvl":1,"move":"quickAttack"},
+            {"lvl":1,"move":"ember"},
+            {"lvl":8,"move":"sandAttack"},
+            {"lvl":16,"move":"ember"},
+            {"lvl":23,"move":"quickAttack"},
+            {"lvl":30,"move":"bite"},
+            {"lvl":36,"move":"fireSpin"},
+            {"lvl":42,"move":"smog"},
+            {"lvl":47,"move":"leer"},
+            {"lvl":52,"move":"flamethrower"}
+        ],
+        "hmMoves": [],
+        "tmMoves": [
+            "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "rage", "mimic", "doubleTeam", 
+            "reflect", "bide", "fireBlast", "swift", "skullBash", "rest", "substitute"
+        ]
+    },
+    {
+        "id": "porygon",
+        "pokedex": [{"region":"kanto","number":137}],
+        "category": "Virtual",
+        "description": "A Pokémon that consists entirely of programming code. Capable of moving freely in cyberspace. The only Pokémon people anticipate can fly into space. None has managed the feat yet, however.",
+        "height": 0.8,
+        "weight": 36.5,
+        "types": ["normal"],
+        "baseStats": {"hp":65,"patk":60,"pdef":70,"satk":85,"sdef":75,"spd":40,"spc":75},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 130,
+        "ev": [{"satk":1}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"tackle"},
+            {"lvl":1,"move":"sharpen"},
+            {"lvl":1,"move":"conversion"},
+            {"lvl":23,"move":"psybeam"},
+            {"lvl":28,"move":"recover"},
+            {"lvl":35,"move":"agility"},
+            {"lvl":42,"move":"triAttack"}
+        ],
+        "hmMoves": ["flash"],
+        "tmMoves": [
+            "toxic", "takeDown", "doubleEdge", "iceBeam", "blizzard", "hyperBeam", "rage", 
+            "thunderbolt", "thunder", "psychic", "teleport", "mimic", "doubleTeam", "reflect", 
+            "bide", "swift", "skullBash", "rest", "thunderWave", "psywave", "triAttack", "substitute"
+        ]
     },
     {
         "id":"snorlax",
         "pokedex":[{"region":"kanto","number":143}],
         "category":"Sleeping"
+    },
+    {
+        "id": "dratini",
+        "pokedex": [{"region":"kanto","number":147}],
+        "category": "Dragon",
+        "description": "Long considered a mythical Pokémon until recently when a small colony was found living underwater. The existence of this mythical Pokémon was only recently confirmed by a fisherman who caught one.",
+        "height": 1.8,
+        "weight": 3.3,
+        "types": ["dragon"],
+        "baseStats": {"hp":41,"patk":64,"pdef":45,"satk":50,"sdef":50,"spd":50,"spc":50},
+        "expCurve": "slow",
+        "catchRate": 45,
+        "xpYield": 67,
+        "ev": [{"patk":1}],
+        "evolutions": [
+            {"to":"dragonair","mode":"level","level":30}
+        ],
+        "learnedMoves": [
+            {"lvl":1,"move":"wrap"},
+            {"lvl":1,"move":"leer"},
+            {"lvl":10,"move":"thunderWave"},
+            {"lvl":20,"move":"agility"},
+            {"lvl":30,"move":"slam"},
+            {"lvl":40,"move":"dragonRage"},
+            {"lvl":50,"move":"hyperBeam"}
+        ],
+        "hmMoves": ["surf"],
+        "tmMoves": [
+            "toxic", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", "blizzard", 
+            "rage", "dragonRage", "thunderbolt", "thunder", "mimic", "doubleTeam", "reflect", "bide", "fireBlast", 
+            "swift", "skullBash", "rest", "thunderWave", "substitute"
+        ]
+    },
+    {
+        "id": "dragonair",
+        "pokedex": [{"region":"kanto","number":148}],
+        "category": "Dragon",
+        "description": "A mystical Pokémon that exudes a gentle aura. Has the ability to change climate conditions. According to a witness, its body was surrounded by a strange aura that gave it a mystical look.",
+        "height": 4.0,
+        "weight": 16.5,
+        "types": ["dragon"],
+        "baseStats": {"hp":61,"patk":84,"pdef":65,"satk":70,"sdef":70,"spd":70,"spc":70},
+        "expCurve": "slow",
+        "catchRate": 45,
+        "xpYield": 144,
+        "ev": [{"patk":2}],
+        "evolutions": [
+            {"to":"dragonite","mode":"level","level":55}
+        ],
+        "learnedMoves": [
+            {"lvl":1,"move":"wrap"},
+            {"lvl":1,"move":"leer"},
+            {"lvl":1,"move":"thunderWave"},
+            {"lvl":10,"move":"thunderWave"},
+            {"lvl":20,"move":"agility"},
+            {"lvl":35,"move":"slam"},
+            {"lvl":45,"move":"dragonRage"},
+            {"lvl":55,"move":"hyperBeam"}
+        ],
+        "hmMoves": ["surf"],
+        "tmMoves": [
+            "toxic", "hornDrill", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", 
+            "blizzard", "rage", "dragonRage", "thunderbolt", "thunder", "mimic", "doubleTeam", "reflect", 
+            "bide", "fireBlast", "swift", "skullBash", "rest", "thunderWave", "substitute"
+        ]
     },
     {
         "id":"mew",

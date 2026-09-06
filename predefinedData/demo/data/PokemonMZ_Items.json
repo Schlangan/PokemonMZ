@@ -17,6 +17,11 @@
         "effect":"passiveSpdBoost",
 		"boostPercent":12.5
     },
+	{
+        "id":"rainbowBadge",
+        "category":"badge",
+        "obedienceLevel":50
+    },
     {
         "id":"potion",
         "user":"trainer",
@@ -36,6 +41,36 @@
 		"effect":"recoverHpFixed",
 		"value":50,
 		"price":700
+	},
+	{
+		"id":"freshWater",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"recoverHpFixed",
+		"value":50,
+		"price":200
+	},
+	{
+		"id":"sodaPop",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"recoverHpFixed",
+		"value":60,
+		"price":300
+	},
+	{
+		"id":"lemonade",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"recoverHpFixed",
+		"value":80,
+		"price":350
 	},
     {
 		"id":"hyperPotion",
@@ -249,7 +284,52 @@
 		"battle":false,
 		"target":"pokemon",
 		"effect":"evolutionItem",
-		"price":0
+		"price":2100
+	},
+	{
+		"id":"fireStone",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"evolutionItem",
+		"price":2100
+	},
+	{
+		"id":"leafStone",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"evolutionItem",
+		"price":2100
+	},
+	{
+		"id":"thunderStone",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"evolutionItem",
+		"price":2100
+	},
+	{
+		"id":"waterStone",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"evolutionItem",
+		"price":2100
+	},
+	{
+		"id":"linkCable",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"evolutionItem",
+		"price":4900
 	},
     {
 		"id":"rareCandy",
@@ -272,6 +352,54 @@
 		"maxValue":25600,
 		"price":9800
 	},
+	{
+		"id":"protein",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"increaseEv",
+        "stat":"patk",
+		"value":2560,
+		"maxValue":25600,
+		"price":9800
+	},
+	{
+		"id":"iron",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"increaseEv",
+        "stat":"pdef",
+		"value":2560,
+		"maxValue":25600,
+		"price":9800
+	},
+	{
+		"id":"carbos",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"increaseEv",
+        "stat":"spd",
+		"value":2560,
+		"maxValue":25600,
+		"price":9800
+	},
+	{
+		"id":"calcium",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"increaseEv",
+        "stat":"satk",
+		"value":2560,
+		"maxValue":25600,
+		"price":9800
+	},
     {
 		"id":"tm01",
 		"user":"trainer",
@@ -281,6 +409,16 @@
 		"effect":"tm",
 		"move":"megaPunch",
 		"price":3000
+	},
+	{
+		"id":"tm02",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"razorWind",
+		"price":2000
 	},
     {
 		"id":"tm04",
@@ -292,6 +430,26 @@
 		"move":"whirlwind",
 		"price":1000
 	},
+	{
+		"id":"tm05",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"megaKick",
+		"price":3000
+	},
+	{
+		"id":"tm07",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"hornDrill",
+		"price":2000
+	},
     {
 		"id":"tm08",
 		"user":"trainer",
@@ -301,6 +459,16 @@
 		"effect":"tm",
 		"move":"bodySlam",
 		"price":4000
+	},
+	{
+		"id":"tm09",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"takeDown",
+		"price":3000
 	},
     {
         "id":"tm11",
@@ -322,6 +490,46 @@
         "move":"waterGun",
         "price":500
     },
+	{
+		"id":"tm13",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"iceBeam",
+        "price":4000
+	},
+	{
+		"id":"tm15",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"hyperBeam",
+        "price":5000
+	},
+	{
+		"id":"tm17",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"submission",
+        "price":3000
+	},
+	{
+		"id":"tm18",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"counter",
+        "price":2000
+	},
     {
 		"id":"tm19",
 		"user":"trainer",
@@ -331,6 +539,26 @@
 		"effect":"tm",
 		"move":"seismicToss",
         "price":3000
+	},
+	{
+		"id":"tm21",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"megaDrain",
+        "price":5000
+	},
+	{
+		"id":"tm23",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"dragonRage",
+        "price":5000
 	},
 	{
 		"id":"tm24",
@@ -362,6 +590,26 @@
 		"move":"teleport",
         "price":1000
 	},
+	{
+		"id":"tm32",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"doubleTeam",
+        "price":1000
+	},
+	{
+		"id":"tm33",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"reflect",
+        "price":1000
+	},
     {
         "id":"tm34",
         "user":"trainer",
@@ -372,6 +620,16 @@
         "move":"bide",
         "price":2000
     },
+	{
+		"id":"tm37",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"eggBomb",
+        "price":2000
+	},
 	{
 		"id":"tm39",
 		"user":"trainer",
@@ -412,6 +670,36 @@
 		"move":"thunderWave",
         "price":2000
 	},
+	{
+		"id":"tm48",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"rockSlide",
+        "price":4000
+	},
+	{
+		"id":"tm49",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"triAttack",
+        "price":4000
+	},
+	{
+		"id":"tm50",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"substitute",
+        "price":2000
+	},
     {
 		"id":"ether",
 		"user":"trainer",
@@ -444,6 +732,17 @@
         "range":"all",
 		"value":10,
         "price":0
+	},
+	{
+		"id":"ppUp",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"increaseMovePP",
+		"value":1,
+		"maxValue":3,
+		"price":9800
 	},
     {
 		"id":"repel",
@@ -482,6 +781,18 @@
 		"effect":"cycling",
         "price":1000000
 	},
+	{
+		"id":"xAttack",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"battlePatkUpUser",
+		"battleAnimation":"powerUpUser1",
+        "mapMessage":"This isn't the time to use that!",
+		"stage":1,
+		"price":500
+	},
     {
 		"id":"xDefend",
 		"user":"trainer",
@@ -518,6 +829,40 @@
 		"stage":1,
 		"price":350
 	},
+	{
+		"id":"xAccuracy",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"battleAccUpUser",
+		"battleAnimation":"powerUpUser1",
+        "mapMessage":"This isn't the time to use that!",
+		"stage":1,
+		"price":950
+	},
+	{
+		"id":"guardSpec",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"battleGuardSpec",
+		"battleAnimation":"powerUpUser1",
+		"mapMessage":"This isn't the time to use that!",
+		"price":700
+	},
+	{
+		"id":"direHit",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"battleDireHit",
+		"battleAnimation":"powerUpUser1",
+		"mapMessage":"This isn't the time to use that!",
+		"price":650
+	},
     {
 		"id":"oldRod",
 		"user":"trainer",
@@ -536,6 +881,22 @@
         "range":7,
         "sound":"Decision5"
 	},
+	{
+		"id":"coinCase",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+		"effect":"coinCase"
+	},
+	{
+		"id":"pokeDoll",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"opponent",
+		"effect":"escapeWildBattle",
+		"price":1000
+	},
     {
 		"id":"hm01",
 		"user":"trainer",
@@ -544,6 +905,16 @@
 		"target":"pokemon",
 		"effect":"hm",
 		"move":"cut",
+		"price":0
+	},
+	{
+		"id":"hm02",
+		"user":"trainer",
+		"category":"hm",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"hm",
+		"move":"fly",
 		"price":0
 	},
 	{

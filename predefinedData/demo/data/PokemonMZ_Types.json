@@ -14,7 +14,8 @@
         "weak":["fighting"],
         "strong":[],
         "immune":["ghost"],
-        "damage":"physical"
+        "damage":"physical",
+        "counter":true
     },
     {
         "id":"fire",
@@ -62,7 +63,8 @@
         "weak":["flying","psychic"],
         "strong":["bug","rock"],
         "immune":[],
-        "damage":"physical"
+        "damage":"physical",
+        "counter":true
     },
     {
         "id":"poison",
