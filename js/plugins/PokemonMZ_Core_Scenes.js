@@ -1388,7 +1388,7 @@ PokemonMZ_Scene_ComputerItems.prototype.onItemOk = function() {
     this._numberWindow.refreshSize();
 
     const newX = this._itemWindow.x + rect.x + rect.width - this._numberWindow.width;
-    const newY = this._itemWindow.y + rect.y + rect.height + this._numberWindow.itemPadding();
+    let newY = this._itemWindow.y + rect.y + rect.height + this._numberWindow.itemPadding();
     if (newY > this._itemWindow.y + this._itemWindow.height) {
         newY = this._itemWindow.y + rect.y - this._numberWindow.height - this._numberWindow.itemPadding();
     }
