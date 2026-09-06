@@ -1853,6 +1853,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._isFlying = false;
     this._isLoweringHead = false;
     this._isMakingWhirlwind = false;
+    this._isRecharging = false;
     this._hasLightScreen = false; // Generation I - Light screen only applies to the user
     this._hasReflect = false; // Generation I - Reflect only applies to the user
 
@@ -3120,6 +3121,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.endFlying();
     this.endSkullBash();
     this.endRazorWind();
+    this.endRecharging();
     this.removeLightScreen(); // Generation I
     this.removeReflect(); // Generation I
     this.resetCounterDamage();
@@ -3201,6 +3203,11 @@ PokemonMZ_Game_Pokemon.prototype.isLoweringHead = function() {
 PokemonMZ_Game_Pokemon.prototype.isMakingWhirlwind = function() {
     return this._isMakingWhirlwind;
 };
+PokemonMZ_Game_Pokemon.prototype.isRecharging = function() {
+    return this._isRecharging;
+};
+
+
 PokemonMZ_Game_Pokemon.prototype.hasLightScreen = function() {
     return this._hasLightScreen;
 };
@@ -3455,6 +3462,9 @@ PokemonMZ_Game_Pokemon.prototype.startRazorWind = function(moveIndex) {
     this._isMakingWhirlwind = true;
     this._razorWindMoveIndex = moveIndex;
 };
+PokemonMZ_Game_Pokemon.prototype.startRecharging = function() {
+    this._isRecharging = true;
+};
 PokemonMZ_Game_Pokemon.prototype.giveLightScreen = function() {
     this._hasLightScreen = true;
 };
@@ -3600,6 +3610,9 @@ PokemonMZ_Game_Pokemon.prototype.endRazorWind = function() {
     this._isMakingWhirlwind = false;
     this._razorWindMoveIndex = -1;
 };
+PokemonMZ_Game_Pokemon.prototype.endRecharging = function() {
+    this._isRecharging = false;
+};
 PokemonMZ_Game_Pokemon.prototype.firstPossibleEvolution = function(evolutionMode, ext1) {
     switch(evolutionMode) {
     case "levelUp":
@@ -3677,8 +3690,6 @@ PokemonMZ_Game_Pokemon.prototype.addToCounterDamage = function(damage) {
 PokemonMZ_Game_Pokemon.prototype.damageTakenCounter = function() {
     return this._damagedCounter;
 };
-
-
 PokemonMZ_Game_Pokemon.prototype.forceLevelUp = function() {
     const exp = this.expForNextLevel();
     this.gainExp(exp);
@@ -5012,6 +5023,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
     case "reflect":
         effectResults = this.effect_reflect(battleData, effect, effectResults);
         break;
+    case "rechargeUser":
+        effectResults = this.effect_rechargeUser(battleData, effect, effectResults);
+        break;
     }
     return effectResults;
 };
@@ -6249,3 +6263,11 @@ PokemonMZ_Game_Action.prototype.effect_reflect = function(battleData, effect, ef
     }
     return effectResults;
 };
+PokemonMZ_Game_Action.prototype.effect_rechargeUser = function(battleData, effect, effectResults) {
+    if (!this._user.isRecharging()) {
+        effectResults.success = true;
+        this._resultSteps.push(["startRechargingUser",this._user])
+    }
+    return effectResults;
+};
+

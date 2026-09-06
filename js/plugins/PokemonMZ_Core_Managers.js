@@ -1161,6 +1161,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
     case "lightScreen":
     case "reflect":
     case "counter":
+    case "rechargeUser":
         DataManager.verifyProperties(
             moveEffect,
             errorMessagePrefix,
@@ -2535,6 +2536,13 @@ PokemonMZ_BattleManager.startPlayerInput = function() {
         return;
     }
 
+    if (pokemon.isRecharging()) {
+        // In case of hyper beam recharge the player cannot select any action
+        this.setPlayerMoveIndex(-1);
+        this.calculateComputerMove();
+        return;
+    }
+
     this._trainerInputWindow.open()
     this._trainerInputWindow.activate()
     this._staticMessageWindow.setText("What should " + pokemon.name() + " do?")
@@ -3474,6 +3482,13 @@ PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
         return;
     }
 
+    // If enemy pokemon is recharging, the move doesn't matter
+    if (enemyPokemon.isRecharging()) {
+        this._enemyMoveIndex = -1;
+        this.calculateBattleActions();
+        return;
+    }
+
     if (trainer) {
         const modifiers = trainer.iaModifiers();
         if (modifiers) {
@@ -3875,6 +3890,9 @@ PokemonMZ_BattleManager.startMove = function(side) {
     // Calculate sleep
     // Gen 1 : doesn't move when wakes up
     if (pokemon.isAsleep()) {
+        if (pokemon.isRecharging()) { // Sleeping removes recharge turn
+            pokemon.endRecharging() 
+        }
 
         // Sleeping sets to -1 the last move so nothing can be copied
         oppositePokemon.clearLastSeenEnemyMove();
@@ -3894,6 +3912,9 @@ PokemonMZ_BattleManager.startMove = function(side) {
 
     // Do not move if flinched
     if (pokemon.isFlinched()) {
+        if (pokemon.isRecharging()) { // Flinch removes recharge turn
+            pokemon.endRecharging() 
+        }
         this._currentAction.addResultSteps(["autotext","isFlinched",this._currentAction.side()])
         this._currentAction.calculateResidualEffectsOnly();
         this.changePhase(nextPhase);
@@ -3923,7 +3944,9 @@ PokemonMZ_BattleManager.startMove = function(side) {
                 if (pokemon.isMakingWhirlwind()) { // Confusion hurt interrupts razor wind
                     pokemon.endRazorWind() 
                 } 
-
+                if (pokemon.isRecharging()) { // Confusion hurt removes recharge turn
+                    pokemon.endRecharging() 
+                }
 
                 this._currentAction.addResultSteps(["autotext","confusedHurt",this._currentAction.side()])
                 move = pokemon.moveSelfHurtConfusion();
@@ -3956,6 +3979,9 @@ PokemonMZ_BattleManager.startMove = function(side) {
         if (pokemon.isMakingWhirlwind()) { // Paralysis interrupts razor wind
             pokemon.endRazorWind() 
         }
+        if (pokemon.isRecharging()) { // Being paralyzed removes recharge turn
+            pokemon.endRecharging() 
+        }
 
         this._currentAction.addResultSteps(["animateUserEffect", this._currentAction.userBattleSprite(), "paralyzed"])
         this._currentAction.addResultSteps(["autotext","isParalyzed",this._currentAction.side()])
@@ -3974,6 +4000,14 @@ PokemonMZ_BattleManager.startMove = function(side) {
         return;
     }
 
+    // Hyper beam recharge turn
+    if (pokemon.isRecharging()) {
+        pokemon.endRecharging() 
+        this._currentAction.addResultSteps(["autotext","needRecharge",this._currentAction.side()])
+        this._currentAction.calculateResidualEffectsOnly();
+        this.changePhase(nextPhase);
+        return;
+    }
 
     // Checking if pokemon obeys, and adapt
     const isObedient = this.isPokemonObedient(side);
@@ -4517,6 +4551,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
             case "startRazorWind":
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["razorWind", step[1]];
+                break;
+            case "startRechargingUser":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["recharge", step[1]];
                 break;
             case "advanceBerserkPokemonTurn":
                 this.changeSubPhase("advanceBerserkPokemonTurn");
@@ -5198,6 +5236,9 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
         case "reflect":
             target.giveReflect();
             break;
+        case "recharge":
+            target.startRecharging();
+            break;
     }
     this.clearSubPhase();
 };
@@ -5544,6 +5585,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + " gained armor!"
     case "oneHitKo":
         return "One-hit KO!"
+    case "needRecharge":
+        return prefix + pokemon.name() + " must recharge!"
     }
     return ""
 };
