@@ -1849,6 +1849,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._isBerserk = false;
     this._isRaging = false;
     this._isMinimized = false;
+    this._isConverted = false;
     this._isDigging = false;
     this._isFlying = false;
     this._isLoweringHead = false;
@@ -1860,6 +1861,9 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._hasMoveDisabled = false;
     this._disabledMoveIndex = -1;
     this._disabledMoveTurns = 0;
+
+    this._convertedType1 = null;
+    this._convertedType2 = null;
 
     this._turnsSleep = 0;
     this._turnsConfusion = 0;
@@ -2656,6 +2660,10 @@ PokemonMZ_Game_Pokemon.prototype.setTrainerInfo = function(trainerId, trainerNam
     this._originalTrainerName = trainerName;
 };
 PokemonMZ_Game_Pokemon.prototype.type1 = function() {
+    if (this._isConverted) {
+        // Change of type due to conversion
+        return this._convertedType1;
+    }
     if (!this._data.types) {
         return null;
     }
@@ -2665,6 +2673,10 @@ PokemonMZ_Game_Pokemon.prototype.type1 = function() {
     return null;
 };
 PokemonMZ_Game_Pokemon.prototype.type2 = function() {
+    if (this._isConverted) {
+        // Change of type due to conversion
+        return this._convertedType2;
+    }
     if (!this._data.types) {
         return null;
     }
@@ -3124,6 +3136,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.endRecharging();
     this.removeLightScreen(); // Generation I
     this.removeReflect(); // Generation I
+    this.unConvert()
     this.resetCounterDamage();
 };
 PokemonMZ_Game_Pokemon.prototype.removeFinishedStatuses = function() {
@@ -3177,6 +3190,9 @@ PokemonMZ_Game_Pokemon.prototype.isRaging = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.isMinimized = function() {
     return this._isMinimized;
+};
+PokemonMZ_Game_Pokemon.prototype.isConverted = function() {
+    return this._isConverted;
 };
 
 PokemonMZ_Game_Pokemon.prototype.isUsingSeveralTurnMove = function() {
@@ -3446,6 +3462,12 @@ PokemonMZ_Game_Pokemon.prototype.minimize = function(force) {
         this._isMinimized = true;
     }
 };
+
+PokemonMZ_Game_Pokemon.prototype.convert = function(type1, type2) {
+    this._isConverted = true;
+    this._convertedType1 = type1;
+    this._convertedType2 = type2;
+};
 PokemonMZ_Game_Pokemon.prototype.startDigging = function(moveIndex) {
     this._isDigging = true;
     this._digMoveIndex = moveIndex;
@@ -3586,6 +3608,13 @@ PokemonMZ_Game_Pokemon.prototype.unRage = function() {
 PokemonMZ_Game_Pokemon.prototype.unMinimize = function() {
     if (this.isMinimized()) {
         this._isMinimized = false;
+    }
+};
+PokemonMZ_Game_Pokemon.prototype.unConvert = function() {
+    if (this.isConverted()) {
+        this._isConverted = false;
+        this._convertedType1 = null;
+        this._convertedType2 = null;
     }
 };
 PokemonMZ_Game_Pokemon.prototype.removeLightScreen = function() {
@@ -5026,6 +5055,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
     case "rechargeUser":
         effectResults = this.effect_rechargeUser(battleData, effect, effectResults);
         break;
+    case "convertType":
+        effectResults = this.effect_convertType(battleData, effect, effectResults);
+        break;
     }
     return effectResults;
 };
@@ -6270,4 +6302,9 @@ PokemonMZ_Game_Action.prototype.effect_rechargeUser = function(battleData, effec
     }
     return effectResults;
 };
-
+PokemonMZ_Game_Action.prototype.effect_convertType = function(battleData, effect, effectResults) {
+    effectResults.success = true;
+    this._resultSteps.push(["convertPokemon",this._user, this._opponent])
+    this._resultSteps.push(["waittext", "converted", this.oppositeSide()])
+    return effectResults;
+};

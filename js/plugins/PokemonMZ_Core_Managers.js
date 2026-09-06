@@ -1162,6 +1162,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
     case "reflect":
     case "counter":
     case "rechargeUser":
+    case "convertType":
         DataManager.verifyProperties(
             moveEffect,
             errorMessagePrefix,
@@ -4536,6 +4537,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["minimize", step[1]];
                 break;
+            case "convertPokemon":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["convert", step[1], step[2]];
+                break;
             case "startDigging":
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["dig", step[1]];
@@ -5210,6 +5215,10 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
             const berserkMaxTurns = this._subPhaseParams[3] - 1;
             target.berserk(berserkMinTurns, berserkMaxTurns, moveIndex, true);
             break;
+        case "convert":
+            const convertOpponent = this._subPhaseParams[2]
+            target.convert(convertOpponent.type1(), convertOpponent.type2())
+            break;
         case "rage":
             target.rage(moveIndex, true);
             break;
@@ -5587,6 +5596,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return "One-hit KO!"
     case "needRecharge":
         return prefix + pokemon.name() + " must recharge!"
+    case "converted":
+        return "Converted type to " + prefix + pokemon.name() + "'s!"
     }
     return ""
 };
