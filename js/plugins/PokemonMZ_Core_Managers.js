@@ -1110,6 +1110,14 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
             optionalProperties
         );
         break;
+    case "fixedCrashDamage":
+        DataManager.verifyProperties(
+            moveEffect,
+            errorMessagePrefix,
+            mandatoryProperties.concat(["value"]),
+            optionalProperties
+        );
+        break;
     case "dig":
     case "fly":
     case "skullBash":
@@ -5689,6 +5697,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return "Too weak to make a Substitute!";
     case "damageSubstitute":
         return "The substitute took damage for " + prefix + pokemon.name() + "!"
+    case "crashed":
+        return prefix + pokemon.name() + " kept going and crashed!";
     }
     return ""
 };

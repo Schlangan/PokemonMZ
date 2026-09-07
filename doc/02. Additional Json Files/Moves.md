@@ -175,6 +175,9 @@ List of implemented effects and their additional parameters:
 - type = **lightScreen** : Specific to the move Light Screen. Double the user Special when being attacked.
 - type = **reflect** : Specific to the move Reflect. Double the user's defense when being attacked.
 
+- type = **fixedCrashDamage** : Inflicts a fixed value of damage to the user if the move missed
+    - value, **int**, *optional* : Amount of damage inflicted by the crash
+
 ---
 
 exceptionData

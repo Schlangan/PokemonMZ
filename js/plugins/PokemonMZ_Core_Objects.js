@@ -4687,6 +4687,19 @@ PokemonMZ_Game_Action.prototype.calculateMoveAttack = function() {
                 }
             }
         }
+
+        // Moves with crash damage effect deal damage here
+        const hasCrashDamage = this._moveData.effects.some(effect => effect.type === "fixedCrashDamage")
+        if (hasCrashDamage && !hit) {
+            const effectsResult = this.calculateMoveEffects({"missed":true});
+            if (effectsResult.userDamage) {
+                this._userEvolvingHp -= effectsResult.userDamage
+                const drainDamage = effectsResult.userHeal ?? 0
+                if ((this._userEvolvingHp + drainDamage) <= 0) {
+                    userWillFaint = true;
+                }
+            }
+        }
     }
 
     if (this._moveRemainingHits == 0) {
@@ -5141,6 +5154,11 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
         break;
     case "substitute":
         effectResults = this.effect_substitute(battleData, effect, effectResults);
+        break;
+    case "fixedCrashDamage":
+        if (!this.isMoveEffectExcepted(effect, this._user)) {
+            effectResults = this.effect_fixedCrashDamage(battleData, effect, effectResults);
+        }
         break;
     }
     return effectResults;
@@ -6560,5 +6578,18 @@ PokemonMZ_Game_Action.prototype.effect_substitute = function(battleData, effect,
     this._resultSteps.push(["createSubstitute",this._user])
     this._resultSteps.push(["damageUser",substituteRequiredHp]);
     this._resultSteps.push(["waittext", "createdSubstitute", this.side()])
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_fixedCrashDamage = function(battleData, effect, effectResults) {
+    const damageDealt = effect.value;
+    if (PokemonMZ.debugLog) {
+        console.log({"PokemonMZ_Game_Action.effect_fixedCrashDamage > ":{"damage":damageDealt}})
+    }
+    if (battleData.missed) {
+        effectResults.success = true;
+        this._resultSteps.push(["damageUser",damageDealt]);
+        this._resultSteps.push(["autotext","crashed",this.side()])
+        effectResults.userDamage = damageDealt;
+    }
     return effectResults;
 };
