@@ -1172,6 +1172,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
     case "rechargeUser":
     case "convertType":
     case "substitute":
+    case "resetAllStatsModifiers":
         DataManager.verifyProperties(
             moveEffect,
             errorMessagePrefix,
@@ -2142,6 +2143,9 @@ PokemonMZ_BattleManager.updateSubPhase = function(timeActive) {
             } else {
                 this.updateEnemyPokemonBlownAway();
             }
+            break;
+        case "resetStats":
+            this.resetStats();
             break;
     }
 };
@@ -4660,6 +4664,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["reflect", step[1]];
                 break;
+            case "resetStats":
+                this.changeSubPhase("resetStats");
+                this._subPhaseParams = [step[1]];
+                break;
         }
     } else {
         if (PokemonMZ.debugLog) {
@@ -5369,6 +5377,13 @@ PokemonMZ_BattleManager.removePokemonStatus = function() {
     }
     this.clearSubPhase();
 };
+
+PokemonMZ_BattleManager.resetStats = function() {
+    const target = this._subPhaseParams[0];
+    target.resetStageModifiers();
+    this.clearSubPhase();
+}
+
 PokemonMZ_BattleManager.startFaintPokemon = function() {
     // Remove all turn phases for KO
     const targetType = this._subPhaseParams[0];
@@ -5699,6 +5714,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return "The substitute took damage for " + prefix + pokemon.name() + "!"
     case "crashed":
         return prefix + pokemon.name() + " kept going and crashed!";
+    case "statsEliminated":
+        return "All stats change are eliminated!"
     }
     return ""
 };

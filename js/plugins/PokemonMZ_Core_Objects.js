@@ -5160,6 +5160,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
             effectResults = this.effect_fixedCrashDamage(battleData, effect, effectResults);
         }
         break;
+    case "resetAllStatsModifiers":
+        effectResults = this.effect_resetAllStatsModifiers(battleData, effect, effectResults);
+        break;
     }
     return effectResults;
 };
@@ -6593,3 +6596,14 @@ PokemonMZ_Game_Action.prototype.effect_fixedCrashDamage = function(battleData, e
     }
     return effectResults;
 };
+
+PokemonMZ_Game_Action.prototype.effect_resetAllStatsModifiers = function(battleData, effect, effectResults) {
+    if (PokemonMZ.debugLog) {
+        console.log({"PokemonMZ_Game_Action.effect_fixedCrashDamage > ":{"damage":damageDealt}})
+    }
+    effectResults.success = true;
+    this._resultSteps.push(["resetStats",this._user])
+    this._resultSteps.push(["resetStats",this._opponent])
+    this._resultSteps.push(["waittext","statsEliminated",this.side()])
+    return effectResults;
+}
