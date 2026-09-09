@@ -1412,20 +1412,21 @@ DataManager.verifyRegionMapData = function(index, regionMapData) {
 DataManager.verifyRegionMapPoiData = function(prefix, index, poiData) {
     const errorMessagePrefix = prefix + "Index " + String(index) + " - ";
     const mandatoryProperties = ["id","name","x","y","pokemons"]
+    const optionalProperties = ["mapHidden"]
 
     if (poiData.fly) {
         DataManager.verifyProperties(
             poiData,
             errorMessagePrefix,
             mandatoryProperties.concat(["fly","flyMapId","flyMapX","flyMapY"]),
-            [],
+            optionalProperties,
         );
     } else {
         DataManager.verifyProperties(
             poiData,
             errorMessagePrefix,
             mandatoryProperties,
-            [],
+            optionalProperties,
         );
     }
 

@@ -948,7 +948,7 @@ PokemonMZ_Window_RegionMap.prototype.updateHelp = function() {
     this.refreshHelp();
 };
 
-PokemonMZ_Window_RegionMap.prototype.setRegionMapId = function(regionId) {
+PokemonMZ_Window_RegionMap.prototype.setRegionMapId = function(regionId) {    
     this._regionData = $PokemonMZ_dataRegionMaps[regionId];
 
     if (this.isFlyingMode()) {
@@ -975,12 +975,25 @@ PokemonMZ_Window_RegionMap.prototype.setPlayerPoiIndex = function(poiId) {
     } else {
         this.setCursorPoiIndex(poiId);
     }
-    
 };
 PokemonMZ_Window_RegionMap.prototype.setCursorPoiIndex = function(poiId) {
     this._cursorPoiIndex = poiId;
-    this.refreshHelp();
-    this.refresh();
+
+    let isMapHidden = false;
+    if (this._regionData.poi[this._cursorPoiIndex].mapHidden) {
+        if (poiId != this._playerPoiIndex) {
+            isMapHidden = true;
+        }
+        
+    }
+
+    if (!isMapHidden) {
+        // Refresh only if the map isn't hidden
+        this.refreshHelp();
+        this.refresh();
+    }
+
+    return isMapHidden;
 };
 PokemonMZ_Window_RegionMap.prototype.refreshHelp = function() {
     const isFlyingMode = this.isFlyingMode();
@@ -1138,36 +1151,51 @@ PokemonMZ_Window_RegionMap.prototype.isTouchOkEnabled = function() {
 PokemonMZ_Window_RegionMap.prototype.cursorDown = function(wrap) {
     const isFlyingMode = this.isFlyingMode();
     this.playCursorSound();
-    if (isFlyingMode) {
-        if (this._cursorPoiIndex > 0) {
-            this.setCursorPoiIndex(this._cursorPoiIndex - 1);
+
+    let shouldFindNextPoi = true;
+    let safetyCounter = 0;
+
+    while (shouldFindNextPoi && safetyCounter < 100) {
+        safetyCounter++;
+        if (isFlyingMode) {
+            if (this._cursorPoiIndex > 0) {
+                shouldFindNextPoi = this.setCursorPoiIndex(this._cursorPoiIndex - 1);
+            } else {
+                shouldFindNextPoi = this.setCursorPoiIndex(this._flyableRegionDataPoi.length - 1);
+            }
         } else {
-            this.setCursorPoiIndex(this._flyableRegionDataPoi.length - 1);
-        }
-    } else {
-        if (this._cursorPoiIndex > 1) {
-            this.setCursorPoiIndex(this._cursorPoiIndex - 1);
-        } else {
-            this.setCursorPoiIndex(this._regionData.poi.length - 1);
+            if (this._cursorPoiIndex > 1) {
+                shouldFindNextPoi = this.setCursorPoiIndex(this._cursorPoiIndex - 1);
+            } else {
+                shouldFindNextPoi = this.setCursorPoiIndex(this._regionData.poi.length - 1);
+            }
         }
     }
+    
 };
 PokemonMZ_Window_RegionMap.prototype.cursorUp = function(wrap) {
     const isFlyingMode = this.isFlyingMode();
     this.playCursorSound();
-    if (isFlyingMode) {
-        if (this._cursorPoiIndex < this._flyableRegionDataPoi.length - 1) {
-            this.setCursorPoiIndex(this._cursorPoiIndex + 1);
+
+    let shouldFindNextPoi = true;
+    let safetyCounter = 0;
+
+    while (shouldFindNextPoi && safetyCounter < 100) {
+        safetyCounter++;
+        if (isFlyingMode) {
+            if (this._cursorPoiIndex < this._flyableRegionDataPoi.length - 1) {
+                shouldFindNextPoi = this.setCursorPoiIndex(this._cursorPoiIndex + 1);
+            } else {
+                shouldFindNextPoi = this.setCursorPoiIndex(0);
+            }
         } else {
-            this.setCursorPoiIndex(0);
+            if (this._cursorPoiIndex < this._regionData.poi.length - 1) {
+                shouldFindNextPoi = this.setCursorPoiIndex(this._cursorPoiIndex + 1);
+            } else {
+                shouldFindNextPoi = this.setCursorPoiIndex(1);
+            }
         }
-    } else {
-        if (this._cursorPoiIndex < this._regionData.poi.length - 1) {
-            this.setCursorPoiIndex(this._cursorPoiIndex + 1);
-        } else {
-            this.setCursorPoiIndex(1);
-        }
-    }
+    };
 };
 PokemonMZ_Window_RegionMap.prototype.selectedPoiData = function() {
     return this.isFlyingMode() ? this._flyableRegionDataPoi[this._cursorPoiIndex] : this._regionData.poi[this._cursorPoiIndex];
