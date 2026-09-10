@@ -78,7 +78,7 @@ Game_CharacterBase.prototype.moveStraight = function(d) {
 Game_CharacterBase.prototype.PokemonMZ_checkautoMoveTile = function(d) {
     const autoDirection = $gameMap.PokemonMZ_autoMoveTileDirection(this._x, this._y);
     
-    if (autoDirection === 0 ) {
+    if (autoDirection === 0 && this._autoMoveTileDirection > 0) {
         this._autoMoveTileDirection = 0;
         this._walkAnime = true;
         this._moveSpeed -= 1;
