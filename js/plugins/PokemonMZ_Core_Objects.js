@@ -26,6 +26,7 @@ Game_CharacterBase.prototype.initMembers = function() {
     PokemonMZ_Game_CharacterBase_initMembers.call(this);
     this._onLedge = false;
     this._remainingSpinData = {"originalSpeed":0, "turns":0, "directions":0, "spinCount":0, "sound":false};
+    this._autoMoveTileDirection = 0;
 };
 const PokemonMZ_Game_CharacterBase_canPass = Game_CharacterBase.prototype.canPass;
 Game_CharacterBase.prototype.canPass = function(x, y, d) {
@@ -67,7 +68,42 @@ Game_CharacterBase.prototype.moveStraight = function(d) {
         return;
     }
     PokemonMZ_Game_CharacterBase_moveStraight.call(this, d);
+    
+    if ($gameMap.PokemonMZ_hasautoMoveTiles()) {
+        if (this.isMovementSucceeded()) {
+            this.PokemonMZ_checkautoMoveTile(d);
+        }
+    }
 };
+Game_CharacterBase.prototype.PokemonMZ_checkautoMoveTile = function(d) {
+    const autoDirection = $gameMap.PokemonMZ_autoMoveTileDirection(this._x, this._y);
+    
+    if (autoDirection === 0 ) {
+        this._autoMoveTileDirection = 0;
+        this._walkAnime = true;
+        this._moveSpeed -= 1;
+        return;
+    }
+
+    if (!this.canPass(this.x, this.y, autoDirection)) {
+        // Wall stops the move
+        this._autoMoveTileDirection = 0;
+        this._walkAnime = true;
+        this._moveSpeed -= 1;
+        return;
+    }
+
+    if (autoDirection > 0) {
+        if (!this._autoMoveTileDirection) {
+            this._walkAnime = false;
+            this._moveSpeed += 1;
+        }
+        
+        this._autoMoveTileDirection = autoDirection;
+    }
+}
+
+
 
 Game_CharacterBase.prototype.PokemonMZ_frontRegionId = function() {
     const x2 = $gameMap.roundXWithDirection(this._x, this._direction);
@@ -102,6 +138,13 @@ Game_CharacterBase.prototype.update = function() {
         this.PokemonMZ_updateSpin();
     }
     PokemonMZ_Game_CharacterBase_update.call(this);
+    if (!this.isMoving()) {
+        const d = this._autoMoveTileDirection;
+        if (d > 0) {
+            this.setDirection(d);
+            this.moveStraight(d);
+        }
+    }
 };
 Game_CharacterBase.prototype.PokemonMZ_updateSpin = function() {
     this._remainingSpinData.spinCount--;
@@ -373,6 +416,9 @@ Game_Player.prototype.canMove = function() {
     if ($gameMap.PokemonMZ_isFishing()) {
         return false;
     }
+    if (this._autoMoveTileDirection > 0) {
+        return false;
+    }
     return PokemonMZ_Game_Player_canMove.call(this);
 };
 
@@ -447,6 +493,13 @@ Game_Map.prototype.initialize = function() {
         "upLeft":-1,
         "upRight":-1,
     };
+    this._autoMoveRegions = {
+        "up":-1,
+        "down":-1,
+        "left":-1,
+        "right":-1,
+        "stop":-1,
+    };
     this._isRopeEscapable = false;
     this._isTeleportAllowed = false;
     this._isDigAllowed = false;
@@ -481,6 +534,15 @@ Game_Map.prototype.PokemonMZ_reinitialize = function() {
     if (!this._waterRegions) {
         this._waterRegions = [];
     }
+    if (!this._autoMoveRegions) {
+        this._autoMoveRegions = {
+            "up":-1,
+            "down":-1,
+            "left":-1,
+            "right":-1,
+            "stop":-1,
+        };
+    }
 };
 const PokemonMZ_Game_Map_setup = Game_Map.prototype.setup;
 Game_Map.prototype.setup = function(mapId) {
@@ -500,6 +562,13 @@ Game_Map.prototype.setup = function(mapId) {
     if (noteData.ledgeDownRightRegion) { this._ledgeRegions.downRight = Number(noteData.ledgeDownRightRegion) } else { this._ledgeRegions.downRight = -1; }
     if (noteData.ledgeUpLeftRegion) { this._ledgeRegions.upLeft = Number(noteData.ledgeUpLeftRegion) } else { this._ledgeRegions.upLeft = -1; }
     if (noteData.ledgeUpRightRegion) { this._ledgeRegions.upRight = Number(noteData.ledgeUpRightRegion) } else { this._ledgeRegions.upRight = -1; }
+
+    this._hasautoMoveTiles = false;
+    if (noteData.autoMoveLeftRegion) { this._autoMoveRegions.left = Number(noteData.autoMoveLeftRegion); this._hasautoMoveTiles = true } else { this._autoMoveRegions.left = -1; }
+    if (noteData.autoMoveRightRegion) { this._autoMoveRegions.right = Number(noteData.autoMoveRightRegion); this._hasautoMoveTiles = true } else { this._autoMoveRegions.right = -1; }
+    if (noteData.autoMoveUpRegion) { this._autoMoveRegions.up = Number(noteData.autoMoveUpRegion); this._hasautoMoveTiles = true } else { this._autoMoveRegions.up = -1; }
+    if (noteData.autoMoveDownRegion) { this._autoMoveRegions.down = Number(noteData.autoMoveDownRegion); this._hasautoMoveTiles = true } else { this._autoMoveRegions.down = -1; }
+    if (noteData.autoMoveStopRegion) { this._autoMoveRegions.stop = Number(noteData.autoMoveStopRegion); } else { this._autoMoveRegions.stop = -1; }
 
     this._waterRegions = [];
     if (noteData.waterRegions) { 
@@ -566,6 +635,31 @@ Game_Map.prototype.PokemonMZ_isLedge = function(x,y,d) {
     }
     return false;
 };
+Game_Map.prototype.PokemonMZ_hasautoMoveTiles = function() {
+    return this._hasautoMoveTiles;
+};
+Game_Map.prototype.PokemonMZ_autoMoveTileDirection = function(x,y) {
+    // Return the spinning direction, or -1 if the tile isn't any
+    if (!this._autoMoveRegions) { return false; }
+    if (!this._hasautoMoveTiles) { return false; } // No need to check if there isn't any spinning tile region
+
+    const regionId = this.regionId(x,y);
+
+    if ( this._autoMoveRegions.up != -1 && regionId == this._autoMoveRegions.up) {
+        return 8;
+    } else if (this._autoMoveRegions.left != -1 && regionId == this._autoMoveRegions.left) {
+        return 4;
+    } else if (this._autoMoveRegions.right != -1 && regionId == this._autoMoveRegions.right ) {
+        return 6;
+    } else if (this._autoMoveRegions.down != -1 && regionId == this._autoMoveRegions.down) {
+        return 2;
+    } else if (this._autoMoveRegions.stop != -1 && regionId == this._autoMoveRegions.stop) {
+        return 0;
+    }
+
+    return -1;
+};
+
 const PokemonMZ_Game_Map_isDashDisabled = Game_Map.prototype.isDashDisabled;
 Game_Map.prototype.isDashDisabled = function() {
     return PokemonMZ_Game_Map_isDashDisabled.call(this) || !$gamePlayerTrainer.canDash();
