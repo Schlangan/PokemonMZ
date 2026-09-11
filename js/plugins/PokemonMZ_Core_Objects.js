@@ -85,13 +85,23 @@ Game_CharacterBase.prototype.PokemonMZ_checkautoMoveTile = function(d) {
         return;
     }
 
-    if (!this.canPass(this.x, this.y, autoDirection)) {
-        // Wall stops the move
-        this._autoMoveTileDirection = 0;
-        this._walkAnime = true;
-        this._moveSpeed -= 1;
-        return;
+    if (this._autoMoveTileDirection > 0) {
+        if (!this.canPass(this.x, this.y, this._autoMoveTileDirection)) {
+            // Wall stops the move
+            this._autoMoveTileDirection = 0;
+            this._walkAnime = true;
+            this._moveSpeed -= 1;
+            return;
+        }
     }
+    if (!this.canPass(this.x, this.y, autoDirection)) {
+            // Wall stops the move
+            this._autoMoveTileDirection = 0;
+            this._walkAnime = true;
+            this._moveSpeed -= 1;
+            return;
+        }
+
 
     if (autoDirection > 0) {
         if (!this._autoMoveTileDirection) {
