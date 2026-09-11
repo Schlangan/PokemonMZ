@@ -86,7 +86,7 @@ Game_CharacterBase.prototype.PokemonMZ_checkautoMoveTile = function(d) {
     }
 
     if (this._autoMoveTileDirection > 0) {
-        if (!this.canPass(this.x, this.y, this._autoMoveTileDirection)) {
+        if (!this.canPass(this.x, this.y, this._autoMoveTileDirection) && autoDirection === -1) {
             // Wall stops the move
             this._autoMoveTileDirection = 0;
             this._walkAnime = true;
