@@ -76,40 +76,36 @@ Game_CharacterBase.prototype.moveStraight = function(d) {
     }
 };
 Game_CharacterBase.prototype.PokemonMZ_checkautoMoveTile = function(d) {
+    // Get tile direction : 2,4,6,8 if move tile, 0 if stop tile, -1 if no specific tile
     const autoDirection = $gameMap.PokemonMZ_autoMoveTileDirection(this._x, this._y);
-    
-    if (autoDirection === 0 && this._autoMoveTileDirection > 0) {
-        this._autoMoveTileDirection = 0;
-        this._walkAnime = true;
-        this._moveSpeed -= 1;
-        return;
-    }
 
-    if (this._autoMoveTileDirection > 0) {
+    if (!this._autoMoveTileDirection || this._autoMoveTileDirection === 0) {
+        // Event isn't moving - only moving tiles are needed
+        // Event speed will increase
+        if (autoDirection > 0) {
+            if (!this._autoMoveTileDirection) {
+                this._walkAnime = false;
+                this._moveSpeed += 1;
+            }
+            this._autoMoveTileDirection = autoDirection;
+        }
+    } else if (this._autoMoveTileDirection > 0) {
+        // Event is already moving - moving tiles don't change speed
+
         if (!this.canPass(this.x, this.y, this._autoMoveTileDirection) && autoDirection === -1) {
-            // Wall stops the move
+            // Walls will stop the event
             this._autoMoveTileDirection = 0;
             this._walkAnime = true;
             this._moveSpeed -= 1;
-            return;
-        }
-    }
-    if (!this.canPass(this.x, this.y, autoDirection)) {
-            // Wall stops the move
+        } else if (autoDirection === 0) {
+            // Stop tiles also stop the event
             this._autoMoveTileDirection = 0;
             this._walkAnime = true;
             this._moveSpeed -= 1;
-            return;
+        } else if (autoDirection > 0) {
+            // Simply change direction if needed
+            this._autoMoveTileDirection = autoDirection;
         }
-
-
-    if (autoDirection > 0) {
-        if (!this._autoMoveTileDirection) {
-            this._walkAnime = false;
-            this._moveSpeed += 1;
-        }
-        
-        this._autoMoveTileDirection = autoDirection;
     }
 }
 
