@@ -980,7 +980,7 @@ PokemonMZ_Window_RegionMap.prototype.setCursorPoiIndex = function(poiId) {
     this._cursorPoiIndex = poiId;
 
     let isMapHidden = false;
-    if (this._regionData.poi[this._cursorPoiIndex].mapHidden) {
+    if (this._regionData.poi[this._cursorPoiIndex]?.mapHidden) {
         if (poiId != this._playerPoiIndex) {
             isMapHidden = true;
         }
