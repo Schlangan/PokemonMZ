@@ -519,7 +519,7 @@ DataManager.verifyEncounterDataWild = function(index, encounterData) {
         encounterData,
         errorMessagePrefix,
         ["id","type","pokemons"],
-        [],
+        ["noCapture"],
     );
 
     let indexWildPokemonData = 0;
@@ -1955,6 +1955,9 @@ PokemonMZ_BattleManager.updatePhase = function(timeActive) {
         case "rejectTrainerBallThrow":
             this.rejectTrainerBallThrow();
             break; 
+        case "rejectWildBallThrow":
+            this.rejectWildBallThrow();
+            break; 
         case "animateBallWobble":
             this.animateBallWobble();
             break;
@@ -2826,7 +2829,8 @@ PokemonMZ_BattleManager.startThrowBall = function() {
     const bitmap = ImageManager.loadPicture(ballPictureFile);
     bitmap.addLoadListener(this.onPokeballBitmapLoad.bind(this, bitmap))
 
-    if ($PokemonMZ_gameBattle.isWildBattle()) {
+    if ($PokemonMZ_gameBattle.isWildBattle() && !$PokemonMZ_gameBattle._noCapture) {
+        console.log($PokemonMZ_gameBattle)
         const message = $gamePlayerTrainer.name() + " used " + ball.name + "!\\|\\^"
         $gameMessage.add(message);  
     }
@@ -2861,7 +2865,12 @@ PokemonMZ_BattleManager.animateBallThrow = function() {
             AudioManager.playStandardSe(PokemonMZ.ballRejectSE);
             this.changePhase("rejectTrainerBallThrow");
         } else {
-            this.changePhase("finishWildBallThrow");
+            if ($PokemonMZ_gameBattle._noCapture) {
+                AudioManager.playStandardSe(PokemonMZ.ballRejectSE);
+                this.changePhase("rejectWildBallThrow");
+            } else {
+                this.changePhase("finishWildBallThrow");
+            }
         }
     }
 };
@@ -2885,6 +2894,18 @@ PokemonMZ_BattleManager.rejectTrainerBallThrow = function() {
     } else {
         ballSprite.visible = false;
         $gameMessage.add("The trainer blocked the Ball! Don't be a thief!");
+        this.changePhase("nextBattleAction")
+    }
+};
+PokemonMZ_BattleManager.rejectWildBallThrow = function() {
+    const ballSprite = this._spriteset.ballSprite();
+    const finalY = 500;
+    if (ballSprite.y < finalY) {
+        ballSprite.x -= 10;
+        ballSprite.y += 15;
+    } else {
+        ballSprite.visible = false;
+        $gameMessage.add("It blocked the Ball! This Pokémon can't be caught!");
         this.changePhase("nextBattleAction")
     }
 };
@@ -4390,7 +4411,6 @@ PokemonMZ_BattleManager.startPlayerItem = function() {
     // Direct item uses
     switch (this._playerUseItem.pkmz_data.effect) {
         case "ball":
-            //TODO LOCK CAPTURE FOR TRAINER AND GHOST MAROWAK
             this._thrownBall = this._playerUseItem;
             this._playerUseItem = null;
             this.changePhase("throwBall");

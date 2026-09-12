@@ -13,6 +13,7 @@ encounterData
 encounterData (Wild pokemons)
 - id, **string** : Identifier of the encounter. It is eaxactly the name of the Troop inside RPG Maker MZ Database.
 - type, **string** : Equal to **wild**
+- noCapture, **boolean**, *optional* : If true, the wild pokemons of this troop cannot be captured. They will dodge the ball. For ex. Ghost Marowak in Pokemon Tower.
 - pokemons, **Array:wildPokemonData** : An array of **wildPokemonData**, defining possible wild pokemons encountered
 
 encounterData (Trainer)

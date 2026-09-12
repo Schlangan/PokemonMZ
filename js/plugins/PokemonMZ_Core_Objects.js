@@ -3893,10 +3893,12 @@ PokemonMZ_Game_Battle.prototype.setup = function(troopId) {
     this._allies = [];
     this._enemies = [];
     this._wildPokemon = null;
+    
     this.clearMoneyDropped();
 
     const troopData = $dataTroops[troopId].pkmz_data;
     this._type = troopData.type;
+    this._noCapture = troopData.noCapture;
 
     switch (this._type) {
     case "wild":
