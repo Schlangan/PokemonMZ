@@ -4283,9 +4283,6 @@ PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO
     this._userStatusRemoved = [];
 
     let skipMessage = false;
-
-            console.log("hooooo " + String(effect.effect))
-
     switch (effect.effect) {
         case "recoverHp":
             this._resultSteps.push(["healUser", effect.value])
