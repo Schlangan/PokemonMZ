@@ -2870,7 +2870,6 @@ PokemonMZ_BattleManager.startThrowBall = function() {
     bitmap.addLoadListener(this.onPokeballBitmapLoad.bind(this, bitmap))
 
     if ($PokemonMZ_gameBattle.isWildBattle() && !$PokemonMZ_gameBattle._noCapture) {
-        console.log($PokemonMZ_gameBattle)
         const message = $gamePlayerTrainer.name() + " used " + ball.name + "!\\|\\^"
         $gameMessage.add(message);  
     }
