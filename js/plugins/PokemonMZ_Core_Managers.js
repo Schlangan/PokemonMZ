@@ -1373,7 +1373,7 @@ DataManager.verifyPokemonEvolutionData = function(prefix, index, evolutionData) 
     }
 };
 DataManager.verifyPokemonMoveLearnedData = function(prefix, index, moveLearnedData) {
-    const errorMessagePrefix = prefix + "Learnedd Move index " + String(index) + " - ";
+    const errorMessagePrefix = prefix + "Learned Move index " + String(index) + " - ";
 
     DataManager.verifyProperties(
         moveLearnedData,
@@ -1383,7 +1383,7 @@ DataManager.verifyPokemonMoveLearnedData = function(prefix, index, moveLearnedDa
     );
     if (moveLearnedData.move) {
         if (!DataManager.declared.moves.includes(moveLearnedData.move)) {
-            console.error(errorMessagePrefix + "Unknown move id: " + moveLearnedData.move);
+            console.error(errorMessagePrefix + "Unknown move learned at lvl." + String(moveLearnedData.lvl??"NaN") + " - id: " + moveLearnedData.move);
         }
     }
 };
