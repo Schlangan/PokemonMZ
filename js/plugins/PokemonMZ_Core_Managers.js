@@ -5627,6 +5627,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + "'s defense greatly rose!";
     case "specialRose":
         return prefix + pokemon.name() + "'s special rose!";
+    case "specialRosePlus":
+        return prefix + pokemon.name() + "'s special greatly rose!";
     case "speedRose":
         return prefix + pokemon.name() + "'s speed rose!";
     case "speedRosePlus":

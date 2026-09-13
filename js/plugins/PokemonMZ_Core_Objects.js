@@ -6034,11 +6034,20 @@ PokemonMZ_Game_Action.prototype.effect_spcUpUser = function(battleData, effect, 
         })
     }
     if (randomNumber < effect.percentChance) {
-        if (this._user._stageModifiers.satk < 6) {
+        const initialStage = this._user._stageModifiers.satk
+        if (initialStage < 6) {
             this._user._stageModifiers.satk += effect.stage;
             if (this._user._stageModifiers.satk > 6) { this._user._stageModifiers.satk = 6; }
             effectResults.success = true;
-            this._resultSteps.push(["autotext","specialRose",this.side()])
+            const roseStages = this._user._stageModifiers.satk - initialStage;
+            switch (roseStages) {
+            case 1:
+                this._resultSteps.push(["autotext","specialRose",this.side()]);
+                break;
+            case 2:
+                this._resultSteps.push(["autotext","specialRosePlus",this.side()]);
+                break;
+            }
         } else {
             if (battleData.damageDealt == 0) {
                 // Message nothing if no damage dealt, else simply nothing happens
