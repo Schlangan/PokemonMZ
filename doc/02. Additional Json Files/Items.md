@@ -24,6 +24,10 @@ Depending on the effet, additional parameters are required.
     - gen1hpFactor,**int** : Factor of hp reduction on ball efficiency for generation 1 (12 for pokeball or ultraball, 8 for greatball)
 - effect = **cureStatus** : Cure a specific status ailment
     - status,**string** : The status cured. For now, only possible choice between **poison**, **paralysis**, **burn**, **freeze**, **sleep**, **all**
+- effect = **fluteCureStatus** : Cure a specific status ailment with a poke flute
+    - status,**string** : The status cured. For now, the only possible choice is **sleep**
+    - mapCommonEventId, **int** : Id of the common event launched when the item is used outside of battle. Use it for example to awake the sleeping Snorlax on the road.
+    - fluteMe, **string** : The name of the ME sound file when playing the flute
 - effect = **lockedItem** : Item impossible to use
     - useMessage,**string** : Message shown on screen when attempting to use the item
 - effect = **recoverHpFixed** : Recover a specific amount of hp (ex: potion)

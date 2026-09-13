@@ -1156,6 +1156,12 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
             SceneManager.pop();
             $gameMap.PokemonMZ_useItemFinder(itemDict.pkmz_data.range, itemDict.pkmz_data.sound);
             break;
+        case "fluteCureStatus":
+            SceneManager.pop();
+            SceneManager.pop();
+            AudioManager.playStandardMe(itemDict.pkmz_data.fluteMe);
+            $gameTemp.reserveCommonEvent(itemDict.pkmz_data.mapCommonEventId);
+            break;
         default:
             // Open Pokemon menu
             SceneManager.push(PokemonMZ_Scene_PokemonMenu);
@@ -4078,6 +4084,7 @@ PokemonMZ_Scene_Battle.prototype.onItemOk = function() {
         case "battleAccUpUser":
         case "battleDireHit":
         case "battleGuardSpec": 
+        case "fluteCureStatus":
             this.onDirectItemUse(selectedItem);
             break;
         default:

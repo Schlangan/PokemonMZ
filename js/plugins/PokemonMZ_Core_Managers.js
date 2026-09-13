@@ -766,6 +766,18 @@ DataManager.verifyItemData = function(index, itemData) {
                 }
             }
             break;
+        case "fluteCureStatus":
+            DataManager.verifyProperties(
+                itemData, 
+                errorMessagePrefix, 
+                mandatoryProperties.concat(["status","mapCommonEventId","fluteMe"]),
+                optionalProperties);
+            if (itemData.status) {
+                if (!["sleep"].includes(itemData.status)) {
+                    console.error(errorMessagePrefix + "Unknown flute cure status item status: " + itemData.status);
+                }
+            }
+            break;
         case "lockedItem":
             DataManager.verifyProperties(
                 itemData, 
@@ -1517,6 +1529,14 @@ AudioManager.playStandardSe = function(seName) {
         "volume":100,
     });
 };
+AudioManager.playStandardMe = function(seName) {
+    AudioManager.playMe({
+        "name":seName,
+        "pan":0,
+        "pitch":100,
+        "volume":100,
+    });
+};
 
 // ConfigManager edits
 ConfigManager.battleAnimation = true;
@@ -1690,6 +1710,7 @@ PokemonMZ_BattleManager.initMembers = function() {
     this._levelUpData = {};
 
     this._moveAskedFor = null;
+    this._fluteWaitCount = 0;
 
     
     this._playerUseItem = null;
@@ -1976,6 +1997,16 @@ PokemonMZ_BattleManager.updatePhase = function(timeActive) {
         case "playerResolveActionSteps":
         case "enemyResolveActionSteps":
             this.updateSubPhase();
+            break;
+        case "waitForFlute":
+            // Wait for the end of the pokeflute effect
+            if (this._fluteWaitCount > 0) {
+                this._fluteWaitCount --;
+            } else {
+                if (!$gameMessage.isBusy()) {
+                    this.changePhase("playerResolveActionSteps"); 
+                }
+            }
             break;
         case "endPlayerFaintedPokemon":
             this.endPlayerFaintedPokemon();
@@ -2580,7 +2611,16 @@ PokemonMZ_BattleManager.startPlayerInput = function() {
     this.changePhase("playerInput");
 };
 PokemonMZ_BattleManager.startPlayerItemUse = function(item) {
-    $gamePlayerTrainer.gainBagItem(item.id, -1);
+    let consumeItem = true;
+
+    // Poke flute isn't consumed upon use
+    if (item.pkmz_data.effect == "fluteCureStatus") {
+        consumeItem = false;
+    }
+    
+    if (consumeItem) {
+        $gamePlayerTrainer.gainBagItem(item.id, -1);
+    }
     this._playerUseItem = item;
     this._playerMove = null;
     this._playerMoveIndex = null;
@@ -3752,6 +3792,7 @@ PokemonMZ_BattleManager.calculateBattleActions = function() {
         case "battleDireHit":
         case "battleGuardSpec":
         case "escapeWildBattle":
+        case "fluteCureStatus":
             this._battleActions.push("playerStartUsingItem");
             break;
         default:
@@ -4432,6 +4473,17 @@ PokemonMZ_BattleManager.startPlayerItem = function() {
             $gameMessage.add($gamePlayerTrainer.name() + " used " + this._playerUseItem.name + "!");
             this._playerUseItem = null;
             this.changePhase("forcePlayerWildEscape");
+            break;
+        case "fluteCureStatus":
+            $gameMessage.add($gamePlayerTrainer.name() + " used " + this._playerUseItem.name + "!");
+            AudioManager.playStandardMe(this._playerUseItem.pkmz_data.fluteMe);
+            this._currentAction = new PokemonMZ_Game_Action(this._playerChosenPokemon, "player");
+            this._currentAction.setOpponent(this._enemyChosenPokemon);
+            this._currentAction.setItem(this._playerUseItem.pkmz_data.id)
+            this._currentAction.calculate();
+            this._playerUseItem = null;
+            this._fluteWaitCount = 180;
+            this.changePhase("waitForFlute"); 
             break;
     }
 };
@@ -5737,6 +5789,10 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + " kept going and crashed!";
     case "statsEliminated":
         return "All stats change are eliminated!"
+    case "allWokeUp":
+        return "All sleeping Pokémon woke up."
+    case "catchyTune":
+        return "Now, that's a catchy tune!"
     }
     return ""
 };

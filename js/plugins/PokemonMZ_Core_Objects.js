@@ -2943,7 +2943,8 @@ PokemonMZ_Game_Pokemon.prototype.itemEffect = function(item, ext1) {
         recoverPercent = 100 * recovered / mHp;
         return {"effect":"recoverHp","value":recovered, "percentValue":recoverPercent};
     case "cureStatus":
-        return {"effect":"cureStatus","status":item.pkmz_data.status};
+    case "fluteCureStatus":
+        return {"effect":item.pkmz_data.effect,"status":item.pkmz_data.status};
     case "revive":
         mHp = this.mhp();
         nextHp = Math.floor(item.pkmz_data.hpPercent*mHp/100);
@@ -4281,6 +4282,10 @@ PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO
     this._userEvolvingHp = this._user.hp();
     this._userStatusRemoved = [];
 
+    let skipMessage = false;
+
+            console.log("hooooo " + String(effect.effect))
+
     switch (effect.effect) {
         case "recoverHp":
             this._resultSteps.push(["healUser", effect.value])
@@ -4314,6 +4319,28 @@ PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO
                     break;
             }
             break;
+        case "fluteCureStatus":
+            skipMessage = true;
+            switch (effect.status) {
+            case "sleep":
+                let foundAsleep = false;
+                if (this._user.isAsleep()) {
+                    foundAsleep = true;
+                    this._resultSteps.push(["sleepHeal",this._user]);
+                }
+                if (this._opponent.isAsleep()) {
+                    foundAsleep = true;
+                    this._resultSteps.push(["sleepHeal",this._opponent]);
+                }
+                if (foundAsleep) {
+                    this._resultSteps.push(["waittext","allWokeUp",this.side()]);
+                } else {
+                    this._resultSteps.push(["waittext","catchyTune",this.side()]);
+                }
+                break;
+            };
+            break;
+
         case "recoverAndCureStatus":
             if (effect.value > 0) {
                 this._resultSteps.push(["healUser", effect.value])
@@ -4367,7 +4394,9 @@ PokemonMZ_Game_Action.prototype.calculateItem = function() { //TODO
             }
             break;
     }
-    this._resultSteps.push(["waittext","usedItem",this.side(), item.name]);
+    if (!skipMessage) {
+        this._resultSteps.push(["waittext","usedItem",this.side(), item.name]);
+    }
     switch (effect.effect) {
         case "patkUp":
             if (effect.success) {

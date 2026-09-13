@@ -53,6 +53,21 @@
  * @command PlayerTeamHeal
  * @text Heal Party
  * @desc Heal all the Pokémon in the player team.
+ * 
+ * //////////////////////////////////////////
+ * @command AwakeParty
+ * @text Awake Party
+ * @desc Remove Sleep from all Pokémon in the player team.
+ * 
+ * //////////////////////////////////////////
+ * @command PlayerHasAnyPokemonSleeping
+ * @text Player Has Sleeping Pokemon
+ * @desc Checks if the player has a sleeping Pokémon in Party
+ * 
+ * @arg returnSwitchId
+ * @type switch
+ * @text Return switch
+ * @desc A switch that will take the value ON if the player has a sleeping Pokémon or OFF if they don't.
 
  * //////////////////////////////////////////
  * @command GivePlayerMoney
@@ -669,7 +684,24 @@ PluginManager.registerCommand(pluginName, "ShowCurrentRegionMap", function(args)
 PluginManager.registerCommand(pluginName, "PlayerTeamHeal", function(args) {
     $gamePlayerTrainer.healTeam();
 });
+PluginManager.registerCommand(pluginName, "AwakeParty", function(args) {
+    for (const pokemon of $gamePlayerTrainer.pokemons()) {
+        pokemon.unsleep();
+    };
+});
+PluginManager.registerCommand(pluginName, "PlayerHasAnyPokemonSleeping", function(args) {
+    const switchId = Number(args.returnSwitchId)
 
+    if (switchId) {
+        let hasSleeping = false;
+        for (const pokemon of $gamePlayerTrainer.pokemons()) {
+            if (pokemon.isAsleep()) {
+                hasSleeping = true;
+            }
+        }
+        $gameSwitches.setValue(switchId, hasSleeping);
+    }
+});
 PluginManager.registerCommand(pluginName, "SelectPokemonTrade", function(args) {
     const pokemonIntId = Number(args.searchedPokemon);
     const returnVariable = Number(args.returnVariable);
