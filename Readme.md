@@ -1,8 +1,10 @@
-The PokemonMZ plugin is a base for creating Pokemon games with RPG Maker MZ. This first beta version has been developed by mimicking the game mechanics of pokemon Red/Blue/Yellow, up to the Celadon City, with pokemon max level limited to 35. Many mechanics have yet to be implemented, but you'll find everything that was accessible up to that point of the original game story.
+The PokemonMZ plugin is a base for creating Pokemon games with RPG Maker MZ. This first beta version has been developed by mimicking the game mechanics of pokemon Red/Blue/Yellow, up to the end of Route 12 after waking up Snorlax, with pokemon max level limited to 40. Several mechanics have yet to be implemented, but you'll find everything that was accessible up to that point of the original game story.
 
 To use the plugin, push the js/plugin and img/ files inside your project folder. If you want to get the preconfigured database for the current state of this plugin, take the files inside predefinedData/demo/data and paste the contents in the data folder of your project.
 
 Please read the documentation inside the doc folder to configure the plugin.
 
-You can find a demonstration version of the plugin at this url: [Download Link](https://mega.nz/file/dIsFVLxR#NbbZ_pP3DbLJIA9zMeymsJy2QmaHGqh_3OuQGgwivU4).
+You can find a demonstration version of the plugin at this url: 
+- [Windows version](https://mega.nz/file/QJ9QTRjZ#vO-grKaXGndFuTgWdQm2KTexxDbC1UI90Z5Eg1Oqu9U).
+- [MacOs version](https://mega.nz/file/ZUlxHDLR#iwtZb0AYhXTs0NrJJo6nRegakXRHT90svGDxFMG5-aU).
 

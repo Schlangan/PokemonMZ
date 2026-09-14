@@ -4,13 +4,13 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 
 - 0001. Bulbasaur
 - 0002. Ivysaur
-- (...)
+- 0003. Venusaur
 - 0004. Charmander
 - 0005. Charmeleon
-- (...)
+- 0006. Charizard
 - 0007. Squirtle
 - 0008. Wartortle
-- (...)
+- 0009. Blastoise
 - 0010. Caterpie
 - 0011. Metapod
 - 0012. Butterfree
@@ -19,7 +19,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0015. Beedrill
 - 0016. Pidgey
 - 0017. Pidgeotto
-- (...)
+- 0018. Pidgeot
 - 0019. Rattata
 - 0020. Raticate
 - 0021. Spearow
@@ -55,13 +55,15 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0051. Dugtrio
 - 0052. Meowth
 - 0053. Persian
-- (...)
+- 0054. Psyduck
+- 0055. Golduck
 - 0056. Mankey
 - 0057. Primeape
 - 0058. Growlithe
 - 0059. Arcanine
 - 0060. Poliwag
-- (...)
+- 0061. Poliwhirl
+- 0062. Poliwrath
 - 0063. Abra
 - 0064. Kadabra
 - 0065. Alakazam
@@ -72,14 +74,14 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0070. Weepinbell
 - 0071. Victreebel
 - 0072. Tentacool
-- (...)
+- 0073. Tentacruel
 - 0074. Geodude
 - 0075. Graveler
 - 0076. Golem
 - 0077. Ponyta
 - (...)
 - 0079. Slowpoke
-- (...)
+- 0080. Slowbro
 - 0081. Magnemite
 - 0082. Magneton
 - 0083. Farfetch'd
@@ -89,24 +91,34 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0088. Grimer
 - (...)
 - 0090. Shellder
-- (...)
+- 0091. Cloyster
+- 0092. Gastly
+- 0093. Haunter
+- 0094. Gengar
 - 0095. Onix
 - 0096. Drowzee
-- (...)
+- 0097. Hypno
+- 0098. Krabby
+- 0099. Kingler
 - 0100. Voltorb
 - 0101. Electrode
 - 0102. Exeggcute
 - (...)
 - 0104. Cubone
+- 0105. Marowak
+- 0106. Hitmonlee
+- 0107. Hitmonchan
 - (...)
 - 0109. Koffing
 - (...)
+- 0111. Rhyhorn
+- (...)
 - 0114. Tangela
-- (...)
+- 0115. Kangaskhan
 - 0116. Horsea
-- (...)
+- 0117. Seadra
 - 0118. Goldeen
-- (...)
+- 0119. Seaking
 - 0120. Staryu
 - 0121. Starmie
 - 0122. Mr.Mime
@@ -122,6 +134,8 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0135. Jolteon
 - 0136. Flareon
 - 0137. Porygon
+- (...)
+- 0143. Snorlax
 - (...)
 - 0147. Dratini
 - 0148. Dragonair
@@ -147,10 +161,12 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Tri Attack
     - Vice Grip
     - Vine Whip
+    - Waterfall
     - Water Gun
     - Wing Attack
 
 - Moves with high critical
+    - Crabhammer
     - Karate Chop
     - Razor Leaf
     - Slash
@@ -163,12 +179,14 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 
 - Moves with specific damage
     - Dragon Rage (40)
+    - Night Shade (User level)
     - Seismic Toss (User level)
     - Sonic Boom (20)
     - Super Fang (50% remaining HP)
 
 - Moves hitting N times in one turn
     - Barrage (2-5)
+    - Comet Punch (2-5)
     - Double Kick (2-2)
     - Double Slap (2-5)
     - Fury Attack (2-5)
@@ -188,6 +206,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - Moves inflicting statuses
     - Burn
         - Ember
+        - Fire Punch
         - Flamethrower
     - Confusion
         - Confuse Ray
@@ -200,11 +219,15 @@ This file details all mechanics available in the plugin, compared to RBY Generat
         - Headbutt
         - Hyper Fang
         - Low Kick
+        - Rolling Kick
+        - Stomp
     - Freeze
         - Ice Beam
+        - Ice Punch
     - Paralysis
         - Body Slam (except Normal types)
         - Glare
+        - Lick (except Ghost types)
         - Stun Spore
         - Thunderbolt  (except Electric types)
         - Thunder Shock (except Electric types)
@@ -223,16 +246,23 @@ This file details all mechanics available in the plugin, compared to RBY Generat
         - Sleep Powder
 
 - Moves dropping target stats by one stage
-    - Acid (defense)
-    - Bubble (speed)
-    - Constrict (speed)
-    - Growl (attack)
-    - Kinesis (accuracy)
-    - Leer (defense)
-    - Psychic (special)
-    - Sand Attack (accuracy)
-    - String Shot (speed)
-    - Tail Whip (defense)
+    - Attack
+        - Aurora Beam
+        - Growl
+    - Defense
+        - Acid
+        - Leer
+        - Tail Whip
+    - Special
+        - Psychic
+    - Speed
+        - Bubble
+        - Constrict
+        - String Shot
+    - Accuracy
+        - Kinesis
+        - Sand Attack
+        - Smoke Screen
 
 - Moves dropping target stats by two stages
     - Screech (defense)
@@ -242,12 +272,14 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Double Team (evasion)
     - Growth (special)
     - Harden (defense)
+    - Meditate (attack)
     - Minimize (evasion)
     - Sharpen (attack)
     - Withdraw (defense)
 
 - Moves raising user stats by two stages
     - Agility (speed)
+    - Amnesia (special)
     - Barrier (defense)
     - Swords Dance (attack)
 
@@ -257,17 +289,24 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 
 - Moves binding the opponent
     - Bind
+    - Clamp
+    - Fire Spin
     - Wrap
 
 - Moves restoring user HP
     - Recover
 
+- Moves with crash damage
+    - Jump Kick (1 Hp)
+
 - Moves with recoil damage
+    - Double Edge (25%)
     - Struggle (50%)
     - Submission (25%)
     - Take Down (25%)
 
 - Moves fainting user 
+    - Explosion
     - Self-destruct
 
 - Moves doing one hit KO on slower opponents
@@ -275,6 +314,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Horn Drill
 
 - Moves dividing target defense during damage calculation
+    - Explosion (by 2)
     - Self-destruct (by 2)
 
 - Moves dropping money
@@ -293,6 +333,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Cut
     - Dig
     - Flash
+    - Fly
     - Teleport
 
 - Barrier moves
@@ -301,9 +342,11 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 
 - Special moves
     - Bide (activate turn 1, wait 1-2 turns, and unleash last turn double damage taken while waiting)
+    - Conversion (take the opponent types)
     - Counter (send back twice damage if hit by normal/fighting moves)
     - Disable (disable a random move from the enemy)
     - Focus Energy (multiply critical chances by 4 - bug fixed compared to original RBY games which were dividing by 4 instead)
+    - Haze (reset stats modifiers from both side)
     - Mirror Move (replicate last attack from the opponent)
     - Splash (no effect at all)
     - Struggle (launched with 0pp)
@@ -361,6 +404,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - Repels
     - Repel
     - Super Repel
+    - Max Repel
 
 - Evolution
     - Fire Stone
@@ -381,7 +425,9 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Bike Voucher
     - Coin Case
     - Item Finder
+    - Lift Key
     - Oak's Parcel
+    - Silph Scope
     - S.S. Ticket
     - Town Map
 
@@ -399,7 +445,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - TM07 - Horn drill
     - TM08 - Body slam
     - TM09 - Take down
-    - (...)
+    - TM10 - Double edge
     - TM11 - Bubble beam
     - TM12 - Water gun
     - TM13 - Ice beam
@@ -416,7 +462,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - TM24 - Thunderbolt
     - (...)
     - TM28 - Dig
-    - (...)
+    - TM29 - Psychic
     - TM30 - Teleport
     - (...)
     - TM32 - Double team

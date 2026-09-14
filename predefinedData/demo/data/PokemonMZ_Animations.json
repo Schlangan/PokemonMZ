@@ -25,6 +25,22 @@
         ]
     },
     {
+        "id":"hitTargetFire",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":5},
+            {"type":"playAnimation", "target":"target", "animationId":3},
+            {"type":"moveSpriteBackward", "target":"user", "distance":35, "duration":5}
+        ]
+    },
+    {
+        "id":"hitTargetIce",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":5},
+            {"type":"playAnimation", "target":"target", "animationId":4},
+            {"type":"moveSpriteBackward", "target":"user", "distance":35, "duration":5}
+        ]
+    },
+    {
         "id":"slashTargetPhysical",
         "sequence":[
             {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":5},
@@ -105,6 +121,14 @@
         ]
     },
     {
+        "id":"fogTarget",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":3},
+            {"type":"playAnimation", "target":"target", "animationId":35},
+            {"type":"moveSpriteBackward", "target":"user", "distance":35, "duration":3}
+        ]
+    },
+    {
         "id":"waterTarget1",
         "sequence":[
             {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
@@ -152,6 +176,24 @@
             {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
         ]
     },
+    {
+        "id":"darkTarget2",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":102},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"darkAll1",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"user", "animationId":101},
+            {"type":"playAnimation", "target":"target", "animationId":101},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+
     {
         "id":"darkUser1",
         "sequence":[

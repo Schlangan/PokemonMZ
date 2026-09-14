@@ -1,3 +1,70 @@
+## [0.09] - TBD
+
+Pokemon can now reach level 40, mechanics including the Rocket HQ, Pokemon Tower have been added. In the demonstration version, you can reach the end of Route 12 after waking up Snorlax. 
+
+- New map mechanics
+    - The town map now has hidden points of interest, only visible when the player is at that location. For example, Rocket HQ in Celadon.
+    - Auto-movement tiles for Celadon Rocket HQ
+    - Use of PokeFlute, allowing a common event to play
+    - Commands checking if the player has a sleeping pokemon and awaking all pokemons
+- New battle mechanics
+    - Moves inflicting crash damage when missed (jump kick) - In Generation 1, only one single hp was lost with crash damage
+    - Wild battles with Pokemon that cannot be caught, such as Marowak inside the Pokemon Tower
+    - Pokeflute, waking up user and opponent at the same time
+- New predefined Pokemon data
+    - Blastoise (evolving player's Wartortle at lvl.36)
+    - Charizard (evolving player's Charmelon at lvl.36)
+    - Cloyster (evolving player's Shellder with a water stone)
+    - Kangaskhan (fought in Rocket HQ against Giovanni)
+    - Gastly (found wild/battled in Lavender Tower)
+    - Haunter (evolving player's Gastly at lvl.25)
+    - Gengar (evolving player's Haunter with Link Cable)
+    - Golduck (evolving player's Psyduck at lvl.33)
+    - Hitmonchan (fought in Saffron dojo and obtained as reward)
+    - Hitmonlee (fought in Saffron dojo and obtained as reward)
+    - Kingler (evolving player's Krabby at lvl.28)
+    - Krabby (fished with Super Rod)
+    - Marowak (evolving player's Cubone at lvl.28)
+    - Pidgeot (evolving player's Pidgeotto at lvl.36)
+    - Poliwhirl (evolving player's Poliwag at lvl.25)
+    - Poliwrath (evolving player's Poliwhirl with a water stone)
+    - Psyduck (fished with Super Rod)
+    - Rhyhorn (fought in Rocket HQ against Giovanni)
+    - Seadra (evolving player's Horsea at lvl.32)
+    - Seaking (evolving player's Goldeen at lvl.33)
+    - Slowbro (evolving player's Slowpoke at lvl.37)
+    - Snorlax (fought on route 12 and 16 when using Pokeflute)
+    - Tentacruel (evolving player's Tentacool at lvl.30)
+    - Venusaur (evolving player's Ivysaur at lvl.32)
+- New predefined moves data
+    - Amnesia (learned by player's Snorlax at lvl.1)
+    - Aurora Beam (learned by player's Vaporeon at lvl.36)
+    - Clamp (learned by player's Shellder at lvl.23)
+    - Comet Punch (learned by player's Hitmonchan at lvl.1)
+    - Crabhammer (learned by player's Krabby at lvl.35)
+    - Double Edge (learned by player's Jigglypuff at lvl.39)
+    - Explosion (learned by player's Geodude at lvl.36)
+    - Fire Punch (learned by player's Hitmonchan at lvl.33)
+    - Fire Spin (learned by player's Flareon at lvl.36)
+    - Haze (learned by player's Zubat at lvl.36)
+    - Ice Punch (learned by player's Hitmonchan at lvl.38)
+    - Lick (learned by player's Gastly at lvl.1)
+    - Jump Kick (learned by player's Hitmonlee at lvl.38)
+    - Meditate (learned by player's Hitmonlee at lvl.1)
+    - Night Shade (learned by player's Gastly at lvl.1)
+    - Rolling Kick (learned by player's Hitmonlee at lvl.33)
+    - Smokescreen (learned by player's Horsea at lvl.19)
+    - Stomp (learned by player's Krabby at lvl.30, Kingler at lvl.34)
+    - Waterfall (learned by player's Goldeen at lvl.37, Seaking at lvl.39)
+- New predefined item data
+    - Lift Key (found in Rocket HQ B4F after defeating trainer)
+    - Silph Scope (found in Rocket HQ B4F after defeating Rocket Boss)
+    - Max Repel (bought in Saffron Mart)
+    - Good Rod (given in Fuschia city)
+    - Super Rod (given in route 12)
+    - TM10 - Double Edge (found in Rocket HQ B3F)
+    - TM29 - Psychic (given in Mr.Psychic house in Saffron City)
+
 ## [0.08] - 2026-09-06
 
 Pokemon can now reach level 35, and all mechanics until Celadon Town have been added, apart from the Rocket hideout itself. The Pokemon Tower in Lavender only let you access to the first floors. The area with wild Pokemon will push you back, to avoid the specific generation I mechanics with ghosts.

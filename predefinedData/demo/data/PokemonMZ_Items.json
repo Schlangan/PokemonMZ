@@ -140,6 +140,22 @@
         "effect":"lockedItem",
         "useMessage":"This isn't the time to use that!"
 	},
+	{
+		"id":"liftKey",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+        "effect":"lockedItem",
+        "useMessage":"This isn't the time to use that!"
+	},
+	{
+		"id":"silphScope",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+        "effect":"lockedItem",
+        "useMessage":"This isn't the time to use that!"
+	},
     {
         "id":"townMap",
         "user":"trainer",
@@ -237,6 +253,17 @@
         "status":"sleep",
         "price":200
     },
+	{
+		"id":"pokeFlute",
+		"user":"trainer",
+		"category":"key",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"fluteCureStatus",
+		"status":"sleep",
+		"mapCommonEventId":7,
+		"fluteMe":"Musical3"
+	},
     {
         "id":"escapeRope",
         "user":"trainer",
@@ -470,6 +497,16 @@
 		"move":"takeDown",
 		"price":3000
 	},
+	{
+		"id":"tm10",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"doubleEdge",
+        "price":4000
+	},
     {
         "id":"tm11",
         "user":"trainer",
@@ -579,6 +616,16 @@
 		"effect":"tm",
 		"move":"dig",
         "price":2000
+	},
+	{
+		"id":"tm29",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"psychic",
+        "price":4000
 	},
 	{
 		"id":"tm30",
@@ -764,6 +811,16 @@
 		"steps":200,
 		"price":500
 	},
+	{
+		"id":"maxRepel",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"trainer",
+		"effect":"repel",
+		"steps":250,
+		"price":700
+	},
     {
 		"id":"nugget",
 		"user":"trainer",
@@ -870,6 +927,24 @@
 		"battle":false,
 		"effect":"fishing",
         "biteChance":100,
+        "badMessage":"This isn't the time to use that!"
+	},
+	{
+		"id":"goodRod",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+		"effect":"fishing",
+        "biteChance":67,
+        "badMessage":"This isn't the time to use that!"
+	},
+	{
+		"id":"superRod",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+		"effect":"fishing",
+        "biteChance":50,
         "badMessage":"This isn't the time to use that!"
 	},
     {
