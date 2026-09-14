@@ -1,4 +1,4 @@
-## [0.09] - TBD
+## [0.09] - 2026-09-14
 
 Pokemon can now reach level 40, mechanics including the Rocket HQ, Pokemon Tower have been added. In the demonstration version, you can reach the end of Route 12 after waking up Snorlax. 
 
