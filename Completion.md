@@ -415,6 +415,8 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Water Stone
 
 - Fishing
+    - Good Rod
+    - Super Rod
     - Old Rod
 
 - Treasures
@@ -427,6 +429,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Item Finder
     - Lift Key
     - Oak's Parcel
+    - Poke Flute
     - Silph Scope
     - S.S. Ticket
     - Town Map
