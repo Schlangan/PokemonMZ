@@ -358,6 +358,50 @@ Game_Event.prototype.isThrough = function() {
 
 
 // Game_Player edits
+const PokemonMZ_Game_Player_initMembers = Game_Player.prototype.initMembers;
+Game_Player.prototype.initMembers = function() {
+    PokemonMZ_Game_Player_initMembers.call(this);
+    this._slopeClimbing = false;
+};
+
+const PokemonMZ_Game_Player_update = Game_Player.prototype.update;
+Game_Player.prototype.update = function(sceneActive) {
+    PokemonMZ_Game_Player_update.call(this, sceneActive);
+    if (!sceneActive) return;
+    if (!this.canMove()) return;
+    if (!this.PokemonMZ_isOnSlopeDownRegion()) {
+        this._slopeClimbing = false;
+        return;
+    }
+
+    if (Input.isPressed("cancel")) {
+        return;
+    }
+    if (this.isMoving()) return;
+
+    // If we already reached the clicked tile, clear the destination
+    // so the slope can take over cleanly
+    if (this.PokemonMZ_hasReachedDestination()) {
+        $gameTemp.clearDestination();
+    }
+
+    const dir = this.PokemonMZ_getSlopeDirection();
+    this._slopeClimbing = (dir === 8);   // only true while holding Up
+
+    // Normal slope behaviour
+    if (dir === 8) {
+        // Fighting the slope
+        this.moveStraight(8);
+    } else if (dir === 4 || dir === 6) {
+        // Left / Right
+        this.moveStraight(dir);
+    } else {
+        // Nothing or Down → automatic slide down
+        this.moveStraight(2);
+    }
+
+
+};
 Game_Player.prototype.refresh = function() {
     const characterName = $gamePlayerTrainer.characterName();
     const characterIndex = $gamePlayerTrainer.characterIndex();
@@ -412,7 +456,35 @@ Game_Player.prototype.startMapEvent = function(x, y, triggers, normal) {
         }
     }
 };
+Game_Player.prototype.PokemonMZ_hasReachedDestination = function() {
+        if (!$gameTemp.isDestinationValid()) return true;
+        const x = $gameTemp.destinationX();
+        const y = $gameTemp.destinationY();
+        return this.pos(x, y);
+    };
+Game_Player.prototype.PokemonMZ_getSlopeDirection = function() {
+        // Keyboard / gamepad has priority
+        const keyDir = Input.dir4;
+        if (keyDir > 0) return keyDir;
 
+        // Touch / mouse destination
+        if ($gameTemp.isDestinationValid()) {
+            const x = $gameTemp.destinationX();
+            const y = $gameTemp.destinationY();
+            const dx = $gameMap.deltaX(x, this.x);
+            const dy = $gameMap.deltaY(y, this.y);
+
+            // Prefer vertical if the click is clearly above or below
+            if (Math.abs(dy) >= Math.abs(dx)) {
+                if (dy < 0) return 8; // above → Up
+                if (dy > 0) return 2; // below → Down
+            } else {
+                if (dx < 0) return 4; // left
+                if (dx > 0) return 6; // right
+            }
+        }
+        return 0; // no input
+    };
 
 
 const PokemonMZ_Game_Player_canMove = Game_Player.prototype.canMove;
@@ -431,14 +503,22 @@ Game_Player.prototype.canMove = function() {
 
 const PokemonMZ_Game_Player_realMoveSpeed = Game_Player.prototype.realMoveSpeed;
 Game_Player.prototype.realMoveSpeed = function() {
-    const speed = PokemonMZ_Game_Player_realMoveSpeed.call(this);
+    let speed = PokemonMZ_Game_Player_realMoveSpeed.call(this);
     if (this.PokemonMZ_isCycling()) {
         // Cycling increase the move speed by 1.25
-        return speed + 1.25;
-    } else {
-        return speed;
+        speed += 1.25;
     }
+    if (this._slopeClimbing) {
+        // Climbing a harsh slope reduces move speed
+        speed -= 1.25;
+    }
+
+    return speed;
 };
+
+
+
+
 
 Game_Player.prototype.PokemonMZ_fishingExecuteEncounter = function(regionId) {
     const troopId = this.PokemonMZ_fishingMakeEncounterTroopId(regionId);
@@ -479,6 +559,11 @@ Game_Player.prototype.PokemonMZ_isCycling = function() {
     return $gamePlayerTrainer.isCycling();
 };
 
+Game_Player.prototype.PokemonMZ_isOnSlopeDownRegion = function() {
+    const slopeRegions = $gameMap.slopeDownRegions() ?? [];
+    return slopeRegions.includes($gamePlayer.regionId()); 
+}
+
 
 // Game_Map edits
 const PokemonMZ_Game_Map_initialize = Game_Map.prototype.initialize;
@@ -488,6 +573,7 @@ Game_Map.prototype.initialize = function() {
     this._regionMapPoiId = 0;
     this._waterRegions = [];
     this._forceCyclingRegions = [];
+    this._slopeDownRegions = []
     this._pokemonPoisonedFainted = 0;
     this._checkAfterFainted = false;
     this._checkEvolution = false;
@@ -594,6 +680,14 @@ Game_Map.prototype.setup = function(mapId) {
         }
     }
 
+    this._slopeDownRegions = [];
+    if (noteData.slopeDownRegions) { 
+        const splitted = noteData.slopeDownRegions.split(",")
+        for (const region of splitted) {
+            this._slopeDownRegions.push(Number(region))
+        }
+    }
+
     this._isRopeEscapable = Boolean(noteData.escapeRope);
     this._isTeleportAllowed = Boolean(noteData.teleport);
     this._isDigAllowed = Boolean(noteData.escapeRope);
@@ -676,6 +770,7 @@ Game_Map.prototype.PokemonMZ_autoMoveTileDirection = function(x,y) {
     return -1;
 };
 
+
 const PokemonMZ_Game_Map_isDashDisabled = Game_Map.prototype.isDashDisabled;
 Game_Map.prototype.isDashDisabled = function() {
     return PokemonMZ_Game_Map_isDashDisabled.call(this) || !$gamePlayerTrainer.canDash();
@@ -691,6 +786,9 @@ Game_Map.prototype.waterRegions = function() {
 };
 Game_Map.prototype.forcedCyclingRegions = function() {
     return this._forceCyclingRegions;
+};
+Game_Map.prototype.slopeDownRegions = function() {
+    return this._slopeDownRegions;
 };
 
 const PokemonMZ_Game_Map_update = Game_Map.prototype.update;
