@@ -779,6 +779,7 @@ DataManager.verifyItemData = function(index, itemData) {
             }
             break;
         case "lockedItem":
+        case "expShare":
             DataManager.verifyProperties(
                 itemData, 
                 errorMessagePrefix, 
@@ -919,7 +920,6 @@ DataManager.verifyItemData = function(index, itemData) {
         case "increaseLevel":
         case "evolutionItem":
         case "townMap": 
-        case "expShare":
         case "escapeRope":
         case "cycling":
         case "escapeWildBattle":
