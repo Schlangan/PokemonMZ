@@ -569,6 +569,11 @@ Scene_Map.prototype.launchBattle = function() {
     this.startEncounterEffect();
     this._mapNameWindow.hide();
 };
+const PokemonMZ_Scene_Map_onMapLoaded = Scene_Map.prototype.onMapLoaded;
+Scene_Map.prototype.onMapLoaded = function() {
+    PokemonMZ_Scene_Map_onMapLoaded.call(this);
+    $gamePlayerTrainer.checkForcedCycling();
+};
 
 // Scene_Save
 Scene_Save.prototype.isSavefileEnabled = function(savefileId) {
@@ -1144,9 +1149,15 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
             break;
         case "cycling":
             if ($gameMap.PokemonMZ_isCyclingAllowed()) {
-                SceneManager.pop();
-                SceneManager.pop();
-                $gameMap.PokemonMZ_switchCycling();
+                // Check if the region is forced
+                if ($gamePlayer.PokemonMZ_isCycling() && $gamePlayerTrainer.isOnForcedCyclingRegion()) {
+                    this._messageWindow.setText("You can't get off here.");
+                    this._messageWindow.startMessage();
+                } else {
+                    SceneManager.pop();
+                    SceneManager.pop();
+                    $gameMap.PokemonMZ_switchCycling();
+                }
             } else {
                 this._messageWindow.setText("No cycling allowed here.");
                 this._messageWindow.startMessage();

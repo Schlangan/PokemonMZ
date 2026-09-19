@@ -389,6 +389,7 @@ Game_Player.prototype.increaseSteps = function() {
         $gameParty.increaseSteps();
         $gamePlayerTrainer.decreaseRepelSteps();
         $gamePlayerTrainer.calculatePoisonOnMap();
+        $gamePlayerTrainer.checkForcedCycling();
     }
 };
 Game_Player.prototype.startMapEvent = function(x, y, triggers, normal) {
@@ -486,6 +487,7 @@ Game_Map.prototype.initialize = function() {
     this._regionMapId = 0;
     this._regionMapPoiId = 0;
     this._waterRegions = [];
+    this._forceCyclingRegions = [];
     this._pokemonPoisonedFainted = 0;
     this._checkAfterFainted = false;
     this._checkEvolution = false;
@@ -584,6 +586,14 @@ Game_Map.prototype.setup = function(mapId) {
         }
     }
 
+    this._forceCyclingRegions = [];
+    if (noteData.forceCyclingRegions) { 
+        const splitted = noteData.forceCyclingRegions.split(",")
+        for (const region of splitted) {
+            this._forceCyclingRegions.push(Number(region))
+        }
+    }
+
     this._isRopeEscapable = Boolean(noteData.escapeRope);
     this._isTeleportAllowed = Boolean(noteData.teleport);
     this._isDigAllowed = Boolean(noteData.escapeRope);
@@ -678,6 +688,9 @@ Game_Map.prototype.regionMapPoiId = function() {
 };
 Game_Map.prototype.waterRegions = function() {
     return this._waterRegions;
+};
+Game_Map.prototype.forcedCyclingRegions = function() {
+    return this._forceCyclingRegions;
 };
 
 const PokemonMZ_Game_Map_update = Game_Map.prototype.update;
@@ -1551,7 +1564,6 @@ PokemonMZ_Game_TrainerPlayer.prototype.numStoredItems = function(itemIntId) {
         return 0;
     }
 };
-
 PokemonMZ_Game_TrainerPlayer.prototype.hasExpShare = function() {
     let found = false;
     for (const item of this.bagItems()) {
@@ -1560,8 +1572,7 @@ PokemonMZ_Game_TrainerPlayer.prototype.hasExpShare = function() {
         }
     }
     return false;
-}
-
+};
 PokemonMZ_Game_TrainerPlayer.prototype.hasItem = function(itemIntId) {
     return this.numBagItems(itemIntId) > 0;
 };
@@ -1869,6 +1880,16 @@ PokemonMZ_Game_TrainerPlayer.prototype.stopCycling = function(displayMessage) {
     $gameSystem.replayWalkingBgm();
     if (displayMessage) {
         $gameMessage.add($gamePlayerTrainer.name() + " got off the Bicycle.")
+    }
+};
+PokemonMZ_Game_TrainerPlayer.prototype.isOnForcedCyclingRegion = function() {
+    const forcedCyclingRegions = $gameMap.forcedCyclingRegions() ?? [];
+    return forcedCyclingRegions.includes($gamePlayer.regionId());
+}
+
+PokemonMZ_Game_TrainerPlayer.prototype.checkForcedCycling = function() {
+    if ($gameMap.PokemonMZ_isCyclingAllowed() && !$gamePlayerTrainer.isCycling() && this.isOnForcedCyclingRegion()) {
+        $gamePlayerTrainer.startCycling();
     }
 };
 PokemonMZ_Game_TrainerPlayer.prototype.startUsingFlash = function() {
