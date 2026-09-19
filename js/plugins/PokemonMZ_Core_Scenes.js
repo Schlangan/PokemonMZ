@@ -1067,6 +1067,7 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
     
     switch(itemDict.pkmz_data.effect) {
         case "lockedItem":
+        case "expShare":
             this._messageWindow.setText(itemDict.pkmz_data.useMessage);
             this._messageWindow.startMessage();
             break;

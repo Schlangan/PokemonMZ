@@ -52,6 +52,7 @@ Depending on the effet, additional parameters are required.
     - maxValue, **int** : Max value of increase with the item. Ex. gen1 hp up cannot go above 25600, even if the stat max EV is 65535.
 - effect = **evolutionItem** : Use as an evolution item (ex: moon stone)
 - effect = **townMap** : Opens the current region map.
+- effect = **expShare** : Any item in the bag with this effects activates exp share between pokemon. Store it to the player's pc to disable the effect.
 - effect = **escapeRope** : Use an escape rope.
 - effect = **passivePatkBoost**, **passivePdefBoost**, **passiveSpcBoost**, **passiveSpdBoost** : Passive attack, defense, special and speed bonus for badges. Applies only if badge owned.
     - boostPercent,**float**: Attack bonus percentage.

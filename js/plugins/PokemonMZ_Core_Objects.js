@@ -1551,6 +1551,17 @@ PokemonMZ_Game_TrainerPlayer.prototype.numStoredItems = function(itemIntId) {
         return 0;
     }
 };
+
+PokemonMZ_Game_TrainerPlayer.prototype.hasExpShare = function() {
+    let found = false;
+    for (const item of this.bagItems()) {
+        if (item.pkmz_data?.effect == "expShare") {
+            return true;
+        }
+    }
+    return false;
+}
+
 PokemonMZ_Game_TrainerPlayer.prototype.hasItem = function(itemIntId) {
     return this.numBagItems(itemIntId) > 0;
 };

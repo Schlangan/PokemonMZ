@@ -919,6 +919,7 @@ DataManager.verifyItemData = function(index, itemData) {
         case "increaseLevel":
         case "evolutionItem":
         case "townMap": 
+        case "expShare":
         case "escapeRope":
         case "cycling":
         case "escapeWildBattle":
@@ -1636,6 +1637,9 @@ PokemonMZ_BattleManager.setup = function(troopId, canEscape, canLose) {
     $gameScreen.onBattleStart();
     $gamePlayerTrainer.resetAllLeveledUpStates();
 
+    // Check is Exp.Share is inside the inventory
+    this._hasExpShare = $gamePlayerTrainer.hasExpShare();
+
     // Init player battled table
     this._playerBattledTable = []
 
@@ -1689,8 +1693,10 @@ PokemonMZ_BattleManager.initMembers = function() {
     this._playerHasShifted = null;
     this._playerSwitchingPokemonId = -1;
     this._enemySwitchingPokemonId = -1;
+    this._hasExpShare = false;
     this._playerBattledTable = [];
     this._playerXpGains = [];
+    this._playerXpShareGains = [];
     this._levelingUpPokemon = null;
     this._levelingUpPokemonExp = 0;
 
@@ -3097,27 +3103,58 @@ PokemonMZ_BattleManager.endEnemyFaintedPokemon = function() {
     const xpGain = this._enemyChosenPokemon.expProvided($PokemonMZ_gameBattle.isTrainerBattle());
 
     let counter = 0;
+    let counterShare = 0;
     this._playerXpGains = [];
+    this._playerXpShareGains = [];
+
+    // Count participating and alive pokemon
     for (let i=0; i<$gamePlayerTrainer._pokemons.length; i++) {
         let pokemon = $gamePlayerTrainer.pokemon(i);
         if (this._playerBattledTable[this._currentEnemyIndex][i] == 1) {
+            // Participated in the battle
             if (!pokemon.isFainted()) {
+                // Gain battle share and exp share
                 counter++;
+                counterShare++;
                 this._playerXpGains.push(1);
+                this._playerXpShareGains.push(1);
             } else {
+                // Fainted: no exp at all
                 this._playerXpGains.push(0);
+                this._playerXpShareGains.push(0);
             }
         } else {
-            this._playerXpGains.push(0);
+            // Didn't participate in battle
+            if (!pokemon.isFainted()) {
+                // Gain exp share
+                counterShare++;
+                this._playerXpGains.push(0);
+                this._playerXpShareGains.push(1);
+            } else {
+                // Fainted: no exp at all
+                this._playerXpGains.push(0);
+                this._playerXpShareGains.push(0);
+            }
+            
         }
     }
 
-    const splittedExp = Math.floor(xpGain / counter);
+    let splittedExp = Math.floor(xpGain / counter);
+    let sharedExp = 0;
+    if (this._hasExpShare) {
+        splittedExp = Math.floor(splittedExp / 2);
+        sharedExp = splittedExp / counterShare;
+    }
+
     for (let i=0; i<$gamePlayerTrainer._pokemons.length; i++) {
+        const outsiderFactor = $gamePlayerTrainer.pokemon(i).isOutsider() ? 1.5 : 1.0;
         if (this._playerXpGains[i] > 0) {
-            const outsiderFactor = $gamePlayerTrainer.pokemon(i).isOutsider() ? 1.5 : 1.0;
             this._playerXpGains[i] = Math.floor(splittedExp * outsiderFactor);
         }
+        if (this._playerXpShareGains[i] > 0) {
+            this._playerXpShareGains[i] = Math.floor(sharedExp * outsiderFactor);
+        }
+
     };
 
     if (counter > 0) {
@@ -3135,16 +3172,30 @@ PokemonMZ_BattleManager.nextExpGains = function() {
     let gaveXp = false;
     for (let i=0; i<$gamePlayerTrainer._pokemons.length; i++) {
         this._levelingUpPokemon = $gamePlayerTrainer.pokemon(i);
-        this._levelingUpPokemonExp = this._playerXpGains[i];;
+        this._levelingUpPokemonExp = this._playerXpGains[i] + this._playerXpShareGains[i];
 
         if (this._levelingUpPokemonExp > 0) {
             this._playerXpGains[i] = 0;
+            this._playerXpShareGains[i] = 0;
             gaveXp = true;
-            let message = this._levelingUpPokemon.name() + " gained "
+            let message = this._levelingUpPokemon.name() + " gained"
+            if (this._hasExpShare) {
+                message += ", with Exp.Share, "
+            } else {
+                message += " "
+            }
             if (this._levelingUpPokemon.isOutsider()) {
                 message += "a boosted "
+                if (this._hasExpShare) {
+                    message += "\n"
+                }
             }
-            message += String(this._levelingUpPokemonExp) + " experience points!"
+            if (this._levelingUpPokemonExp > 1) {
+                message += String(this._levelingUpPokemonExp) + " experience points!"
+            } else {
+                message += String(this._levelingUpPokemonExp) + " experience point!"
+            }
+            
             $gameMessage.add(message);
             if (this._levelingUpPokemon.wouldLevelUpWithExp(this._levelingUpPokemonExp)) {
                 this.changePhase("playerPokemonLeveledUp")
