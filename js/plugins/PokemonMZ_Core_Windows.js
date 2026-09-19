@@ -123,6 +123,24 @@ Window_Base.prototype.PokemonMZ_drawTextWrap = function(text, x, y, maxWidth, li
 
     return totalHeight;
 };
+Window_Base.prototype.PokemonMZ_getTopNonTransparentY = function(bitmap) {
+    if (!bitmap || !bitmap.isReady() || !bitmap.context) return 0;
+
+    const w = bitmap.width;
+    const h = bitmap.height;
+    const imageData = bitmap.context.getImageData(0, 0, w, h);
+    const data = imageData.data;   // RGBA
+
+    for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+            const alpha = data[(y * w + x) * 4 + 3];
+            if (alpha > 0) {
+                return y;          // first opaque pixel found
+            }
+        }
+    }
+    return 0;
+};
 
 
 // Window_TitleCommand
@@ -1438,10 +1456,33 @@ PokemonMZ_Window_MenuPokemonList.prototype.drawItem = function(index) {
 };
 PokemonMZ_Window_MenuPokemonList.prototype.drawItemImage = function(index) {
     const pokemon = this.pokemon(index);
+    if (!pokemon) return;
+
     const rect = this.itemRect(index);
     const height = rect.height - 2;
-    const width = height;
-    this.PokemonMZ_drawPokemonFront(pokemon, rect.x+1, rect.y-10, width, height);
+    const width  = height;
+
+    // Load the front sprite
+    const bitmap = ImageManager.PokemonMZ_loadPokemonFront(pokemon._data.id);
+
+    bitmap.addLoadListener(() => {
+        const topEmpty = this.PokemonMZ_getTopNonTransparentY(bitmap);
+        const contentH = bitmap.height - topEmpty;
+        const scale = Math.min(width / bitmap.width, height / contentH);
+
+        const drawW = Math.floor(bitmap.width * scale);
+        const drawH = Math.floor(contentH * scale);
+        const dx = Math.floor(rect.x + (width  - drawW) / 2);
+        const dy = Math.floor(rect.y + (height - drawH) / 2);
+
+        this.contents.blt(
+            bitmap,
+            0, topEmpty, 
+            bitmap.width, contentH,
+            dx, dy,
+            drawW, drawH
+        );
+    });
 };
 PokemonMZ_Window_MenuPokemonList.prototype.drawItemStatus = function(index) {
     const pokemon = this.pokemon(index);
