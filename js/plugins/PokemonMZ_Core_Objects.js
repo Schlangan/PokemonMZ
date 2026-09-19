@@ -5341,6 +5341,11 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
             effectResults = this.effect_evaUpUser(battleData, effect, effectResults);
         }
         break;
+    case "mistUser":
+        if (!this.isMoveEffectExcepted(effect, this._user)) {
+            effectResults = this.effect_mistUser(battleData, effect, effectResults);
+        }
+        break;
     case "healUserPercentHp":
         if (!this.isMoveEffectExcepted(effect, this._user)) {
             effectResults = this.effect_healUserPercentHp(battleData, effect, effectResults);
@@ -6248,6 +6253,16 @@ PokemonMZ_Game_Action.prototype.effect_evaUpUser = function(battleData, effect, 
                 this._resultSteps.push(["autotext","statusNothing",this.side()])
             }
         }
+    }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_mistUser = function(battleData, effect, effectResults) {
+    if (this._user.canGetGuardSpec()) {
+        effectResults.success = true;
+        this._resultSteps.push(["waittext","shroudedMist",this.side()])
+        this._resultSteps.push(["mistPokemon",this._user])
+    } else {
+        this._resultSteps.push(["waittext","statusFailed",this.side()]);
     }
     return effectResults;
 };

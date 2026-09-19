@@ -1186,6 +1186,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
     case "convertType":
     case "substitute":
     case "resetAllStatsModifiers":
+    case "mistUser":
         DataManager.verifyProperties(
             moveEffect,
             errorMessagePrefix,
@@ -4673,6 +4674,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["paralysis", step[1]];
                 break;
+            case "mistPokemon":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["mist", step[1]];
+                break;
             case "disableMove":
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["disabled", step[1], step[2], step[3]];
@@ -5387,6 +5392,9 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
             break;
         case "seed":
             target.seed();
+            break;
+        case "mist":
+            target.guardSpec();
             break;
         case "bind":
             const bindMinTurns = this._subPhaseParams[2];

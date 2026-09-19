@@ -123,6 +123,8 @@ List of implemented effects and their additional parameters:
     - stage, **int** : Number of raised stages
     - percentChance, **int** : Chance out of 100 of the drop down to happen
 
+- type = **mistUser** : Set the mist effect on the user
+
 - type = **patkDownTarget** : Decreases the physical attack of the target
     - stage, **int** : Number of dropped down stages
     - percentChance, **int** : Chance out of 100 of the drop down to happen
