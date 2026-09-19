@@ -395,12 +395,15 @@ Game_Player.prototype.update = function(sceneActive) {
     } else if (dir === 4 || dir === 6) {
         // Left / Right
         this.moveStraight(dir);
+    } else if (dir === 2) {
+        // Down
+        this.moveStraight(dir);
     } else {
-        // Nothing or Down → automatic slide down
-        this.moveStraight(2);
+        // Nothing or Down → automatic slide down if not pressing action
+        if (!Input.isPressed("ok")) {
+            this.moveStraight(2);
+        }
     }
-
-
 };
 Game_Player.prototype.refresh = function() {
     const characterName = $gamePlayerTrainer.characterName();
