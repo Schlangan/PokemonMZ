@@ -154,7 +154,20 @@
 		"accuracy":85,
 		"effects":[
 			{"type":"flinchTarget","percentChance":10}
-		]
+		],
+        "animationHit":"hitTargetPhysical"
+	},
+    {
+		"id":"bonemerang",
+		"type":"ground",
+		"target":"opponent",
+		"pp":10,
+		"power":50,
+		"accuracy":90,
+		"effects":[
+			{"type":"multiHit","min":2,"max":2,"percentChances":[100]}
+		],
+        "animationHit":"hitTargetPhysicalFast"
 	},
     {
         "id":"bubble",
@@ -682,6 +695,16 @@
         "animationHit":"pierceTargetPhysicalEffect"
     },
     {
+        "id":"hydroPump",
+        "type":"water",
+        "target":"opponent",
+        "pp":5,
+        "power":120,
+        "accuracy":80,
+        "effects":[],
+        "animationHit":"waterTargetAll1"
+    },
+    {
         "id":"hyperBeam",
         "type":"normal",
         "target":"opponent",
@@ -839,6 +862,18 @@
         "animationHit":"powerUpUser2"
     },
     {
+        "id":"lovelyKiss",
+        "category":"status",
+        "type":"normal",
+        "target":"opponent",
+        "pp":10,
+        "accuracy":75,
+        "effects":[
+            {"type":"sleepTarget","percentChance":100}
+        ],
+        "animationHit":"sleepTarget"
+    },
+    {
         "id":"lowKick",
         "type":"fighting",
         "target":"opponent",
@@ -933,6 +968,18 @@
         "effects":[
             {"type":"mirrorMove"}
         ]
+    },
+     {
+        "id":"mist",
+        "category":"status",
+        "type":"ice",
+        "target":"user",
+        "pp":30,
+        "accuracy":100,
+        "effects":[
+            {"type":"mistUser"}
+        ],
+        "animationHit":"fogUser"
     },
     {
         "id":"nightShade",
@@ -1323,6 +1370,18 @@
         "animationHit":"powder"
     },
     {
+        "id":"sludge",
+        "type":"poison",
+        "target":"opponent",
+        "pp":20,
+        "power":65,
+        "accuracy":100,
+        "effects":[
+            {"type":"poisonTarget","percentChance":40}
+        ],
+        "animationHit":"grassTarget1"
+    },
+    {
         "id":"smog",
         "type":"poison",
         "target":"opponent",
@@ -1559,6 +1618,18 @@
         "animationHit":"thrash"
     },
     {
+        "id":"thunder",
+        "type":"electric",
+        "target":"opponent",
+        "pp":10,
+        "power":120,
+        "accuracy":70,
+        "effects":[
+            {"type":"paralyzeTarget","except":[{"type":"electric"}],"percentChance":10}
+        ],
+        "animationHit":"thunderTargetAll2"
+    },
+    {
         "id":"thunderbolt",
         "type":"electric",
         "target":"opponent",
@@ -1569,6 +1640,18 @@
             {"type":"paralyzeTarget","except":[{"type":"electric"}],"percentChance":10}
         ],
         "animationHit":"thunderTarget1"
+    },
+    {
+        "id":"thunderPunch",
+        "type":"electric",
+        "target":"opponent",
+        "pp":15,
+        "power":75,
+        "accuracy":100,
+        "effects":[
+            {"type":"paralyzeTarget","except":[{"type":"electric"}],"percentChance":10}
+        ],
+        "animationHit":"hitTargetThunder"
     },
     {
         "id":"thunderShock",
@@ -1593,6 +1676,18 @@
             {"type":"paralyzeTarget","percentChance":100}
         ],
         "animationHit":"thunderTarget2"
+    },
+    {
+        "id":"toxic",
+        "category":"status",
+        "type":"poison",
+        "target":"opponent",
+        "pp":10,
+        "accuracy":85,
+        "effects":[
+            {"type":"badPoisonTarget","except":[{"type":"poison"}],"percentChance":100}
+        ],
+        "animationHit":"badPoison"
     },
     {
         "id":"triAttack",

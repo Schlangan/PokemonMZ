@@ -1,3 +1,44 @@
+## [0.10] - 2026-09-20
+
+Pokemon can now reach level 45, mechanics up to Fuchsia City, excepted Safari Zone, have been added. This includes the Exp.Share, as well as the Cycling Road.
+
+New demonstration versions of the plugin at these url: 
+- [Windows version](https://mega.nz/file/sAMTwLyB#emeh1EsE8ZH2MXstF8eRA3leJgBToI-MBACe8DSpqBY).
+- [MacOs version](https://mega.nz/file/JVFxTRAI#hossIUviKl9DEWe0Ge680ch2XA46t2WHb_d1i8nPM8A).
+
+- Bug fixes
+    - Incorrect pokemon sprite vertical alignment inside the menu
+- New map mechanics
+    - Regions with cycling forced. When entering a region Id marked as forced, the player automatically hops on the bicycle, if cycling is allowed. The player cannot get off the bicycle on those regions.
+    - Slope down regions. When entering such region id, the player automatically moves down, except if the player moves sideways, up (being slowed down) or press cancel to brake.
+- New battle mechanics
+    - Exp share - when the item is in the bag, it gives half of the earned per pokemon experience to all non-fainted pokemon in the party. For example, if a pokemon gives 480 exp and is defeated by two pokemon, the gained xp will be as follow: 280 exp to the two fighting pokemon (480/2/2=240 + 480/2/6=40), and 40 exp to all other pokemon (480/2/6=40)
+    - Mist effect set by a move.
+    - Bad poison, increasing poison damage each turn
+- New predefined Pokemon data
+    - Jynx (tradeable against Poliwag in Cerulean City)
+    - Lickitung (tradeable against Slowbro in Route 18)
+    - Muk (fought against Koga in Fuchsia Gym)
+    - Rapidash (evolving player's Ponyta at lvl.40)
+    - Weezing (fought against Koga in Fuchsia Gym)
+- New predefined moves data
+    - Bonemerang (learned by player's Cubone at lvl.43)
+    - Hydro Pump (learned by player's Squirtle at lvl.42)
+    - Lovely Kiss (learned by player's Jynx at lvl.1)
+    - Mist (learned by player's Vaporeon at lvl.42)
+    - Sludge (used by opponent's Weezing and Muk)
+    - Thunder (learned by player's Pikachu at lvl.41)
+    - Thunder Punch (learned by player's Hitmonchan at lvl.43)
+    - Toxic (learned with TM06, and used by Koga)
+- New predefined item data
+    - Exp Share (given in Route 16)
+    - Max Elixir (found hidden in Route 17)
+    - Max Revive (found hidden in Route 17)
+    - Soul Badge (given in Fuschia Gym)
+    - TM06 - Toxic (given in Fuschia Gym)
+    - TM20 - Rage (found in Route 15)
+    - Ultra Ball (bought in Fuchsia Mart)
+
 ## [0.09] - 2026-09-14
 
 Pokemon can now reach level 40, mechanics including the Rocket HQ, Pokemon Tower have been added. In the demonstration version, you can reach the end of Route 12 after waking up Snorlax. 

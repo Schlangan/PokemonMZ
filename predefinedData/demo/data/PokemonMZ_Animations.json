@@ -41,6 +41,14 @@
         ]
     },
     {
+        "id":"hitTargetThunder",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":5},
+            {"type":"playAnimation", "target":"target", "animationId":5},
+            {"type":"moveSpriteBackward", "target":"user", "distance":35, "duration":5}
+        ]
+    },
+    {
         "id":"slashTargetPhysical",
         "sequence":[
             {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":5},
@@ -121,10 +129,26 @@
         ]
     },
     {
+        "id":"fogUser",
+        "sequence":[
+            {"type":"moveSpriteBackward", "target":"user", "distance":35, "duration":5},
+            {"type":"playAnimation", "target":"target", "animationId":35, "wait":true},
+            {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":5}
+        ]
+    },
+    {
         "id":"fogTarget",
         "sequence":[
             {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":3},
             {"type":"playAnimation", "target":"target", "animationId":35},
+            {"type":"moveSpriteBackward", "target":"user", "distance":35, "duration":3}
+        ]
+    },
+    {
+        "id":"sleepTarget",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":35, "duration":3},
+            {"type":"playAnimation", "target":"target", "animationId":62},
             {"type":"moveSpriteBackward", "target":"user", "distance":35, "duration":3}
         ]
     },
@@ -141,6 +165,22 @@
         "sequence":[
             {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
             {"type":"playAnimation", "target":"target", "animationId":82},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"waterTargetAll1",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":83},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"waterTargetAll2",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":84},
             {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
         ]
     },
@@ -283,6 +323,14 @@
         ]
     },
     {
+        "id":"thunderTargetAll2",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":79},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
         "id":"rockTarget1",
         "sequence":[
             {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
@@ -337,7 +385,6 @@
             {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
         ]
     },
-
     {
         "id":"absorb",
         "sequence":[
@@ -345,6 +392,14 @@
             {"type":"playAnimation", "target":"target", "animationId":58, "wait":true},
             {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8},
             {"type":"playAnimation", "target":"user", "animationId":41}
+        ]
+    },
+    {
+        "id":"badPoison",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":58, "wait":true},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
         ]
     },
     {

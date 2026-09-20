@@ -2390,6 +2390,38 @@
         ]
     },
     {
+        "id": "rapidash",
+        "pokedex": [{"region":"kanto","number":78}],
+        "category": "Fire Horse",
+        "description": "Very competitive, this Pokémon will chase anything that moves fast in the hopes of racing it. Just loves to run. If it sees something faster than itself, it will give chase at top speed.",
+        "height": 1.7,
+        "weight": 95.0,
+        "types": ["fire"],
+        "baseStats": {"hp":65,"patk":100,"pdef":70,"satk":80,"sdef":80,"spd":105,"spc":80},
+        "expCurve": "mediumFast",
+        "catchRate": 60,
+        "xpYield": 192,
+        "ev": [{"spd":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"ember"},
+            {"lvl":1,"move":"tailWhip"},
+            {"lvl":1,"move":"stomp"},
+            {"lvl":1,"move":"growl"},
+            {"lvl":30,"move":"tailWhip"},
+            {"lvl":32,"move":"stomp"},
+            {"lvl":35,"move":"growl"},
+            {"lvl":39,"move":"fireSpin"},
+            {"lvl":47,"move":"takeDown"},
+            {"lvl":55,"move":"agility"}
+        ],
+        "hmMoves": [],
+        "tmMoves": [
+            "toxic", "hornDrill", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "rage", "mimic", 
+            "doubleTeam", "reflect", "bide", "fireBlast", "swift", "skullBash", "rest", "substitute"
+        ]
+    },
+    {
         "id":"slowpoke",
         "pokedex":[{"region":"kanto","number":79}],
         "category":"Dopey",
@@ -2644,6 +2676,40 @@
         "tmMoves":[
             "toxic","bodySlam","rage","megaDrain","thunderbolt","thunder","mimic","doubleTeam",
             "bide","selfDestruct","fireBlast","rest","explosion","substitute"
+        ]
+    },
+    {
+        "id": "muk",
+        "pokedex": [{"region":"kanto","number":89}],
+        "category": "Sludge",
+        "description": "Thickly covered with a filthy, vile sludge. It is so toxic, even its footprints contain poison. Smells so awful, it can cause fainting. Through degeneration, it lost its sense of smell.",
+        "height": 1.2,
+        "weight": 30.0,
+        "types": ["poison"],
+        "baseStats": {"hp":105,"patk":105,"pdef":75,"satk":65,"sdef":100,"spd":50,"spc":65},
+        "expCurve": "mediumFast",
+        "catchRate": 75,
+        "xpYield": 157,
+        "ev": [
+            {"hp":1},
+            {"patk":1}
+        ],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"pound"},
+            {"lvl":1,"move":"disable"},
+            {"lvl":1,"move":"poisonGas"},
+            {"lvl":30,"move":"poisonGas"},
+            {"lvl":33,"move":"minimize"},
+            {"lvl":37,"move":"sludge"},
+            {"lvl":45,"move":"harden"},
+            {"lvl":53,"move":"screech"},
+            {"lvl":60,"move":"acidArmor"}
+        ],
+        "hmMoves": [],
+        "tmMoves": [
+            "toxic", "bodySlam", "hyperBeam", "rage", "megaDrain", "thunderbolt", "thunder", 
+            "mimic", "doubleTeam", "bide", "selfDestruct", "fireBlast", "rest", "explosion", "substitute"
         ]
     },
     {
@@ -3168,6 +3234,36 @@
         ]
     },
     {
+        "id": "lickitung",
+        "pokedex": [{"region":"kanto","number":108}],
+        "category": "Licking",
+        "description": "Its tongue can be extended like a chameleon's. It leaves a tingling sensation when it licks enemies. Its tongue spans almost 2 meters and moves more freely than its forelegs. Its licks can cause paralysis.",
+        "height": 1.2,
+        "weight": 65.5,
+        "types": ["normal"],
+        "baseStats": {"hp":90,"patk":55,"pdef":75,"satk":60,"sdef":75,"spd":30,"spc":60},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 127,
+        "ev": [{"hp":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"wrap"},
+            {"lvl":1,"move":"supersonic"},
+            {"lvl":7,"move":"stomp"},
+            {"lvl":15,"move":"disable"},
+            {"lvl":23,"move":"defenseCurl"},
+            {"lvl":31,"move":"slam"},
+            {"lvl":39,"move":"screech"}
+        ],
+        "hmMoves": ["cut", "surf", "strength"],
+        "tmMoves": [
+            "megaPunch", "swordsDance", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", 
+            "iceBeam", "blizzard", "hyperBeam", "submission", "counter", "seismicToss", "rage", "thunderbolt", "thunder", 
+            "earthquake", "fissure", "mimic", "doubleTeam", "bide", "fireBlast", "skullBash", "rest", "substitute"
+        ]
+    },
+    {
         "id":"koffing",
         "pokedex":[{"region":"kanto","number":109}],
         "category":"Poison Gas",
@@ -3196,6 +3292,36 @@
         "tmMoves":[
             "toxic","rage","thunderbolt","thunder","mimic","doubleTeam",
             "bide","selfDestruct","fireBlast","rest","explosion","substitute"
+        ]
+    },
+    {
+        "id": "weezing",
+        "pokedex": [{"region":"kanto","number":110}],
+        "category": "Poison Gas",
+        "description": "Where two kinds of poison gases meet, 2 Koffings can fuse into a Weezing over many years. It lives and grows by absorbing dust, germs and poison gases that are contained in toxic waste and garbage.",
+        "height": 1.2,
+        "weight": 9.5,
+        "types": ["poison"],
+        "baseStats": {"hp":65,"patk":90,"pdef":120,"satk":85,"sdef":70,"spd":60,"spc":85},
+        "expCurve": "mediumFast",
+        "catchRate": 60,
+        "xpYield": 173,
+        "ev": [{"pdef":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"tackle"},
+            {"lvl":1,"move":"smog"},
+            {"lvl":1,"move":"sludge"},
+            {"lvl":32,"move":"sludge"},
+            {"lvl":39,"move":"smokescreen"},
+            {"lvl":43,"move":"selfDestruct"},
+            {"lvl":49,"move":"haze"},
+            {"lvl":53,"move":"explosion"}
+        ],
+        "hmMoves": [],
+        "tmMoves": [
+            "toxic", "hyperBeam", "rage", "thunderbolt", "thunder", "mimic", "doubleTeam", 
+            "bide", "selfDestruct", "fireBlast", "rest", "explosion", "substitute"
         ]
     },
     {
@@ -3229,6 +3355,11 @@
             "earthquake", "fissure", "dig", "mimic", "doubleTeam", "bide", "fireBlast", "skullBash", "rest", 
             "rockSlide", "substitute"
         ]
+    },
+    {
+        "id": "chansey",
+        "pokedex": [{"region":"kanto","number":113}],
+        "category": "Egg"
     },
     {
         "id": "tangela",
@@ -3536,6 +3667,33 @@
         ]
     },
     {
+        "id": "jynx",
+        "pokedex": [{"region":"kanto","number":124}],
+        "category": "Human Shape",
+        "description": "It seductively wiggles its hips as it walks. It can cause people to dance in unison with it. Appears to move to a rhythm of its own, as if it were dancing. It wiggles its hips as it walks.",
+        "height": 1.4,
+        "weight": 40.6,
+        "types": ["ice", "psychic"],
+        "baseStats": {"hp":65,"patk":50,"pdef":35,"satk":115,"sdef":95,"spd":95,"spc":95},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 137,
+        "ev": [{"satk":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"pound"},
+            {"lvl":1,"move":"lovelyKiss"},
+            {"lvl":18,"move":"lick"},
+            {"lvl":23,"move":"doubleSlap"},
+            {"lvl":31,"move":"icePunch"},
+            {"lvl":39,"move":"bodySlam"},
+            {"lvl":47,"move":"thrash"},
+            {"lvl":58,"move":"blizzard"}
+        ],
+        "hmMoves": [],
+        "tmMoves": ["megaPunch", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", "blizzard", "hyperBeam", "submission", "counter", "seismicToss", "rage", "psychic", "teleport", "mimic", "doubleTeam", "reflect", "bide", "metronome", "skullBash", "rest", "psywave", "substitute"]
+    },
+    {
         "id": "pinsir",
         "pokedex": [{"region":"kanto","number":127}],
         "category": "Stag Beetle",
@@ -3616,6 +3774,11 @@
             "blizzard","hyperBeam","rage","dragonRage","thunderbolt","thunder","mimic",
             "doubleTeam","reflect","bide","fireBlast","skullBash","rest","substitute"
         ]
+    },
+    {
+        "id":"lapras",
+        "pokedex":[{"region":"kanto","number":131}],
+        "category":"Transport"
     },
     {
         "id": "eevee",
@@ -3783,6 +3946,16 @@
             "thunderbolt", "thunder", "psychic", "teleport", "mimic", "doubleTeam", "reflect", 
             "bide", "swift", "skullBash", "rest", "thunderWave", "psywave", "triAttack", "substitute"
         ]
+    },
+    {
+        "id":"omanyte",
+        "pokedex":[{"region":"kanto","number":138}],
+        "category":"Spiral"
+    },
+    {
+        "id":"kabuto",
+        "pokedex":[{"region":"kanto","number":140}],
+        "category":"Shellfish"
     },
     {
         "id": "snorlax",

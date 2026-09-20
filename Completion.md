@@ -79,7 +79,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0075. Graveler
 - 0076. Golem
 - 0077. Ponyta
-- (...)
+- 0078. Rapidash
 - 0079. Slowpoke
 - 0080. Slowbro
 - 0081. Magnemite
@@ -89,7 +89,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0085. Dodrio
 - (...)
 - 0088. Grimer
-- (...)
+- 0089. Muk
 - 0090. Shellder
 - 0091. Cloyster
 - 0092. Gastly
@@ -108,9 +108,9 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0105. Marowak
 - 0106. Hitmonlee
 - 0107. Hitmonchan
-- (...)
+- 0108. Lickitung
 - 0109. Koffing
-- (...)
+- 0110. Weezing
 - 0111. Rhyhorn
 - (...)
 - 0114. Tangela
@@ -123,6 +123,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0121. Starmie
 - 0122. Mr.Mime
 - 0123. Scyther
+- 0124. Jynx
 - (...)
 - 0127. Pinsir
 - (...)
@@ -150,6 +151,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Egg Bomb
     - Gust
     - Horn Attack
+    - Hydro Pump
     - Mega Kick
     - Peck
     - Pound
@@ -186,6 +188,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 
 - Moves hitting N times in one turn
     - Barrage (2-5)
+    - Bonemerang (2-2)
     - Comet Punch (2-5)
     - Double Kick (2-2)
     - Double Slap (2-5)
@@ -224,19 +227,25 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Freeze
         - Ice Beam
         - Ice Punch
+    - Mist
+        - Mist
     - Paralysis
         - Body Slam (except Normal types)
         - Glare
         - Lick (except Ghost types)
         - Stun Spore
         - Thunderbolt  (except Electric types)
+        - Thunder (except Electric types)
+        - Thunder Punch (except Electric types)
         - Thunder Shock (except Electric types)
         - Thunder Wave
     - Poison
         - Poison Gas
         - Poison Powder
         - Poison Sting
+        - Sludge
         - Smog
+        - Toxic (bad poison)
         - Twineedle (after last hit)
     - Seed
         - Leech Seed
@@ -359,10 +368,12 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Cascade Badge
     - Thunder Badge
     - Rainbow Badge
+    - Soul Badge
 
 - Balls
     - Poke Ball
     - Great Ball
+    - Ultra Ball
 
 - Healing
     - Potion
@@ -379,9 +390,12 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Awakening
     - Full Heal
     - Full Restore
+    - Revive
+    - Max Revive
     - Ether
     - Max Ether
     - Elixir
+    - Max Elixir
 
 - Battle Power-up
     - Dire Hit
@@ -426,6 +440,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Bicycle
     - Bike Voucher
     - Coin Case
+    - Exp Share
     - Item Finder
     - Lift Key
     - Oak's Parcel
@@ -444,7 +459,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - (...)
     - TM04 - Whirlwind
     - TM05 - Mega kick
-    - (...)
+    - TM06 - Toxic
     - TM07 - Horn drill
     - TM08 - Body slam
     - TM09 - Take down
@@ -458,7 +473,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - TM17 - Submission
     - TM18 - Counter
     - TM19 - Seismic toss
-    - (...)
+    - TM20 - Rage
     - TM21 - Mega drain
     - (...)
     - TM23 - Dragon rage
