@@ -2073,6 +2073,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._isParalyzed = false;
     this._isAsleep = false;
     this._isPoisoned = false;
+    this._isBadlyPoisoned = false;
     this._isFrozen = false; 
     this._isFlinched = false;
     this._isSeeded = false;
@@ -2100,6 +2101,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._convertedType2 = null;
 
     this._substituteHp = 0;
+    this._badPoisonCounter = 0;
 
     this._turnsSleep = 0;
     this._turnsConfusion = 0;
@@ -2611,7 +2613,10 @@ PokemonMZ_Game_Pokemon.prototype.isMoveStatusOnly = function(index) {
         if (
             effect.type == "sleepTarget" ||
             effect.type == "paralyzeTarget" ||
-            effect.type == "poisonTarget"
+            effect.type == "poisonTarget" ||
+            effect.type == "burnTarget" ||
+            effect.type == "freezeTarget" ||
+            effect.type == "badPoisonTarget"
         ) {
             return true;
         }
@@ -3384,6 +3389,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.removeLightScreen(); // Generation I
     this.removeReflect(); // Generation I
     this.unConvert()
+    this.reduceBadPoison();
     this.removeSubstitute();
     this.resetCounterDamage();
 };
@@ -3407,8 +3413,18 @@ PokemonMZ_Game_Pokemon.prototype.isParalyzed = function() {
     return this._isParalyzed;
 };
 PokemonMZ_Game_Pokemon.prototype.isPoisoned = function() {
-    return this._isPoisoned;
+    return this._isPoisoned || this._isBadlyPoisoned;
 };
+PokemonMZ_Game_Pokemon.prototype.isBadlyPoisoned = function() {
+    return this._isBadlyPoisoned;
+};
+PokemonMZ_Game_Pokemon.prototype.badPoisonCounter = function() {
+    return this._badPoisonCounter;
+};
+PokemonMZ_Game_Pokemon.prototype.increaseBadPoisonCounter = function() {
+    this._badPoisonCounter++;
+};
+
 PokemonMZ_Game_Pokemon.prototype.isAsleep = function() {
     return this._isAsleep;
 };
@@ -3637,6 +3653,12 @@ PokemonMZ_Game_Pokemon.prototype.poison = function(force) {
         this._isPoisoned = true;
     }
 };
+PokemonMZ_Game_Pokemon.prototype.badlyPoison = function(force) {
+    if (this.isPoisonable() || force) {
+        this._isBadlyPoisoned = true;
+        this._badPoisonCounter = 1;
+    }
+};
 PokemonMZ_Game_Pokemon.prototype.sleep = function(force) {
     if (this.isSleepable() || force) {
         this._isAsleep = true;
@@ -3807,8 +3829,17 @@ PokemonMZ_Game_Pokemon.prototype.unparalyze = function() {
 PokemonMZ_Game_Pokemon.prototype.unpoison = function() {
     if (this.isPoisoned()) {
         this._isPoisoned = false;
+        this._isBadlyPoisoned = false;
+        this._badPoisonCounter = 0;
     }
 };
+PokemonMZ_Game_Pokemon.prototype.reduceBadPoison = function() {
+    if (this._isBadlyPoisoned) {
+        this._isPoisoned = true;
+        this._isBadlyPoisoned = false;
+        this._badPoisonCounter = 0;
+    }
+}
 PokemonMZ_Game_Pokemon.prototype.unsleep = function() {
     if (this.isAsleep()) {
         this._isAsleep = false;
@@ -5063,7 +5094,7 @@ PokemonMZ_Game_Action.prototype.calculateMoveStatus = function() {
         for (const effect of this._moveData.effects) {
             if (effect.type == "seedTarget") {
                 failTextKey = "evaded";
-            } else if (["poisonTarget","sleepTarget","paralyzeTarget"].includes(effect.type)) {
+            } else if (["badPoisonTarget","poisonTarget","sleepTarget","paralyzeTarget"].includes(effect.type)) {
                 failTextKey = "noAffect";
             }
         }
@@ -5260,7 +5291,6 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
     case "paralyzeTarget":
         if (!this.isMoveEffectExcepted(effect, this._opponent)) {
             effectResults = this.effect_paralyzeTarget(battleData, effect, effectResults);
-        } else {
         }
         break;
     case "poisonTarget":
@@ -5277,7 +5307,11 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
             effectResults = this.effect_poisonTarget(battleData, effect, effectResults);
         }
         break;
-    
+    case "badPoisonTarget":
+        if (!this.isMoveEffectExcepted(effect, this._opponent)) {
+            effectResults = this.effect_badPoisonTarget(battleData, effect, effectResults);
+        }
+        break;
     case "bindTarget":
         effectResults = this.effect_bindTarget(battleData, effect, effectResults);
         break;
@@ -5779,6 +5813,11 @@ PokemonMZ_Game_Action.prototype.calculatePoisonEffect = function(userRemainingHp
     this.addResultSteps(["animateUserEffect", this.userBattleSprite(), "poisoned"])
     this.addResultSteps(["waittext","hurtpoison",this.side()]);
     let poisonDamage = Math.floor(mHp / 16);
+    if (this._user.isBadlyPoisoned()) {
+        poisonDamage *= this._user.badPoisonCounter();
+        this._user.increaseBadPoisonCounter();
+    }
+
     if (poisonDamage < 1) { poisonDamage = 1; }
     if (poisonDamage > mHp) { poisonDamage = mHp; }
 
@@ -6027,6 +6066,40 @@ PokemonMZ_Game_Action.prototype.effect_poisonTarget = function(battleData, effec
             effectResults.success = true;
             this._resultSteps.push(["waittext","poisoned",this.oppositeSide()])
             this._resultSteps.push(["poisonPokemon",this._opponent])
+        } else {
+            if (battleData.damageDealt == 0) {
+                this._resultSteps.push(["waittext","noAffect",this.oppositeSide()]);
+            };
+        }
+    }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_badPoisonTarget = function(battleData, effect, effectResults) {
+    if (this._opponent.hp() - battleData.damageDealt <= 0) { 
+        // No effect if target will faint
+        return effectResults;
+    }
+
+    // Cannot usually poison substitutes
+    if (this._opponent.hasSubstitute() && !effect.bypassSubstitute) {
+        if (battleData.damageDealt == 0) {
+            this._resultSteps.push(["waittext","noAffect",this.oppositeSide()]);
+        };
+        return effectResults;
+    }
+
+
+    const randomNumber = Math.randomInt(100)
+    if (PokemonMZ.debugLog) {
+        console.log({"PokemonMZ_Game_Action.effect_badPoisonTarget > ":{
+            "chance":effect.percentChance, "randomNumber":randomNumber}
+        })
+    }
+    if (randomNumber < effect.percentChance) {
+        if (this._opponent.isPoisonable()) {
+            effectResults.success = true;
+            this._resultSteps.push(["waittext","badlyPoisoned",this.oppositeSide()])
+            this._resultSteps.push(["badPoisonPokemon",this._opponent])
         } else {
             if (battleData.damageDealt == 0) {
                 this._resultSteps.push(["waittext","noAffect",this.oppositeSide()]);

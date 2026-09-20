@@ -1050,6 +1050,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
     case "confuseTarget":
     case "flinchTarget":
     case "seedTarget":
+    case "badPoisonTarget":
         DataManager.verifyProperties(
             moveEffect,
             errorMessagePrefix,
@@ -4670,6 +4671,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["poison", step[1]];
                 break;
+            case "badPoisonPokemon":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["badPoison", step[1]];
+                break;
             case "paralyzePokemon":
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["paralysis", step[1]];
@@ -5364,6 +5369,11 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
             this._enemyPokemonStatusWindow.refresh(true);
             this._playerPokemonStatusWindow.refresh(true);
             break;
+        case "badPoison":
+            target.badlyPoison();
+            this._enemyPokemonStatusWindow.refresh(true);
+            this._playerPokemonStatusWindow.refresh(true);
+            break;
         case "paralysis":
             target.paralyze();
             this._enemyPokemonStatusWindow.refresh(true);
@@ -5512,6 +5522,7 @@ PokemonMZ_BattleManager.removePokemonStatus = function() {
 PokemonMZ_BattleManager.resetStats = function() {
     const target = this._subPhaseParams[0];
     target.resetStageModifiers();
+    target.reduceBadPoison(); // Transform bad poison into poison
     this.clearSubPhase();
 }
 
@@ -5741,6 +5752,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return "Leech Seed saps " + prefix + pokemon.name() + "!";
     case "poisoned":
         return prefix + pokemon.name() + " was poisoned!";
+    case "badlyPoisoned":
+        return prefix + pokemon.name() + "'s badly poisoned!";
     case "hurtpoison":
         return prefix + pokemon.name() + "'s hurt by poison!";
     case "paralyzed":

@@ -73,6 +73,8 @@ List of implemented effects and their additional parameters:
 - type = **poisonTarget** : Poison the target 
     - percentChance, **int** : Chance out of 100 of the poison to happen
     - multiHitEffect, **string**, *optional* : For multihit skills (Twineedle), indicates if **all** hits try to poison, or if only the **last** hit calculates poison.
+- type = **badPoisonTarget** : Badly Poison the target 
+    - percentChance, **int** : Chance out of 100 of the bad poison to happen
 - type = **sleepTarget** : Put the target to sleep
     - percentChance, **int** : Chance out of 100 of the sleep to happen
 - type = **confuseTarget** : Put confusion to the target 
