@@ -3082,6 +3082,14 @@ PokemonMZ_BattleManager.endPlayerFaintedPokemon = function() {
         index = this._battleActions.indexOf("playerMove");
     }
 
+    // Enemy turn is also removed after faint
+    index = this._battleActions.indexOf("enemyMove");
+    while (index > -1) {
+        this._battleActions.splice(index,1);
+        index = this._battleActions.indexOf("enemyMove");
+    }
+
+
     this.changePhase("afterPlayerFaintedPokemon");
 };
 PokemonMZ_BattleManager.endEnemyFaintedPokemon = function() { 
@@ -3099,6 +3107,13 @@ PokemonMZ_BattleManager.endEnemyFaintedPokemon = function() {
     while (index > -1) {
         this._battleActions.splice(index,1);
         index = this._battleActions.indexOf("enemyMove");
+    }
+
+    // Player turn is also removed after faint
+    index = this._battleActions.indexOf("playerMove");
+    while (index > -1) {
+        this._battleActions.splice(index,1);
+        index = this._battleActions.indexOf("playerMove");
     }
 
     const enemyIndex = this._currentEnemyIndex;
