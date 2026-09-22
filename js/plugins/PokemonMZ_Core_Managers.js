@@ -1188,6 +1188,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
     case "substitute":
     case "resetAllStatsModifiers":
     case "mistUser":
+    case "mimicTargetMove":
         DataManager.verifyProperties(
             moveEffect,
             errorMessagePrefix,
