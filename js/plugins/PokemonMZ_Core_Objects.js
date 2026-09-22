@@ -2053,6 +2053,9 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._level = level;
     this._exp = this.expForLevel(this._level);
     this._moves = [];
+    this._mimickedMoveIndex = -1;
+    this._mimickedMoveId = null;
+    this._mimickedMovePp = 0;
     this._pp = [];
     this._hp = 0;
     this._originalTrainerId = 0;
@@ -2479,12 +2482,20 @@ PokemonMZ_Game_Pokemon.prototype.movePP = function(moveStrId, ppUp) {
     }
 };
 PokemonMZ_Game_Pokemon.prototype.movePPAtIndex = function(index) {
-    const moveData = this._moves[index];
-    return this.movePP(moveData.id, moveData.ppup);
+    if (this._mimickedMoveIndex == index) {
+        return 5;
+    } else {
+        const moveData = this.move(index);
+        return this.movePP(moveData.id, moveData.ppup);
+    }
 };
 PokemonMZ_Game_Pokemon.prototype.movePPUpAtIndex = function(index) {
-    const moveData = this._moves[index];
-    return moveData.ppup;
+    if (this._mimickedMoveIndex == index) {
+        return 0;
+    } else {
+        const moveData = this._moves[index];
+        return moveData.ppup;
+    }
 };
 PokemonMZ_Game_Pokemon.prototype.recoverPpAtIndex = function(index, ppRecovered) {
     const maxPP = this.movePPAtIndex(index);
@@ -2505,7 +2516,12 @@ PokemonMZ_Game_Pokemon.prototype.consumePP = function(index) {
     // No PP consumption for index -1 -> struggle
     if (index != -1) {
         // 1 PP for now - will change with Gen 3 Pressure for ex.
-        this._moves[index].pp --;
+        if (this._mimickedMoveIndex == index) {
+            this._mimickedMovePp--;
+        } else {
+            this._moves[index].pp --;
+        }
+            
     }
 };
 PokemonMZ_Game_Pokemon.prototype.moveName = function(move) {
@@ -2522,10 +2538,18 @@ PokemonMZ_Game_Pokemon.prototype.moveNameFromStringId = function(moveStringId) {
     }
 };
 PokemonMZ_Game_Pokemon.prototype.moves = function() {
-    return this._moves;
+    const moveList = [];
+    for (let i=0; i< this._moves.length; i++) {
+        moveList.push(this.move(i))
+    }
+    return moveList;
 };
 PokemonMZ_Game_Pokemon.prototype.move = function(index) {
-    return this._moves[index];
+    if (this._mimickedMoveIndex == index) {
+        return {"id":this._mimickedMoveId, "pp":this._mimickedMovePp, "ppup":0}
+    } else {
+        return this._moves[index];
+    }
 };
 PokemonMZ_Game_Pokemon.prototype.movePriority = function(index) {
     const moveData = this.moveDataFromIndex(index);
@@ -2566,7 +2590,7 @@ PokemonMZ_Game_Pokemon.prototype.moveFromMetronome = function() {
 };
 
 PokemonMZ_Game_Pokemon.prototype.moveUseability = function(index) {
-    const move = this._moves[index];
+    const move = this.move(index);
     if (this.isMoveDisabled(index)) {
         return "The move is disabled!"
     }
@@ -2576,6 +2600,13 @@ PokemonMZ_Game_Pokemon.prototype.moveUseability = function(index) {
 
     return "";
 };
+
+PokemonMZ_Game_Pokemon.prototype.setMimickedMove = function(index, move) {
+    this._mimickedMoveId = move.id;
+    this._mimickedMoveIndex = index;
+    this._mimickedMovePp = 5;
+}
+
 PokemonMZ_Game_Pokemon.prototype.hasHmMove = function() {
     let hasHm = false;
     for (let i=0; i<this._moves.length; i++) {
@@ -3392,6 +3423,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.reduceBadPoison();
     this.removeSubstitute();
     this.resetCounterDamage();
+    this.resetMimic();
 };
 PokemonMZ_Game_Pokemon.prototype.removeFinishedStatuses = function() {
     // Remove statuses that disappear at the beginning of the next turn
@@ -3785,6 +3817,24 @@ PokemonMZ_Game_Pokemon.prototype.selectDisableRandomMove = function() {
     }
     return possibleMovesIndex[Math.randomInt(possibleMovesIndex.length)];
 };
+PokemonMZ_Game_Pokemon.prototype.selectMimicRandomMove = function(userMoves) {
+    const userMovesId = []
+    for (const userMove of userMoves) {
+        userMovesId.push(userMove.id)
+    }
+    const possibleMovesIndex = [];
+    for (let i=0; i<this._moves.length; i++) {
+        if (!userMoves.includes(this.move(i).id)) {
+            possibleMovesIndex.push(i);
+        }
+    }
+    if (possibleMovesIndex.length > 0) {
+        return possibleMovesIndex[Math.randomInt(possibleMovesIndex.length)];
+    } else {
+        return -1;
+    }
+};
+
 PokemonMZ_Game_Pokemon.prototype.disableMove = function(index, duration) {
     this._hasMoveDisabled = true;
     this._disabledMoveIndex = index;
@@ -3998,6 +4048,10 @@ PokemonMZ_Game_Pokemon.prototype.endBide = function() {
     this._isBiding = false;
     this._turnsBide = 0;
     this._damagedBide = 0;
+};
+PokemonMZ_Game_Pokemon.prototype.resetMimic = function() {
+    this._mimickedMoveIndex = -1;
+    this._mimickedMoveId = null;
 };
 PokemonMZ_Game_Pokemon.prototype.resetCounterDamage = function(damage) {
     this._damagedCounter = 0;
@@ -5404,6 +5458,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
     case "disableTargetMove":
         effectResults = this.effect_disableTargetMove(battleData, effect, effectResults);
         break;
+    case "mimicTargetMove":
+        effectResults = this.effect_mimicTargetMove(battleData, effect, effectResults);
+        break;
     case "splash":
         effectResults = this.effect_splash(battleData, effect, effectResults);
         break;
@@ -6733,6 +6790,27 @@ PokemonMZ_Game_Action.prototype.effect_disableTargetMove = function(battleData, 
             this._resultSteps.push(["waittext","statusFailed",this.oppositeSide()]);
         };
     }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_mimicTargetMove = function(battleData, effect, effectResults) {
+    if (this._opponent.hp() - battleData.damageDealt <= 0) { 
+        // No effect if target will faint
+        return effectResults;
+    }
+    let moveIndex = 0;
+    moveIndex = this._opponent.selectMimicRandomMove(this._user.moves());
+
+    if (moveIndex > -1) {
+        effectResults.success = true;
+        this._resultSteps.push(["waittext","mimicMove",this.side(), this._opponent.moveNameFromIndex(moveIndex)])
+        this._resultSteps.push(["mimicMove",this._user, this._opponent, moveIndex])
+    } else {
+        // No valid new move found
+        if (battleData.damageDealt == 0) {
+            this._resultSteps.push(["waittext","statusFailed",this.oppositeSide()]);
+        };
+    }
+
     return effectResults;
 };
 PokemonMZ_Game_Action.prototype.effect_splash = function(battleData, effect, effectResults) {

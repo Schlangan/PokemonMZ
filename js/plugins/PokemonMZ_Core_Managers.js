@@ -2171,6 +2171,9 @@ PokemonMZ_BattleManager.updateSubPhase = function(timeActive) {
         case "removePokemonStatus":
             this.removePokemonStatus();
             break;
+        case "mimicMove":
+            this.mimicMove();
+            break;
         case "animateUserEffect":
             this.animateUserEffect();
             break;
@@ -4702,6 +4705,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["disabled", step[1], step[2], step[3]];
                 break;
+            case "mimicMove":
+                this.changeSubPhase("mimicMove");
+                this._subPhaseParams = [step[1], step[2], step[3]];
+                break;
             case "bindPokemon":
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["bind", step[1], step[2], step[3], step[4]];
@@ -5534,6 +5541,15 @@ PokemonMZ_BattleManager.removePokemonStatus = function() {
     this.clearSubPhase();
 };
 
+PokemonMZ_BattleManager.mimicMove = function() {
+    const user =  this._subPhaseParams[0];
+    const userMoveIndex = user.lastMoveIndex();
+    const target = this._subPhaseParams[1];
+    const targetMoveIndex = this._subPhaseParams[2];
+    user.setMimickedMove(userMoveIndex, target.move(targetMoveIndex))
+    this.clearSubPhase();
+}
+
 PokemonMZ_BattleManager.resetStats = function() {
     const target = this._subPhaseParams[0];
     target.resetStageModifiers();
@@ -5881,6 +5897,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return "All sleeping Pokémon woke up."
     case "catchyTune":
         return "Now, that's a catchy tune!"
+    case "mimicMove":
+        return prefix + pokemon.name() + " learned " + String(ext1) + "!";
     }
     return ""
 };
