@@ -1,8 +1,8 @@
-The PokemonMZ_Items.json file defines the items of the game.
+The PokemonMZ_Items.json file defines the items of the game. Note that the order of the items in this file will be the order for which the items are displayed in the bag computer. The order inside RPG Maker Database doesn't apply. This allows you to configure a proper display order without having to move items around in the database configuration.
 
 ---
 
-main, **Array:itemData** : Array of **itemData**. The first element is null, mimicking the first null elements of RPG Maker MZ json files.
+main, **Array:itemData** : Array of **itemData**. The first element is null, mimicking the first null elements of RPG Maker MZ json files. The order in the file corresponds to the display order of the items in-game.
 
 ---
 

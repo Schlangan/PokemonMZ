@@ -1713,21 +1713,25 @@ PokemonMZ_Game_TrainerPlayer.prototype.gainStoredItem = function(itemIntId, amou
 PokemonMZ_Game_TrainerPlayer.prototype.bagItems = function() {
     switch(PokemonMZ.bagMechanicsGeneration) {
     case 1:
-        return Object.keys(this._items.everything).map(id => $dataItems[id]);
+        return $dataItemsOrder
+            .map(stringId => $dataItems[$dataItemsIndex[stringId]])
+            .filter(item => item && this._items.everything[item.id]);
     }
 };
 PokemonMZ_Game_TrainerPlayer.prototype.battleBagItems = function() {
     switch(PokemonMZ.bagMechanicsGeneration) {
     case 1:
-        return Object.keys(this._items.everything)
-            .filter(id => $dataItems[id].pkmz_data.battle)
-            .map(id => $dataItems[id]);
+        return $dataItemsOrder
+            .map(stringId => $dataItems[$dataItemsIndex[stringId]])
+            .filter(item => item && this._items.everything[item.id] && item.pkmz_data.battle);
     }
 };
 PokemonMZ_Game_TrainerPlayer.prototype.storedItems = function() {
     switch(PokemonMZ.bagMechanicsGeneration) {
     case 1:
-        return Object.keys(this._storedItems.everything).map(id => $dataItems[id]);
+        return $dataItemsOrder
+            .map(stringId => $dataItems[$dataItemsIndex[stringId]])
+            .filter(item => item && this._storedItems.everything[item.id]);
     }
 };
 PokemonMZ_Game_TrainerPlayer.prototype.canGetPokemon = function() {

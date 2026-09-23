@@ -28,10 +28,12 @@ DataManager.parsePokemonMZ_Notes = function(note) {
 };
 DataManager.enhanceItems = function() {
     // Enhance $dataItems with infos from PokemonMZ_Items
+    $dataItemsOrder = []
     $dataItemsIndex = {}
     const itemFullData = {}
     for (item of $PokemonMZ_dataItems) {
         if (item) {
+            $dataItemsOrder.push(item.id);
             itemFullData[item.id] = item;
         }
     }
