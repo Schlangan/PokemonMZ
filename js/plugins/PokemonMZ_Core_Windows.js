@@ -409,7 +409,6 @@ PokemonMZ_Window_ItemList_Gen1.prototype.initialize = function(rect, inBattle) {
     Window_Selectable.prototype.initialize.call(this, rect);
     this._data = [];
     this._inBattle = inBattle;
-    this._lastIndex = -1;
     this.refresh();
 };
 PokemonMZ_Window_ItemList_Gen1.prototype.maxCols = function() {
@@ -468,30 +467,25 @@ PokemonMZ_Window_ItemList_Gen1.prototype.needsNumber = function() {
 PokemonMZ_Window_ItemList_Gen1.prototype.item = function() {
     return this.itemAt(this.index());
 };
-PokemonMZ_Window_ItemList_Gen1.prototype.setLastIndex = function(index) {
-    this._lastIndex = index;
-};
-PokemonMZ_Window_ItemList_Gen1.prototype.lastIndex = function() {
-    return this._lastIndex;
-};
-PokemonMZ_Window_ItemList_Gen1.prototype.selectLastIndex = function() {
-    if (this._lastIndex > -1) {
-        if (this._lastIndex < this._data.length) {
-            this.smoothSelect(this._lastIndex);
-        } else if (this._data.length > 0) {
-            this.smoothSelect(this._data.length - 1);
+PokemonMZ_Window_ItemList_Gen1.prototype.selectLast = function() {
+    let lastIndex = 0;
+    if (this._inBattle) {
+        lastIndex = $gamePlayerTrainer.lastBattleItemSelectedIndex();
+    } else {
+        lastIndex = $gamePlayerTrainer.lastBagItemSelectedIndex();
+    }
+
+    if (lastIndex) {
+        if (lastIndex < this._data.length) {
+            this.forceSelect(lastIndex);
         } else {
-            this.smoothSelect(-1);
+            this.forceSelect(this._data.length-1);
         }
     } else {
-        if (this._data.length > 0) {
-            this.smoothSelect(0);
-        } else {
-            this.smoothSelect(-1);
-        }
-    } 
-
+        this.forceSelect(0);
+    }
 };
+
 
 
 // PokemonMZ_Window_ItemListCommand_Gen1
@@ -663,6 +657,19 @@ PokemonMZ_Window_ComputerItemsList.prototype.drawItemNumber = function(item, x, 
     this.drawText(":", x, y, width - this.textWidth("000"), "right");
     this.drawText(amount, x, y, width, "right");
 };
+PokemonMZ_Window_ComputerItemsList.prototype.selectLast = function() {
+    const lastIndex = $gamePlayerTrainer.lastStoredItemSelectedIndex();
+    if (lastIndex) {
+        if (lastIndex < this._data.length) {
+            this.forceSelect(lastIndex);
+        } else {
+            this.forceSelect(this._data.length-1);
+        }
+    } else {
+        this.forceSelect(0);
+    }
+};
+
 
 // PokemonMZ_Window_ComputerItemsNumber
 // The window to select the amount of items to deal with

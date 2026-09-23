@@ -1415,6 +1415,9 @@ PokemonMZ_Game_TrainerPlayer.prototype.initMembers = function(sourceActorId) {
     this._isCycling = false;
     this._isUsingFlash = false;
     this._visitedLocations = {};
+    this._lastBagItemSelectedIndex = 0;
+    this._lastStoredItemSelectedIndex = 0;
+    this._lastBattleItemSelectedIndex = 0;
     this.initializeItems();
     this.initializeBoxes();
     this.initializePokedex();
@@ -1991,7 +1994,6 @@ PokemonMZ_Game_TrainerPlayer.prototype.isOnForcedCyclingRegion = function() {
     const forcedCyclingRegions = $gameMap.forcedCyclingRegions() ?? [];
     return forcedCyclingRegions.includes($gamePlayer.regionId());
 }
-
 PokemonMZ_Game_TrainerPlayer.prototype.checkForcedCycling = function() {
     if ($gameMap.PokemonMZ_isCyclingAllowed() && !$gamePlayerTrainer.isCycling() && this.isOnForcedCyclingRegion()) {
         $gamePlayerTrainer.startCycling();
@@ -2042,6 +2044,27 @@ PokemonMZ_Game_TrainerPlayer.prototype.visitedPoiInRegion = function(regionId) {
         return [];
     }
 }
+
+PokemonMZ_Game_TrainerPlayer.prototype.lastBagItemSelectedIndex = function() {
+    return this._lastBagItemSelectedIndex;
+};
+PokemonMZ_Game_TrainerPlayer.prototype.lastStoredItemSelectedIndex = function() {
+    return this._lastStoredItemSelectedIndex;
+};
+PokemonMZ_Game_TrainerPlayer.prototype.lastBattleItemSelectedIndex = function() {
+    return this._lastBattleItemSelectedIndex;
+};
+PokemonMZ_Game_TrainerPlayer.prototype.setLastBagItemSelectedIndex = function(index) {
+    this._lastBagItemSelectedIndex = index;
+};
+PokemonMZ_Game_TrainerPlayer.prototype.setLastStoredItemSelectedIndex = function(index) {
+    this._lastStoredItemSelectedIndex = index;
+};
+PokemonMZ_Game_TrainerPlayer.prototype.setLastBattleItemSelectedIndex = function(index) {
+    this._lastBattleItemSelectedIndex = index;
+};
+
+
 
 
 

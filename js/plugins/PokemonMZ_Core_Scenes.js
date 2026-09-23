@@ -985,6 +985,7 @@ PokemonMZ_Scene_Item_Gen1.prototype.createItemWindow = function() {
     this._itemWindow.setHandler("ok", this.onItemOk.bind(this));
     this._itemWindow.setHandler("cancel", this.popScene.bind(this));
     this._itemWindow.activate();
+    this._itemWindow.selectLast();
     this.addWindow(this._itemWindow);
 };
 PokemonMZ_Scene_Item_Gen1.prototype.createMessageWindow = function() {
@@ -1049,8 +1050,10 @@ PokemonMZ_Scene_Item_Gen1.prototype.yesNoWindowRect = function() {
     return new Rectangle(wx, wy, ww, wh);
 };
 PokemonMZ_Scene_Item_Gen1.prototype.onItemOk = function() {
+    const index = this._itemWindow.index();
     const item = this.item();
     if (item) {
+        $gamePlayerTrainer.setLastBagItemSelectedIndex(index);
         this._itemWindow.deactivate();
         const rect = this._itemWindow.itemRect(this._itemWindow.index());
         const newX = this._itemWindow.x + rect.x + rect.width - this._itemSelectWindow.width;
@@ -1374,16 +1377,19 @@ PokemonMZ_Scene_ComputerItems.prototype.commandWithdraw = function() {
     this._itemWindow.setMode("withdraw");
     this._itemWindow.open();
     this._itemWindow.activate();
+    this._itemWindow.selectLast();
 };
 PokemonMZ_Scene_ComputerItems.prototype.commandDeposit = function() {
     this._itemWindow.setMode("deposit");
     this._itemWindow.open();
     this._itemWindow.activate();
+    this._itemWindow.selectLast();
 };
 PokemonMZ_Scene_ComputerItems.prototype.commandToss = function() {
     this._itemWindow.setMode("toss");
     this._itemWindow.open();
     this._itemWindow.activate();
+    this._itemWindow.selectLast();
 };
 PokemonMZ_Scene_ComputerItems.prototype.currentItemCount = function(item) {
     switch(this._itemWindow.mode()) {
@@ -1396,10 +1402,13 @@ PokemonMZ_Scene_ComputerItems.prototype.currentItemCount = function(item) {
 
 }
 PokemonMZ_Scene_ComputerItems.prototype.onItemOk = function() {
+    const index = this._itemWindow.index();
     const item = this._itemWindow.item();
     const itemCount = this.currentItemCount(item);
     
     // Ready number window if required
+    $gamePlayerTrainer.setLastStoredItemSelectedIndex(index);
+
     const rect = this._itemWindow.itemRect(this._itemWindow.index());
     this._numberWindow.setMinValue(0);
     this._numberWindow.setMaxValue(itemCount);
@@ -4055,7 +4064,7 @@ PokemonMZ_Scene_Battle.prototype.commandItem = function() {
     this._itemWindow.refresh();
     this._itemWindow.show();
     this._itemWindow.activate();
-    this._itemWindow.selectLastIndex();
+    this._itemWindow.selectLast();
     this._playerInputWindow.deactivate();
 };
 PokemonMZ_Scene_Battle.prototype.commandRun = function() { 
@@ -4064,8 +4073,10 @@ PokemonMZ_Scene_Battle.prototype.commandRun = function() {
     PokemonMZ_BattleManager.changePhase("tryRunAway");
 };
 PokemonMZ_Scene_Battle.prototype.onItemOk = function() {
+    const index = this._itemWindow.index();
     const selectedItem = this._itemWindow.item()
     if (selectedItem) {
+        $gamePlayerTrainer.setLastBattleItemSelectedIndex(index);
         switch(selectedItem.pkmz_data.effect) {
         case "ball":
             if ($gamePlayerTrainer.canGetPokemon()) {
@@ -4203,7 +4214,6 @@ PokemonMZ_Scene_Battle.prototype.onPokemonMenuMessageTerminated = function() {
         this._pokemonListWindow.activate();
         break;
     case "useItem":
-        this._itemWindow.setLastIndex(this._itemWindow.index());
         if  (this._mustReturnToBattle) {
             this._mustReturnToBattle = false;
             this._pokemonCommandWindow.deactivate();
