@@ -22,6 +22,7 @@ moveData
 - noVariance, **bool**, *optional* : If set to **true**, the move won't have any variance calculation and always do fixed damage.
 - cpuHigherEffectFailure, **bool**, *optional* : If set to **true**, the computer pokemon has an additional 25% chance of failing the effects of the move.
 - fixedDamage, **int**, *optional* : If the value is set and positive, the move will strictly do that amount of damage, without variance, critical or type effectiveness. If the value is equal to **-1**, the damage becomes equal to the user's level (ex: seismic toss)
+- randomDamageMaxLevelFactor, **float**, *optional* : If the value is set, the move will  do random damage between 1 and the user's level mulitplied by the value. User for psywave
 - percentHpDamage, **int**, *optional* : If the value is set, the move will remove exactly that percentage of the target remaining hp, with a minimum value of 1. Example, Super Fang.
 
 - requiredTargetStatus, **string**, *optional* : If the value is set, the corresponding status on the target will be required to hit. Else, the move will miss. Possible statuses are **burn**,**paralysis**,**poison**,**freeze**,**sleep**.

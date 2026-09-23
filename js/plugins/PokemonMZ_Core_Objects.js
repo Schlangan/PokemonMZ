@@ -5650,6 +5650,7 @@ PokemonMZ_Game_Action.prototype.moveHit = function() {
 PokemonMZ_Game_Action.prototype.moveCritical = function() { 
     if (this._moveData.noCritical) { return false; } // Non criticable move, like hurting from confusion
     if (this._moveData.fixedDamage) { return false; } // Fixed damage move, no critical possible
+    if (this._moveData.randomDamageMaxLevelFactor) { return false; } // Damage randomized, no critical possible
     if (this._moveData.percentHpDamage) { return false; } // % HP damage move, no critical possible
 
     if (!this._moveData.power) { return false; }
@@ -5746,6 +5747,17 @@ PokemonMZ_Game_Action.prototype.moveDamage = function(critical) {
         }
 
         return {"user":userDamage, "opponent":opponentDamage, "efficiency":1.0};
+    }
+
+    if (this._moveData.randomDamageMaxLevelFactor) {
+        // Case of damage random between the 1 and the user level multiplied by a given factor
+        const maxValue = Math.floor(this._user.level() * this._moveData.randomDamageMaxLevelFactor);
+        const randomDamage = Math.randomInt(maxValue) + 1;
+        if (this._moveData.target == "opponent") {
+            return {"user":0, "opponent":randomDamage, "efficiency":1.0};
+        } else if (this._moveData.target == "user") {
+            return {"user":randomDamage, "opponent":0, "efficiency":1.0};
+        }
     }
 
     const playerAtkBadgeBoosts = $gamePlayerTrainer.badgeBoosts(this._side, "attack");
