@@ -1696,8 +1696,8 @@ PokemonMZ_Game_TrainerPlayer.prototype.gainBagItem = function(itemIntId, amount)
 
     $gameMap.requestRefresh();
 };
-PokemonMZ_Game_TrainerPlayer.prototype.loseBagItem = function(itemIntId) {
-    this.gainBagItem(itemIntId, -1);
+PokemonMZ_Game_TrainerPlayer.prototype.loseBagItem = function(itemIntId, amount) {
+    this.gainBagItem(itemIntId, -amount);
 };
 PokemonMZ_Game_TrainerPlayer.prototype.gainStoredItem = function(itemIntId, amount) {
     const lastNumber = this.numStoredItems(itemIntId);

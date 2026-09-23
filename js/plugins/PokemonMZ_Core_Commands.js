@@ -208,6 +208,23 @@
  * @text Quantity
  * @desc The quantity of the item to give.
  
+
+ * //////////////////////////////////////////
+ * @command AddItemVariableCountToBag
+ * @text Add Variable Item Amount To Bag
+ * @desc Add an item to the bag, with the quantity stored in a variable.
+ * 
+ * @arg item
+ * @type item
+ * @text Item
+ * @desc The item to give
+ * 
+ * @arg variableId
+ * @type variable
+ * @text Amount Variable
+ * @desc The variable containing the amount to give
+
+
  * //////////////////////////////////////////
  * @command HasItemInBag
  * @text Has Item In Bag ?
@@ -222,6 +239,24 @@
  * @type switch
  * @text Return switch
  * @desc A switch that will take the value ON if the player has the item or else OFF.
+
+
+ * //////////////////////////////////////////
+ * @command NumItemInBag
+ * @text Number Item In Bag
+ * @desc Returns the amount of a specific item inside the bag
+ * 
+ * @arg item
+ * @type item
+ * @text Item
+ * @desc The item to check
+ * 
+ * @arg returnVariableId
+ * @type variable
+ * @text Return variable
+ * @desc A variable that will take the amount of the specific item
+
+
 
  * //////////////////////////////////////////
  * @command GiveBadge
@@ -242,6 +277,21 @@
  * @type item
  * @text Item
  * @desc The item to lose
+
+ * //////////////////////////////////////////
+ * @command LoseItemVariableCount
+ * @text Lose Variable Item Amount
+ * @desc Removes an item from the player, with the quantity stored in a variable.
+ * 
+ * @arg item
+ * @type item
+ * @text Item
+ * @desc The item to lose
+ * 
+ * @arg variableId
+ * @type variable
+ * @text Amount Variable
+ * @desc The variable containing the amount to remove
  * 
 
  * //////////////////////////////////////////
@@ -524,7 +574,7 @@ PluginManager.registerCommand(pluginName, "RandomizeSlotMachinePayout", function
 
 
 
-
+// Bag
 PluginManager.registerCommand(pluginName, "AddItemToStorage", function(args) {
     const itemId = Number(args.item);
     const amount = Number(args.amount);
@@ -535,10 +585,27 @@ PluginManager.registerCommand(pluginName, "AddItemToBag", function(args) {
     const amount = Number(args.amount);
     $gamePlayerTrainer.gainBagItem(itemId, amount);
 });
+PluginManager.registerCommand(pluginName, "AddItemVariableCountToBag", function(args) {
+    const itemId = Number(args.item);
+    const variableId = Number(args.variableId);
+    const amount = $gameVariables.value(variableId) ?? 0;
+    if (amount > 0) {
+        $gamePlayerTrainer.gainBagItem(itemId, amount);
+    }
+});
 PluginManager.registerCommand(pluginName, "LoseItem", function(args) {
     const itemId = Number(args.item);
-    $gamePlayerTrainer.loseBagItem(itemId);
+    $gamePlayerTrainer.loseBagItem(itemId, 1);
 });
+PluginManager.registerCommand(pluginName, "LoseItemVariableCount", function(args) {
+    const itemId = Number(args.item);
+    const variableId = Number(args.variableId);
+    const amount = $gameVariables.value(variableId) ?? 0;
+    if (amount > 0) {
+        $gamePlayerTrainer.loseBagItem(itemId, amount);
+    }
+});
+
 PluginManager.registerCommand(pluginName, "GiveBadge", function(args) {
     const itemId = Number(args.item);
     if (PokemonMZ.badgeItemIds.includes(itemId)) {
@@ -554,7 +621,11 @@ PluginManager.registerCommand(pluginName, "HasItemInBag", function(args) {
         if (args.returnSwitchId) { $gameSwitches.setValue(switchId, false); }
     }
 });
-
+PluginManager.registerCommand(pluginName, "NumItemInBag", function(args) {
+    const itemId = Number(args.item);
+    const variableId = Number(args.returnVariableId)
+    $gameVariables.setValue(variableId, $gamePlayerTrainer.numBagItems(itemId) ?? 0)
+});
 
 
 
