@@ -3378,6 +3378,7 @@ PokemonMZ_BattleManager.askForPokemonChange = function() {
     this._yesNoWindow.setMode("shift")
     this._yesNoWindow.open()
     this._yesNoWindow.activate();
+    this._yesNoWindow.select(0);
     this.changePhase("playerInput");
 };
 PokemonMZ_BattleManager.afterPlayerFaintedPokemon = function() {

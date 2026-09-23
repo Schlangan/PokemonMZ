@@ -1037,6 +1037,7 @@ PokemonMZ_Scene_Item_Gen1.prototype.createYesNoWindow = function() {
     this._yesNoWindow = new PokemonMZ_BattleYesNoWindow(rect);
     this._yesNoWindow.setHandler("yes", this.commandYes.bind(this));
     this._yesNoWindow.setHandler("no", this.commandNo.bind(this));
+    this._yesNoWindow.setHandler("cancel", this.commandNo.bind(this));
     this._yesNoWindow.openness = 0;
     this.addWindow(this._yesNoWindow);
 };
@@ -3728,6 +3729,7 @@ PokemonMZ_Scene_Battle.prototype.createYesNoWindow = function() {
     this._yesNoWindow = new PokemonMZ_BattleYesNoWindow(rect);
     this._yesNoWindow.setHandler("yes", this.commandYes.bind(this));
     this._yesNoWindow.setHandler("no", this.commandNo.bind(this));
+    this._yesNoWindow.setHandler("cancel", this.commandNo.bind(this));
     this.addWindow(this._yesNoWindow);
 };
 PokemonMZ_Scene_Battle.prototype.createNicknameWindows = function() {
