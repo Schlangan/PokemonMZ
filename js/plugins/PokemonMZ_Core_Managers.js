@@ -1138,6 +1138,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
     case "fly":
     case "skullBash":
     case "razorWind":
+    case "solarBeam":
         DataManager.verifyProperties(
             moveEffect,
             errorMessagePrefix,
@@ -2603,6 +2604,14 @@ PokemonMZ_BattleManager.startPlayerInput = function() {
         return;
     }
 
+    if (pokemon.isTakingSunlight()) {
+        // In case of solar beam the player cannot select any action - 
+        // the phase immediatly switch to skull bash turn 2
+        this.setPlayerMoveIndex(pokemon.solarBeamMoveIndex());
+        this.calculateComputerMove();
+        return;
+    }
+
     if (pokemon.isMakingWhirlwind()) {
         // In case of razor wind, the player cannot select any action - 
         // the phase immediatly switch to razor wind turn 2
@@ -3637,6 +3646,13 @@ PokemonMZ_BattleManager.calculateComputerMove = function() { //TODO
         return;
     }
 
+    // If enemy pokemon is using solar beam, it only selects that move
+    if (enemyPokemon.isTakingSunlight()) {
+        this._enemyMoveIndex = enemyPokemon.solarBeamMoveIndex();
+        this.calculateBattleActions();
+        return;
+    }
+
     // If enemy pokemon is using razor wind, it only selects that move
     if (enemyPokemon.isMakingWhirlwind()) {
         this._enemyMoveIndex = enemyPokemon.razorWindMoveIndex();
@@ -4104,6 +4120,9 @@ PokemonMZ_BattleManager.startMove = function(side) {
                 if (pokemon.isLoweringHead()) { // Confusion hurt interrupts skull bash
                     pokemon.endSkullBash() 
                 } 
+                if (pokemon.isTakingSunlight()) { // Confusion hurt interrupts solar beam
+                    pokemon.endSolarBeam() 
+                } 
                 if (pokemon.isMakingWhirlwind()) { // Confusion hurt interrupts razor wind
                     pokemon.endRazorWind() 
                 } 
@@ -4139,6 +4158,9 @@ PokemonMZ_BattleManager.startMove = function(side) {
         if (pokemon.isLoweringHead()) { // Paralysis interrupts skull bash
             pokemon.endSkullBash() 
         }
+        if (pokemon.isTakingSunlight()) { // Paralysis interrupts skull bash
+            pokemon.endSolarBeam() 
+        } 
         if (pokemon.isMakingWhirlwind()) { // Paralysis interrupts razor wind
             pokemon.endRazorWind() 
         }
@@ -4256,6 +4278,9 @@ PokemonMZ_BattleManager.startMove = function(side) {
         if (pokemon.isLoweringHead()) { // Disabling skull bash interrupts the attack
             pokemon.endSkullBash() 
         }
+        if (pokemon.isTakingSunlight()) { // Disabling solar beam interrupts the attack
+            pokemon.endSolarBeam() 
+        } 
         if (pokemon.isMakingWhirlwind()) { // Disabling razor wind interrupts the attack
             pokemon.endRazorWind() 
         }
@@ -4400,6 +4425,15 @@ PokemonMZ_BattleManager.startMove = function(side) {
         move = pokemon.lastMoveUsed();
     }
 
+    // If pokemon launches solar beam, no pp consumption, another message
+    if (pokemon.isMoveSolarBeam(moveIndex) && !pokemon.isTakingSunlight()) {
+        skipPP = true;
+    }
+    if (pokemon.isTakingSunlight() && pokemon.isMoveMirrorMove(moveIndex)) {
+        // If using solar beam already through mirror move, follow-up
+        move = pokemon.lastMoveUsed();
+    }
+
     // If pokemon launches razor wind, no pp consumption, another message
     if (pokemon.isMoveRazorWind(moveIndex) && !pokemon.isMakingWhirlwind()) {
         skipPP = true;
@@ -4450,6 +4484,15 @@ PokemonMZ_BattleManager.startMove = function(side) {
             }
         }
 
+        let isMirrorSolarBeamTurn1 = false;
+        if (pokemon.isMoveMirrorMove(moveIndex) && !pokemon.isTakingSunlight()) {
+            const mirroredMove = pokemon.moveMirrored()
+            const mirroredMoveData = pokemon.moveDataFromStringId(mirroredMove.id)
+            for (const effect of mirroredMoveData.effects) {
+                if (effect.type == "solarBeam") { isMirrorSolarBeamTurn1 = true; }
+            }
+        }
+
         let isMirrorRazorWindTurn1 = false;
         if (pokemon.isMoveMirrorMove(moveIndex) && !pokemon.isMakingWhirlwind()) {
             const mirroredMove = pokemon.moveMirrored()
@@ -4475,6 +4518,10 @@ PokemonMZ_BattleManager.startMove = function(side) {
             this._currentAction.insertResultStepsAt(["autotext","lowerHead",this._currentAction.side()], battleIndex)
         } else if (isMirrorSkullBashTurn1) {
             this._currentAction.insertResultStepsAt(["autotext","lowerHead",this._currentAction.side()], battleIndex)
+        } else if (pokemon.isMoveSolarBeam(moveIndex) && !pokemon.isTakingSunlight()) {
+            this._currentAction.insertResultStepsAt(["autotext","takeSunlight",this._currentAction.side()], battleIndex)
+        } else if (isMirrorSolarBeamTurn1) {
+            this._currentAction.insertResultStepsAt(["autotext","takeSunlight",this._currentAction.side()], battleIndex)
         } else if (pokemon.isMoveRazorWind(moveIndex) && !pokemon.isMakingWhirlwind()) {
             this._currentAction.insertResultStepsAt(["autotext","makeWhirlwind",this._currentAction.side()], battleIndex-1)
         } else if (isMirrorRazorWindTurn1) {
@@ -4501,6 +4548,11 @@ PokemonMZ_BattleManager.startMove = function(side) {
 
     // If pokemon launches skull bash, no pp consumption
     if (pokemon.isMoveSkullBash(moveIndex) && !pokemon.isLoweringHead()) {
+        skipSeeMove = true;
+    }
+
+    // If pokemon launches solar beam, no pp consumption
+    if (pokemon.isMoveSolarBeam(moveIndex) && !pokemon.isTakingSunlight()) {
         skipSeeMove = true;
     }
 
@@ -4753,6 +4805,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["skullBash", step[1]];
                 break;
+            case "startSolarBeam":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["solarBeam", step[1]];
+                break;
             case "startRazorWind":
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["razorWind", step[1]];
@@ -4797,6 +4853,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("removePokemonStatus");
                 this._subPhaseParams = ["skullBash", step[1]];
                 break;
+            case "endSolarBeam":
+                this.changeSubPhase("removePokemonStatus");
+                this._subPhaseParams = ["solarBeam", step[1]];
+                break;   
             case "endRazorWind":
                 this.changeSubPhase("removePokemonStatus");
                 this._subPhaseParams = ["razorWind", step[1]];
@@ -5469,6 +5529,9 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
         case "skullBash":
             target.startSkullBash(moveIndex);
             break;
+        case "solarBeam":
+            target.startSolarBeam(moveIndex);
+            break;
         case "razorWind":
             target.startRazorWind(moveIndex);
             break;
@@ -5527,6 +5590,9 @@ PokemonMZ_BattleManager.removePokemonStatus = function() {
             break;
         case "skullBash":
             target.endSkullBash();
+            break;
+        case "solarBeam":
+            target.endSolarBeam();
             break;
         case "razorWind":
             target.endRazorWind();
@@ -5857,6 +5923,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + " flew up high!"
     case "lowerHead":
         return prefix + pokemon.name() + " lowered its head!"
+    case "takeSunlight":
+        return prefix + pokemon.name() + " took in sunlight!"
     case "makeWhirlwind":
         return prefix + pokemon.name() + " made a whirlwind!"
     case "coinsScatter":

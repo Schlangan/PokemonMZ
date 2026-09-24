@@ -2117,6 +2117,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._isDigging = false;
     this._isFlying = false;
     this._isLoweringHead = false;
+    this._isTakingSunlight = false;
     this._isMakingWhirlwind = false;
     this._isRecharging = false;
     this._hasLightScreen = false; // Generation I - Light screen only applies to the user
@@ -2150,6 +2151,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._flyMoveIndex = -1;
     this._skullBashMoveIndex = -1;
     this._razorWindMoveIndex = -1;
+    this._solarBeamMoveIndex = -1;
 
     this._lastSeenEnemyMove = null;
 
@@ -2767,6 +2769,19 @@ PokemonMZ_Game_Pokemon.prototype.isMoveSkullBash = function(index) {
     }
     return false;
 };
+PokemonMZ_Game_Pokemon.prototype.isMoveSolarBeam = function(index) {
+    // Returns if the move at index has the skull bash effect
+    if (index == -1 ) {
+        // Struggle cannot be skull bash
+        return false;
+    }
+
+    const move = this.moveDataFromIndex(index);
+    for (const effect of move.effects) {
+        if (effect.type == "solarBeam") { return true; }
+    }
+    return false;
+};
 PokemonMZ_Game_Pokemon.prototype.isMoveRazorWind = function(index) {
     // Returns if the move at index has the skull bash effect
     if (index == -1 ) {
@@ -2808,6 +2823,9 @@ PokemonMZ_Game_Pokemon.prototype.flyMoveIndex = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.skullBashMoveIndex = function() {
     return this._skullBashMoveIndex;
+};
+PokemonMZ_Game_Pokemon.prototype.solarBeamMoveIndex = function() {
+    return this._solarBeamMoveIndex;
 };
 PokemonMZ_Game_Pokemon.prototype.razorWindMoveIndex = function() {
     return this._razorWindMoveIndex;
@@ -3442,6 +3460,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.endDigging();
     this.endFlying();
     this.endSkullBash();
+    this.endSolarBeam();
     this.endRazorWind();
     this.endRecharging();
     this.removeLightScreen(); // Generation I
@@ -3526,6 +3545,7 @@ PokemonMZ_Game_Pokemon.prototype.isUsingSeveralTurnMove = function() {
         pokemon.isBerserk() || 
         pokemon.isRaging() || 
         pokemon.isLoweringHead() || 
+        pokemon.isTakingSunlight() ||
         pokemon.isMakingWhirlwind()
     )
 }
@@ -3538,6 +3558,9 @@ PokemonMZ_Game_Pokemon.prototype.isFlying = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.isLoweringHead = function() {
     return this._isLoweringHead;
+};
+PokemonMZ_Game_Pokemon.prototype.isTakingSunlight = function() {
+    return this._isTakingSunlight;
 };
 PokemonMZ_Game_Pokemon.prototype.isMakingWhirlwind = function() {
     return this._isMakingWhirlwind;
@@ -3812,6 +3835,10 @@ PokemonMZ_Game_Pokemon.prototype.startSkullBash = function(moveIndex) {
     this._isLoweringHead = true;
     this._skullBashMoveIndex = moveIndex;
 };
+PokemonMZ_Game_Pokemon.prototype.startSolarBeam = function(moveIndex) {
+    this._isTakingSunlight = true;
+    this._solarBeamMoveIndex = moveIndex;
+};
 PokemonMZ_Game_Pokemon.prototype.startRazorWind = function(moveIndex) {
     this._isMakingWhirlwind = true;
     this._razorWindMoveIndex = moveIndex;
@@ -4001,6 +4028,10 @@ PokemonMZ_Game_Pokemon.prototype.endFlying = function() {
 PokemonMZ_Game_Pokemon.prototype.endSkullBash = function() {
     this._isLoweringHead = false;
     this._skullBashMoveIndex = -1;
+};
+PokemonMZ_Game_Pokemon.prototype.endSolarBeam = function() {
+    this._isTakingSunlight = false;
+    this._solarBeamMoveIndex = -1;
 };
 PokemonMZ_Game_Pokemon.prototype.endRazorWind = function() {
     this._isMakingWhirlwind = false;
@@ -4439,6 +4470,15 @@ PokemonMZ_Game_Action.prototype.isMoveSkullBash = function() {
     }
     return false;
 };
+PokemonMZ_Game_Action.prototype.isMoveSolarBeam = function() {
+    if (!this._moveData) { return false; }
+    for (const effect of this._moveData.effects) {
+        if (effect.type == "solarBeam") {
+            return true;
+        }
+    }
+    return false;
+};
 PokemonMZ_Game_Action.prototype.isMoveRazorWind = function() {
     if (!this._moveData) { return false; }
     for (const effect of this._moveData.effects) {
@@ -4774,6 +4814,14 @@ PokemonMZ_Game_Action.prototype.calculateMove = function() { //TODO
     if (this.isMoveSkullBash()) {
         if (!this._user.isLoweringHead()) {
             this.calculateMoveSkullBashTurn1();
+            return;
+        }
+    }
+
+    // Specific behavior for solar beam turn 1
+    if (this.isMoveSolarBeam()) {
+        if (!this._user.isTakingSunlight()) {
+            this.calculateMoveSolarBeamTurn1();
             return;
         }
     }
@@ -5310,6 +5358,21 @@ PokemonMZ_Game_Action.prototype.calculateMoveSkullBashTurn1 = function() {
     const effectsResult = this.calculateMoveEffects({});
     this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
 };
+PokemonMZ_Game_Action.prototype.calculateMoveSolarBeamTurn1 = function() { 
+    let enemyWillFaint = false;
+    let userWillFaint = false;
+
+    let animation = null;
+    for (const effect of this._moveData.effects) {
+        if (effect.type == "solarBeam") {
+            animation = effect.animationTurn1;
+        }
+    }
+
+    this._resultSteps.push(["hitAnimation", animation, this._user._battleSprite, this._opponent._battleSprite, this.side()]);
+    const effectsResult = this.calculateMoveEffects({});
+    this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
+};
 PokemonMZ_Game_Action.prototype.calculateMoveRazorWindTurn1 = function() { 
     let enemyWillFaint = false;
     let userWillFaint = false;
@@ -5514,6 +5577,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
         break;
     case "skullBash":
         effectResults = this.effect_skullBash(battleData, effect, effectResults);
+        break;
+    case "solarBeam":
+        effectResults = this.effect_solarBeam(battleData, effect, effectResults);
         break;
     case "razorWind":
         effectResults = this.effect_razorWind(battleData, effect, effectResults);
@@ -6959,6 +7025,16 @@ PokemonMZ_Game_Action.prototype.effect_skullBash = function(battleData, effect, 
     } else {
         effectResults.success = true;
         this._resultSteps.push(["endSkullBash",this._user])
+    }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_solarBeam = function(battleData, effect, effectResults) {
+    if (!this._user.isTakingSunlight()) {
+        effectResults.success = true;
+        this._resultSteps.push(["startSolarBeam",this._user])
+    } else {
+        effectResults.success = true;
+        this._resultSteps.push(["endSolarBeam",this._user])
     }
     return effectResults;
 };

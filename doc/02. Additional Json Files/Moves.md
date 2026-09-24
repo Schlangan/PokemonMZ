@@ -172,6 +172,9 @@ List of implemented effects and their additional parameters:
     - animationTurn1, **string**, *optional* : Animation played during the first turn.
 - type = **razorWind** : Two turns attack. First turn creates a whirlwind on the user, with no additional effect in generation 1. Second turn, attack the target
     - animationTurn1, **string**, *optional* : Animation played during the first turn.
+- type = **solarBeam** : Two turns attack. First turn the user absorbs light, with no additional effect in generation 1. Second turn, attack the target
+    - animationTurn1, **string**, *optional* : Animation played during the first turn.
+
 
 - type = **moneyDrop** : Drops money when using the attack. The effect depends on the pokemon generation. In generation I, it drops two times the level of the user.
 
