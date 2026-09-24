@@ -186,6 +186,17 @@
  * @type file
  * @dir audio/bgm/
  * 
+ * @param surfSprite
+ * @text Surf Character Sprite
+ * @desc Select a single character sprite sheet (starting with $ or !$)
+ * @type file
+ * @dir img/characters
+ * 
+ * @param surfBGM
+ * @text Surf BGM
+ * @type file
+ * @dir audio/bgm/
+ * 
 */
 
 const PokemonMZ = {}
@@ -238,3 +249,5 @@ PokemonMZ.evolutionBGM = parameters.evolutionBGM;
 
 PokemonMZ.bicycleCharacterSprite = parameters.bicycleSprite;
 PokemonMZ.bicycleBGM = parameters.bicycleBGM;
+PokemonMZ.surfCharacterSprite = parameters.surfSprite;
+PokemonMZ.surfBGM = parameters.surfBGM;

@@ -1119,7 +1119,7 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
             this._messageWindow.startMessage();
             break;
         case "escapeRope":
-            if ($gameMap.PokemonMZ_isRopeEscapable()) {
+            if ($gameMap.PokemonMZ_isRopeEscapable() && !$gamePlayerTrainer.isSurfing()) {
                 $gamePlayerTrainer.gainBagItem(itemDict.id, -1);
                 SceneManager.pop();
                 SceneManager.pop();
@@ -1152,7 +1152,11 @@ PokemonMZ_Scene_Item_Gen1.prototype.onItemSelectUse = function() {
             this._messageWindow.startMessage();
             break;
         case "cycling":
-            if ($gameMap.PokemonMZ_isCyclingAllowed()) {
+            // No cycling if we're surfing
+            if ($gamePlayerTrainer.isSurfing()) {
+                this._messageWindow.setText("This isn't the time to use that!");
+                this._messageWindow.startMessage();
+            } else if ($gameMap.PokemonMZ_isCyclingAllowed()) {
                 // Check if the region is forced
                 if ($gamePlayer.PokemonMZ_isCycling() && $gamePlayerTrainer.isOnForcedCyclingRegion()) {
                     this._messageWindow.setText("You can't get off here.");
@@ -2480,7 +2484,12 @@ PokemonMZ_Scene_PokemonMenu.prototype.onUsingMapMove = function(soundEffectName)
         $gamePlayerTrainer.startUsingFlash();
         SceneManager.pop();
         SceneManager.pop();
-        
+        break;
+    case "surf":
+        SceneManager.pop();
+        SceneManager.pop();
+        $gameMap.PokemonMZ_useSurf(this.selectedPokemon(), soundEffectName);
+        break;
     }
 };
 PokemonMZ_Scene_PokemonMenu.prototype.onUsingTmHm = function() {
@@ -2607,6 +2616,10 @@ PokemonMZ_Scene_PokemonMenu.prototype.onMoveCommand = function() {
         this._usingMapMove = "cut"
         this.onUsingMapMove(mapEffect.sound);
         break;
+    case "surf":
+        this._usingMapMove = "surf"
+        this.onUsingMapMove(mapEffect.sound);
+        break;
     case "fly":
         this.useFlyCommand(mapEffect.sound);
         break;
@@ -2639,7 +2652,7 @@ PokemonMZ_Scene_PokemonMenu.prototype.useTeleportCommand = function() {
 PokemonMZ_Scene_PokemonMenu.prototype.useDigCommand = function() {
     const pokemon = this.selectedPokemon();
 
-    if ($gameMap.PokemonMZ_isDigAllowed()) {
+    if ($gameMap.PokemonMZ_isDigAllowed() && !$gamePlayerTrainer.isSurfing()) {
         this._commandWindow.close();
         this._listWindow.deactivate();
         this._messageWindow.setText(pokemon.name() + " used Dig!");

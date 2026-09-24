@@ -42,9 +42,10 @@ moveData
     - **dig** : Allow teleporting to the last respawn from maps where the escapeRope:true note is set.
     - **fly** : Allow using fly to move to another maps, from maps where the fly:true note is set.
     - **flash** : Allow illuminating dark caves
+    - **surf** : Allow moving on water tiles
     - **teleport** : Allow teleporting to the last respawn from maps where the teleport:true note is set.
 - mapBadgeRequires: **string**, *optional* : Specify a required badge to allow using the move. Give the badge item string id, ex. cascadeBadge
-- mapSound: **string**, *optional* : Sound effect played when the move is used. Only applies to **cut** for now.
+- mapSound: **string**, *optional* : Sound effect played when the move is used. Applies to **cut**, **fly** and **surf** for now.
 - animationAlways, **string**, *optional* : The animation string Id from the additional JSon file PokemonMZ_Animations.json when the move is launched, whether it hits or not.
 - animationHit, **string**, *optional* : The animation string Id from the additional JSon file PokemonMZ_Animations.json when the move hits.
 

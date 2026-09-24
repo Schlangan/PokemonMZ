@@ -28,6 +28,28 @@ Game_CharacterBase.prototype.initMembers = function() {
     this._remainingSpinData = {"originalSpeed":0, "turns":0, "directions":0, "spinCount":0, "sound":false};
     this._autoMoveTileDirection = 0;
 };
+
+Game_CharacterBase.prototype.PokemonMZ_isSurfing = function() {
+    return false; // Overriden by Game_Event and Game_Player
+}
+
+const PokemonMZ_Game_CharacterBase_isMapPassable = Game_CharacterBase.prototype.isMapPassable;
+Game_CharacterBase.prototype.isMapPassable = function(x, y, d) {
+    const isSurfing = this.PokemonMZ_isSurfing();
+    const x2 = $gameMap.roundXWithDirection(x, d);
+    const y2 = $gameMap.roundYWithDirection(y, d);
+    const d2 = this.reverseDir(d);
+
+    const currentRegionId = $gameMap.regionId(x,y)
+    const nextRegionId = $gameMap.regionId(x2,y2)
+    const waterRegions = $gameMap.waterRegions();
+
+    let currentPassability = $gameMap.isPassable(x, y, d) || (waterRegions.includes(currentRegionId) && isSurfing);
+    let nextPassability =  $gameMap.isPassable(x2, y2, d2) || (waterRegions.includes(nextRegionId) && isSurfing);
+
+    return currentPassability && nextPassability;
+};
+
 const PokemonMZ_Game_CharacterBase_canPass = Game_CharacterBase.prototype.canPass;
 Game_CharacterBase.prototype.canPass = function(x, y, d) {
     const x2 = $gameMap.roundXWithDirection(x, d);
@@ -43,6 +65,7 @@ Game_CharacterBase.prototype.canPass = function(x, y, d) {
     }
     return canPass;
 };
+
 const PokemonMZ_Game_CharacterBase_moveStraight = Game_CharacterBase.prototype.moveStraight;
 Game_CharacterBase.prototype.moveStraight = function(d) {
     if (this._onLedge && !this.isJumping()) {
@@ -178,6 +201,9 @@ Game_Event.prototype.initialize = function(mapId, eventId) {
     PokemonMZ_Game_Event_initialize.call(this, mapId, eventId);
     const notes = this.PokemonMZ_noteArgs();
 
+    const surfing = notes.surf;
+    this._isSurfing = surfing ? Boolean(surfing) : false;
+
     const limitedRegion = notes.limitRegion;
     this._limitedRegion = limitedRegion ? Number(limitedRegion) : -1;
 
@@ -201,6 +227,10 @@ Game_Event.prototype.initialize = function(mapId, eventId) {
         this._hiddenItemPage = -1;
     }
 };
+Game_Event.prototype.PokemonMZ_isSurfing = function() {
+    return this._isSurfing;
+}
+
 Game_Event.prototype.PokemonMZ_isAggroing = function() {
     return this._aggroSequence;
 };
@@ -411,9 +441,13 @@ Game_Player.prototype.refresh = function() {
 
     if (this.PokemonMZ_isCycling()) {
         this.setImage(PokemonMZ.bicycleCharacterSprite, 0);
+    } else if (this.PokemonMZ_isSurfing()) {
+        this.setImage(PokemonMZ.surfCharacterSprite, 0);
     } else {
         this.setImage(characterName, characterIndex);
     }
+
+
     this._followers.refresh();
 };
 Game_Player.prototype.executeEncounter = function() {
@@ -561,12 +595,28 @@ Game_Player.prototype.PokemonMZ_fishingMeetsEncounterConditions = function(encou
 Game_Player.prototype.PokemonMZ_isCycling = function() {
     return $gamePlayerTrainer.isCycling();
 };
+Game_Player.prototype.PokemonMZ_isSurfing = function() {
+    return $gamePlayerTrainer.isSurfing();
+};
 
 Game_Player.prototype.PokemonMZ_isOnSlopeDownRegion = function() {
     const slopeRegions = $gameMap.slopeDownRegions() ?? [];
     return slopeRegions.includes($gamePlayer.regionId()); 
 }
 
+const PokemonMZ_Game_Player_moveStraight = Game_Player.prototype.moveStraight;
+Game_Player.prototype.moveStraight = function(d) {
+    PokemonMZ_Game_Player_moveStraight.call(this,d);
+
+    if (this.isMovementSucceeded() && this.PokemonMZ_isSurfing()) {
+        const regionId = $gameMap.regionId(this.x, this.y);
+        const waterRegions = $gameMap.waterRegions();
+        console.log(regionId)
+        if (!waterRegions.includes(regionId)) {
+            $gamePlayerTrainer.stopSurfing();
+        }
+    }
+}
 
 // Game_Map edits
 const PokemonMZ_Game_Map_initialize = Game_Map.prototype.initialize;
@@ -808,6 +858,9 @@ Game_Map.prototype.update = function(sceneActive) {
             AudioManager.playStandardSe(PokemonMZ.teleportSE);
             const location = $gamePlayerTrainer.respawnLocation();
             $gamePlayer.reserveTransfer(location.mapId,location.x,location.y,2,0);
+            if ($gamePlayerTrainer.isSurfing()) {
+                $gamePlayerTrainer.stopSurfing();
+            }
             $gameSystem.enableMenu();
         }
         return;
@@ -837,6 +890,9 @@ Game_Map.prototype.update = function(sceneActive) {
             AudioManager.playStandardSe(this._soundOfFly);
             const location = this.PokemonMZ_flyDestination();
             $gamePlayer.reserveTransfer(location.mapId,location.x,location.y,2,0);
+            if ($gamePlayerTrainer.isSurfing()) {
+                $gamePlayerTrainer.stopSurfing();
+            }
         }
     }
 
@@ -1024,6 +1080,26 @@ Game_Map.prototype.PokemonMZ_useFly = function(pokemon, soundEffectName, poiData
     this._isUsingFly = true;
     this._flyDestination = poiData;
     this._soundOfFly = soundEffectName;
+}
+Game_Map.prototype.PokemonMZ_useSurf = function(pokemon, soundEffectName) {
+    // Calculate if there is anything to cut
+    const d = $gamePlayer.direction();
+    const x2 = this.roundXWithDirection($gamePlayer.x, d);
+    const y2 = this.roundYWithDirection($gamePlayer.y, d);
+    const regionId = this.regionId(x2,y2);
+
+    if (this._waterRegions.includes(regionId)) {
+        pokemon.playCry();
+        $gameMessage.add($gamePlayerTrainer.name() + " got on " + pokemon.name() + "!")
+        this._soundOfSurf = soundEffectName;
+        if ($gamePlayerTrainer.isCycling()) {
+            $gamePlayerTrainer.stopCycling(false); // Surfing drops down from bicycle
+        }
+        $gamePlayerTrainer.startSurfing();
+    } else {
+        $gameMessage.add("No surfing on " + pokemon.name() + " here!")
+        return;
+    }
 }
 Game_Map.prototype.PokemonMZ_isCutting = function() {
     return this._eventsToCut && this._eventsToCut.length > 0;
@@ -1414,6 +1490,7 @@ PokemonMZ_Game_TrainerPlayer.prototype.initMembers = function(sourceActorId) {
     this._repelSteps = 0;
     this._isCycling = false;
     this._isUsingFlash = false;
+    this._isSurfing = false;
     this._visitedLocations = {};
     this._lastBagItemSelectedIndex = 0;
     this._lastStoredItemSelectedIndex = 0;
@@ -1962,6 +2039,9 @@ PokemonMZ_Game_TrainerPlayer.prototype.generateTradedPokemon = function(pokemonI
 PokemonMZ_Game_TrainerPlayer.prototype.isCycling = function() {
     return this._isCycling;
 };
+PokemonMZ_Game_TrainerPlayer.prototype.isSurfing = function() {
+    return this._isSurfing;
+};
 PokemonMZ_Game_TrainerPlayer.prototype.startCycling = function(displayMessage) {
     if ($gameMap.PokemonMZ_isCyclingAllowed()) {
         this._isCycling = true;
@@ -1990,6 +2070,30 @@ PokemonMZ_Game_TrainerPlayer.prototype.stopCycling = function(displayMessage) {
         $gameMessage.add($gamePlayerTrainer.name() + " got off the Bicycle.")
     }
 };
+
+PokemonMZ_Game_TrainerPlayer.prototype.startSurfing = function() {
+    this._isSurfing = true;
+    $gamePlayer.moveStraight($gamePlayer.direction());
+    $gamePlayer.refresh();
+
+    if (PokemonMZ.surfBGM) {
+        $gameSystem.saveWalkingBgm();
+        AudioManager.playBgm({
+            "name":PokemonMZ.surfBGM,
+            "pan":0,
+            "volume":100,
+            "pitch":100
+        });
+    }
+};
+PokemonMZ_Game_TrainerPlayer.prototype.stopSurfing = function() {
+    this._isSurfing = false;
+    $gamePlayer.refresh();
+    $gameSystem.replayWalkingBgm();
+};
+
+
+
 PokemonMZ_Game_TrainerPlayer.prototype.isOnForcedCyclingRegion = function() {
     const forcedCyclingRegions = $gameMap.forcedCyclingRegions() ?? [];
     return forcedCyclingRegions.includes($gamePlayer.regionId());
