@@ -611,7 +611,6 @@ Game_Player.prototype.moveStraight = function(d) {
     if (this.isMovementSucceeded() && this.PokemonMZ_isSurfing()) {
         const regionId = $gameMap.regionId(this.x, this.y);
         const waterRegions = $gameMap.waterRegions();
-        console.log(regionId)
         if (!waterRegions.includes(regionId)) {
             $gamePlayerTrainer.stopSurfing();
         }
