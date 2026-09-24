@@ -999,7 +999,7 @@ DataManager.verifyMoveData = function(index, moveData) {
         }
     }
     if (moveData.mapEffect) {
-        if (!["teleport","dig","cut","flash","fly","surf"].includes(moveData.mapEffect)) {
+        if (!["teleport","dig","cut","flash","fly","surf","strength"].includes(moveData.mapEffect)) {
             console.error(errorMessagePrefix + "Unknown Map Effect: " + moveData.mapEffect);
         }
     }

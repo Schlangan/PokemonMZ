@@ -218,6 +218,12 @@ Game_Event.prototype.initialize = function(mapId, eventId) {
     // Never cut when map initializes except if player stand on the event already
     this._hasBeenCut = this._canBeCut && ($gamePlayer._x == this._x && $gamePlayer._y == this._y);
 
+    if (notes.strength && notes.strengthPage) {
+        this._canBeMoved = Boolean(notes.strength) === true;
+        this._canBeMovedPage = Number(notes.strengthPage);
+    }
+
+
     const hiddenItemPage = notes.hiddenItemPage;
     if (hiddenItemPage) {
         this._isHiddenItem = true;
@@ -225,6 +231,16 @@ Game_Event.prototype.initialize = function(mapId, eventId) {
     } else {
         this._isHiddenItem = false;
         this._hiddenItemPage = -1;
+    }
+};
+const PokemonMZ_Game_Event_isCollidedWithEvents = Game_Event.prototype.isCollidedWithEvents;
+Game_Event.prototype.isCollidedWithEvents = function(x, y) {
+    // Edit even collision calculation to get the same behavior as players when pushing rocks
+    if (this._canBeMoved) {
+        const events = $gameMap.eventsXyNt(x, y);
+        return events.some(event => event.isNormalPriority());
+    } else {
+        return PokemonMZ_Game_Event_isCollidedWithEvents.call(this,x,y);
     }
 };
 Game_Event.prototype.PokemonMZ_isSurfing = function() {
@@ -365,6 +381,31 @@ Game_Event.prototype.PokemonMZ_cut = function() {
         this._hasBeenCut = true;
     }
 };
+Game_Event.prototype.PokemonMZ_canBeMoved = function() {
+    return this._canBeMoved && this._pageIndex == this._canBeMovedPage - 1;
+};
+
+
+Game_Event.prototype.PokemonMZ_strengthPush = function() {
+    const d = $gamePlayer.direction();
+    const canPass = this.canPass(this.x, this.y, d);
+    if (canPass) {
+        if (PokemonMZ.strengthSE) {
+            AudioManager.playStandardSe(PokemonMZ.strengthSE);
+        }
+        this.moveStraight(d);
+    }
+};
+
+const PokemonMZ_Game_Event_realMoveSpeed = Game_Event.prototype.realMoveSpeed;
+Game_Event.prototype.realMoveSpeed = function() {
+    if (this._canBeMoved) {
+        return $gamePlayer.realMoveSpeed();
+    } else {
+        return PokemonMZ_Game_Event_realMoveSpeed.call(this);
+    }
+};
+
 
 const PokemonMZ_Game_Event_opacity = Game_Event.prototype.opacity;
 Game_Event.prototype.opacity = function() {
@@ -380,6 +421,9 @@ const PokemonMZ_Game_Event_isThrough = Game_Event.prototype.isThrough;
 Game_Event.prototype.isThrough = function() {
     if (this._hasBeenCut) {
         // Cut events become passable
+        return true;
+    } else if (this._canBeMoved && this._x === $gamePlayer._x && this._y === $gamePlayer._y) {
+        // If player appears on a rock, it becomes through so the player can go down
         return true;
     } else {
         return PokemonMZ_Game_Event_isThrough.call(this);
@@ -476,11 +520,16 @@ Game_Player.prototype.increaseSteps = function() {
 Game_Player.prototype.startMapEvent = function(x, y, triggers, normal) {
     if (!$gameMap.isEventRunning()) {
         for (const event of $gameMap.eventsXy(x, y)) {
+            if ($gamePlayerTrainer.isUsingStrength() && event.PokemonMZ_canBeMoved()) {
+                if (triggers.includes(2) && !triggers.includes(0)) {
+                    event.PokemonMZ_strengthPush();
+                }
+            }
             if (event.PokemonMZ_isHiddenItem() && event.isTriggerIn([0])) {
                 // Hidden items with action button are triggered if near them and not standing on them
                 // Event only started when not standing on the item, and using action button
                 if (triggers.includes(0) && normal === true) {
-                        event.start();
+                    event.start();
                 }
             } else if (event.isTriggerIn(triggers) && event.isNormalPriority() === normal) {
                 event.start();
@@ -494,34 +543,34 @@ Game_Player.prototype.startMapEvent = function(x, y, triggers, normal) {
     }
 };
 Game_Player.prototype.PokemonMZ_hasReachedDestination = function() {
-        if (!$gameTemp.isDestinationValid()) return true;
+    if (!$gameTemp.isDestinationValid()) return true;
+    const x = $gameTemp.destinationX();
+    const y = $gameTemp.destinationY();
+    return this.pos(x, y);
+};
+Game_Player.prototype.PokemonMZ_getSlopeDirection = function() {
+    // Keyboard / gamepad has priority
+    const keyDir = Input.dir4;
+    if (keyDir > 0) return keyDir;
+
+    // Touch / mouse destination
+    if ($gameTemp.isDestinationValid()) {
         const x = $gameTemp.destinationX();
         const y = $gameTemp.destinationY();
-        return this.pos(x, y);
-    };
-Game_Player.prototype.PokemonMZ_getSlopeDirection = function() {
-        // Keyboard / gamepad has priority
-        const keyDir = Input.dir4;
-        if (keyDir > 0) return keyDir;
+        const dx = $gameMap.deltaX(x, this.x);
+        const dy = $gameMap.deltaY(y, this.y);
 
-        // Touch / mouse destination
-        if ($gameTemp.isDestinationValid()) {
-            const x = $gameTemp.destinationX();
-            const y = $gameTemp.destinationY();
-            const dx = $gameMap.deltaX(x, this.x);
-            const dy = $gameMap.deltaY(y, this.y);
-
-            // Prefer vertical if the click is clearly above or below
-            if (Math.abs(dy) >= Math.abs(dx)) {
-                if (dy < 0) return 8; // above → Up
-                if (dy > 0) return 2; // below → Down
-            } else {
-                if (dx < 0) return 4; // left
-                if (dx > 0) return 6; // right
-            }
+        // Prefer vertical if the click is clearly above or below
+        if (Math.abs(dy) >= Math.abs(dx)) {
+            if (dy < 0) return 8; // above → Up
+            if (dy > 0) return 2; // below → Down
+        } else {
+            if (dx < 0) return 4; // left
+            if (dx > 0) return 6; // right
         }
-        return 0; // no input
-    };
+    }
+    return 0; // no input
+};
 
 
 const PokemonMZ_Game_Player_canMove = Game_Player.prototype.canMove;
@@ -750,6 +799,11 @@ Game_Map.prototype.setup = function(mapId) {
     // If player is using flash and end up in a map not dark, the flash effect stops
     if (!this._isDark && $gamePlayerTrainer.isUsingFlash()) {
         $gamePlayerTrainer.stopUsingFlash();
+    }
+
+    // Strength stops when changing maps
+    if ($gamePlayerTrainer.isUsingStrength()) {
+        $gamePlayerTrainer.stopUsingStrength();
     }
 
     // If player is cycling and end up in a map where no cycling allowed, get down from the bike without message
@@ -1181,6 +1235,8 @@ const PokemonMZ_Game_Map_autoplay = Game_Map.prototype.autoplay;
 Game_Map.prototype.autoplay = function() {
     if ($dataMap.autoplayBgm && $gamePlayer.PokemonMZ_isCycling()) {
         $gameSystem.saveWalkingBgm2();
+    } else if ($dataMap.autoplayBgm && $gamePlayer.PokemonMZ_isSurfing()) {
+        $gameSystem.saveWalkingBgm2();
     } else {
         PokemonMZ_Game_Map_autoplay.call(this);
     }
@@ -1489,6 +1545,7 @@ PokemonMZ_Game_TrainerPlayer.prototype.initMembers = function(sourceActorId) {
     this._repelSteps = 0;
     this._isCycling = false;
     this._isUsingFlash = false;
+    this._isUsingStrength = false;
     this._isSurfing = false;
     this._visitedLocations = {};
     this._lastBagItemSelectedIndex = 0;
@@ -2112,6 +2169,15 @@ PokemonMZ_Game_TrainerPlayer.prototype.stopUsingFlash = function() {
 };
 PokemonMZ_Game_TrainerPlayer.prototype.isUsingFlash = function() {
     return this._isUsingFlash;
+};
+PokemonMZ_Game_TrainerPlayer.prototype.startUsingStrength = function() {
+    this._isUsingStrength = true;
+};
+PokemonMZ_Game_TrainerPlayer.prototype.stopUsingStrength = function() {
+    this._isUsingStrength = false;
+};
+PokemonMZ_Game_TrainerPlayer.prototype.isUsingStrength = function() {
+    return this._isUsingStrength;
 };
 PokemonMZ_Game_TrainerPlayer.prototype.addVisitedLocation = function(regionId, poiId) {
     if (!this._visitedLocations) { 

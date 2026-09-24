@@ -2485,6 +2485,11 @@ PokemonMZ_Scene_PokemonMenu.prototype.onUsingMapMove = function(soundEffectName)
         SceneManager.pop();
         SceneManager.pop();
         break;
+    case "strength":
+        $gamePlayerTrainer.startUsingStrength();
+        SceneManager.pop();
+        SceneManager.pop();
+        break;
     case "surf":
         SceneManager.pop();
         SceneManager.pop();
@@ -2626,6 +2631,9 @@ PokemonMZ_Scene_PokemonMenu.prototype.onMoveCommand = function() {
     case "flash":
         this.useFlashCommand(mapEffect.sound);
         break;
+    case "strength":
+        this.useStrengthCommand(mapEffect.sound);
+        break;
     default:
         this._commandWindow.close();
         this._listWindow.activate();
@@ -2694,6 +2702,18 @@ PokemonMZ_Scene_PokemonMenu.prototype.useFlashCommand = function(soundName) {
     this._messageWindow.startMessage();
     this._usingMapMove = "flash"
 };
+PokemonMZ_Scene_PokemonMenu.prototype.useStrengthCommand = function(soundName) {
+    const pokemon = this.selectedPokemon();
+    const name = pokemon.name();
+    pokemon.playCry();
+    const message = name + " used Strength. " + name + " can move boulders."
+    this._commandWindow.close();
+    this._listWindow.deactivate();
+    this._messageWindow.setText(message);
+    this._messageWindow.startMessage();
+    this._usingMapMove = "strength"
+};
+
 PokemonMZ_Scene_PokemonMenu.prototype.onCancelStatus = function() {
     this._statusWindow.close();
     this._listWindow.activate();

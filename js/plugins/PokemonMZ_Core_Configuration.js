@@ -197,6 +197,10 @@
  * @type file
  * @dir audio/bgm/
  * 
+ * @param strengthSE
+ * @text Strength moving SE
+ * @type file
+ * @dir audio/se/
 */
 
 const PokemonMZ = {}
@@ -251,3 +255,4 @@ PokemonMZ.bicycleCharacterSprite = parameters.bicycleSprite;
 PokemonMZ.bicycleBGM = parameters.bicycleBGM;
 PokemonMZ.surfCharacterSprite = parameters.surfSprite;
 PokemonMZ.surfBGM = parameters.surfBGM;
+PokemonMZ.strengthSE = parameters.strengthSE;

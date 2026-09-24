@@ -43,6 +43,7 @@ moveData
     - **fly** : Allow using fly to move to another maps, from maps where the fly:true note is set.
     - **flash** : Allow illuminating dark caves
     - **surf** : Allow moving on water tiles
+    - **strength** : Allow to move event with the strength property
     - **teleport** : Allow teleporting to the last respawn from maps where the teleport:true note is set.
 - mapBadgeRequires: **string**, *optional* : Specify a required badge to allow using the move. Give the badge item string id, ex. cascadeBadge
 - mapSound: **string**, *optional* : Sound effect played when the move is used. Applies to **cut**, **fly** and **surf** for now.
