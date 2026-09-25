@@ -2740,6 +2740,7 @@ PokemonMZ_BattleManager.captureAttemptGen1 = function() {
 
     const randomValue1 = Math.randomInt(rate+1)
     const randomizer = randomValue1 - statusEffect.randomizerBonus;
+
     if (randomizer < 0) {
         if (PokemonMZ.debugLog) {
             console.log({"PokemonMZ_BattleManager.captureAttemptGen1 >":
@@ -3027,7 +3028,10 @@ PokemonMZ_BattleManager.pokemonBreakFree = function() {
     AudioManager.playStandardSe(PokemonMZ.ballEscapeSE);
     switch(this._pokemonCaptureResult.wobble) {
     case 0:
+        const mw = SceneManager._scene._messageWindow;
+        $gameMessage.clear();
         $gameMessage.add("The ball missed the Pokémon!");
+        mw.startMessage();
         break;
     case 1:
         $gameMessage.add("Darn! The Pokémon broke free!");
