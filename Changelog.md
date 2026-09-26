@@ -1,3 +1,72 @@
+## [0.11] - 2026-09-26
+
+Pokemon can now reach level 50, mechanics up to Fuchsia City with Surf and Strength, including Safari Zone, Power Plant have been added. Routes 20 and 21 are not accessible yet.
+
+New demonstration versions of the plugin at these url: 
+- [Windows version](https://mega.nz/file/RctijarL#K5CIGiM4mnAISn3vwmFK1Lh7Nkkj914YYay5ujkm9eo).
+- [MacOs version](https://mega.nz/file/UYUAEbTY#tK53f8q2Mpxm4YYHe3N0xel_sYS8Af8ep4EdM9jHxhs).
+
+- Bug fixes
+    - When a pokemon faster than the opponent fainted due to poison, the opponent attack would play first against the next pokemon, instead of the action being removed from the action queue.
+    - Capture attempts with immediate fail due to no wobble weren't properly displaying the missed pokemon message.
+
+- QoL
+    - Asking for pokemon change returns to Yes every time a new opponent is fainted. The cancel button now properly acts as pressing No.
+    - Display order of items is now taken from the order inside the PokemonMZ_Items.json, bypassing the order in the database that could be messy.
+    - Position in item menu is now saved, allowing to return to the same index when opening the items menu again
+
+- New map mechanics
+    - Number Item In Bag : A plugin command to check the amount of a specific item inside the player's bag, and store the result in a variable
+    - Add Variable Item Amount To Bag : A plugin command to add an item to the bag with the amount stored inside a variable
+    - Lose Variable Item Amount : A plugin command to remove an item from the bag with the amount stored inside a variable
+    - Surf mechanics, including swimming NPCs
+    - Strength mechanics, to push boulders
+
+- New battle mechanics
+    - Mimic - Randomly copies one of the opponent moves until the user faints, is switched out, or the battle ends.
+    - Moves doing random damage between 1 and the user's level multiplied by a given factor (psywave).
+    - Solar Beam - Taking in sunlight at first turn, they launching attack
+
+- New predefined Pokemon data
+    - Chansey (found wild in Safari Zone)
+    - Electabuzz (found wild in Power Plant)
+    - Exeggutor (evolving player's Exeggcute with a Leaf Stone)
+    - Lapras (given in Silph Co. 7F)
+    - Rhydon (evolving player's Rhyhorn at lvl.42)
+    - Tauros (found wild in Safari Zone)
+    - Zapdos (found in Power Plant)
+
+- New predefined moves data
+    - Acid Armor (learned by player's Vaporeon at lvl.47)
+    - Dizzy Punch (learned by player's Kangaskhan at lvl.46)
+    - High Jump Kick (learned by player's Hitmonlee at lvl.48)
+    - Mimic (learned with TM31)
+    - Psywave (learned with TM46)
+    - Soft-Boiled (learned with TM41)
+    - Solar Beam (learned by Exeggcute at lvl.42)
+    - Spike Cannon (learned by player's Cloyster at lvl.50)
+    - Strength (taught with HM04)
+    - Surf (taught with HM03)
+
+- New predefined item data
+    - Card Key (found in Silph Co. 5F)
+    - Gold Teeth (found in Safari Zone)
+    - Marsh Badge (given in Saffron Gym)
+    - Master Ball (given in Silph Co. 11F)
+    - Safari Ball (used inside Safari Zone)
+    - TM03 - Swords Dance (found in Silph Co. 7F)
+    - TM16 - Payday (found in Route 12 with Surf)
+    - TM25 - Thunder (found in Power Plant)
+    - TM26 - Earthquake (found in Silph Co. 10F)
+    - TM31 - Mimic (given by Copycat in Saffron City)
+    - TM36 - Self-destruct (given by NPC in Silph Co. 2F)
+    - TM40 - Skull Bash (found in Safari Zone)
+    - TM41 - Soft-Boiled (given by NPC in Celadon with Surf)
+    - TM46 - Psywave (given in Saffron Gym)
+    - HM03 - Surf (given in Safari Zone)
+    - HM04 - Strength (given in Fuchsia City, Warden House)
+
+
 ## [0.10] - 2026-09-20
 
 Pokemon can now reach level 45, mechanics up to Fuchsia City, excepted Safari Zone, have been added. This includes the Exp.Share, as well as the Cycling Road.

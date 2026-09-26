@@ -38,6 +38,18 @@
         "animationHit":"waterTarget2"
     },
     {
+        "id":"acidArmor",
+        "category":"status",
+        "type":"poison",
+        "target":"user",
+        "pp":40,
+        "accuracy":100,
+        "effects":[
+            {"type":"pdefUpUser","stage":2,"percentChance":100}
+        ],
+        "animationHit":"powerUpUser2"
+    },
+    {
         "id":"agility",
         "category":"status",
         "type":"psychic",
@@ -345,6 +357,16 @@
         "animationHit":"silence"
     },
     {
+		"id":"dizzyPunch",
+		"type":"normal",
+		"target":"opponent",
+		"pp":10,
+		"power":70,
+		"accuracy":100,
+		"effects":[],
+        "animationHit":"hitTargetPhysical"
+	},
+    {
 		"id":"doubleEdge",
 		"type":"normal",
 		"target":"opponent",
@@ -532,6 +554,7 @@
 		"pp":15,
 		"power":70,
 		"accuracy":95,
+        "hm":true,
         "mapEffect":"fly",
         "mapBadgeRequires":"thunderBadge",
         "mapSound":"Wind8",
@@ -671,6 +694,18 @@
             {"type":"flinchTarget","percentChance":30}
         ],
         "animationHit":"hitTargetPhysical"
+    },
+    {
+        "id":"highJumpKick",
+        "type":"fighting",
+        "target":"opponent",
+        "pp":20,
+        "power":85,
+        "accuracy":90,
+        "effects":[
+            {"type":"fixedCrashDamage","value":1}
+        ],
+        "animationHit":"hitTargetPhysicalFast"
     },
     {
         "id":"hornAttack",
@@ -944,6 +979,18 @@
         "animationHit":"metronome"
     },
     {
+        "id":"mimic",
+        "category":"status",
+        "type":"normal",
+        "target":"opponent",
+        "pp":10,
+        "accuracy":100,
+        "effects":[
+            {"type":"mimicTargetMove"}
+        ],
+        "animationHit":"mimic"
+    },
+    {
         "id":"minimize",
         "category":"status",
         "type":"normal",
@@ -1106,6 +1153,16 @@
         "effects":[
             {"type":"spcDownTarget","stage":1,"percentChance":33}
         ],
+        "animationHit":"lightTarget2"
+    },
+    {
+        "id":"psywave",
+        "type":"psychic",
+        "target":"opponent",
+        "randomDamageMaxLevelFactor":1.5,
+        "pp":15,
+        "accuracy":80,
+        "effects":[],
         "animationHit":"lightTarget2"
     },
     {
@@ -1406,6 +1463,31 @@
         "animationHit":"fogTarget"
     },
     {
+        "id":"softBoiled",
+        "category":"status",
+        "type":"normal",
+        "target":"user",
+        "pp":10,
+        "accuracy":100,
+        "effects":[
+            {"type":"healUserPercentHp","value":50}
+        ],
+        "animationHit":"healUser1"
+    },
+    {
+        "id":"solarBeam",
+        "type":"grass",
+        "target":"opponent",
+        "pp":10,
+        "power":120,
+        "accuracy":100,
+		"effects":[
+			{"type":"solarBeam","animationTurn1":"ballLightUser"}
+		],
+        "alwaysEffects":true,
+        "animationHit":"solarBeam"
+	},
+    {
 		"id":"sonicBoom",
 		"type":"normal",
 		"target":"opponent",
@@ -1415,6 +1497,18 @@
 		"effects":[],
         "animationHit":"windTarget2"
 	},
+    {
+        "id":"spikeCannon",
+        "type":"normal",
+        "target":"opponent",
+        "pp":15,
+        "power":20,
+        "accuracy":100,
+        "effects":[
+            {"type":"multiHit","min":2,"max":5,"percentChances":[38,37,13,12]}
+        ],
+        "animationHit":"pierceTargetPhysicalFast"
+    },
     {
         "id":"splash",
         "category":"status",
@@ -1450,6 +1544,19 @@
             {"type":"flinchTarget","percentChance":30}
         ],
         "animationHit":"bodySlamTarget"
+    },
+     {
+        "id":"strength",
+        "type":"normal",
+        "target":"opponent",
+        "hm":true,
+        "mapEffect":"strength",
+        "mapBadgeRequires":"rainbowBadge",
+        "pp":15,
+        "power":80,
+        "accuracy":100,
+        "effects":[],
+        "animationHit":"hitTargetPhysical"
     },
     {
         "id":"stringShot",
@@ -1534,6 +1641,20 @@
             {"type":"confuseTarget","percentChance":100}
         ],
         "animationHit":"supersonic"
+    },
+    {
+        "id":"surf",
+        "type":"water",
+        "target":"opponent",
+        "pp":15,
+        "power":95,
+        "accuracy":100,
+        "hm":true,
+        "mapEffect":"surf",
+        "mapBadgeRequires":"soulBadge",
+        "mapSound":"Water1",
+        "effects":[],
+        "animationHit":"waterTargetAll2"
     },
     {
         "id":"swift",

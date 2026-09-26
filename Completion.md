@@ -103,7 +103,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0100. Voltorb
 - 0101. Electrode
 - 0102. Exeggcute
-- (...)
+- 0103. Exeggutor
 - 0104. Cubone
 - 0105. Marowak
 - 0106. Hitmonlee
@@ -112,7 +112,8 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0109. Koffing
 - 0110. Weezing
 - 0111. Rhyhorn
-- (...)
+- 0112. Rhydon
+- 0113. Chansey
 - 0114. Tangela
 - 0115. Kangaskhan
 - 0116. Horsea
@@ -124,11 +125,13 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0122. Mr.Mime
 - 0123. Scyther
 - 0124. Jynx
+- 0125. Electabuzz
 - (...)
 - 0127. Pinsir
-- (...)
+- 0128. Tauros
 - 0129. Magikarp
 - 0130. Gyarados
+- 0131. Lapras
 - (...)
 - 0133. Eevee
 - 0134. Vaporeon
@@ -138,6 +141,8 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - (...)
 - 0143. Snorlax
 - (...)
+- 0145. Zapdos
+- (...)
 - 0147. Dratini
 - 0148. Dragonair
 - (...)
@@ -146,6 +151,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 
 - Moves without secondary effect
     - Cut
+    - Dizzy Punch
     - Drill Peck
     - Earthquake
     - Egg Bomb
@@ -159,6 +165,8 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Rock Throw
     - Scratch
     - Slam
+    - Strength
+    - Surf
     - Tackle
     - Tri Attack
     - Vice Grip
@@ -182,6 +190,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - Moves with specific damage
     - Dragon Rage (40)
     - Night Shade (User level)
+    - Psywave (random between 1 and user's level ×1.5)
     - Seismic Toss (User level)
     - Sonic Boom (20)
     - Super Fang (50% remaining HP)
@@ -195,6 +204,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Fury Attack (2-5)
     - Fury Swipes (2-5)
     - Pin Missile (2-5)
+    - Spike Cannon (2-5)
     - Twineedle (2-2)
 
 - Moves hitting N turns consecutively and ending with confusion
@@ -287,6 +297,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Withdraw (defense)
 
 - Moves raising user stats by two stages
+    - Acid Armor (defense)
     - Agility (speed)
     - Amnesia (special)
     - Barrier (defense)
@@ -306,6 +317,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Recover
 
 - Moves with crash damage
+    - High Jump Kick (1 Hp)
     - Jump Kick (1 Hp)
 
 - Moves with recoil damage
@@ -343,6 +355,8 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Dig
     - Flash
     - Fly
+    - Strength
+    - Surf
     - Teleport
 
 - Barrier moves
@@ -356,6 +370,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Disable (disable a random move from the enemy)
     - Focus Energy (multiply critical chances by 4 - bug fixed compared to original RBY games which were dividing by 4 instead)
     - Haze (reset stats modifiers from both side)
+    - Mimic (takes temporarily one of the opponent's moves)
     - Mirror Move (replicate last attack from the opponent)
     - Splash (no effect at all)
     - Struggle (launched with 0pp)
@@ -369,11 +384,14 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Thunder Badge
     - Rainbow Badge
     - Soul Badge
+    - Marsh Badge
 
 - Balls
     - Poke Ball
     - Great Ball
     - Ultra Ball
+    - Master Ball
+    - Safari Ball
 
 - Healing
     - Potion
@@ -439,9 +457,11 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - Key Items
     - Bicycle
     - Bike Voucher
+    - Card Key
     - Coin Case
     - Exp Share
     - Item Finder
+    - Gold Teeth
     - Lift Key
     - Oak's Parcel
     - Poke Flute
@@ -456,7 +476,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - TMs / HMs
     - TM01 - Mega punch
     - TM02 - Razor wind
-    - (...)
+    - TM03 - Swords Dance
     - TM04 - Whirlwind
     - TM05 - Mega kick
     - TM06 - Toxic
@@ -469,7 +489,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - TM13 - Ice beam
     - (...)
     - TM15 - Hyper beam
-    - (...)
+    - TM16 - Payday
     - TM17 - Submission
     - TM18 - Counter
     - TM19 - Seismic toss
@@ -478,28 +498,34 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - (...)
     - TM23 - Dragon rage
     - TM24 - Thunderbolt
+    - TM25 - Thunder
+    - TM26 - Earthquake
     - (...)
     - TM28 - Dig
     - TM29 - Psychic
     - TM30 - Teleport
-    - (...)
+    - TM31 - Mimic
     - TM32 - Double team
     - TM33 - Reflect
     - TM34 - Bide
     - (...)
+    - TM36 - Self-destruct
     - TM37 - Egg bomb
     - (...)
     - TM39 - Swift
-    - (...)
+    - TM40 - Skull bash
+    - TM41 - Soft-boiled
     - TM42 - Dream eater
     - (...)
     - TM44 - Rest
     - TM45 - Thunderwave
+    - TM46 - Psywave
     - (...)
     - TM48 - Rock slide
     - TM49 - Tri attack
     - TM50 - Substitute
     - HM01 - Cut
     - HM02 - Fly
-    - (...)
+    - HM03 - Surf
+    - HM04 - Strength
     - HM05 - Flash

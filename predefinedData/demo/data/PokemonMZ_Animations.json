@@ -259,6 +259,14 @@
         ]
     },
     {
+        "id":"solarBeam",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":117},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
         "id":"hyperBeam",
         "sequence":[
             {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
@@ -428,6 +436,14 @@
         ]
     },
     {
+        "id":"mimic",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"user", "animationId":97, "wait":true},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
         "id":"growl",
         "sequence":[
             {"type":"playAnimation", "target":"user", "animationId":37, "wait":true},
@@ -505,6 +521,14 @@
         "sequence":[
             {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8},
             {"type":"playAnimation", "target":"user", "animationId":52, "wait":true},
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"ballLightUser",
+        "sequence":[
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"user", "animationId":119, "wait":true},
             {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8}
         ]
     },

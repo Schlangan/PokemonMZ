@@ -3106,7 +3106,35 @@
             {"lvl":48,"move":"sleepPowder"}
         ],
         "hmMoves": [],
-        "tmMoves": ["toxic", "takeDown", "doubleEdge", "rage", "psychic", "teleport", "mimic", "doubleTeam", "reflect", "bide", "selfDestruct", "eggBomb", "rest", "psywave", "explosion", "substitute"]
+        "tmMoves": [
+            "toxic", "takeDown", "doubleEdge", "rage", "psychic", "teleport", "mimic", "doubleTeam", 
+            "reflect", "bide", "selfDestruct", "eggBomb", "rest", "psywave", "explosion", "substitute"
+        ]
+    },
+    {
+        "id": "exeggutor",
+        "pokedex": [{"region":"kanto","number":103}],
+        "category": "Coconut",
+        "description": "Legend has it that on rare occasions, one of its heads will drop off and continue on as an Exeggcute. Its cries are very noisy. This is because each of the 3 heads thinks about whatever it likes.",
+        "height": 2.0,
+        "weight": 120.0,
+        "types": ["grass", "psychic"],
+        "baseStats": {"hp":95,"patk":95,"pdef":85,"satk":125,"sdef":65,"spd":55,"spc":125},
+        "expCurve": "slow",
+        "catchRate": 45,
+        "xpYield": 212,
+        "ev": [{"satk":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"hypnosis"},
+            {"lvl":1,"move":"barrage"},
+            {"lvl":28,"move":"stomp"}
+        ],
+        "hmMoves": ["strength"],
+        "tmMoves": [
+            "toxic", "takeDown", "doubleEdge", "hyperBeam", "rage", "megaDrain", "solarBeam", "psychic", "teleport", 
+            "mimic", "doubleTeam", "reflect", "bide", "selfDestruct", "eggBomb", "rest", "psywave", "explosion", "substitute"
+        ]
     },
     {
         "id":"cubone",
@@ -3357,9 +3385,70 @@
         ]
     },
     {
+        "id": "rhydon",
+        "pokedex": [{"region":"kanto","number":112}],
+        "category": "Drill",
+        "description": "Protected by an armor-like hide, it is capable of living in molten lava of 3,600 degrees. Walks on its hind legs. Shows signs of intelligence. Its armor-like hide even repels molten lava.",
+        "height": 1.9,
+        "weight": 120.0,
+        "types": ["ground", "rock"],
+        "baseStats": {"hp":105,"patk":130,"pdef":120,"satk":45,"sdef":45,"spd":40,"spc":45},
+        "expCurve": "slow",
+        "catchRate": 60,
+        "xpYield": 204,
+        "ev": [{"patk":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"stomp"},
+            {"lvl":1,"move":"hornAttack"},
+            {"lvl":1,"move":"furyAttack"},
+            {"lvl":1,"move":"tailWhip"},
+            {"lvl":30,"move":"stomp"},
+            {"lvl":35,"move":"tailWhip"},
+            {"lvl":40,"move":"furyAttack"},
+            {"lvl":48,"move":"hornDrill"},
+            {"lvl":55,"move":"leer"},
+            {"lvl":64,"move":"takeDown"}
+        ],
+        "hmMoves": ["surf", "strength"],
+        "tmMoves": [
+            "megaPunch", "megaKick", "toxic", "hornDrill", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", 
+            "blizzard", "hyperBeam", "payDay", "submission", "counter", "seismicToss", "rage", "thunderbolt", "thunder", "earthquake", 
+            "fissure", "dig", "mimic", "doubleTeam", "bide", "fireBlast", "skullBash", "rest", "rockSlide", "substitute"
+        ]
+    },
+    {
         "id": "chansey",
         "pokedex": [{"region":"kanto","number":113}],
-        "category": "Egg"
+        "category": "Egg",
+        "description": "A rare and elusive Pokémon that is said to bring happiness to those who manage to get it. A gentle and kindhearted Pokémon that shares its nutritious eggs if it sees an injured Pokémon.",
+        "height": 1.1,
+        "weight": 34.6,
+        "types": ["normal"],
+        "baseStats": {"hp":250,"patk":5,"pdef":5,"satk":35,"sdef":105,"spd":50,"spc":105},
+        "expCurve": "fast",
+        "catchRate": 30,
+        "xpYield": 255,
+        "ev": [{"hp":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"pound"},
+            {"lvl":1,"move":"tailWhip"},
+            {"lvl":12,"move":"doubleSlap"},
+            {"lvl":24,"move":"sing"},
+            {"lvl":30,"move":"growl"},
+            {"lvl":38,"move":"minimize"},
+            {"lvl":44,"move":"defenseCurl"},
+            {"lvl":48,"move":"lightScreen"},
+            {"lvl":54,"move":"doubleEdge"}
+        ],
+        "hmMoves": ["strength", "flash"],
+        "tmMoves": [
+            "megaPunch", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", "blizzard", 
+            "hyperBeam", "submission", "counter", "seismicToss", "rage", "solarBeam", "thunderbolt", "thunder", "psychic", "teleport", 
+            "mimic", "doubleTeam", "reflect", "bide", "metronome", "eggBomb", "fireBlast", "skullBash", "softBoiled", "rest", "thunderWave", 
+            "psywave", "triAttack", "substitute"
+        ]
     },
     {
         "id": "tangela",
@@ -3694,6 +3783,36 @@
         "tmMoves": ["megaPunch", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", "blizzard", "hyperBeam", "submission", "counter", "seismicToss", "rage", "psychic", "teleport", "mimic", "doubleTeam", "reflect", "bide", "metronome", "skullBash", "rest", "psywave", "substitute"]
     },
     {
+        "id": "electabuzz",
+        "pokedex": [{"region":"kanto","number":125}],
+        "category": "Electric",
+        "description": "Normally found near power plants, they can wander away and cause major blackouts in cities. If a major power outage occurs, it is certain that this Pokémon has eaten electricity at a power plant.",
+        "height": 1.1,
+        "weight": 30.0,
+        "types": ["electric"],
+        "baseStats": {"hp":65,"patk":83,"pdef":57,"satk":95,"sdef":85,"spd":105,"spc":85},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 156,
+        "ev": [{"spd":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"quickAttack"},
+            {"lvl":1,"move":"leer"},
+            {"lvl":34,"move":"thunderShock"},
+            {"lvl":37,"move":"screech"},
+            {"lvl":42,"move":"thunderPunch"},
+            {"lvl":49,"move":"lightScreen"},
+            {"lvl":54,"move":"thunder"}
+        ],
+        "hmMoves": ["strength", "flash"],
+        "tmMoves": [
+            "megaPunch", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "submission", "counter", "seismicToss", 
+            "rage", "thunderbolt", "thunder", "psychic", "teleport", "mimic", "doubleTeam", "reflect", "bide", "metronome", "swift", "skullBash", 
+            "rest", "thunderWave", "psywave", "substitute"
+        ]
+    },
+    {
         "id": "pinsir",
         "pokedex": [{"region":"kanto","number":127}],
         "category": "Stag Beetle",
@@ -3721,6 +3840,37 @@
         "tmMoves": [
             "swordsDance", "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", 
             "submission", "seismicToss", "rage", "mimic", "doubleTeam", "bide", "rest", "substitute"
+        ]
+    },
+    {
+        "id": "tauros",
+        "pokedex": [{"region":"kanto","number":128}],
+        "category": "Wild Bull",
+        "description": "When it targets an enemy, it charges furiously while whipping its body with its long tails. A rowdy Pokémon with a lot of stamina. Once running, it won't stop until it hits something.",
+        "height": 1.4,
+        "weight": 88.4,
+        "types": ["normal"],
+        "baseStats": {"hp":75,"patk":100,"pdef":95,"satk":40,"sdef":70,"spd":110,"spc":70},
+        "expCurve": "slow",
+        "catchRate": 45,
+        "xpYield": 211,
+        "ev": [
+            {"patk":1},
+            {"spd":1}
+        ],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"tackle"},
+            {"lvl":21,"move":"stomp"},
+            {"lvl":28,"move":"tailWhip"},
+            {"lvl":35,"move":"leer"},
+            {"lvl":44,"move":"rage"},
+            {"lvl":51,"move":"takeDown"}
+        ],
+        "hmMoves": ["strength"],
+        "tmMoves": [
+            "toxic", "hornDrill", "bodySlam", "takeDown", "doubleEdge", "iceBeam", "blizzard", "hyperBeam", "rage", "thunderbolt", 
+            "thunder", "earthquake", "fissure", "mimic", "doubleTeam", "bide", "fireBlast", "skullBash", "rest", "substitute"
         ]
     },
     {
@@ -3776,9 +3926,35 @@
         ]
     },
     {
-        "id":"lapras",
-        "pokedex":[{"region":"kanto","number":131}],
-        "category":"Transport"
+        "id": "lapras",
+        "pokedex": [{"region":"kanto","number":131}],
+        "category": "Transport",
+        "description": "A Pokémon that has been overhunted almost to extinction. It can ferry people across the water. A gentle soul that can read the minds of people. It can ferry people across the sea on its back.",
+        "height": 2.5,
+        "weight": 220.0,
+        "types": ["water", "ice"],
+        "baseStats": {"hp":130,"patk":85,"pdef":80,"satk":85,"sdef":95,"spd":60,"spc":95},
+        "expCurve": "slow",
+        "catchRate": 45,
+        "xpYield": 219,
+        "ev": [{"hp":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"growl"},
+            {"lvl":1,"move":"waterGun"},
+            {"lvl":16,"move":"sing"},
+            {"lvl":20,"move":"mist"},
+            {"lvl":25,"move":"bodySlam"},
+            {"lvl":31,"move":"confuseRay"},
+            {"lvl":38,"move":"iceBeam"},
+            {"lvl":46,"move":"hydroPump"}
+        ],
+        "hmMoves": ["surf", "strength"],
+        "tmMoves": [
+            "toxic", "hornDrill", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", "blizzard", "hyperBeam", 
+            "rage", "solarBeam", "dragonRage", "thunderbolt", "thunder", "psychic", "mimic", "doubleTeam", "reflect", "bide", "skullBash", 
+            "rest", "psywave", "substitute"
+        ]
     },
     {
         "id": "eevee",
@@ -3985,6 +4161,33 @@
             "megaPunch", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", "blizzard", "hyperBeam", 
             "payDay", "submission", "counter", "seismicToss", "rage", "solarBeam", "thunderbolt", "thunder", "earthquake", "fissure", "psychic", 
             "mimic", "doubleTeam", "reflect", "bide", "metronome", "selfDestruct", "fireBlast", "skullBash", "rest", "psywave", "rockSlide", "substitute"
+        ]
+    },
+    {
+        "id": "zapdos",
+        "pokedex": [{"region":"kanto","number":145}],
+        "category": "Electric",
+        "description": "A legendary bird Pokémon that is said to appear from clouds while dropping enormous lightning bolts. This legendary bird Pokémon is said to appear when the sky turns dark and lightning showers down.",
+        "height": 1.6,
+        "weight": 52.6,
+        "types": ["electric", "flying"],
+        "baseStats": {"hp":90,"patk":90,"pdef":85,"satk":125,"sdef":90,"spd":100,"spc":125},
+        "expCurve": "slow",
+        "catchRate": 3,
+        "xpYield": 216,
+        "ev": [{"satk":3}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"drillPeck"},
+            {"lvl":1,"move":"thunderShock"},
+            {"lvl":51,"move":"thunder"},
+            {"lvl":55,"move":"agility"},
+            {"lvl":60,"move":"lightScreen"}
+        ],
+        "hmMoves": ["fly", "flash"],
+        "tmMoves": [
+            "razorWind", "whirlwind", "toxic", "takeDown", "doubleEdge", "hyperBeam", "rage", "thunderbolt", 
+            "thunder", "mimic", "doubleTeam", "reflect", "bide", "swift", "skyAttack", "rest", "thunderWave", "substitute"
         ]
     },
     {

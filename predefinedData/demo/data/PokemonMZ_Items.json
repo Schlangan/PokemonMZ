@@ -28,6 +28,61 @@
         "effect":"passivePdefBoost",
         "boostPercent":12.5
     },
+	{
+		"id":"marshBadge",
+		"category":"badge",
+		"obedienceLevel":70	
+	},
+	{
+        "id":"pokeBall",
+        "user":"trainer",
+        "category":"regular",
+        "battle":true,
+        "effect":"ball",
+        "gen1rate":255,
+        "gen1hpFactor":12,
+        "price":200
+    },
+    {
+        "id":"greatBall",
+        "user":"trainer",
+        "category":"regular",
+        "battle":true,
+        "effect":"ball",
+        "gen1rate":200,
+        "gen1hpFactor":8,
+        "price":600
+    },
+    {
+        "id":"ultraBall",
+        "user":"trainer",
+        "category":"regular",
+        "battle":true,
+        "effect":"ball",
+        "gen1rate":150,
+        "gen1hpFactor":12,
+        "price":1200
+    },
+    {
+        "id":"masterBall",
+        "user":"trainer",
+        "category":"regular",
+        "battle":true,
+        "effect":"ball",
+        "gen1rate":-1,
+        "gen1hpFactor":0,
+        "price":0
+    },
+	 {
+        "id":"safariBall",
+        "user":"trainer",
+        "category":"regular",
+        "battle":true,
+        "effect":"ball",
+        "gen1rate":150,
+        "gen1hpFactor":12,
+        "price":1200
+    },
     {
         "id":"potion",
         "user":"trainer",
@@ -78,7 +133,7 @@
 		"value":80,
 		"price":350
 	},
-    {
+	{
 		"id":"hyperPotion",
 		"user":"trainer",
 		"category":"regular",
@@ -88,7 +143,7 @@
 		"value":200,
 		"price":1500
 	},
-    {
+	{
 		"id":"maxPotion",
 		"user":"trainer",
 		"category":"regular",
@@ -98,126 +153,19 @@
 		"value":100,
 		"price":2500
 	},
-    {
-        "id":"oakParcel",
-        "user":"trainer",
-        "category":"key",
-        "battle":false,
-        "effect":"lockedItem",
-        "useMessage":"This isn't yours to use!"
-    },
-    {
-		"id":"domeFossil",
-		"user":"trainer",
-		"category":"key",
-		"battle":false,
-        "effect":"lockedItem",
-        "useMessage":"This isn't the time to use that!"
-	},
-    {
-		"id":"helixFossil",
-		"user":"trainer",
-		"category":"key",
-		"battle":false,
-        "effect":"lockedItem",
-        "useMessage":"This isn't the time to use that!"
-	},
 	{
-		"id":"oldAmber",
+		"id":"fullRestore",
 		"user":"trainer",
-		"category":"key",
-		"battle":false,
-        "effect":"lockedItem",
-        "useMessage":"This isn't the time to use that!"
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"recoverHpPercentCureStatus",
+		"value":100,
+		"status":"all",
+		"price":3000
 	},
-    {
-		"id":"ssTicket",
-		"user":"trainer",
-		"category":"key",
-		"battle":false,
-        "effect":"lockedItem",
-        "useMessage":"This isn't the time to use that!"
-	},
-    {
-		"id":"bikeVoucher",
-		"user":"trainer",
-		"category":"key",
-		"battle":false,
-        "effect":"lockedItem",
-        "useMessage":"This isn't the time to use that!"
-	},
+
 	{
-		"id":"liftKey",
-		"user":"trainer",
-		"category":"key",
-		"battle":false,
-        "effect":"lockedItem",
-        "useMessage":"This isn't the time to use that!"
-	},
-	{
-		"id":"silphScope",
-		"user":"trainer",
-		"category":"key",
-		"battle":false,
-        "effect":"lockedItem",
-        "useMessage":"This isn't the time to use that!"
-	},
-	{
-		"id":"expShare",
-		"user":"trainer",
-		"category":"key",
-		"battle":false,
-		"effect":"expShare",
-        "useMessage":"This isn't the time to use that!"
-	},
-    {
-        "id":"townMap",
-        "user":"trainer",
-        "category":"key",
-        "battle":false,
-        "effect":"townMap"
-    },
-    {
-        "id":"pokeBall",
-        "user":"trainer",
-        "category":"regular",
-        "battle":true,
-        "effect":"ball",
-        "gen1rate":255,
-        "gen1hpFactor":12,
-        "price":200
-    },
-    {
-        "id":"greatBall",
-        "user":"trainer",
-        "category":"regular",
-        "battle":true,
-        "effect":"ball",
-        "gen1rate":200,
-        "gen1hpFactor":8,
-        "price":600
-    },
-    {
-        "id":"ultraBall",
-        "user":"trainer",
-        "category":"regular",
-        "battle":true,
-        "effect":"ball",
-        "gen1rate":150,
-        "gen1hpFactor":12,
-        "price":1200
-    },
-    {
-        "id":"masterBall",
-        "user":"trainer",
-        "category":"regular",
-        "battle":true,
-        "effect":"ball",
-        "gen1rate":-1,
-        "gen1hpFactor":0,
-        "price":99999999
-    },
-    {
         "id":"antidote",
         "user":"trainer",
         "category":"regular",
@@ -227,14 +175,14 @@
         "status":"poison",
         "price":100
     },
-    {
-        "id":"paralyzHeal",
+	{
+        "id":"awakening",
         "user":"trainer",
         "category":"regular",
         "battle":true,
         "target":"pokemon",
         "effect":"cureStatus",
-        "status":"paralysis",
+        "status":"sleep",
         "price":200
     },
     {
@@ -258,36 +206,16 @@
 		"price":250
 	},
     {
-        "id":"awakening",
+        "id":"paralyzHeal",
         "user":"trainer",
         "category":"regular",
         "battle":true,
         "target":"pokemon",
         "effect":"cureStatus",
-        "status":"sleep",
+        "status":"paralysis",
         "price":200
     },
 	{
-		"id":"pokeFlute",
-		"user":"trainer",
-		"category":"key",
-		"battle":true,
-		"target":"pokemon",
-		"effect":"fluteCureStatus",
-		"status":"sleep",
-		"mapCommonEventId":7,
-		"fluteMe":"Musical3"
-	},
-    {
-        "id":"escapeRope",
-        "user":"trainer",
-        "category":"regular",
-        "battle":false,
-        "target":"trainer",
-        "effect":"escapeRope",
-        "price":550
-    },
-    {
         "id":"fullHeal",
         "user":"trainer",
         "category":"regular",
@@ -297,17 +225,6 @@
         "status":"all",
         "price":600
     },
-    {
-		"id":"fullRestore",
-		"user":"trainer",
-		"category":"regular",
-		"battle":true,
-		"target":"pokemon",
-		"effect":"recoverHpPercentCureStatus",
-		"value":100,
-		"status":"all",
-		"price":3000
-	},
 	{
 		"id":"revive",
 		"user":"trainer",
@@ -328,61 +245,172 @@
 		"hpPercent":100,
 		"price":2000
 	},
-    {
-		"id":"moonStone",
-		"user":"trainer",
-		"category":"regular",
-		"battle":false,
-		"target":"pokemon",
-		"effect":"evolutionItem",
-		"price":2100
-	},
 	{
-		"id":"fireStone",
+		"id":"ether",
 		"user":"trainer",
 		"category":"regular",
-		"battle":false,
+		"battle":true,
 		"target":"pokemon",
-		"effect":"evolutionItem",
-		"price":2100
-	},
-	{
-		"id":"leafStone",
-		"user":"trainer",
-		"category":"regular",
-		"battle":false,
-		"target":"pokemon",
-		"effect":"evolutionItem",
-		"price":2100
-	},
-	{
-		"id":"thunderStone",
-		"user":"trainer",
-		"category":"regular",
-		"battle":false,
-		"target":"pokemon",
-		"effect":"evolutionItem",
-		"price":2100
-	},
-	{
-		"id":"waterStone",
-		"user":"trainer",
-		"category":"regular",
-		"battle":false,
-		"target":"pokemon",
-		"effect":"evolutionItem",
-		"price":2100
-	},
-	{
-		"id":"linkCable",
-		"user":"trainer",
-		"category":"regular",
-		"battle":false,
-		"target":"pokemon",
-		"effect":"evolutionItem",
-		"price":4900
+		"effect":"restorePp",
+        "range":"single",
+		"value":10,
+        "price":0
 	},
     {
+		"id":"maxEther",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"restorePp",
+        "range":"single",
+		"value":-1,
+        "price":0
+	},
+    {
+		"id":"elixir",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"restorePp",
+        "range":"all",
+		"value":10,
+        "price":0
+	},
+	{
+		"id":"maxElixir",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"restorePp",
+		"range":"all",
+		"value":-1,
+		"price":0
+	},
+	{
+        "id":"escapeRope",
+        "user":"trainer",
+        "category":"regular",
+        "battle":false,
+        "target":"trainer",
+        "effect":"escapeRope",
+        "price":550
+    },
+	{
+		"id":"pokeDoll",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"opponent",
+		"effect":"escapeWildBattle",
+		"price":1000
+	},
+	{
+		"id":"repel",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"trainer",
+		"effect":"repel",
+		"steps":100,
+		"price":350
+	},
+	{
+		"id":"superRepel",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"trainer",
+		"effect":"repel",
+		"steps":200,
+		"price":500
+	},
+	{
+		"id":"maxRepel",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"trainer",
+		"effect":"repel",
+		"steps":250,
+		"price":700
+	},
+	
+
+	
+	{
+		"id":"bicycle",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+		"effect":"cycling",
+        "price":1000000
+	},
+	{
+		"id":"coinCase",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+		"effect":"coinCase"
+	},
+	{
+		"id":"itemFinder",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+        "effect":"itemFinder",
+        "range":7,
+        "sound":"Decision5"
+	},
+	{
+		"id":"pokeFlute",
+		"user":"trainer",
+		"category":"key",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"fluteCureStatus",
+		"status":"sleep",
+		"mapCommonEventId":7,
+		"fluteMe":"Musical3"
+	},
+	{
+        "id":"townMap",
+        "user":"trainer",
+        "category":"key",
+        "battle":false,
+        "effect":"townMap"
+    },
+	{
+		"id":"oldRod",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+		"effect":"fishing",
+        "biteChance":100,
+        "badMessage":"This isn't the time to use that!"
+	},
+	{
+		"id":"goodRod",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+		"effect":"fishing",
+        "biteChance":67,
+        "badMessage":"This isn't the time to use that!"
+	},
+	{
+		"id":"superRod",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+		"effect":"fishing",
+        "biteChance":50,
+        "badMessage":"This isn't the time to use that!"
+	},
+
+	{
 		"id":"rareCandy",
 		"user":"trainer",
 		"category":"regular",
@@ -451,6 +479,267 @@
 		"maxValue":25600,
 		"price":9800
 	},
+	{
+		"id":"ppUp",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"increaseMovePP",
+		"value":1,
+		"maxValue":3,
+		"price":9800
+	},
+    
+    
+	{
+		"id":"fireStone",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"evolutionItem",
+		"price":2100
+	},
+	{
+		"id":"leafStone",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"evolutionItem",
+		"price":2100
+	},
+    {
+		"id":"moonStone",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"evolutionItem",
+		"price":2100
+	},
+	{
+		"id":"thunderStone",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"evolutionItem",
+		"price":2100
+	},
+	{
+		"id":"waterStone",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"evolutionItem",
+		"price":2100
+	},
+	{
+		"id":"linkCable",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"evolutionItem",
+		"price":4900
+	},
+
+	{
+		"id":"nugget",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"price":10000,
+        "effect":"lockedItem",
+        "useMessage":"This isn't the time to use that!"
+	},
+
+
+	{
+		"id":"bikeVoucher",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+        "effect":"lockedItem",
+        "useMessage":"This isn't the time to use that!"
+	},
+	{
+		"id":"cardKey",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+		"effect":"lockedItem",
+        "useMessage":"This isn't the time to use that!"
+	},
+	{
+		"id":"expShare",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+		"effect":"expShare",
+        "useMessage":"This isn't the time to use that!"
+	},
+	{
+		"id":"goldTeeth",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+        "effect":"lockedItem",
+        "useMessage":"This isn't the time to use that!"
+	},
+	{
+		"id":"liftKey",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+        "effect":"lockedItem",
+        "useMessage":"This isn't the time to use that!"
+	},
+	{
+        "id":"mysteriousNote",
+        "user":"trainer",
+        "category":"key",
+        "battle":false,
+        "effect":"lockedItem",
+        "useMessage":"Someone said that Mew could hide under trucks. It might be\ntrue, but not here. If a Pokémon League Champion was to come\nto see me in Celadon, perhaps we could find an arrangement.\nSchlangan"
+    },
+    {
+        "id":"oakParcel",
+        "user":"trainer",
+        "category":"key",
+        "battle":false,
+        "effect":"lockedItem",
+        "useMessage":"This isn't yours to use!"
+    },
+	{
+		"id":"silphScope",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+        "effect":"lockedItem",
+        "useMessage":"This isn't the time to use that!"
+	},
+	{
+		"id":"ssTicket",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+        "effect":"lockedItem",
+        "useMessage":"This isn't the time to use that!"
+	},
+	
+
+    {
+		"id":"domeFossil",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+        "effect":"lockedItem",
+        "useMessage":"This isn't the time to use that!"
+	},
+    {
+		"id":"helixFossil",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+        "effect":"lockedItem",
+        "useMessage":"This isn't the time to use that!"
+	},
+	{
+		"id":"oldAmber",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+        "effect":"lockedItem",
+        "useMessage":"This isn't the time to use that!"
+	},
+    
+    
+	{
+		"id":"direHit",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"battleDireHit",
+		"battleAnimation":"powerUpUser1",
+		"mapMessage":"This isn't the time to use that!",
+		"price":650
+	},
+	{
+		"id":"guardSpec",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"battleGuardSpec",
+		"battleAnimation":"powerUpUser1",
+		"mapMessage":"This isn't the time to use that!",
+		"price":700
+	},
+	{
+		"id":"xAttack",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"battlePatkUpUser",
+		"battleAnimation":"powerUpUser1",
+        "mapMessage":"This isn't the time to use that!",
+		"stage":1,
+		"price":500
+	},
+    {
+		"id":"xDefend",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"battlePdefUpUser",
+        "battleAnimation":"powerUpUser1",
+        "mapMessage":"This isn't the time to use that!",
+		"stage":1,
+		"price":550
+	},
+    {
+		"id":"xSpecial",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"battleSpcUpUser",
+        "battleAnimation":"powerUpUser1",
+        "mapMessage":"This isn't the time to use that!",
+		"stage":1,
+		"price":350
+	},
+	{
+		"id":"xSpeed",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"battleSpdUpUser",
+        "battleAnimation":"powerUpUser1",
+        "mapMessage":"This isn't the time to use that!",
+		"stage":1,
+		"price":350
+	},
+	{
+		"id":"xAccuracy",
+		"user":"trainer",
+		"category":"regular",
+		"battle":true,
+		"target":"pokemon",
+		"effect":"battleAccUpUser",
+		"battleAnimation":"powerUpUser1",
+        "mapMessage":"This isn't the time to use that!",
+		"stage":1,
+		"price":950
+	},
     {
 		"id":"tm01",
 		"user":"trainer",
@@ -469,6 +758,16 @@
 		"target":"pokemon",
 		"effect":"tm",
 		"move":"razorWind",
+		"price":2000
+	},
+	{
+		"id":"tm03",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"swordsDance",
 		"price":2000
 	},
     {
@@ -492,16 +791,6 @@
 		"price":3000
 	},
 	{
-		"id":"tm07",
-		"user":"trainer",
-		"category":"regular",
-		"battle":false,
-		"target":"pokemon",
-		"effect":"tm",
-		"move":"hornDrill",
-		"price":2000
-	},
-	{
 		"id":"tm06",
 		"user":"trainer",
 		"category":"regular",
@@ -510,6 +799,16 @@
 		"effect":"tm",
 		"move":"toxic",
 		"price":4000
+	},
+	{
+		"id":"tm07",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"hornDrill",
+		"price":2000
 	},
     {
 		"id":"tm08",
@@ -582,6 +881,16 @@
         "price":5000
 	},
 	{
+		"id":"tm16",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"payDay",
+        "price":5000
+	},
+	{
 		"id":"tm17",
 		"user":"trainer",
 		"category":"regular",
@@ -651,6 +960,26 @@
 		"move":"thunderbolt",
         "price":2000
 	},
+	{
+		"id":"tm25",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"thunder",
+        "price":5000
+	},
+	{
+		"id":"tm26",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"earthquake",
+        "price":4000
+	},
     {
 		"id":"tm28",
 		"user":"trainer",
@@ -680,6 +1009,16 @@
 		"effect":"tm",
 		"move":"teleport",
         "price":1000
+	},
+	{
+		"id":"tm31",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"mimic",
+        "price":2000
 	},
 	{
 		"id":"tm32",
@@ -712,6 +1051,16 @@
         "price":2000
     },
 	{
+		"id":"tm36",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"selfDestruct",
+        "price":2000
+	},
+	{
 		"id":"tm37",
 		"user":"trainer",
 		"category":"regular",
@@ -729,6 +1078,26 @@
 		"target":"pokemon",
 		"effect":"tm",
 		"move":"swift",
+        "price":2000
+	},
+	{
+		"id":"tm40",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"skullBash",
+        "price":4000
+	},
+	{
+		"id":"tm41",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"softBoiled",
         "price":2000
 	},
 	{
@@ -762,6 +1131,16 @@
         "price":2000
 	},
 	{
+		"id":"tm46",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"psywave",
+        "price":4000
+	},
+	{
 		"id":"tm48",
 		"user":"trainer",
 		"category":"regular",
@@ -791,243 +1170,7 @@
 		"move":"substitute",
         "price":2000
 	},
-    {
-		"id":"ether",
-		"user":"trainer",
-		"category":"regular",
-		"battle":true,
-		"target":"pokemon",
-		"effect":"restorePp",
-        "range":"single",
-		"value":10,
-        "price":0
-	},
-    {
-		"id":"maxEther",
-		"user":"trainer",
-		"category":"regular",
-		"battle":true,
-		"target":"pokemon",
-		"effect":"restorePp",
-        "range":"single",
-		"value":-1,
-        "price":0
-	},
-    {
-		"id":"elixir",
-		"user":"trainer",
-		"category":"regular",
-		"battle":true,
-		"target":"pokemon",
-		"effect":"restorePp",
-        "range":"all",
-		"value":10,
-        "price":0
-	},
 	{
-		"id":"maxElixir",
-		"user":"trainer",
-		"category":"regular",
-		"battle":true,
-		"target":"pokemon",
-		"effect":"restorePp",
-		"range":"all",
-		"value":-1,
-		"price":0
-	},
-	{
-		"id":"ppUp",
-		"user":"trainer",
-		"category":"regular",
-		"battle":false,
-		"target":"pokemon",
-		"effect":"increaseMovePP",
-		"value":1,
-		"maxValue":3,
-		"price":9800
-	},
-    {
-		"id":"repel",
-		"user":"trainer",
-		"category":"regular",
-		"battle":false,
-		"target":"trainer",
-		"effect":"repel",
-		"steps":100,
-		"price":350
-	},
-	{
-		"id":"superRepel",
-		"user":"trainer",
-		"category":"regular",
-		"battle":false,
-		"target":"trainer",
-		"effect":"repel",
-		"steps":200,
-		"price":500
-	},
-	{
-		"id":"maxRepel",
-		"user":"trainer",
-		"category":"regular",
-		"battle":false,
-		"target":"trainer",
-		"effect":"repel",
-		"steps":250,
-		"price":700
-	},
-    {
-		"id":"nugget",
-		"user":"trainer",
-		"category":"regular",
-		"battle":false,
-		"price":10000,
-        "effect":"lockedItem",
-        "useMessage":"This isn't the time to use that!"
-	},
-    {
-		"id":"bicycle",
-		"user":"trainer",
-		"category":"key",
-		"battle":false,
-		"effect":"cycling",
-        "price":1000000
-	},
-	{
-		"id":"xAttack",
-		"user":"trainer",
-		"category":"regular",
-		"battle":true,
-		"target":"pokemon",
-		"effect":"battlePatkUpUser",
-		"battleAnimation":"powerUpUser1",
-        "mapMessage":"This isn't the time to use that!",
-		"stage":1,
-		"price":500
-	},
-    {
-		"id":"xDefend",
-		"user":"trainer",
-		"category":"regular",
-		"battle":true,
-		"target":"pokemon",
-		"effect":"battlePdefUpUser",
-        "battleAnimation":"powerUpUser1",
-        "mapMessage":"This isn't the time to use that!",
-		"stage":1,
-		"price":550
-	},
-    {
-		"id":"xSpecial",
-		"user":"trainer",
-		"category":"regular",
-		"battle":true,
-		"target":"pokemon",
-		"effect":"battleSpcUpUser",
-        "battleAnimation":"powerUpUser1",
-        "mapMessage":"This isn't the time to use that!",
-		"stage":1,
-		"price":350
-	},
-	{
-		"id":"xSpeed",
-		"user":"trainer",
-		"category":"regular",
-		"battle":true,
-		"target":"pokemon",
-		"effect":"battleSpdUpUser",
-        "battleAnimation":"powerUpUser1",
-        "mapMessage":"This isn't the time to use that!",
-		"stage":1,
-		"price":350
-	},
-	{
-		"id":"xAccuracy",
-		"user":"trainer",
-		"category":"regular",
-		"battle":true,
-		"target":"pokemon",
-		"effect":"battleAccUpUser",
-		"battleAnimation":"powerUpUser1",
-        "mapMessage":"This isn't the time to use that!",
-		"stage":1,
-		"price":950
-	},
-	{
-		"id":"guardSpec",
-		"user":"trainer",
-		"category":"regular",
-		"battle":true,
-		"target":"pokemon",
-		"effect":"battleGuardSpec",
-		"battleAnimation":"powerUpUser1",
-		"mapMessage":"This isn't the time to use that!",
-		"price":700
-	},
-	{
-		"id":"direHit",
-		"user":"trainer",
-		"category":"regular",
-		"battle":true,
-		"target":"pokemon",
-		"effect":"battleDireHit",
-		"battleAnimation":"powerUpUser1",
-		"mapMessage":"This isn't the time to use that!",
-		"price":650
-	},
-    {
-		"id":"oldRod",
-		"user":"trainer",
-		"category":"key",
-		"battle":false,
-		"effect":"fishing",
-        "biteChance":100,
-        "badMessage":"This isn't the time to use that!"
-	},
-	{
-		"id":"goodRod",
-		"user":"trainer",
-		"category":"key",
-		"battle":false,
-		"effect":"fishing",
-        "biteChance":67,
-        "badMessage":"This isn't the time to use that!"
-	},
-	{
-		"id":"superRod",
-		"user":"trainer",
-		"category":"key",
-		"battle":false,
-		"effect":"fishing",
-        "biteChance":50,
-        "badMessage":"This isn't the time to use that!"
-	},
-    {
-		"id":"itemFinder",
-		"user":"trainer",
-		"category":"key",
-		"battle":false,
-        "effect":"itemFinder",
-        "range":7,
-        "sound":"Decision5"
-	},
-	{
-		"id":"coinCase",
-		"user":"trainer",
-		"category":"key",
-		"battle":false,
-		"effect":"coinCase"
-	},
-	{
-		"id":"pokeDoll",
-		"user":"trainer",
-		"category":"regular",
-		"battle":true,
-		"target":"opponent",
-		"effect":"escapeWildBattle",
-		"price":1000
-	},
-    {
 		"id":"hm01",
 		"user":"trainer",
 		"category":"hm",
@@ -1045,6 +1188,26 @@
 		"target":"pokemon",
 		"effect":"hm",
 		"move":"fly",
+		"price":0
+	},
+	{
+		"id":"hm03",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"hm",
+		"move":"surf",
+		"price":0
+	},
+	{
+		"id":"hm04",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"hm",
+		"move":"strength",
 		"price":0
 	},
 	{
