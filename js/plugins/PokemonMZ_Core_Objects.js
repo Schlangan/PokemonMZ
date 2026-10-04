@@ -1135,23 +1135,33 @@ Game_Map.prototype.PokemonMZ_useFly = function(pokemon, soundEffectName, poiData
     this._soundOfFly = soundEffectName;
 }
 Game_Map.prototype.PokemonMZ_useSurf = function(pokemon, soundEffectName) {
-    // Calculate if there is anything to cut
+    // Calculate if it is possible to surf or get down
     const d = $gamePlayer.direction();
     const x2 = this.roundXWithDirection($gamePlayer.x, d);
     const y2 = this.roundYWithDirection($gamePlayer.y, d);
     const regionId = this.regionId(x2,y2);
 
-    if (this._waterRegions.includes(regionId)) {
-        pokemon.playCry();
-        $gameMessage.add($gamePlayerTrainer.name() + " got on " + pokemon.name() + "!")
-        this._soundOfSurf = soundEffectName;
-        if ($gamePlayerTrainer.isCycling()) {
-            $gamePlayerTrainer.stopCycling(false); // Surfing drops down from bicycle
+    if ($gamePlayerTrainer.isSurfing()) {
+        // Cannot get down if non passable tile or water tile
+        if ($gamePlayer.canPass(x2,y2,d) && !$gamePlayer.isCollidedWithCharacters(x2,y2) && !this._waterRegions.includes(regionId) ) {
+            $gamePlayer.moveStraight(d);
+        } else {
+            $gameMessage.add("There's no place to get off!")
+            return;
         }
-        $gamePlayerTrainer.startSurfing();
     } else {
-        $gameMessage.add("No surfing on " + pokemon.name() + " here!")
-        return;
+        if (this._waterRegions.includes(regionId)) {
+            pokemon.playCry();
+            $gameMessage.add($gamePlayerTrainer.name() + " got on " + pokemon.name() + "!")
+            this._soundOfSurf = soundEffectName;
+            if ($gamePlayerTrainer.isCycling()) {
+                $gamePlayerTrainer.stopCycling(false); // Surfing drops down from bicycle
+            }
+            $gamePlayerTrainer.startSurfing();
+        } else {
+            $gameMessage.add("No surfing on " + pokemon.name() + " here!")
+            return;
+        }
     }
 }
 Game_Map.prototype.PokemonMZ_isCutting = function() {
