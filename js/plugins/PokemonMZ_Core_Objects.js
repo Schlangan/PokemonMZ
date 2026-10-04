@@ -2137,6 +2137,19 @@ PokemonMZ_Game_TrainerPlayer.prototype.stopCycling = function(displayMessage) {
     }
 };
 
+PokemonMZ_Game_TrainerPlayer.prototype.setAsSurfing = function() {
+    this._isSurfing = true;
+    $gamePlayer.refresh();
+    if (PokemonMZ.surfBGM) {
+        $gameSystem.saveWalkingBgm();
+        AudioManager.playBgm({
+            "name":PokemonMZ.surfBGM,
+            "pan":0,
+            "volume":100,
+            "pitch":100
+        });
+    }
+};
 PokemonMZ_Game_TrainerPlayer.prototype.startSurfing = function() {
     this._isSurfing = true;
     $gamePlayer.moveStraight($gamePlayer.direction());

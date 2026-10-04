@@ -48,6 +48,16 @@
  * @min 0
 
 
+ * //////////////////////////////////////////
+ * @command ChangeSurfState
+ * @text Change Surf State
+ * @desc Force the player to be surfing/not surfinc
+ * 
+ * @arg state
+ * @type boolean
+ * @text State
+ * @desc State ON/OFF for the surf
+
 
  * //////////////////////////////////////////
  * @command PlayerTeamHeal
@@ -823,4 +833,23 @@ PluginManager.registerCommand(pluginName, "RenamePartyPokemon", function(args) {
     $gameTemp.pokemon = $gamePlayerTrainer.pokemon($gameVariables.value(indexVariable));
     SceneManager.push(PokemonMZ_Scene_PokemonNickname);
     SceneManager.prepareNextScene("rename", {"returnSwitch":returnSwitch});
+});
+
+
+
+PluginManager.registerCommand(pluginName, "ChangeSurfState", function(args) {
+    const state = Boolean(args.state);
+
+    if (state) {
+        if (!$gamePlayerTrainer.isSurfing()) {
+            if ($gamePlayerTrainer.isCycling()) {
+                $gamePlayerTrainer.stopCycling(false); // Surfing drops down from bicycle
+            }
+            $gamePlayerTrainer.setAsSurfing();
+        }
+    } else {
+        if ($gamePlayerTrainer.isSurfing()) {
+            $gamePlayerTrainer.stopSurfing();
+        }
+    }
 });
