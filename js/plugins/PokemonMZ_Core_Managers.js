@@ -1192,6 +1192,7 @@ DataManager.verifyMoveEffect = function(prefix, index, moveEffect) {
     case "resetAllStatsModifiers":
     case "mistUser":
     case "mimicTargetMove":
+    case "transform":
         DataManager.verifyProperties(
             moveEffect,
             errorMessagePrefix,
@@ -4793,6 +4794,10 @@ PokemonMZ_BattleManager.resolveNextResultStep = function() {
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["convert", step[1], step[2]];
                 break;
+            case "transformPokemon":
+                this.changeSubPhase("inflictPokemonStatus");
+                this._subPhaseParams = ["transform", step[1], step[2]];
+                break;
             case "createSubstitute":
                 this.changeSubPhase("inflictPokemonStatus");
                 this._subPhaseParams = ["substitute", step[1]];
@@ -5517,6 +5522,10 @@ PokemonMZ_BattleManager.inflictPokemonStatus = function() {
             const convertOpponent = this._subPhaseParams[2]
             target.convert(convertOpponent.type1(), convertOpponent.type2())
             break;
+        case "transform":
+            const transformOpponent = this._subPhaseParams[2]
+            target.transform(transformOpponent);
+            break;
         case "substitute":
             this._spriteset.playerPokemonSprite().setOpacity(100);
             target.giveSubstitute();
@@ -5957,6 +5966,8 @@ PokemonMZ_BattleManager.textFromKey = function(key, side, ext1) {
         return prefix + pokemon.name() + " must recharge!"
     case "converted":
         return "Converted type to " + prefix + pokemon.name() + "'s!";
+    case "transformed":
+        return prefix + pokemon.name() + " transformed into " + String(ext1) + "!"
     case "createdSubstitute":
         return "It created a Substitute!";
     case "hasSubstitute":
