@@ -2,7 +2,7 @@
 
 Pokémon can now reach level 100, and mechanics up to the entrance of the Victory Road have been added. The demo mac version has been removed, as MacOs doesn't allow exportations for Windows to work.
 
-New demonstration versions of the plugin at these url: 
+New demonstration versions of the plugin at this url: 
 - [Windows version](https://mega.nz/file/xVMCBLjR#BnLcIBntlijHNhE-a65S0VZZUno3cdurRGUW6hoX_nU).
 
 - Bug fixes
@@ -22,7 +22,7 @@ New demonstration versions of the plugin at these url:
     - Ditto (found wild in Pokemon Mansion)
     - Dragonite (evolving player's Dragonair at lvl.55)
     - Kabuto (resurrected from Dome Fossil)
-    - Kabutops (evolving player's Omanyte at lvl.40)
+    - Kabutops (evolving player's Kabuto at lvl.40)
     - Magmar (found wild in Pokemon Mansion)
     - Omanyte (resurrected from Helix Fossil)
     - Omastar (evolving player's Omanyte at lvl.40)
@@ -38,8 +38,8 @@ New demonstration versions of the plugin at these url:
     - Volcano Badge (given in Cinnabar gym)
     - Secret Key (found in Pokemon Mansion B1F)
     - TM14 - Blizzard (found in Pokemon Mansion B1F)
-    - TM27 - Fissure (given by Giovanni in Viridian Gym)
     - TM22 - Solar Beam (found in Pokemon Mansion B1F)
+    - TM27 - Fissure (given by Giovanni in Viridian Gym)
     - TM35 - Metronome (given by Scientist in Cinnabar Lab R&D Room)
     - TM38 - Fire Blast (given by Blaine in Cinnabar Gym)
 
