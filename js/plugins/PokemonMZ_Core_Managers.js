@@ -3044,6 +3044,7 @@ PokemonMZ_BattleManager.pokemonBreakFree = function() {
         $gameMessage.add("Shoot! It was so close too!");
         break;
     }
+    this._battleActions.splice(0,0, "playerUsedItem");
     this.changePhase("nextBattleAction")
 };
 PokemonMZ_BattleManager.pokemonCaught = function() {
