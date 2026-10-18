@@ -87,7 +87,8 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0083. Farfetch'd
 - 0084. Doduo
 - 0085. Dodrio
-- (...)
+- 0086. Seel
+- 0087. Dewgong
 - 0088. Grimer
 - 0089. Muk
 - 0090. Shellder
@@ -126,25 +127,30 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 - 0123. Scyther
 - 0124. Jynx
 - 0125. Electabuzz
-- (...)
+- 0126. Magmar
 - 0127. Pinsir
 - 0128. Tauros
 - 0129. Magikarp
 - 0130. Gyarados
 - 0131. Lapras
-- (...)
+- 0132. Ditto
 - 0133. Eevee
 - 0134. Vaporeon
 - 0135. Jolteon
 - 0136. Flareon
 - 0137. Porygon
-- (...)
+- 0138. Omanyte
+- 0139. Omastar
+- 0140. Kabuto
+- 0141. Kabutops
+- 0142. Aerodactyl
 - 0143. Snorlax
-- (...)
+- 0144. Articuno
 - 0145. Zapdos
 - (...)
 - 0147. Dratini
 - 0148. Dragonair
+- 0149. Dragonite
 - (...)
 
 ## Moves
@@ -315,6 +321,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
 
 - Moves restoring user HP
     - Recover
+    - Soft-boiled
 
 - Moves with crash damage
     - High Jump Kick (1 Hp)
@@ -331,6 +338,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Self-destruct
 
 - Moves doing one hit KO on slower opponents
+    - Fissure
     - Guillotine
     - Horn Drill
 
@@ -348,6 +356,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Dig (underground turn 1, attack turn 2)
     - Fly (in the air turn1, attack turn 2)
     - Razor Wind (making whirlwind turn 1, attack turn 2)
+    - Solar Beam (taking in light turn 1, attack turn 2)
     - Skull Bash (lowering head turn 1, attack turn 2)
 
 - Moves with effects on the map
@@ -375,6 +384,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Splash (no effect at all)
     - Struggle (launched with 0pp)
     - Substitute (create substitute absorbing damage and canceling move effects against 25% of the user hp)
+    - Transform (transform into the opponent)
 
 ## Items
 
@@ -385,6 +395,8 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Rainbow Badge
     - Soul Badge
     - Marsh Badge
+    - Volcano Badge
+    - Earth Badge
 
 - Balls
     - Poke Ball
@@ -465,6 +477,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Lift Key
     - Oak's Parcel
     - Poke Flute
+    - Secret Key
     - Silph Scope
     - S.S. Ticket
     - Town Map
@@ -487,7 +500,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - TM11 - Bubble beam
     - TM12 - Water gun
     - TM13 - Ice beam
-    - (...)
+    - TM14 - Blizzard
     - TM15 - Hyper beam
     - TM16 - Payday
     - TM17 - Submission
@@ -495,12 +508,12 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - TM19 - Seismic toss
     - TM20 - Rage
     - TM21 - Mega drain
-    - (...)
+    - TM22 - Solar beam
     - TM23 - Dragon rage
     - TM24 - Thunderbolt
     - TM25 - Thunder
     - TM26 - Earthquake
-    - (...)
+    - TM27 - Fissure
     - TM28 - Dig
     - TM29 - Psychic
     - TM30 - Teleport
@@ -508,10 +521,10 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - TM32 - Double team
     - TM33 - Reflect
     - TM34 - Bide
-    - (...)
+    - TM35 - Metronome
     - TM36 - Self-destruct
     - TM37 - Egg bomb
-    - (...)
+    - TM38 - Fire blast
     - TM39 - Swift
     - TM40 - Skull bash
     - TM41 - Soft-boiled

@@ -44,17 +44,18 @@
             {"id":36,"name":"Fuchsia City","x":10,"y":13,"fly":true,"flyMapId":167,"flyMapX":19,"flyMapY":28,"pokemons":["magikarp","poliwag","goldeen","krabby","gyarados"]},
             {"id":37,"name":"Safari Zone","x":10,"y":12,"pokemons":["exeggcute","nidorina","nidorino","paras","parasect","venonat","rhyhorn","scyther","pinsir","tangela","chansey","doduo","cubone","marowak","tauros","kangaskhan","magikarp","poliwag","goldeen","psyduck","slowpoke","krabby","dratini"]},
             {"id":38,"name":"Sea Route 19","x":9,"y":15,"pokemons":["magikarp","goldeen","poliwag","tentacool","shellder","horsea","staryu"]},
-            {"id":39,"name":"Seafoam Islands","x":7,"y":15,"pokemons":[]},
-            {"id":40,"name":"Sea Route 20","x":6,"y":15,"pokemons":[]},
-            {"id":41,"name":"Cinnabar Island","x":4,"y":15,"pokemons":[]},
-            {"id":42,"name":"Sea Route 21","x":4,"y":13,"pokemons":[]},
+            {"id":39,"name":"Seafoam Islands","x":7,"y":15,"pokemons":["zubat","golbat","psyduck","golduck","slowpoke","slowbro","seel","dewgong","shellder","krabby","kingler","horsea","seadra","staryu","magikarp","poliwag","goldeen","jynx","squirtle"]},
+            {"id":40,"name":"Sea Route 20","x":6,"y":15,"pokemons":["magikarp","poliwag","goldeen","tentacool","tentacruel","shellder","horsea","staryu"]},
+            {"id":41,"name":"Cinnabar Island","x":4,"y":15,"fly":true,"flyMapId":205,"flyMapX":12,"flyMapY":16,"pokemons":["magikarp","poliwag","goldeen","tentacool","tentacruel","shellder","horsea","staryu"]},
+            {"id":42,"name":"Sea Route 21","x":4,"y":13,"pokemons":["pidgey","pidgeotto","rattata","raticate","tangela","poliwag","goldeen","tentacool","tentacruel","shellder","horsea","staryu"]},
             {"id":43,"name":"Route 22","x":3,"y":8,"pokemons":["rattata","spearow","nidoranf","nidoranm","mankey","magikarp","poliwag","goldeen"]},
             {"id":44,"name":"Route 23","x":2,"y":6,"pokemons":["fearow","nidorina","nidorino","spearow","ekans","mankey","arbok","primeape","magikarp","poliwag","goldeen","poliwhirl"]},
             {"id":45,"name":"Victory Road","x":2,"y":4,"pokemons":[]},
             {"id":46,"name":"Indigo Plateau","x":2,"y":2,"pokemons":[]},
             {"id":47,"name":"Power Plant","x":17,"y":4,"pokemons":["magnemite","voltorb","grimer","pikachu","magneton","raichu","muk","electabuzz"]},
             {"id":48,"name":"Underground Path","mapHidden":true,"x":12,"y":5,"pokemons":[]},
-            {"id":49,"name":"Rocket HQ","x":9,"y":5,"mapHidden":true,"pokemons":[]}
+            {"id":49,"name":"Rocket HQ","x":9,"y":5,"mapHidden":true,"pokemons":[]},
+            {"id":50,"name":"Pokemon Mansion","x":4,"y":15,"mapHidden":true,"pokemons":["rattata","raticate","vulpix","growlithe","ponyta","grimer","muk","koffing","weezing","magmar","ditto","charmander"]}
         ]
     }
 ]

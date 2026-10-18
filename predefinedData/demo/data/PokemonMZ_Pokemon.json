@@ -2641,10 +2641,65 @@
             "mimic", "doubleTeam", "reflect", "bide", "skullBash", "skyAttack", "rest", "triAttack", "substitute"
         ]
     },
+        {
+        "id": "seel",
+        "pokedex": [{"region":"kanto","number":86}],
+        "category": "Sea Lion",
+        "description": "The protruding horn on its head is very hard. It is used for bashing through thick ice. Loves freezing cold conditions. Relishes swimming in a frigid climate of around -10 degrees.",
+        "height": 1.1,
+        "weight": 90.0,
+        "types": ["water"],
+        "baseStats": {"hp":65,"patk":45,"pdef":55,"satk":45,"sdef":70,"spd":45,"spc":70},
+        "expCurve": "mediumFast",
+        "catchRate": 190,
+        "xpYield": 100,
+        "ev": [{"sdef":1}],
+        "evolutions": [
+            {"to":"dewgong","mode":"level","level":34}
+        ],
+        "learnedMoves": [
+            {"lvl":1,"move":"headbutt"},
+            {"lvl":30,"move":"growl"},
+            {"lvl":35,"move":"auroraBeam"},
+            {"lvl":40,"move":"rest"},
+            {"lvl":45,"move":"takeDown"},
+            {"lvl":50,"move":"iceBeam"}
+        ],
+        "hmMoves": ["surf", "strength"],
+        "tmMoves": [
+            "toxic", "hornDrill", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", 
+            "blizzard", "payDay", "rage", "mimic", "doubleTeam", "bide", "skullBash", "rest", "substitute"
+        ]
+    },
     {
-        "id":"seel",
-        "pokedex":[{"region":"kanto","number":86}],
-        "category":"Sea Lion"
+        "id": "dewgong",
+        "pokedex": [{"region":"kanto","number":87}],
+        "category": "Sea Lion",
+        "description": "Stores thermal energy in its body. Swims at a steady 8 knots even in intensely cold waters. Its entire body is a snowy-white. Unharmed by even intense cold, it swims powerfully in icy waters.",
+        "height": 1.7,
+        "weight": 120.0,
+        "types": ["water", "ice"],
+        "baseStats": {"hp":90,"patk":70,"pdef":80,"satk":70,"sdef":95,"spd":70,"spc":95},
+        "expCurve": "mediumFast",
+        "catchRate": 75,
+        "xpYield": 176,
+        "ev": [{"sdef":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"headbutt"},
+            {"lvl":1,"move":"growl"},
+            {"lvl":1,"move":"auroraBeam"},
+            {"lvl":30,"move":"growl"},
+            {"lvl":35,"move":"auroraBeam"},
+            {"lvl":44,"move":"rest"},
+            {"lvl":50,"move":"takeDown"},
+            {"lvl":56,"move":"iceBeam"}
+        ],
+        "hmMoves": ["surf", "strength"],
+        "tmMoves": [
+            "toxic", "hornDrill", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", "blizzard", 
+            "hyperBeam", "payDay", "rage", "mimic", "doubleTeam", "bide", "skullBash", "rest", "substitute"
+        ]
     },
     {
         "id":"grimer",
@@ -3813,6 +3868,36 @@
         ]
     },
     {
+        "id": "magmar",
+        "pokedex": [{"region":"kanto","number":126}],
+        "category": "Spitfire",
+        "description": "Its body always burns with an orange glow that enables it to hide perfectly among flames. Born in an active volcano. Its body is always cloaked in flames, so it looks like a big ball of fire.",
+        "height": 1.3,
+        "weight": 44.5,
+        "types": ["fire"],
+        "baseStats": {"hp":65,"patk":95,"pdef":57,"satk":100,"sdef":85,"spd":93,"spc":85},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 158,
+        "ev": [{"satk":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"ember"},
+            {"lvl":36,"move":"leer"},
+            {"lvl":39,"move":"confuseRay"},
+            {"lvl":43,"move":"firePunch"},
+            {"lvl":48,"move":"smokescreen"},
+            {"lvl":52,"move":"smog"},
+            {"lvl":55,"move":"flamethrower"}
+        ],
+        "hmMoves": ["strength"],
+        "tmMoves": [
+            "megaPunch", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "hyperBeam", "submission", "counter", 
+            "seismicToss", "rage", "psychic", "teleport", "mimic", "doubleTeam", "bide", "metronome", "fireBlast", "skullBash", 
+            "rest", "psywave", "substitute"
+        ]
+    },
+    {
         "id": "pinsir",
         "pokedex": [{"region":"kanto","number":127}],
         "category": "Stag Beetle",
@@ -3955,6 +4040,26 @@
             "rage", "solarBeam", "dragonRage", "thunderbolt", "thunder", "psychic", "mimic", "doubleTeam", "reflect", "bide", "skullBash", 
             "rest", "psywave", "substitute"
         ]
+    },
+    {
+        "id": "ditto",
+        "pokedex": [{"region":"kanto","number":132}],
+        "category": "Transform",
+        "description": "Capable of copying an enemy's genetic code to instantly transform itself into a duplicate of the enemy. When it spots an enemy, its body transfigures into an almost perfect copy of its opponent.",
+        "height": 0.3,
+        "weight": 4.0,
+        "types": ["normal"],
+        "baseStats": {"hp":48,"patk":48,"pdef":48,"satk":48,"sdef":48,"spd":48,"spc":48},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 61,
+        "ev": [{"hp":1}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"transform"}
+        ],
+        "hmMoves": [],
+        "tmMoves": []
     },
     {
         "id": "eevee",
@@ -4123,15 +4228,152 @@
             "bide", "swift", "skullBash", "rest", "thunderWave", "psywave", "triAttack", "substitute"
         ]
     },
-    {
-        "id":"omanyte",
-        "pokedex":[{"region":"kanto","number":138}],
-        "category":"Spiral"
+   {
+        "id": "omanyte",
+        "pokedex": [{"region":"kanto","number":138}],
+        "category": "Spiral",
+        "description": "Although long extinct, in rare cases, it can be genetically resurrected from fossils. An ancient Pokémon that was recovered from a fossil. It swims by cleverly twisting its 10 tentacles about.",
+        "height": 0.4,
+        "weight": 7.5,
+        "types": ["rock", "water"],
+        "baseStats": {"hp":35,"patk":40,"pdef":100,"satk":90,"sdef":55,"spd":35,"spc":90},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 99,
+        "ev": [{"pdef":1}],
+        "evolutions": [
+            {"to":"omastar","mode":"level","level":40}
+        ],
+        "learnedMoves": [
+            {"lvl":1,"move":"waterGun"},
+            {"lvl":1,"move":"withdraw"},
+            {"lvl":34,"move":"hornAttack"},
+            {"lvl":39,"move":"leer"},
+            {"lvl":46,"move":"spikeCannon"},
+            {"lvl":53,"move":"hydroPump"}
+        ],
+        "hmMoves": ["surf"],
+        "tmMoves": [
+            "toxic", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", "blizzard", 
+            "rage", "mimic", "doubleTeam", "reflect", "bide", "rest", "substitute"
+        ]
     },
     {
-        "id":"kabuto",
-        "pokedex":[{"region":"kanto","number":140}],
-        "category":"Shellfish"
+        "id": "omastar",
+        "pokedex": [{"region":"kanto","number":139}],
+        "category": "Spiral",
+        "description": "A prehistoric Pokémon that died out when its heavy shell made it impossible to catch prey. Sharp beaks ring its mouth. Its shell was too big for it to move freely, so it became extinct.",
+        "height": 1.0,
+        "weight": 35.0,
+        "types": ["rock", "water"],
+        "baseStats": {"hp":70,"patk":60,"pdef":125,"satk":115,"sdef":70,"spd":55,"spc":115},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 199,
+        "ev": [{"pdef":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"hornAttack"},
+            {"lvl":1,"move":"waterGun"},
+            {"lvl":1,"move":"withdraw"},
+            {"lvl":34,"move":"hornAttack"},
+            {"lvl":39,"move":"leer"},
+            {"lvl":44,"move":"spikeCannon"},
+            {"lvl":49,"move":"hydroPump"}
+        ],
+        "hmMoves": ["surf"],
+        "tmMoves": [
+            "toxic", "hornDrill", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", "blizzard", "hyperBeam", 
+            "submission", "seismicToss", "rage", "mimic", "doubleTeam", "reflect", "bide", "skullBash", "rest", "substitute"
+        ]
+    },
+    {
+        "id": "kabuto",
+        "pokedex": [{"region":"kanto","number":140}],
+        "category": "Shellfish",
+        "description": "A Pokémon that was resurrected from a fossil found in what was once the ocean floor eons ago. A Pokémon that was recovered from a fossil. It uses the eyes on its back while hiding on the sea floor.",
+        "height": 0.5,
+        "weight": 11.5,
+        "types": ["rock", "water"],
+        "baseStats": {"hp":30,"patk":80,"pdef":90,"satk":55,"sdef":45,"spd":55,"spc":45},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 99,
+        "ev": [{"pdef":1}],
+        "evolutions": [
+            {"to":"kabutops","mode":"level","level":40}
+        ],
+        "learnedMoves": [
+            {"lvl":1,"move":"scratch"},
+            {"lvl":1,"move":"harden"},
+            {"lvl":34,"move":"absorb"},
+            {"lvl":39,"move":"slash"},
+            {"lvl":44,"move":"leer"},
+            {"lvl":49,"move":"hydroPump"}
+        ],
+        "hmMoves": ["surf"],
+        "tmMoves": [
+            "toxic", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", "blizzard",
+            "rage", "mimic", "doubleTeam", "reflect", "bide", "rest", "substitute"
+        ]
+    },
+    {
+        "id": "kabutops",
+        "pokedex": [{"region":"kanto","number":141}],
+        "category": "Shellfish",
+        "description": "Its sleek shape is perfect for swimming. It slashes prey with its claws and drains the body fluids. A slim and fast swimmer. It slices its prey with its sharp sickles and drinks the body fluids.",
+        "height": 1.3,
+        "weight": 40.5,
+        "types": ["rock", "water"],
+        "baseStats": {"hp":60,"patk":115,"pdef":105,"satk":65,"sdef":70,"spd":80,"spc":70},
+        "expCurve": "mediumFast",
+        "catchRate": 45,
+        "xpYield": 201,
+        "ev": [{"patk":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"scratch"},
+            {"lvl":1,"move":"absorb"},
+            {"lvl":1,"move":"harden"},
+            {"lvl":34,"move":"absorb"},
+            {"lvl":39,"move":"slash"},
+            {"lvl":46,"move":"leer"},
+            {"lvl":53,"move":"hydroPump"}
+        ],
+        "hmMoves": ["cut", "surf"],
+        "tmMoves": [
+            "razorWind", "swordsDance", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", 
+            "iceBeam", "blizzard", "hyperBeam", "submission", "seismicToss", "rage", "mimic", "doubleTeam", "reflect", "bide", 
+            "skullBash", "rest", "substitute"
+        ]
+    },
+    {
+        "id": "aerodactyl",
+        "pokedex": [{"region":"kanto","number":142}],
+        "category": "Fossil",
+        "description": "A ferocious, prehistoric Pokémon that goes for the enemy's throat with its serrated saw-like fangs. A savage Pokémon that died out in ancient times. It was resurrected using DNA taken from amber.",
+        "height": 1.8,
+        "weight": 59.0,
+        "types": ["rock", "flying"],
+        "baseStats": {"hp":80,"patk":105,"pdef":65,"satk":60,"sdef":75,"spd":130,"spc":60},
+        "expCurve": "slow",
+        "catchRate": 45,
+        "xpYield": 202,
+        "ev": [{"spd":2}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"wingAttack"},
+            {"lvl":1,"move":"agility"},
+            {"lvl":33,"move":"supersonic"},
+            {"lvl":38,"move":"bite"},
+            {"lvl":45,"move":"takeDown"},
+            {"lvl":54,"move":"hyperBeam"}
+        ],
+        "hmMoves": ["fly"],
+        "tmMoves": [
+            "razorWind", "whirlwind", "toxic", "takeDown", "doubleEdge", "hyperBeam", "rage", "dragonRage", 
+            "mimic", "doubleTeam", "reflect", "bide", "fireBlast", "swift", "skyAttack", "rest", "substitute"
+        ]
     },
     {
         "id": "snorlax",
@@ -4161,6 +4403,33 @@
             "megaPunch", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", "blizzard", "hyperBeam", 
             "payDay", "submission", "counter", "seismicToss", "rage", "solarBeam", "thunderbolt", "thunder", "earthquake", "fissure", "psychic", 
             "mimic", "doubleTeam", "reflect", "bide", "metronome", "selfDestruct", "fireBlast", "skullBash", "rest", "psywave", "rockSlide", "substitute"
+        ]
+    },
+        {
+        "id": "articuno",
+        "pokedex": [{"region":"kanto","number":144}],
+        "category": "Freeze",
+        "description": "A legendary bird Pokémon that is said to appear to doomed people who are lost in icy mountains. A legendary bird Pokémon. It freezes water that is contained in winter air and makes it snow.",
+        "height": 1.7,
+        "weight": 55.4,
+        "types": ["ice", "flying"],
+        "baseStats": {"hp":90,"patk":85,"pdef":100,"satk":95,"sdef":125,"spd":85,"spc":125},
+        "expCurve": "slow",
+        "catchRate": 3,
+        "xpYield": 215,
+        "ev": [{"sdef":3}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"peck"},
+            {"lvl":1,"move":"iceBeam"},
+            {"lvl":51,"move":"blizzard"},
+            {"lvl":55,"move":"agility"},
+            {"lvl":60,"move":"mist"}
+        ],
+        "hmMoves": ["fly"],
+        "tmMoves": [
+            "razorWind", "whirlwind", "toxic", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", "blizzard", 
+            "hyperBeam", "rage", "mimic", "doubleTeam", "reflect", "bide", "swift", "skyAttack", "rest", "substitute"
         ]
     },
     {
@@ -4252,6 +4521,38 @@
         "tmMoves": [
             "toxic", "hornDrill", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", 
             "blizzard", "rage", "dragonRage", "thunderbolt", "thunder", "mimic", "doubleTeam", "reflect", 
+            "bide", "fireBlast", "swift", "skullBash", "rest", "thunderWave", "substitute"
+        ]
+    },
+    {
+        "id": "dragonite",
+        "pokedex": [{"region":"kanto","number":149}],
+        "category": "Dragon",
+        "description": "An extremely rarely seen marine Pokémon. Its intelligence is said to match that of humans. It is said that this Pokémon lives somewhere in the sea and that it flies. However, it is only a rumor.",
+        "height": 2.2,
+        "weight": 210.0,
+        "types": ["dragon", "flying"],
+        "baseStats": {"hp":91,"patk":134,"pdef":95,"satk":100,"sdef":100,"spd":80,"spc":100},
+        "expCurve": "slow",
+        "catchRate": 45,
+        "xpYield": 218,
+        "ev": [{"patk":3}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"wrap"},
+            {"lvl":1,"move":"leer"},
+            {"lvl":1,"move":"thunderWave"},
+            {"lvl":1,"move":"agility"},
+            {"lvl":10,"move":"thunderWave"},
+            {"lvl":20,"move":"agility"},
+            {"lvl":35,"move":"slam"},
+            {"lvl":45,"move":"dragonRage"},
+            {"lvl":60,"move":"hyperBeam"}
+        ],
+        "hmMoves": ["surf", "strength"],
+        "tmMoves": [
+            "razorWind", "toxic", "hornDrill", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", 
+            "blizzard", "hyperBeam", "rage", "dragonRage", "thunderbolt", "thunder", "mimic", "doubleTeam", "reflect", 
             "bide", "fireBlast", "swift", "skullBash", "rest", "thunderWave", "substitute"
         ]
     },

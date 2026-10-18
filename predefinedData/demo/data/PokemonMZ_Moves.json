@@ -146,6 +146,18 @@
         "animationHit":"pierceTargetPhysical"
 	},
     {
+		"id":"blizzard",
+		"type":"ice",
+		"target":"opponent",
+		"pp":5,
+		"power":120,
+		"accuracy":90,
+		"effects":[
+			{"type":"freezeTarget","percentChance":10}
+		],
+        "animationHit":"iceTargetAll2"
+	},
+    {
 		"id":"bodySlam",
 		"type":"normal",
 		"target":"opponent",
@@ -495,6 +507,18 @@
         "animationHit":"postDestruct"
     },
     {
+		"id":"fireBlast",
+		"type":"fire",
+		"target":"opponent",
+		"pp":5,
+		"power":120,
+		"accuracy":85,
+		"effects":[
+			{"type":"burnTarget","percentChance":30}
+		],
+        "animationHit":"fireTargetAll1"
+	},
+    {
 		"id":"firePunch",
 		"type":"fire",
 		"target":"opponent",
@@ -517,6 +541,17 @@
 			{"type":"bindTarget","min":2,"max":5,"percentChances":[38,37,13,12]}
 		],
         "animationHit":"fireTarget1"
+	},
+    {
+		"id":"fissure",
+		"type":"ground",
+		"target":"opponent",
+		"pp":5,
+		"accuracy":30,
+		"effects":[
+			{"type":"oneHitKO"}
+		],
+        "animationHit":"earthTargetAll2"
 	},
     {
 		"id":"flamethrower",
@@ -1809,6 +1844,19 @@
             {"type":"badPoisonTarget","except":[{"type":"poison"}],"percentChance":100}
         ],
         "animationHit":"badPoison"
+    },
+     {
+        "id":"transform",
+        "category":"status",
+        "type":"normal",
+        "target":"opponent",
+        "pp":10,
+        "forbidMirrorMove":true,
+        "noAccuracy":true,
+        "effects":[
+            {"type":"transform"}
+        ],
+        "animationHit":"transform"
     },
     {
         "id":"triAttack",

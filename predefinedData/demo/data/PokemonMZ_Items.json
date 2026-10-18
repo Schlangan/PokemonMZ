@@ -34,6 +34,17 @@
 		"obedienceLevel":70	
 	},
 	{
+		"id":"volcanoBadge",
+		"category":"badge",
+		"effect":"passiveSpcBoost",
+		"boostPercent":12.5		
+	},
+	{
+		"id":"earthBadge",
+		"category":"badge",
+		"obedienceLevel":255
+	},
+	{
         "id":"pokeBall",
         "user":"trainer",
         "category":"regular",
@@ -615,6 +626,14 @@
         "useMessage":"This isn't yours to use!"
     },
 	{
+		"id":"secretKey",
+		"user":"trainer",
+		"category":"key",
+		"battle":false,
+        "effect":"lockedItem",
+        "useMessage":"This isn't the time to use that!"
+	},
+	{
 		"id":"silphScope",
 		"user":"trainer",
 		"category":"key",
@@ -871,6 +890,16 @@
         "price":4000
 	},
 	{
+		"id":"tm14",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"blizzard",
+        "price":5000
+	},
+	{
 		"id":"tm15",
 		"user":"trainer",
 		"category":"regular",
@@ -941,6 +970,16 @@
         "price":5000
 	},
 	{
+		"id":"tm22",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"solarBeam",
+        "price":5000
+	},
+	{
 		"id":"tm23",
 		"user":"trainer",
 		"category":"regular",
@@ -979,6 +1018,16 @@
 		"effect":"tm",
 		"move":"earthquake",
         "price":4000
+	},
+	{
+		"id":"tm27",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"fissure",
+        "price":5000
 	},
     {
 		"id":"tm28",
@@ -1051,6 +1100,16 @@
         "price":2000
     },
 	{
+		"id":"tm35",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"metronome",
+        "price":4000
+	},
+	{
 		"id":"tm36",
 		"user":"trainer",
 		"category":"regular",
@@ -1069,6 +1128,16 @@
 		"effect":"tm",
 		"move":"eggBomb",
         "price":2000
+	},
+	{
+		"id":"tm38",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"fireBlast",
+        "price":5000
 	},
 	{
 		"id":"tm39",

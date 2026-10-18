@@ -201,10 +201,26 @@
         ]
     },
     {
+        "id":"fireTargetAll1",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":68},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
         "id":"iceTarget1",
         "sequence":[
             {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
             {"type":"playAnimation", "target":"target", "animationId":71},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"iceTargetAll2",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"target", "animationId":74},
             {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
         ]
     },
@@ -530,6 +546,14 @@
             {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8},
             {"type":"playAnimation", "target":"user", "animationId":119, "wait":true},
             {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8}
+        ]
+    },
+    {
+        "id":"transform",
+        "sequence":[
+            {"type":"moveSpriteForward", "target":"user", "distance":20, "duration":8},
+            {"type":"playAnimation", "target":"user", "animationId":120},
+            {"type":"moveSpriteBackward", "target":"user", "distance":20, "duration":8}
         ]
     },
     {

@@ -1,3 +1,51 @@
+## [0.12] - 2026-10-18
+
+Pokémon can now reach level 100, and mechanics up to the entrance of the Victory Road have been added. The demo mac version has been removed, as MacOs doesn't allow exportations for Windows to work.
+
+New demonstration versions of the plugin at these url: 
+- [Windows version](https://mega.nz/file/RctijarL#K5CIGiM4mnAISn3vwmFK1Lh7Nkkj914YYay5ujkm9eo).
+
+- Bug fixes
+    - Using surf while surfing was acting as using surf from land; the BGM would be stuck on the surfing BGM while getting off from surf afterwards
+    - Damaging status effects like poison were not calculated after a wild pokemon escaped from the thrown pokeball
+
+- New map mechanics
+    - Plugin command to set the player as surfing (for example used when falling into water from a hole above)
+
+- New battle mechanics
+    - Transform mechanics
+
+- New predefined Pokemon data
+    - Aerodactyl (resurrected from Old Amber)
+    - Articuno (found in Seafoam Islands)
+    - Dewgong (evolving player's Seel at lvl.34)
+    - Ditto (found wild in Pokemon Mansion)
+    - Dragonite (evolving player's Dragonair at lvl.55)
+    - Kabuto (resurrected from Dome Fossil)
+    - Kabutops (evolving player's Omanyte at lvl.40)
+    - Magmar (found wild in Pokemon Mansion)
+    - Omanyte (resurrected from Helix Fossil)
+    - Omastar (evolving player's Omanyte at lvl.40)
+    - Seel (found wild in Seafoam Islands)
+
+- New predefined moves data
+    - Blizzard (learned with TM14)
+    - Fire Blast (learned with TM38)
+    - Transform (learned by Ditto at lvl.1)
+
+- New predefined item data
+    - Earth Bagde (given in Viridian gym)
+    - Volcano Badge (given in Cinnabar gym)
+    - Secret Key (found in Pokemon Mansion B1F)
+    - TM14 - Blizzard (found in Pokemon Mansion B1F)
+    - TM27 - Fissure (given by Giovanni in Viridian Gym)
+    - TM22 - Solar Beam (found in Pokemon Mansion B1F)
+    - TM35 - Metronome (given by Scientist in Cinnabar Lab R&D Room)
+    - TM38 - Fire Blast (given by Blaine in Cinnabar Gym)
+
+
+
+
 ## [0.11] - 2026-09-26
 
 Pokemon can now reach level 50, mechanics up to Fuchsia City with Surf and Strength, including Safari Zone, Power Plant have been added. Routes 20 and 21 are not accessible yet.
