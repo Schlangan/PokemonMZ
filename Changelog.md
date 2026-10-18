@@ -3,7 +3,7 @@
 Pokémon can now reach level 100, and mechanics up to the entrance of the Victory Road have been added. The demo mac version has been removed, as MacOs doesn't allow exportations for Windows to work.
 
 New demonstration versions of the plugin at these url: 
-- [Windows version](https://mega.nz/file/RctijarL#K5CIGiM4mnAISn3vwmFK1Lh7Nkkj914YYay5ujkm9eo).
+- [Windows version](https://mega.nz/file/xVMCBLjR#BnLcIBntlijHNhE-a65S0VZZUno3cdurRGUW6hoX_nU).
 
 - Bug fixes
     - Using surf while surfing was acting as using surf from land; the BGM would be stuck on the surfing BGM while getting off from surf afterwards
