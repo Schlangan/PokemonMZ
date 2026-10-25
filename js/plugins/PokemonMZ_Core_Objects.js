@@ -2302,6 +2302,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._isDigging = false;
     this._isFlying = false;
     this._isLoweringHead = false;
+    this._isGlowing = false;
     this._isTakingSunlight = false;
     this._isMakingWhirlwind = false;
     this._isRecharging = false;
@@ -2337,6 +2338,7 @@ PokemonMZ_Game_Pokemon.prototype.initialize = function(enemyId, level) {
     this._digMoveIndex = -1;
     this._flyMoveIndex = -1;
     this._skullBashMoveIndex = -1;
+    this._skyAttackMoveIndex = -1;
     this._razorWindMoveIndex = -1;
     this._solarBeamMoveIndex = -1;
 
@@ -2978,6 +2980,19 @@ PokemonMZ_Game_Pokemon.prototype.isMoveSkullBash = function(index) {
     }
     return false;
 };
+PokemonMZ_Game_Pokemon.prototype.isMoveSkyAttack = function(index) {
+    // Returns if the move at index has the skull bash effect
+    if (index == -1 ) {
+        // Struggle cannot be sky Attack
+        return false;
+    }
+
+    const move = this.moveDataFromIndex(index);
+    for (const effect of move.effects) {
+        if (effect.type == "skyAttack") { return true; }
+    }
+    return false;
+};
 PokemonMZ_Game_Pokemon.prototype.isMoveSolarBeam = function(index) {
     // Returns if the move at index has the skull bash effect
     if (index == -1 ) {
@@ -3031,6 +3046,9 @@ PokemonMZ_Game_Pokemon.prototype.flyMoveIndex = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.skullBashMoveIndex = function() {
     return this._skullBashMoveIndex;
+};
+PokemonMZ_Game_Pokemon.prototype.skyAttackMoveIndex = function() {
+    return this._skyAttackMoveIndex;
 };
 PokemonMZ_Game_Pokemon.prototype.solarBeamMoveIndex = function() {
     return this._solarBeamMoveIndex;
@@ -3714,6 +3732,7 @@ PokemonMZ_Game_Pokemon.prototype.removeTemporaryStatuses = function() {
     this.endDigging();
     this.endFlying();
     this.endSkullBash();
+    this.endSkyAttack();
     this.endSolarBeam();
     this.endRazorWind();
     this.endRecharging();
@@ -3808,6 +3827,7 @@ PokemonMZ_Game_Pokemon.prototype.isUsingSeveralTurnMove = function() {
         pokemon.isBerserk() || 
         pokemon.isRaging() || 
         pokemon.isLoweringHead() || 
+        pokemon.isGlowing() ||
         pokemon.isTakingSunlight() ||
         pokemon.isMakingWhirlwind()
     )
@@ -3820,6 +3840,9 @@ PokemonMZ_Game_Pokemon.prototype.isFlying = function() {
 };
 PokemonMZ_Game_Pokemon.prototype.isLoweringHead = function() {
     return this._isLoweringHead;
+};
+PokemonMZ_Game_Pokemon.prototype.isGlowing = function() {
+    return this._isGlowing;
 };
 PokemonMZ_Game_Pokemon.prototype.isTakingSunlight = function() {
     return this._isTakingSunlight;
@@ -4128,6 +4151,10 @@ PokemonMZ_Game_Pokemon.prototype.startSkullBash = function(moveIndex) {
     this._isLoweringHead = true;
     this._skullBashMoveIndex = moveIndex;
 };
+PokemonMZ_Game_Pokemon.prototype.startSkyAttack = function(moveIndex) {
+    this._isGlowing = true;
+    this._skyAttackMoveIndex = moveIndex;
+};
 PokemonMZ_Game_Pokemon.prototype.startSolarBeam = function(moveIndex) {
     this._isTakingSunlight = true;
     this._solarBeamMoveIndex = moveIndex;
@@ -4326,6 +4353,10 @@ PokemonMZ_Game_Pokemon.prototype.endFlying = function() {
 PokemonMZ_Game_Pokemon.prototype.endSkullBash = function() {
     this._isLoweringHead = false;
     this._skullBashMoveIndex = -1;
+};
+PokemonMZ_Game_Pokemon.prototype.endSkyAttack = function() {
+    this._isGlowing = false;
+    this._skyAttackMoveIndex = -1;
 };
 PokemonMZ_Game_Pokemon.prototype.endSolarBeam = function() {
     this._isTakingSunlight = false;
@@ -4526,14 +4557,17 @@ PokemonMZ_Game_Battle.prototype.chooseWildPokemon = function(pokemons) {
             };
         }
 
-        if (pokemonEncounterData.levelMax < minimumWildLevel) {
-            // Max level below minimum encounterable level -> match impossible
-            // The minimum wild level is equal to zero if there is no repel active
-            continue;
+        if (!pokemonEncounterData.noRepel) {
+            if (pokemonEncounterData.levelMax < minimumWildLevel) {
+                // Max level below minimum encounterable level -> match impossible
+                // The minimum wild level is equal to zero if there is no repel active
+                // Calculation ignored if noRepel is set
+                continue;
+            }
         }
 
         maxRate += pokemonEncounterData.rate;
-        rates.push({"id":i, "minRate":minRate, "maxRate":maxRate})
+        rates.push({"id":i, "minRate":minRate, "maxRate":maxRate, "noRepel":pokemonEncounterData.noRepel})
         minRate = maxRate;
     };
 
@@ -4552,9 +4586,11 @@ PokemonMZ_Game_Battle.prototype.chooseWildPokemon = function(pokemons) {
 
     const chosenPokemon = pokemons[chosenId];
     let minimumLevel = chosenPokemon.levelMin;
-    if (minimumLevel < minimumWildLevel) { 
-        // If minimum level below that of first pokemon repelling, set the minimum level to that value
-        minimumLevel = minimumWildLevel;
+    if (!chosenPokemon.noRepel) {
+        if (minimumLevel < minimumWildLevel) { 
+            // If minimum level below that of first pokemon repelling, set the minimum level to that value
+            minimumLevel = minimumWildLevel;
+        }
     }
     if (minimumLevel < chosenPokemon.levelMax) {
         const level = minimumLevel + Math.randomInt(chosenPokemon.levelMax - minimumLevel + 1)
@@ -4768,6 +4804,15 @@ PokemonMZ_Game_Action.prototype.isMoveSkullBash = function() {
     if (!this._moveData) { return false; }
     for (const effect of this._moveData.effects) {
         if (effect.type == "skullBash") {
+            return true;
+        }
+    }
+    return false;
+};
+PokemonMZ_Game_Action.prototype.isMoveSkyAttack = function() {
+    if (!this._moveData) { return false; }
+    for (const effect of this._moveData.effects) {
+        if (effect.type == "skyAttack") {
             return true;
         }
     }
@@ -5117,6 +5162,14 @@ PokemonMZ_Game_Action.prototype.calculateMove = function() { //TODO
     if (this.isMoveSkullBash()) {
         if (!this._user.isLoweringHead()) {
             this.calculateMoveSkullBashTurn1();
+            return;
+        }
+    }
+
+    // Specific behavior for sky attack turn 1
+    if (this.isMoveSkyAttack()) {
+        if (!this._user.isGlowing()) {
+            this.calculateMoveSkyAttackTurn1();
             return;
         }
     }
@@ -5661,6 +5714,21 @@ PokemonMZ_Game_Action.prototype.calculateMoveSkullBashTurn1 = function() {
     const effectsResult = this.calculateMoveEffects({});
     this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
 };
+PokemonMZ_Game_Action.prototype.calculateMoveSkyAttackTurn1 = function() { 
+    let enemyWillFaint = false;
+    let userWillFaint = false;
+
+    let animation = null;
+    for (const effect of this._moveData.effects) {
+        if (effect.type == "skyAttack") {
+            animation = effect.animationTurn1;
+        }
+    }
+
+    this._resultSteps.push(["hitAnimation", animation, this._user._battleSprite, this._opponent._battleSprite, this.side()]);
+    const effectsResult = this.calculateMoveEffects({});
+    this.calculateStatusEffects(this._userEvolvingHp, this._opponentEvolvingHp);
+};
 PokemonMZ_Game_Action.prototype.calculateMoveSolarBeamTurn1 = function() { 
     let enemyWillFaint = false;
     let userWillFaint = false;
@@ -5880,6 +5948,9 @@ PokemonMZ_Game_Action.prototype.calculateMoveEffect = function(battleData, effec
         break;
     case "skullBash":
         effectResults = this.effect_skullBash(battleData, effect, effectResults);
+        break;
+    case "skyAttack":
+        effectResults = this.effect_skyAttack(battleData, effect, effectResults);
         break;
     case "solarBeam":
         effectResults = this.effect_solarBeam(battleData, effect, effectResults);
@@ -7331,6 +7402,16 @@ PokemonMZ_Game_Action.prototype.effect_skullBash = function(battleData, effect, 
     } else {
         effectResults.success = true;
         this._resultSteps.push(["endSkullBash",this._user])
+    }
+    return effectResults;
+};
+PokemonMZ_Game_Action.prototype.effect_skyAttack = function(battleData, effect, effectResults) {
+    if (!this._user.isGlowing()) {
+        effectResults.success = true;
+        this._resultSteps.push(["startSkyAttack",this._user])
+    } else {
+        effectResults.success = true;
+        this._resultSteps.push(["endSkyAttack",this._user])
     }
     return effectResults;
 };

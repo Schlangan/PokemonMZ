@@ -40,6 +40,7 @@ wildPokemonData
 - condition, **string**, *optional* : Condition for pokemon appearance. The pokemon will be ignored if the conditions do not match
     - **fishing** : Requires the player to be fishing, using the item specified by the property itemId
 - itemId, **string**, *optional* : Used by fishing condition. Specified the fishing rod item id required for this encounter to happen.
+- noRepel, **boolean**, *optional* : If true, the encounter can always happen, even if repel has been activated.
 
 ---
 
