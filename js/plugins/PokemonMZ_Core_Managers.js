@@ -614,7 +614,7 @@ DataManager.verifyTrainerPokemonData = function(prefix, index, trainerPokemonDat
         trainerPokemonData,
         errorMessagePrefix,
         ["id","level","moveset","dv","ev"],
-        ["addMoves"],
+        ["addMoves","setMoves"],
     );
     if (trainerPokemonData.id) {
         if (!DataManager.declared.pokemons.includes(trainerPokemonData.id)) {
@@ -622,19 +622,29 @@ DataManager.verifyTrainerPokemonData = function(prefix, index, trainerPokemonDat
         }
     }
     if (trainerPokemonData.moveset) {
-        if (!["default","add"].includes(trainerPokemonData.moveset)) {
+        if (!["default","add","set"].includes(trainerPokemonData.moveset)) {
             console.error(errorMessagePrefix + "Unknown pokemon Moveset type: " + trainerPokemonData.moveset)
         }
         if (trainerPokemonData.moveset == "default") {
             if (trainerPokemonData.addMoves) { console.error(errorMessagePrefix + "AddMoves property ignored with 'default' moveset.") }
-        } else if (trainerPokemonData.moveset == "addMoves") {
-            if (!trainerPokemonData.addMoves) {  console.error(errorMessagePrefix + "AddMoves property missing with 'addMoves' moveset.") }
+        } else if (trainerPokemonData.moveset == "add") {
+            if (!trainerPokemonData.addMoves) {  console.error(errorMessagePrefix + "AddMoves property missing with 'add' moveset.") }
+        } else if (trainerPokemonData.moveset == "set") {
+            if (!trainerPokemonData.setMoves) {  console.error(errorMessagePrefix + "SetMoves property missing with 'set' moveset.") }
         }
+
     }
     if (trainerPokemonData.addMoves) {
         for (const moveId of trainerPokemonData.addMoves) {
             if (!DataManager.declared.moves.includes(moveId)) {
                 console.error(errorMessagePrefix + "Unknown added move id : " + moveId) 
+            }
+        }
+    }
+    if (trainerPokemonData.setMoves) {
+        for (const moveId of trainerPokemonData.setMoves) {
+            if (!DataManager.declared.moves.includes(moveId)) {
+                console.error(errorMessagePrefix + "Unknown set move id : " + moveId) 
             }
         }
     }

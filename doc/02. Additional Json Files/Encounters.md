@@ -47,8 +47,9 @@ wildPokemonData
 trainerPokemonData
 - id, **string** : Pokemon identifier, as found inside the RPG Maker MZ Enemy Database, note id.
 - level, **int** : Level of the pokemon
-- moveset, **string** : Either **default** (default learned moves) or **add** (Add specific moves).
+- moveset, **string** : Either **default** (default learned moves), **add** (Add specific moves to default moves), **set** (Specifically define the moves).
 - addMoves, **Array:string**, *optional* : When moveset is set to add, add the moves in the array. If moves exceed four, previous moves are deleted.
+- setMoves, **Array:string**, *optional* : When moveset is set to set, defines the available moves of the pokemon. If moves exceed four, previous moves are deleted.
 - dv, **string** : DV values for generation 1-2. Only **default** is implemented for now (x,9,8,8,8)
 - ev, **string** : EV values for the pokemon. Only **default** is implemented for now (0,0,0,0,0)
 

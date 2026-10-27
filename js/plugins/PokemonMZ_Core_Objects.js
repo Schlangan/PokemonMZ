@@ -4651,7 +4651,15 @@ PokemonMZ_Game_Battle.prototype.createTrainerPokemon = function(pokemonData) {
             }
             pokemon.removeOlderMoves();
             break;
-    }   
+        case "set":
+            // Specific moves set to the pokemon
+            pokemon._moves = [];
+            for (const addedMove of pokemonData.setMoves) {
+                pokemon.learnMove(addedMove);
+            }
+            pokemon.removeOlderMoves();
+            break;
+    }
 
     // Heal pokemon
     pokemon.heal();
