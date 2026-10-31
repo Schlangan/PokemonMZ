@@ -23,9 +23,29 @@
  * @desc Display the map of the current region.
 
  * //////////////////////////////////////////
- * @command ShowHallOfFame
- * @text Show Hall Of Fame
- * @desc Display the hall of fame sequence.
+ * @command ShowNewHallOfFame
+ * @text Show New Hall Of Fame
+ * @desc Display the hall of fame sequence and save its data.
+ * 
+ * //////////////////////////////////////////
+ * @command ReplayHallOfFame
+ * @text Replay Hall of Fame
+ * @desc Display the nth hall of fame (starting at 1) where n is stored into the index variable.
+ * 
+ * @arg indexVariable
+ * @type variable
+ * @text Index variable
+ * @desc The variable containing the index of the hall of fame to be replayed
+ * 
+ * //////////////////////////////////////////
+ * @command HallOfFameCount
+ * @text Get Hall of Fame Count
+ * @desc Get the number of saved hall of fames, and sets the value in a variable
+ * 
+ * @arg returnVariable
+ * @type variable
+ * @text Return variable
+ * @desc The variable containing the count of hall of fames
 
  * //////////////////////////////////////////
  * @command SetPlayerRespawn
@@ -822,9 +842,28 @@ PluginManager.registerCommand(pluginName, "TradePartyPokemon", function(args) {
     }
 
 });
-PluginManager.registerCommand(pluginName, "ShowHallOfFame", function(args) {
+PluginManager.registerCommand(pluginName, "ShowNewHallOfFame", function(args) {
+    $gamePlayerTrainer.saveHallOfFameData();
     SceneManager.push(PokemonMZ_Scene_HallOfFame);
+    SceneManager.prepareNextScene($gamePlayerTrainer.hallOfFameDataLength() - 1);
 });
+PluginManager.registerCommand(pluginName, "HallOfFameCount", function(args) {
+    const returnVariable = Number(args.returnVariable);
+    $gameVariables.setValue(returnVariable, $gamePlayerTrainer.hallOfFameDataLength());
+});
+PluginManager.registerCommand(pluginName, "ReplayHallOfFame", function(args) {
+    const indexVariable = Number(args.indexVariable);
+    let index = $gameVariables.value(indexVariable) - 1;
+    const maxLength = $gamePlayerTrainer.hallOfFameDataLength();
+
+    if (index < 0) { index = 0; }
+    if (index >= maxLength) { index = maxLength -1; }
+    
+    SceneManager.push(PokemonMZ_Scene_HallOfFame);
+    SceneManager.prepareNextScene(index);
+});
+
+
 
 PluginManager.registerCommand(pluginName, "SelectPokemonRename", function(args) {
     const returnSwitch = Number(args.returnSwitch);

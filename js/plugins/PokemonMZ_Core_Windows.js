@@ -584,9 +584,19 @@ PokemonMZ_Window_HallOfFame.prototype.initialize = function(rect) {
     Window_Selectable.prototype.initialize.call(this, rect);
     this._pokemon = null;
     this._mode = "pokemon";
+    this._money = 0;
+    this._playtime = "";
     this.openness = 0;
     this.refresh();
 };
+
+PokemonMZ_Window_HallOfFame.prototype.setPlayerData = function(money, playtime, seen, owned) {
+    this._money = money;
+    this._playtime = playtime;
+    this._seen = seen;
+    this._owned = owned;
+};
+
 PokemonMZ_Window_HallOfFame.prototype.setPokemon = function(pokemon) {
     this._pokemon = pokemon;
     this._mode = "pokemon";
@@ -659,19 +669,19 @@ PokemonMZ_Window_HallOfFame.prototype.drawPlayerInfo = function() {
 
     this.resetTextColor();
     this.drawText("Playtime", 10, y, 140, "left");
-    this.drawText($gameSystem.playtimeText(), 160, y, this.contentsWidth() - 60, "left");
+    this.drawText(this._playtime, 160, y, this.contentsWidth() - 60, "left");
     y += lineH;
     this.drawText("Money", 10, y, 140, "left");
-    this.drawText($gamePlayerTrainer.money() + " " + TextManager.currencyUnit, 160, y, this.contentsWidth() - 60, "left");
+    this.drawText(this._money + " " + TextManager.currencyUnit, 160, y, this.contentsWidth() - 60, "left");
     y += lineH;
 
     // Pokémon seen / owned
     this.drawText("Seen", 10, y, 140, "left");
-    this.drawText(String($gamePlayerTrainer.numPokemonSeen()), 160, y, this.contentsWidth() - 60, "left");
+    this.drawText(this._seen, 160, y, this.contentsWidth() - 60, "left");
     y += lineH;
 
     this.drawText("Owned", 10, y, 140, "left");
-    this.drawText(String($gamePlayerTrainer.numPokemonCaptured()), 160, y, this.contentsWidth() - 60, "left");
+    this.drawText(this._owned, 160, y, this.contentsWidth() - 60, "left");
 };
 
 

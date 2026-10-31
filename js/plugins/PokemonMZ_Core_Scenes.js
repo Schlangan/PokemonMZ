@@ -1333,7 +1333,6 @@ PokemonMZ_Scene_HallOfFame.prototype = Object.create(Scene_MenuBase.prototype);
 PokemonMZ_Scene_HallOfFame.prototype.constructor = PokemonMZ_Scene_HallOfFame;
 PokemonMZ_Scene_HallOfFame.prototype.initialize = function() {
     Scene_MenuBase.prototype.initialize.call(this);
-    this._party = $gamePlayerTrainer.pokemons().slice(); // copy
     this._index = 0;
     this._phase = "init";          // init → backIn → frontIn → wait → next / player
     this._waitCount = 0;
@@ -1342,6 +1341,15 @@ PokemonMZ_Scene_HallOfFame.prototype.initialize = function() {
     this._centerY = Graphics.boxHeight / 2 - 40;
     this._displayDuration = 180;   // how long each Pokémon stays visible (~3 seconds)
 };
+
+PokemonMZ_Scene_HallOfFame.prototype.prepare = function(hofIndex) {
+    const hofData = $gamePlayerTrainer.hallOfFameData(hofIndex)
+    this._party = hofData.pokemons;
+    this._money = hofData.money;
+    this._playTime = hofData.playtime;
+    this._seen = hofData.seen;
+    this._owned = hofData.owned;
+}   
 
 PokemonMZ_Scene_HallOfFame.prototype.create = function() {
     Scene_MenuBase.prototype.create.call(this);
@@ -1367,6 +1375,7 @@ PokemonMZ_Scene_HallOfFame.prototype.createInfoWindow = function() {
     const wy = Graphics.boxHeight - wh - 20;
     const rect = new Rectangle(wx, wy, ww, wh);
     this._infoWindow = new PokemonMZ_Window_HallOfFame(rect);
+    this._infoWindow.setPlayerData(this._money, this._playTime, this._seen, this._owned);
     this.addWindow(this._infoWindow);
 };
 

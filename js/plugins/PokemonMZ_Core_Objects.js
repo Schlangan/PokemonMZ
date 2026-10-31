@@ -1561,6 +1561,7 @@ PokemonMZ_Game_TrainerPlayer.prototype.initMembers = function(sourceActorId) {
     this._lastBagItemSelectedIndex = 0;
     this._lastStoredItemSelectedIndex = 0;
     this._lastBattleItemSelectedIndex = 0;
+    this._hallOfFames = [];
     this.initializeItems();
     this.initializeBoxes();
     this.initializePokedex();
@@ -2249,6 +2250,28 @@ PokemonMZ_Game_TrainerPlayer.prototype.setLastStoredItemSelectedIndex = function
 };
 PokemonMZ_Game_TrainerPlayer.prototype.setLastBattleItemSelectedIndex = function(index) {
     this._lastBattleItemSelectedIndex = index;
+};
+
+PokemonMZ_Game_TrainerPlayer.prototype.saveHallOfFameData = function() {
+    // Save Hall of Fame
+    const hofData = {
+        "playtime":$gameSystem.playtimeText(),
+        "money":this._money,
+        "pokemons":this._pokemons.slice(),
+        "seen":String(this.numPokemonSeen()),
+        "owned":String(this.numPokemonCaptured())
+    }
+    if (!this._hallOfFames) {
+        this._hallOfFames = [];
+    }
+    this._hallOfFames.push(hofData);
+};
+PokemonMZ_Game_TrainerPlayer.prototype.hallOfFameData = function(index) {
+    // Save Hall of Fame
+    return this._hallOfFames[index];
+};
+PokemonMZ_Game_TrainerPlayer.prototype.hallOfFameDataLength = function() {
+    return this._hallOfFames.length;
 };
 
 
