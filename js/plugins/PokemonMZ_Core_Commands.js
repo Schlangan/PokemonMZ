@@ -22,6 +22,10 @@
  * @text Show Current Region Map
  * @desc Display the map of the current region.
 
+ * //////////////////////////////////////////
+ * @command ShowHallOfFame
+ * @text Show Hall Of Fame
+ * @desc Display the hall of fame sequence.
 
  * //////////////////////////////////////////
  * @command SetPlayerRespawn
@@ -789,7 +793,6 @@ PluginManager.registerCommand(pluginName, "SelectPokemonTrade", function(args) {
     SceneManager.push(PokemonMZ_Scene_PokemonMenu);
     SceneManager.prepareNextScene("selectTrade",{"pokemonIntId":pokemonIntId, "returnVariable":returnVariable});
 });
-
 PluginManager.registerCommand(pluginName, "TradePartyPokemon", function(args) {
     const partyIndexVariable = Number(args.partyIndexVariable);
     const tradedPokemonId = Number(args.tradedPokemon)
@@ -819,7 +822,9 @@ PluginManager.registerCommand(pluginName, "TradePartyPokemon", function(args) {
     }
 
 });
-
+PluginManager.registerCommand(pluginName, "ShowHallOfFame", function(args) {
+    SceneManager.push(PokemonMZ_Scene_HallOfFame);
+});
 
 PluginManager.registerCommand(pluginName, "SelectPokemonRename", function(args) {
     const returnSwitch = Number(args.returnSwitch);

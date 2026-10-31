@@ -1323,6 +1323,181 @@ PokemonMZ_Scene_Player.prototype.badgesWindowRect = function() {
     return new Rectangle(wx, wy, ww, wh);
 };
 
+
+
+function PokemonMZ_Scene_HallOfFame() {
+    this.initialize(...arguments);
+}
+
+PokemonMZ_Scene_HallOfFame.prototype = Object.create(Scene_MenuBase.prototype);
+PokemonMZ_Scene_HallOfFame.prototype.constructor = PokemonMZ_Scene_HallOfFame;
+PokemonMZ_Scene_HallOfFame.prototype.initialize = function() {
+    Scene_MenuBase.prototype.initialize.call(this);
+    this._party = $gamePlayerTrainer.pokemons().slice(); // copy
+    this._index = 0;
+    this._phase = "init";          // init → backIn → frontIn → wait → next / player
+    this._waitCount = 0;
+    this._scrollSpeed = 12;         // pixels per frame
+    this._centerX = Graphics.boxWidth / 2;
+    this._centerY = Graphics.boxHeight / 2 - 40;
+    this._displayDuration = 180;   // how long each Pokémon stays visible (~3 seconds)
+};
+
+PokemonMZ_Scene_HallOfFame.prototype.create = function() {
+    Scene_MenuBase.prototype.create.call(this);
+    this.createPokemonSprite();
+    this.createInfoWindow();
+    this.createPlayerFace();
+};
+
+PokemonMZ_Scene_HallOfFame.prototype.createPokemonSprite = function() {
+    // We reuse the existing battle sprite class
+    this._pokemonSpriteBack = new PokemonMZ_Sprite_Pokemon("back");
+    this._pokemonSpriteBack.visible = false;
+    this._pokemonSpriteFront = new PokemonMZ_Sprite_Pokemon("front");
+    this._pokemonSpriteFront.visible = false;
+    this.addChild(this._pokemonSpriteBack);
+    this.addChild(this._pokemonSpriteFront);
+};
+
+PokemonMZ_Scene_HallOfFame.prototype.createInfoWindow = function() {
+    const ww = 320;
+    const wh = 240;
+    const wx = (Graphics.boxWidth - ww) / 2;
+    const wy = Graphics.boxHeight - wh - 20;
+    const rect = new Rectangle(wx, wy, ww, wh);
+    this._infoWindow = new PokemonMZ_Window_HallOfFame(rect);
+    this.addWindow(this._infoWindow);
+};
+
+PokemonMZ_Scene_HallOfFame.prototype.createPlayerFace = function() {
+    this._playerFaceSprite = new Sprite();
+    this._playerFaceSprite.visible = false;
+    this.addChild(this._playerFaceSprite);
+
+    const actor = $gameActors.actor(PokemonMZ.playerActorID);
+    const bitmap = ImageManager.loadFace(actor.faceName());
+    bitmap.addLoadListener(() => {
+        // Draw a single face (144×144)
+        const faceIndex = actor.faceIndex();
+        const pw = ImageManager.faceWidth;
+        const ph = ImageManager.faceHeight;
+        const sx = (faceIndex % 4) * pw;
+        const sy = Math.floor(faceIndex / 4) * ph;
+        this._playerFaceSprite.bitmap = new Bitmap(pw, ph);
+        this._playerFaceSprite.bitmap.blt(bitmap, sx, sy, pw, ph, 0, 0);
+        this._playerFaceSprite.x = this._centerX - pw / 2;
+        this._playerFaceSprite.y = this._centerY - ph / 2 - 20;
+    });
+};
+
+PokemonMZ_Scene_HallOfFame.prototype.start = function() {
+    Scene_MenuBase.prototype.start.call(this);
+    this.startNextPokemon();
+};
+
+PokemonMZ_Scene_HallOfFame.prototype.startNextPokemon = function() {
+    if (this._index >= this._party.length) {
+        this.startPlayerPhase();
+        return;
+    }
+
+    const pokemon = this._party[this._index];
+    this._currentPokemon = pokemon;
+
+    // ---- Back sprite scroll (right → left) ----
+    this._pokemonSpriteFront.visible = false;
+    this._pokemonSpriteBack.setPokemon(pokemon);
+    this._pokemonSpriteBack.visible = true;
+    this._pokemonSpriteBack.opacity = 255;
+
+    // Start just off the right edge
+    const startX = Graphics.boxWidth + 80;
+    this._pokemonSpriteBack.placeBottomCenter(startX, this._centerY + 300);
+    this._targetX = -80;               // exit left
+    this._phase = "backIn";
+    this._infoWindow.close();
+};
+
+PokemonMZ_Scene_HallOfFame.prototype.startFrontSprite = function() {
+    // Switch to front sprite and bring it in from the left
+    this._pokemonSpriteBack.visible = false;
+    this._pokemonSpriteFront.setPokemon(this._currentPokemon);
+    this._pokemonSpriteFront.placeBottomCenter(-80, this._centerY+60);
+    this._pokemonSpriteFront.visible = true;
+    this._pokemonSpriteFront.opacity = 255;
+    this._targetX = this._centerX;
+    this._phase = "frontIn";
+};
+
+PokemonMZ_Scene_HallOfFame.prototype.startPlayerPhase = function() {
+    this._pokemonSpriteFront.visible = false;
+    this._playerFaceSprite.visible = true;
+    this._infoWindow.showPlayer();
+    this._infoWindow.open();
+    this._phase = "player";
+    this._waitCount = 30;               // short pause before accepting input
+};
+
+PokemonMZ_Scene_HallOfFame.prototype.update = function() {
+    Scene_Base.prototype.update.call(this);
+
+    switch (this._phase) {
+    case "backIn":
+        this.updateScroll(-this._scrollSpeed);   // moving left
+        if (this._pokemonSpriteBack._bottomCenterX <= this._targetX) {
+            this.startFrontSprite();
+        }
+        break;
+
+    case "frontIn":
+        this.updateScroll(this._scrollSpeed);    // moving right
+        if (this._pokemonSpriteFront._bottomCenterX >= this._targetX) {
+            this._pokemonSpriteFront.placeBottomCenter(this._centerX, this._centerY + 60);
+            this._infoWindow.setPokemon(this._currentPokemon);
+            this._infoWindow.open();
+            this._phase = "wait";
+            this._waitCount = this._displayDuration;                // tiny pause so the window opens cleanly
+            if (this._currentPokemon.playCry) {
+                this._currentPokemon.playCry();
+            }
+        }
+        break;
+
+    case "wait":
+        if (this._waitCount > 0) {
+            this._waitCount--;
+        } else {
+            this._index++;
+            this.startNextPokemon();
+        }
+        break;
+
+    case "player":
+        if (this._waitCount > 0) {
+            this._waitCount--;
+        } else if (Input.isTriggered("ok") || Input.isTriggered("cancel") ||
+                   TouchInput.isTriggered()) {
+            this.popScene();
+        }
+        break;
+    }
+};
+PokemonMZ_Scene_HallOfFame.prototype.updateScroll = function(dx) {
+    let sprite;
+    switch (this._phase) {
+    case "backIn":
+        sprite = this._pokemonSpriteBack;
+        break;
+    case "frontIn":
+        sprite = this._pokemonSpriteFront;
+        break;
+    }
+
+    sprite._bottomCenterX += dx;
+    sprite.updateBottomCenterPlacement();
+};
+
 // PokemonMZ_Scene_ComputerItems
 // The scene class of the player computer
 function PokemonMZ_Scene_ComputerItems() {

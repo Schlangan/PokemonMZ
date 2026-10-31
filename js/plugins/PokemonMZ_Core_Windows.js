@@ -573,6 +573,108 @@ PokemonMZ_Window_PlayerBadges.prototype.refresh = function() {
     this.contents.fontSize += 5;
 };
 
+// PokemonMZ_Window_HallOfFame
+function PokemonMZ_Window_HallOfFame() {
+    this.initialize(...arguments);
+}
+
+PokemonMZ_Window_HallOfFame.prototype = Object.create(Window_Selectable.prototype);
+PokemonMZ_Window_HallOfFame.prototype.constructor = PokemonMZ_Window_HallOfFame;
+PokemonMZ_Window_HallOfFame.prototype.initialize = function(rect) {
+    Window_Selectable.prototype.initialize.call(this, rect);
+    this._pokemon = null;
+    this._mode = "pokemon";
+    this.openness = 0;
+    this.refresh();
+};
+PokemonMZ_Window_HallOfFame.prototype.setPokemon = function(pokemon) {
+    this._pokemon = pokemon;
+    this._mode = "pokemon";
+    this.refresh();
+};
+PokemonMZ_Window_HallOfFame.prototype.showPlayer = function() {
+    this._pokemon = null;
+    this._mode = "player";
+    this.refresh();
+};
+PokemonMZ_Window_HallOfFame.prototype.refresh = function() {
+    this.contents.clear();
+    this.contents.fontSize = 24;
+    if (this._mode === "pokemon" && this._pokemon) {
+        this.drawPokemonInfo();
+    } else if (this._mode === "player") {
+        this.drawPlayerInfo();
+    }
+};
+
+PokemonMZ_Window_HallOfFame.prototype.drawPokemonInfo = function() {
+    const pokemon = this._pokemon;
+    const lineH = 30;
+    let y = 0;
+
+    this.changeTextColor(ColorManager.crisisColor());
+    this.drawText("HALL OF FAME", 0, y, this.contentsWidth(), "center");
+    y += lineH;
+    this.changeTextColor(ColorManager.systemColor());
+    this.drawText(pokemon.name(), 0, y, this.contentsWidth(), "center");
+    this.resetTextColor();
+    
+    y += lineH + 12;
+    this.drawText("Level", 10, y, this.contentsWidth() - 40, "left");
+    this.drawText(pokemon.level(), 100, y, this.contentsWidth() - 140, "left");
+
+    y += lineH;
+    const type1 = pokemon.type1();
+    const type2 = pokemon.type2();
+    let typeText = "";
+    if (type1) {
+        typeText = pokemon.typeName(type1);
+        if (type2) {
+            typeText += " / " + pokemon.typeName(type2);
+        }
+    }
+    this.drawText("Type", 10, y, this.contentsWidth() - 60, "left");
+    this.drawText(typeText, 100, y, this.contentsWidth() - 60, "left");
+    y += lineH;
+
+    this.drawText("OT", 10, y, this.contentsWidth() - 60, "left");
+    this.drawText(pokemon.originalTrainerName(), 100, y, this.contentsWidth() - 60, "left");
+    y += lineH;
+
+    const idStr = String(pokemon.originalTrainerId()).padStart(5, "0");
+    this.drawText("ID", 10, y, this.contentsWidth() - 60, "left");
+    this.drawText(idStr, 100, y, this.contentsWidth() - 60, "left");
+};
+
+PokemonMZ_Window_HallOfFame.prototype.drawPlayerInfo = function() {
+    const lineH = 30;
+    let y = 4;
+
+    this.changeTextColor(ColorManager.crisisColor());
+    this.drawText("HALL OF FAME", 0, y, this.contentsWidth(), "center");
+    y += lineH;
+    this.changeTextColor(ColorManager.systemColor());
+    this.drawText($gamePlayerTrainer.name(), 0, y, this.contentsWidth(), "center");
+    y += lineH + 8;
+
+    this.resetTextColor();
+    this.drawText("Playtime", 10, y, 140, "left");
+    this.drawText($gameSystem.playtimeText(), 160, y, this.contentsWidth() - 60, "left");
+    y += lineH;
+    this.drawText("Money", 10, y, 140, "left");
+    this.drawText($gamePlayerTrainer.money() + " " + TextManager.currencyUnit, 160, y, this.contentsWidth() - 60, "left");
+    y += lineH;
+
+    // Pokémon seen / owned
+    this.drawText("Seen", 10, y, 140, "left");
+    this.drawText(String($gamePlayerTrainer.numPokemonSeen()), 160, y, this.contentsWidth() - 60, "left");
+    y += lineH;
+
+    this.drawText("Owned", 10, y, 140, "left");
+    this.drawText(String($gamePlayerTrainer.numPokemonCaptured()), 160, y, this.contentsWidth() - 60, "left");
+};
+
+
 // PokemonMZ_Window_ComputerItemsMenu
 // The window to display the Withdraw/Deposit/Toss menu inside computer
 function PokemonMZ_Window_ComputerItemsMenu() {
