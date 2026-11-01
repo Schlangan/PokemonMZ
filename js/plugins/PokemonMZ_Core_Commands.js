@@ -369,6 +369,20 @@
  * @desc Variable that gets the number of pokemon owned.
 
 
+ * //////////////////////////////////////////
+ * @command OwnPokemon
+ * @text Own A Specific Pokemon?
+ * @desc Checks if the player has captured/evolved a specific Pokemon.
+ * 
+ * @arg pokemon
+ * @type enemy
+ * @text Pokemon
+ * @desc The pokemon to check.
+ * 
+ * @arg returnSwitchId
+ * @type switch
+ * @text Return switch
+ * @desc A switch that will take the value ON if the pokemon is marked as seen in the player pokedex.
 
 
  * //////////////////////////////////////////
@@ -685,6 +699,18 @@ PluginManager.registerCommand(pluginName, "NumberPokemonSeen", function(args) {
 PluginManager.registerCommand(pluginName, "NumberPokemonOwned", function(args) {
     const returnVariable = Number(args.returnVariable);
     $gameVariables.setValue(returnVariable, $gamePlayerTrainer.numPokemonCaptured());
+});
+PluginManager.registerCommand(pluginName, "OwnPokemon", function(args) {
+    const pokemonId = Number(args.pokemon);
+    const switchId = Number(args.returnSwitchId)
+    const dataEnemy = $dataEnemies[pokemonId];
+
+    if (dataEnemy) {
+        const id = dataEnemy.pkmz_data.id;
+        $gameSwitches.setValue(switchId, $gamePlayerTrainer.ownsPokemon(id));
+    } else {
+        $gameSwitches.setValue(switchId, false);
+    }
 });
 
 

@@ -1645,6 +1645,9 @@ PokemonMZ_Game_TrainerPlayer.prototype.numPokemonSeen = function() {
 PokemonMZ_Game_TrainerPlayer.prototype.numPokemonCaptured = function() {
     return this._capturedPokemons.length;
 };
+PokemonMZ_Game_TrainerPlayer.prototype.ownsPokemon = function(pokemonStrId) {
+    return this._capturedPokemons.includes(pokemonStrId);
+};
 PokemonMZ_Game_TrainerPlayer.prototype.selectedBox = function() {
     return this._selectedBoxIndex;
 };
