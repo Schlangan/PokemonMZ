@@ -3319,7 +3319,7 @@ PokemonMZ_Game_Pokemon.prototype.canUseItemOn = function(item, ext1) {
     switch(item.pkmz_data.effect) {
     case "recoverHpFixed":
     case "recoverHpPercent":
-        if (this.canRecoverHp()) { return canUseResult; }
+        if (this.canRecoverHp() && !this.isFainted()) { return canUseResult; }
         break;
     case "cureStatus":
         switch(item.pkmz_data.status) {
@@ -3344,7 +3344,7 @@ PokemonMZ_Game_Pokemon.prototype.canUseItemOn = function(item, ext1) {
         }
         break;
     case "recoverHpPercentCureStatus":
-        if (this.canRecoverHp()) { return canUseResult; }
+        if (this.canRecoverHp() && !this.isFainted()) { return canUseResult; }
         switch(item.pkmz_data.status) {
         case "poison":
             if (this.isPoisoned()) { return canUseResult; }
