@@ -2162,7 +2162,7 @@ PokemonMZ_Window_ShopBuy.prototype.makeItemList = function() {
         const item = this.goodsToItem(goods);
         if (item) {
             this._data.push(item);
-            this._price.push(item.pkmz_data.price);
+            this._price.push(goods[2] === 0 ? item.pkmz_data.price : goods[3]);
         }
     }
 };
