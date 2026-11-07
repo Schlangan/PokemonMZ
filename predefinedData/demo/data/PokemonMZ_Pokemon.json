@@ -4460,6 +4460,33 @@
         ]
     },
     {
+        "id": "moltres",
+        "pokedex": [{"region":"kanto","number":146}],
+        "category": "Flame",
+        "description": "Known as the legendary bird of fire. Every flap of its wings creates a dazzling flash of flames. A legendary bird Pokémon. As it flaps its flaming wings, even the night sky will turn red.",
+        "height": 2.0,
+        "weight": 60.0,
+        "types": ["fire", "flying"],
+        "baseStats": {"hp":90,"patk":100,"pdef":90,"satk":125,"sdef":85,"spd":90,"spc":125},
+        "expCurve": "slow",
+        "catchRate": 3,
+        "xpYield": 217,
+        "ev": [{"satk":3}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"peck"},
+            {"lvl":1,"move":"fireSpin"},
+            {"lvl":51,"move":"leer"},
+            {"lvl":55,"move":"agility"},
+            {"lvl":60,"move":"skyAttack"}
+        ],
+        "hmMoves": ["fly"],
+        "tmMoves": [
+            "razorWind", "whirlwind", "toxic", "takeDown", "doubleEdge", "hyperBeam", "rage", "mimic", 
+            "doubleTeam", "reflect", "bide", "fireBlast", "swift", "skyAttack", "rest", "substitute"
+        ]
+    },
+    {
         "id": "dratini",
         "pokedex": [{"region":"kanto","number":147}],
         "category": "Dragon",
@@ -4557,22 +4584,67 @@
         ]
     },
     {
-        "id":"mew",
-        "pokedex":[{"region":"kanto","number":151}],
-        "category":"PLACEHOLDER",
-        "description":"PLACEHOLDER",
-        "height":0.0,
-        "weight":0.0,
-        "types":["psychic"],
-        "baseStats":{"hp":0,"patk":0,"pdef":0,"satk":0,"sdef":0,"spd":0,"spc":0},
-        "expCurve":"PLACEHOLDER",
-        "catchRate":0,
-        "xpYield":0,
-        "ev":[{}],
-        "evolutions":[],
-        "learnedMoves":[],
-        "hmMoves":[],
-        "tmMoves":[]
+        "id": "mewtwo",
+        "pokedex": [{"region":"kanto","number":150}],
+        "category": "Genetic",
+        "description": "It was created by a scientist after years of horrific gene splicing and DNA engineering experiments. Its DNA is almost the same as Mew's. However, its size and disposition are vastly different.",
+        "height": 2.0,
+        "weight": 122.0,
+        "types": ["psychic"],
+        "baseStats": {"hp":106,"patk":110,"pdef":90,"satk":154,"sdef":90,"spd":130,"spc":154},
+        "expCurve": "slow",
+        "catchRate": 3,
+        "xpYield": 220,
+        "ev": [{"satk":3}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"disable"},
+            {"lvl":1,"move":"confusion"},
+            {"lvl":1,"move":"psychic"},
+            {"lvl":1,"move":"swift"},
+            {"lvl":63,"move":"barrier"},
+            {"lvl":66,"move":"psychic"},
+            {"lvl":70,"move":"recover"},
+            {"lvl":75,"move":"mist"},
+            {"lvl":81,"move":"amnesia"}
+        ],
+        "hmMoves": ["strength", "flash"],
+        "tmMoves": [
+            "megaPunch", "megaKick", "toxic", "bodySlam", "takeDown", "doubleEdge", "bubbleBeam", "waterGun", "iceBeam", 
+            "blizzard", "hyperBeam", "payDay", "submission", "counter", "seismicToss", "rage", "solarBeam", "thunderbolt", 
+            "thunder", "psychic", "teleport", "mimic", "doubleTeam", "reflect", "bide", "metronome", "selfDestruct", 
+            "fireBlast", "skullBash", "rest", "thunderWave", "psywave", "triAttack", "substitute"
+        ]
+    },
+        {
+        "id": "mew",
+        "pokedex": [{"region":"kanto","number":151}],
+        "category": "New Species",
+        "description": "So rare that it is still said to be a mirage by many experts. Only a few people have seen it worldwide. When viewed through a microscope, this Pokémon's short, fine, delicate hair can be seen.",
+        "height": 0.4,
+        "weight": 4.0,
+        "types": ["psychic"],
+        "baseStats": {"hp":100,"patk":100,"pdef":100,"satk":100,"sdef":100,"spd":100,"spc":100},
+        "expCurve": "mediumSlow",
+        "catchRate": 45,
+        "xpYield": 64,
+        "ev": [{"hp":3}],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"pound"},
+            {"lvl":10,"move":"transform"},
+            {"lvl":20,"move":"megaPunch"},
+            {"lvl":30,"move":"metronome"},
+            {"lvl":40,"move":"psychic"}
+        ],
+        "hmMoves": ["cut", "fly", "surf", "strength", "flash"],
+        "tmMoves": [
+            "megaPunch", "razorWind", "swordsDance", "whirlwind", "megaKick", "toxic", "hornDrill", "bodySlam", "takeDown", "doubleEdge", 
+            "bubbleBeam", "waterGun", "iceBeam", "blizzard", "hyperBeam", "payDay", "submission", "counter", "seismicToss", "rage", 
+            "megaDrain", "solarBeam", "dragonRage", "thunderbolt", "thunder", "earthquake", "fissure", "dig", "psychic", "teleport", 
+            "mimic", "doubleTeam", "reflect", "bide", "metronome", "selfDestruct", "eggBomb", "fireBlast", "swift", "skullBash", "softBoiled", 
+            "dreamEater", "skyAttack", "rest", "thunderWave", "psywave", "explosion", "rockSlide", "triAttack", "substitute"
+        ]
     },
     {
         "id": "ghostMarowak",
@@ -4593,6 +4665,29 @@
             {"lvl":1,"move":"headbutt"},
             {"lvl":1,"move":"boneClub"},
             {"lvl":1,"move":"fireSpin"}
+        ],
+        "hmMoves": [],
+        "tmMoves": []
+    },
+    {
+        "id": "missingno",
+        "pokedex": [],
+        "category": "",
+        "description": "",
+        "height": 1.0,
+        "weight": 34.0,
+        "types": ["normal","ghost"],
+        "baseStats": {"hp":178,"patk":19,"pdef":11,"satk":23,"sdef":23,"spd":0,"spc":23},
+        "expCurve": "mediumFast",
+        "catchRate": 29,
+        "xpYield": 255,
+        "ev": [],
+        "evolutions": [],
+        "learnedMoves": [
+            {"lvl":1,"move":"bind"},
+            {"lvl":1,"move":"hyperBeam"},
+            {"lvl":1,"move":"payDay"},
+            {"lvl":1,"move":"waterGun"}
         ],
         "hmMoves": [],
         "tmMoves": []

@@ -356,6 +356,7 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - Dig (underground turn 1, attack turn 2)
     - Fly (in the air turn1, attack turn 2)
     - Razor Wind (making whirlwind turn 1, attack turn 2)
+    - Sky Attack (glowing turn 1, attack turn 2)
     - Solar Beam (taking in light turn 1, attack turn 2)
     - Skull Bash (lowering head turn 1, attack turn 2)
 
@@ -529,11 +530,11 @@ This file details all mechanics available in the plugin, compared to RBY Generat
     - TM40 - Skull bash
     - TM41 - Soft-boiled
     - TM42 - Dream eater
-    - (...)
+    - TM43 - Sky Attack
     - TM44 - Rest
     - TM45 - Thunderwave
     - TM46 - Psywave
-    - (...)
+    - TM47 - Explosion
     - TM48 - Rock slide
     - TM49 - Tri attack
     - TM50 - Substitute

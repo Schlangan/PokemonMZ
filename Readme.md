@@ -1,8 +1,8 @@
-The PokemonMZ plugin is a base for creating Pokemon games with RPG Maker MZ. This first beta version has been developed by mimicking the game mechanics of pokemon Red/Blue/Yellow, up to the entrance of Victory Road. Some mechanics have yet to be implemented, but you'll find everything that was accessible up to that point of the original game story.
+The PokemonMZ plugin is a base for creating Pokemon games with RPG Maker MZ. This first version has been developed by mimicking the game mechanics of pokemon Red/Blue/Yellow, until Cerulean Cave. With this, you can recreate a Pokemon first generation game in its entirety.
 
-To use the plugin, push the js/plugin and img/ files inside your project folder. If you want to get the preconfigured database for the current state of this plugin, take the files inside predefinedData/demo/data and paste the contents in the data folder of your project.
+To use the plugin, push the js/plugin and img/ files inside your project folder. If you want to get the preconfigured database for generation I, take the files inside predefinedData/demo/data and paste the contents in the data folder of your project.
 
 Please read the documentation inside the doc folder to configure the plugin.
 
 You can find a demonstration version of the plugin at this url: 
-- [Windows version](https://mega.nz/file/xVMCBLjR#BnLcIBntlijHNhE-a65S0VZZUno3cdurRGUW6hoX_nU).
+- [Windows version](https://mega.nz/file/MF8VFQRK#jbv2NP-Qg67A88gZzSfVbQHwjq1FqiK2wyHn_18Bk-I)

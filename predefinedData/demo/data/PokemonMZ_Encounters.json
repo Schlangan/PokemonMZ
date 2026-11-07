@@ -2799,7 +2799,7 @@
         "type":"wild",
         "noCapture":true,
         "pokemons":[
-            {"id":"ghostMarowak","levelMin":30, "levelMax":30, "rate":100}
+            {"id":"ghostMarowak","levelMin":30, "levelMax":30, "rate":100, "noRepel":true}
         ]
     },
     {
@@ -2858,7 +2858,7 @@
         "id":"snorlax_wild",
         "type":"wild",
         "pokemons":[
-            {"id":"snorlax","levelMin":30, "levelMax":30, "rate":100}
+            {"id":"snorlax","levelMin":30, "levelMax":30, "rate":100, "noRepel":true}
         ]
     },
     {
@@ -4524,7 +4524,7 @@
         "id":"powerplant_zapdos",
         "type":"wild",
         "pokemons":[
-            {"id":"zapdos","levelMin":50, "levelMax":50, "rate":100}
+            {"id":"zapdos","levelMin":50, "levelMax":50, "rate":100, "noRepel":true}
         ]
     },
     {
@@ -5060,7 +5060,7 @@
         "id":"seafoamb4f_articuno",
         "type":"wild",
         "pokemons":[
-            {"id":"articuno","levelMin":50, "levelMax":50, "rate":100}
+            {"id":"articuno","levelMin":50, "levelMax":50, "rate":100, "noRepel":true}
         ]
     },
     {
@@ -5135,6 +5135,14 @@
             {"id":"growlithe","levelMin":34, "levelMax":37, "rate":20},
             {"id":"ponyta","levelMin":34, "levelMax":37, "rate":20},
             {"id":"charmander","levelMin":15, "levelMax":15, "rate":5}
+        ]
+    },
+    {
+        "id":"mansionb2f_lava_wild",
+        "type":"wild",
+        "noCapture":true,
+        "pokemons":[
+            {"id":"missingno","levelMin":128, "levelMax":128, "rate":100}
         ]
     },
     {
@@ -5443,7 +5451,7 @@
         "defeatText":"Ha! That was a truly intense fight!\nYou have won! As proof, here is the Earth Badge!",
         "money":5445
     },
-        {
+    {
         "id":"rival7_starter_bulbasaur",
         "type":"trainer",
         "trainerActor":2,
@@ -5499,5 +5507,576 @@
         ],
         "defeatText":"What!? I was just careless!",
         "money":3445
+    },
+    {
+        "id":"victory1f_cave_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"zubat","levelMin":39, "levelMax":44, "rate":20},
+            {"id":"golbat","levelMin":41, "levelMax":41, "rate":9},
+            {"id":"machoke","levelMin":42, "levelMax":42, "rate":5},
+            {"id":"geodude","levelMin":26, "levelMax":41, "rate":50},
+            {"id":"graveler","levelMin":41, "levelMax":47, "rate":5},
+            {"id":"onix","levelMin":36, "levelMax":45, "rate":10},
+            {"id":"marowak","levelMin":43, "levelMax":43, "rate":1}
+        ]
+    },
+    {
+        "id":"victory2f_cave_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"zubat","levelMin":44, "levelMax":44, "rate":20},
+            {"id":"golbat","levelMin":39, "levelMax":40, "rate":9},
+            {"id":"machoke","levelMin":39, "levelMax":42, "rate":5},
+            {"id":"geodude","levelMin":24, "levelMax":41, "rate":34},
+            {"id":"graveler","levelMin":43, "levelMax":44, "rate":8},
+            {"id":"onix","levelMin":36, "levelMax":47, "rate":16},
+            {"id":"marowak","levelMin":40, "levelMax":40, "rate":4}
+        ]
+    },
+    {
+        "id":"victory3f_cave_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"golbat","levelMin":41, "levelMax":44, "rate":15},
+            {"id":"venomoth","levelMin":40, "levelMax":40, "rate":10},
+            {"id":"machoke","levelMin":42, "levelMax":45, "rate":10},
+            {"id":"geodude","levelMin":36, "levelMax":46, "rate":35},
+            {"id":"graveler","levelMin":41, "levelMax":47, "rate":15},
+            {"id":"onix","levelMin":42, "levelMax":49, "rate":15}
+        ]
+    },
+    {
+        "id":"victory1f_cooltrainerf1",
+        "type":"trainer",
+        "trainerActor":24,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"hyperPotion","condition":"hpBelowPercent","hpPercent":10,"chance":100,"maxPerPokemon":1}
+        },
+        "pokemons":[
+            {"id":"persian","level":44,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"ninetales","level":44,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I lost out!",
+        "money":1540
+    },
+    {
+        "id":"victory1f_cooltrainerm1",
+        "type":"trainer",
+        "trainerActor":43,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"xAttack","condition":"random","chance":25,"maxPerPokemon":2}
+        },
+        "pokemons":[
+            {"id":"ivysaur","level":42,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"wartortle","level":42,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"charmeleon","level":42,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"charizard","level":42,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I had a chance...",
+        "money":1470
+    },
+    {
+        "id":"victory2f_belt1",
+        "type":"trainer",
+        "trainerActor":26,
+        "ia":"basic",
+        "iaModifiers":{
+            "item":{"id":"xAttack","condition":"random","chance":15,"maxPerPokemon":2}
+        },
+        "pokemons":[
+            {"id":"machoke","level":43,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"machop","level":43,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"machoke","level":43,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Aiyah!",
+        "money":1075
+    },
+    {
+        "id":"victory2f_juggler1",
+        "type":"trainer",
+        "trainerActor":33,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"drowzee","level":41,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"hypno","level":41,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"kadabra","level":41,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"kadabra","level":41,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"You got me!",
+        "money":1435
+    },
+    {
+        "id":"victory2f_tamer1",
+        "type":"trainer",
+        "trainerActor":34,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"persian","level":44,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"golduck","level":44,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I got whipped!",
+        "money":1760
+    },
+    {
+        "id":"victory2f_juggler2",
+        "type":"trainer",
+        "trainerActor":33,
+        "ia":"basic",
+        "pokemons":[
+            {"id":"mrMime","level":48,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Well done!",
+        "money":1680
+    },
+    {
+        "id":"victory2f_maniac1",
+        "type":"trainer",
+        "trainerActor":22,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"charmeleon","level":40,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"lapras","level":40,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"lickitung","level":40,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"No! Unbelievable!",
+        "money":2000
+    },
+    {
+        "id":"victory3f_cooltrainerm1",
+        "type":"trainer",
+        "trainerActor":43,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"xAttack","condition":"random","chance":25,"maxPerPokemon":2}
+        },
+        "pokemons":[
+            {"id":"exeggutor","level":43,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"cloyster","level":43,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"arcanine","level":43,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"The rumors were true!",
+        "money":1505
+    },
+    {
+        "id":"victory3f_cooltrainerf1",
+        "type":"trainer",
+        "trainerActor":24,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"hyperPotion","condition":"hpBelowPercent","hpPercent":10,"chance":100,"maxPerPokemon":1}
+        },
+        "pokemons":[
+            {"id":"parasect","level":43,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"dewgong","level":43,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"chansey","level":43,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Oh! So strong!",
+        "money":1505
+    },
+    {
+        "id":"victory3f_cooltrainerm2",
+        "type":"trainer",
+        "trainerActor":43,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"xAttack","condition":"random","chance":25,"maxPerPokemon":2}
+        },
+        "pokemons":[
+            {"id":"kingler","level":43,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"tentacruel","level":43,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"blastoise","level":43,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I don't believe it!",
+        "money":1505
+    },
+    {
+        "id":"victory3f_cooltrainerf2",
+        "type":"trainer",
+        "trainerActor":24,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"hyperPotion","condition":"hpBelowPercent","hpPercent":10,"chance":100,"maxPerPokemon":1}
+        },
+        "pokemons":[
+            {"id":"bellsprout","level":43,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"weepinbell","level":43,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"victreebel","level":43,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"I'm furious!",
+        "money":1505
+    },
+    {
+        "id":"victory2f_moltres",
+        "type":"wild",
+        "pokemons":[
+            {"id":"moltres","levelMin":50, "levelMax":50, "rate":100, "noRepel":true}
+        ]
+    },
+    {
+        "id":"indigo_lorelei",
+        "type":"trainer",
+        "trainerActor":45,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"superPotion","condition":"hpBelowPercent","hpPercent":20,"chance":50,"maxPerPokemon":2}
+        },
+        "pokemons":[
+            {"id":"dewgong","level":54,"moveset":"set","setMoves":["bubbleBeam","auroraBeam","rest","takeDown"],"dv":"default","ev":"default"},
+            {"id":"cloyster","level":53,"moveset":"set","setMoves":["supersonic","clamp","iceBeam","spikeCannon"],"dv":"default","ev":"default"},
+            {"id":"slowbro","level":54,"moveset":"set","setMoves":["psychic","surf","withdraw","amnesia"],"dv":"default","ev":"default"},
+            {"id":"jynx","level":56,"moveset":"set","setMoves":["doubleSlap","icePunch","lovelyKiss","thrash"],"dv":"default","ev":"default"},
+            {"id":"lapras","level":56,"moveset":"set","setMoves":["bodySlam","confuseRay","blizzard","hydroPump"],"dv":"default","ev":"default"}
+
+        ],
+        "defeatText":"How dare you!",
+        "money":5544
+    },
+    {
+        "id":"indigo_bruno",
+        "type":"trainer",
+        "trainerActor":46,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"xDefend","condition":"random","chance":25,"maxPerPokemon":2}
+        },
+        "pokemons":[
+            {"id":"onix","level":53,"moveset":"set","setMoves":["rockSlide","screech","slam","dig"],"dv":"default","ev":"default"},
+            {"id":"hitmonchan","level":55,"moveset":"set","setMoves":["icePunch","thunderPunch","firePunch","doubleTeam"],"dv":"default","ev":"default"},
+            {"id":"hitmonlee","level":55,"moveset":"set","setMoves":["doubleKick","megaKick","highJumpKick","doubleTeam"],"dv":"default","ev":"default"},
+            {"id":"onix","level":56,"moveset":"set","setMoves":["rockSlide","screech","slam","earthquake"],"dv":"default","ev":"default"},
+            {"id":"machamp","level":58,"moveset":"set","setMoves":["leer","karateChop","strength","submission"],"dv":"default","ev":"default"}
+
+        ],
+        "defeatText":"Why? How could I lose?",
+        "money":5742
+    },
+    {
+        "id":"indigo_agatha",
+        "type":"trainer",
+        "trainerActor":47,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"superPotion","condition":"hpBelowPercent","hpPercent":20,"chance":50,"maxPerPokemon":2}
+        },
+        "pokemons":[
+            {"id":"gengar","level":56,"moveset":"set","setMoves":["confuseRay","substitute","lick","megaDrain"],"dv":"default","ev":"default"},
+            {"id":"golbat","level":56,"moveset":"set","setMoves":["supersonic","toxic","wingAttack","leechLife"],"dv":"default","ev":"default"},
+            {"id":"haunter","level":55,"moveset":"set","setMoves":["confuseRay","lick","hypnosis","dreamEater"],"dv":"default","ev":"default"},
+            {"id":"arbok","level":58,"moveset":"set","setMoves":["wrap","glare","screech","acid"],"dv":"default","ev":"default"},
+            {"id":"gengar","level":60,"moveset":"set","setMoves":["confuseRay","psychic","hypnosis","dreamEater"],"dv":"default","ev":"default"}
+
+        ],
+        "defeatText":"Woo-hoo! You're something special, child!",
+        "money":5940
+    },
+    {
+        "id":"indigo_lance",
+        "type":"trainer",
+        "trainerActor":48,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"hyperPotion","condition":"hpBelowPercent","hpPercent":20,"chance":50,"maxPerPokemon":2}
+        },
+        "pokemons":[
+            {"id":"gyarados","level":58,"moveset":"set","setMoves":["dragonRage","leer","hydroPump","hyperBeam"],"dv":"default","ev":"default"},
+            {"id":"dragonair","level":56,"moveset":"set","setMoves":["thunderWave","slam","thunderbolt","hyperBeam"],"dv":"default","ev":"default"},
+            {"id":"dragonair","level":56,"moveset":"set","setMoves":["bubbleBeam","wrap","iceBeam","hyperBeam"],"dv":"default","ev":"default"},
+            {"id":"aerodactyl","level":60,"moveset":"set","setMoves":["wingAttack","swift","fly","hyperBeam"],"dv":"default","ev":"default"},
+            {"id":"dragonite","level":62,"moveset":"set","setMoves":["blizzard","fireBlast","thunder","hyperBeam"],"dv":"default","ev":"default"}
+
+        ],
+        "defeatText":"That's it! I hate to admit it,\nbut you are a Pokémon master!",
+        "money":6138
+    },
+    {
+        "id":"rival8_starter_bulbasaur",
+        "type":"trainer",
+        "trainerActor":2,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"fullRestore","condition":"hpBelowPercent","hpPercent":20,"chance":15,"maxPerPokemon":1}
+        },
+        "pokemons":[
+            {"id":"pidgeot","level":61,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"alakazam","level":59,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"rhydon","level":61,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"exeggutor","level":61,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"gyarados","level":63,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"charizard","level":65,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"NO! That can't be! You beat my best!\nAfter all that work to become\nLeague Champion? My reign is over already?\nIt's not fair!",
+        "money":6435
+    },
+    {
+        "id":"rival8_starter_charmander",
+        "type":"trainer",
+        "trainerActor":2,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"fullRestore","condition":"hpBelowPercent","hpPercent":20,"chance":15,"maxPerPokemon":1}
+        },
+        "pokemons":[
+            {"id":"pidgeot","level":61,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"alakazam","level":59,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"rhydon","level":61,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"arcanine","level":61,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"exeggutor","level":63,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"blastoise","level":65,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"NO! That can't be! You beat my best!\nAfter all that work to become\nLeague Champion? My reign is over already?\nIt's not fair!",
+        "money":6435
+    },
+    {
+        "id":"rival8_starter_squirtle",
+        "type":"trainer",
+        "trainerActor":2,
+        "ia":"effective",
+        "iaModifiers":{
+            "item":{"id":"fullRestore","condition":"hpBelowPercent","hpPercent":20,"chance":15,"maxPerPokemon":1}
+        },
+        "pokemons":[
+            {"id":"pidgeot","level":61,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"alakazam","level":59,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"rhydon","level":61,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"gyarados","level":61,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"arcanine","level":63,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"venusaur","level":65,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"NO! That can't be! You beat my best!\nAfter all that work to become\nLeague Champion? My reign is over already?\nIt's not fair!",
+        "money":6435
+    },
+    {
+        "id":"oak_starter_bulbasaur",
+        "type":"trainer",
+        "trainerActor":49,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"tauros","level":66,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"exeggutor","level":67,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"arcanine","level":68,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"blastoise","level":69,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"gyarados","level":70,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Good! Very good!\nI expected as much of a League Champion!",
+        "money":6930
+    },
+    {
+        "id":"oak_starter_charmander",
+        "type":"trainer",
+        "trainerActor":49,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"tauros","level":66,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"exeggutor","level":67,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"arcanine","level":68,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"venusaur","level":69,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"gyarados","level":70,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Good! Very good!\nI expected as much of a League Champion!",
+        "money":6930
+    },
+    {
+        "id":"oak_starter_squirtle",
+        "type":"trainer",
+        "trainerActor":49,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"tauros","level":66,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"exeggutor","level":67,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"arcanine","level":68,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"charizard","level":69,"moveset":"default","dv":"default","ev":"default"},
+            {"id":"gyarados","level":70,"moveset":"default","dv":"default","ev":"default"}
+        ],
+        "defeatText":"Good! Very good!\nI expected as much of a League Champion!",
+        "money":6930
+    },
+    {
+        "id":"ccave1f_cave_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"arbok","levelMin":52, "levelMax":52, "rate":5},
+            {"id":"raichu","levelMin":53, "levelMax":53, "rate":4},
+            {"id":"sandslash","levelMin":52, "levelMax":52, "rate":5},
+            {"id":"golbat","levelMin":46, "levelMax":55, "rate":15},
+            {"id":"gloom","levelMin":55, "levelMax":55, "rate":5},
+            {"id":"parasect","levelMin":52, "levelMax":54, "rate":5},
+            {"id":"venomoth","levelMin":49, "levelMax":54, "rate":5},
+            {"id":"kadabra","levelMin":49, "levelMax":49, "rate":5},
+            {"id":"weepinbell","levelMin":55, "levelMax":55, "rate":5},
+            {"id":"graveler","levelMin":45, "levelMax":45, "rate":5},
+            {"id":"magneton","levelMin":46, "levelMax":46, "rate":5},
+            {"id":"dodrio","levelMin":49, "levelMax":49, "rate":5},
+            {"id":"hypno","levelMin":46, "levelMax":46, "rate":10},
+            {"id":"ditto","levelMin":53, "levelMax":60, "rate":1}
+        ]
+    },
+    {
+        "id":"ccave2f_cave_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"sandslash","levelMin":56, "levelMax":56, "rate":5},
+            {"id":"wigglytuff","levelMin":57, "levelMax":57, "rate":5},
+            {"id":"golbat","levelMin":52, "levelMax":57, "rate":15},
+            {"id":"gloom","levelMin":58, "levelMax":58, "rate":5},
+            {"id":"venomoth","levelMin":51, "levelMax":51, "rate":5},
+            {"id":"kadabra","levelMin":51, "levelMax":51, "rate":5},
+            {"id":"weepinbell","levelMin":58, "levelMax":58, "rate":5},
+            {"id":"graveler","levelMin":50, "levelMax":50, "rate":5},
+            {"id":"dodrio","levelMin":51, "levelMax":51, "rate":5},
+            {"id":"electrode","levelMin":52, "levelMax":52, "rate":5},
+            {"id":"marowak","levelMin":52, "levelMax":52, "rate":5},
+            {"id":"rhyhorn","levelMin":50, "levelMax":50, "rate":10},
+            {"id":"rhydon","levelMin":52, "levelMax":60, "rate":5},
+            {"id":"chansey","levelMin":56, "levelMax":56, "rate":5},
+            {"id":"ditto","levelMin":55, "levelMax":60, "rate":10}
+        ]
+    },
+    {
+        "id":"ccaveb1f_cave_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"arbok","levelMin":57, "levelMax":57, "rate":5},
+            {"id":"raichu","levelMin":64, "levelMax":64, "rate":5},
+            {"id":"sandslash","levelMin":57, "levelMax":57, "rate":5},
+            {"id":"golbat","levelMin":54, "levelMax":59, "rate":15},
+            {"id":"parasect","levelMin":64, "levelMax":64, "rate":5},
+            {"id":"graveler","levelMin":55, "levelMax":55, "rate":5},
+            {"id":"electrode","levelMin":55, "levelMax":55, "rate":5},
+            {"id":"marowak","levelMin":55, "levelMax":55, "rate":10},
+            {"id":"lickitung","levelMin":50, "levelMax":55, "rate":5},
+            {"id":"rhyhorn","levelMin":52, "levelMax":52, "rate":10},
+            {"id":"rhydon","levelMin":55, "levelMax":62, "rate":5},
+            {"id":"chansey","levelMin":56, "levelMax":64, "rate":5},
+            {"id":"ditto","levelMin":60, "levelMax":67, "rate":5}
+        ]
+    },
+    {
+        "id":"ccave1f_water_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"magikarp","levelMin":5, "levelMax":5, "rate":100, "condition":"fishing","itemId":"oldRod"},
+            {"id":"poliwag","levelMin":10, "levelMax":10, "rate":50, "condition":"fishing","itemId":"goodRod"},
+            {"id":"goldeen","levelMin":10, "levelMax":10, "rate":50, "condition":"fishing","itemId":"goodRod"},
+            {"id":"slowbro","levelMin":53, "levelMax":53, "rate":25, "condition":"fishing","itemId":"superRod"},
+            {"id":"kingler","levelMin":53, "levelMax":53, "rate":25, "condition":"fishing","itemId":"superRod"},
+            {"id":"seadra","levelMin":53, "levelMax":53, "rate":25, "condition":"fishing","itemId":"superRod"},
+            {"id":"seaking","levelMin":53, "levelMax":55, "rate":25, "condition":"fishing","itemId":"superRod"}
+        ]
+    },
+    {
+        "id":"ccaveb1f_water_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"magikarp","levelMin":5, "levelMax":5, "rate":100, "condition":"fishing","itemId":"oldRod"},
+            {"id":"poliwag","levelMin":10, "levelMax":10, "rate":50, "condition":"fishing","itemId":"goodRod"},
+            {"id":"goldeen","levelMin":10, "levelMax":10, "rate":50, "condition":"fishing","itemId":"goodRod"},
+            {"id":"slowbro","levelMin":55, "levelMax":58, "rate":25, "condition":"fishing","itemId":"superRod"},
+            {"id":"kingler","levelMin":55, "levelMax":58, "rate":25, "condition":"fishing","itemId":"superRod"},
+            {"id":"seadra","levelMin":55, "levelMax":58, "rate":25, "condition":"fishing","itemId":"superRod"},
+            {"id":"seaking","levelMin":55, "levelMax":60, "rate":25, "condition":"fishing","itemId":"superRod"}
+        ]
+    },
+    {
+        "id":"ccaveb1f_mewtwo",
+        "type":"wild",
+        "pokemons":[
+            {"id":"mewtwo","levelMin":70, "levelMax":70, "rate":100, "noRepel":true}
+        ]
+    },
+    {
+        "id":"celadon_anyxia",
+        "type":"trainer",
+        "trainerActor":50,
+        "ia":"effective",
+        "pokemons":[
+            {"id":"charizard","level":72,"moveset":"set","setMoves":["slash","fly","flamethrower","fireSpin"],"dv":"default","ev":"default"},
+            {"id":"jolteon","level":73,"moveset":"set","setMoves":["thunderWave","pinMissile","sandAttack","thunderbolt"],"dv":"default","ev":"default"},
+            {"id":"victreebel","level":73,"moveset":"set","setMoves":["razorLeaf","doubleEdge","wrap","toxic"],"dv":"default","ev":"default"},
+            {"id":"alakazam","level":74,"moveset":"set","setMoves":["recover","psychic","disable","reflect"],"dv":"default","ev":"default"},
+            {"id":"tauros","level":74,"moveset":"set","setMoves":["bodySlam","hyperBeam","blizzard","earthquake"],"dv":"default","ev":"default"},
+            {"id":"lapras","level":75,"moveset":"set","setMoves":["surf","iceBeam","confuseRay","bodySlam"],"dv":"default","ev":"default"}
+        ],
+        "defeatText":"Well done! You'd deserve to fight my true\nteam instead!",
+        "money":7500
+    },
+    {
+        "id":"lostisland_beach_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"nidoking","levelMin":64, "levelMax":70, "rate":30},
+            {"id":"nidoqueen","levelMin":62, "levelMax":68, "rate":30},
+            {"id":"lickitung","levelMin":55, "levelMax":61, "rate":10},
+            {"id":"mrMime","levelMin":55, "levelMax":60, "rate":10},
+            {"id":"bulbasaur","levelMin":5, "levelMax":5, "rate":5},
+            {"id":"charmander","levelMin":5, "levelMax":5, "rate":5},
+            {"id":"squirtle","levelMin":5, "levelMax":5, "rate":5},
+            {"id":"eevee","levelMin":5, "levelMax":5, "rate":5}
+        ]
+    },
+    {
+        "id":"lostisland_beach_water",
+        "type":"wild",
+        "pokemons":[
+            {"id":"gyarados","levelMin":60, "levelMax":65, "rate":30, "condition":"fishing","itemId":"superRod"},
+            {"id":"dragonair","levelMin":40, "levelMax":54, "rate":20, "condition":"fishing","itemId":"superRod"},
+            {"id":"starmie","levelMin":60, "levelMax":65, "rate":20, "condition":"fishing","itemId":"superRod"},
+            {"id":"poliwrath","levelMin":60, "levelMax":65, "rate":30, "condition":"fishing","itemId":"superRod"},
+            {"id":"tentacruel","levelMin":60, "levelMax":70, "rate":80},
+            {"id":"lapras","levelMin":55, "levelMax":65, "rate":20}
+        ]
+    },
+    {
+        "id":"lostisland_jungle_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"butterfree","levelMin":65, "levelMax":70, "rate":20},
+            {"id":"beedrill","levelMin":65, "levelMax":70, "rate":20},
+            {"id":"vileplume","levelMin":67, "levelMax":72, "rate":20},
+            {"id":"exeggutor","levelMin":67, "levelMax":72, "rate":20},
+            {"id":"parasect","levelMin":65, "levelMax":75, "rate":20}
+        ]
+    },
+    {
+        "id":"lostisland_plateau_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"golem","levelMin":61, "levelMax":64, "rate":35},
+            {"id":"snorlax","levelMin":65, "levelMax":65, "rate":35},
+            {"id":"aerodactyl","levelMin":67, "levelMax":74, "rate":20},
+            {"id":"dragonite","levelMin":73, "levelMax":78, "rate":5}
+        ]
+    },
+    {
+        "id":"lostisland_cave_wild",
+        "type":"wild",
+        "pokemons":[
+            {"id":"dugtrio","levelMin":61, "levelMax":64, "rate":40},
+            {"id":"hitmonlee","levelMin":60, "levelMax":63, "rate":20},
+            {"id":"hitmonchan","levelMin":60, "levelMax":63, "rate":20},
+            {"id":"gengar","levelMin":66, "levelMax":71, "rate":10},
+            {"id":"clefable","levelMin":64, "levelMax":69, "rate":10}
+        ]
+    },
+    {
+        "id":"lostisland_cave_water",
+        "type":"wild",
+        "pokemons":[
+            {"id":"omastar","levelMin":63, "levelMax":68, "rate":50, "condition":"fishing","itemId":"superRod"},
+            {"id":"kabutops","levelMin":63, "levelMax":68, "rate":50, "condition":"fishing","itemId":"superRod"},
+            {"id":"omanyte","levelMin":30, "levelMax":38, "rate":30},
+            {"id":"kabuto","levelMin":30, "levelMax":38, "rate":30}
+        ]
+    },
+    {
+        "id":"lostisland_jungle_mew",
+        "type":"wild",
+        "pokemons":[
+            {"id":"mew","levelMin":80, "levelMax":80, "rate":100, "noRepel":true}
+        ]
     }
 ]
+
+

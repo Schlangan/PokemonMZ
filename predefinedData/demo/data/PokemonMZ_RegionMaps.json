@@ -50,12 +50,14 @@
             {"id":42,"name":"Sea Route 21","x":4,"y":13,"pokemons":["pidgey","pidgeotto","rattata","raticate","tangela","poliwag","goldeen","tentacool","tentacruel","shellder","horsea","staryu"]},
             {"id":43,"name":"Route 22","x":3,"y":8,"pokemons":["rattata","spearow","nidoranf","nidoranm","mankey","magikarp","poliwag","goldeen"]},
             {"id":44,"name":"Route 23","x":2,"y":6,"pokemons":["fearow","nidorina","nidorino","spearow","ekans","mankey","arbok","primeape","magikarp","poliwag","goldeen","poliwhirl"]},
-            {"id":45,"name":"Victory Road","x":2,"y":4,"pokemons":[]},
-            {"id":46,"name":"Indigo Plateau","x":2,"y":2,"pokemons":[]},
+            {"id":45,"name":"Victory Road","x":2,"y":4,"pokemons":["zubat","golbat","machoke","geodude","graveler","onix","marowak","venomoth"]},
+            {"id":46,"name":"Indigo Plateau","x":2,"y":2,"fly":true,"flyMapId":229,"flyMapX":9,"flyMapY":6,"pokemons":[]},
             {"id":47,"name":"Power Plant","x":17,"y":4,"pokemons":["magnemite","voltorb","grimer","pikachu","magneton","raichu","muk","electabuzz"]},
             {"id":48,"name":"Underground Path","mapHidden":true,"x":12,"y":5,"pokemons":[]},
             {"id":49,"name":"Rocket HQ","x":9,"y":5,"mapHidden":true,"pokemons":[]},
-            {"id":50,"name":"Pokemon Mansion","x":4,"y":15,"mapHidden":true,"pokemons":["rattata","raticate","vulpix","growlithe","ponyta","grimer","muk","koffing","weezing","magmar","ditto","charmander"]}
+            {"id":50,"name":"Pokemon Mansion","x":4,"y":15,"mapHidden":true,"pokemons":["rattata","raticate","vulpix","growlithe","ponyta","grimer","muk","koffing","weezing","magmar","ditto","charmander"]},
+            {"id":51,"name":"Cerulean Cave","mapHidden":true,"x":11,"y":1,"pokemons":[]},
+            {"id":52,"name":"Lost Island","mapHidden":true,"x":19,"y":15,"fly":true,"flyMapId":241,"flyMapX":20,"flyMapY":12,"pokemons":[]}
         ]
     }
 ]

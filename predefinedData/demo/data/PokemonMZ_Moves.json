@@ -1428,6 +1428,19 @@
         "animationHit":"hitTargetEffect"
 	},
     {
+        "id":"skyAttack",
+        "type":"flying",
+        "target":"opponent",
+        "pp":5,
+        "power":140,
+        "accuracy":90,
+        "effects":[
+            {"type":"skyAttack","animationTurn1":"powerUpUser2"}
+        ],
+        "alwaysEffects":true,
+        "animationHit":"pierceTargetPhysicalEffect"
+    },
+    {
         "id":"slam",
         "type":"normal",
         "target":"opponent",

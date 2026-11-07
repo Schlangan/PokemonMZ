@@ -1179,6 +1179,16 @@
 		"move":"dreamEater",
         "price":2000
 	},
+	{
+		"id":"tm43",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"skyAttack",
+        "price":5000
+	},
     {
 		"id":"tm44",
 		"user":"trainer",
@@ -1208,6 +1218,16 @@
 		"effect":"tm",
 		"move":"psywave",
         "price":4000
+	},
+	{
+		"id":"tm47",
+		"user":"trainer",
+		"category":"regular",
+		"battle":false,
+		"target":"pokemon",
+		"effect":"tm",
+		"move":"explosion",
+        "price":3000
 	},
 	{
 		"id":"tm48",
@@ -1262,7 +1282,7 @@
 	{
 		"id":"hm03",
 		"user":"trainer",
-		"category":"regular",
+		"category":"hm",
 		"battle":false,
 		"target":"pokemon",
 		"effect":"hm",
@@ -1272,7 +1292,7 @@
 	{
 		"id":"hm04",
 		"user":"trainer",
-		"category":"regular",
+		"category":"hm",
 		"battle":false,
 		"target":"pokemon",
 		"effect":"hm",

@@ -1,3 +1,35 @@
+## [1.00] - 2026-11-07
+
+The original content of Pokemon Red/Blue has been implemented in the demo version. Now, you can recreate a whole first generation game with the plugin. Additional content, Lost Island, has been added in the demo version to allow you to catch Mew.
+
+New demonstration versions of the plugin at this url: 
+- [Windows version](https://mega.nz/file/MF8VFQRK#jbv2NP-Qg67A88gZzSfVbQHwjq1FqiK2wyHn_18Bk-I)
+
+- Bug fixes
+    - Specifically set item price was not applied to merchant windows, keeping default price instead.
+    - Recovery items such as potions were usable on fainted Pokémon.
+
+- New map mechanics
+    - Add noRepel property for encounters that must happen, even if repel is on. Used for fixed encounters such as legendaries
+    - Add Hall of Fame mechanics, to display the Pokemon team and trainer info. Comes with commands to replay registered hall of fame.
+    - Plugin command to check if a specific pokemon has been captured
+
+- New battle mechanics
+    - Sky Attack mechanics: glow turn 1, attack turn 2
+    - Set moves for trainer's pokemon, allowing to completely define the opponent moveset
+
+- New predefined Pokemon data
+    - Moltres (found in Victory Road 2F)
+    - Mewtwo (found in Cerulean Cave)
+    - Mew (found in Lost Island)
+
+- New predefined moves data
+    - Sky Attack (learned with TM43, or Moltres lvl.60)
+
+- New predefined item data
+    - TM43 - Sky Attack (found in Victory Road 1F)
+    - TM47 - Explosion (found in Victory Road 3F)
+
 ## [0.12] - 2026-10-18
 
 Pokémon can now reach level 100, and mechanics up to the entrance of the Victory Road have been added. The demo mac version has been removed, as MacOs doesn't allow exportations for Windows to work.
